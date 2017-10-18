@@ -16,6 +16,8 @@ This is how you define the **prior** for the a simple **mixture of Gaussians** m
 
 ```python
 import numpy as np
+import inferpy as inf
+from inferpy import ProbModel
 from inferpy.models import Normal, InverseGamma, Dirichlet
 
 # K defines the number of components. 
@@ -31,12 +33,12 @@ Then the **data model** is defined by showing how to draw a single example:
 
 ```python
 #data Model
-with bs.dataModel():
+with inf.dataModel():
     # Sample the component of the mixture this sample belongs to. 
     # This is a latent variable that can not be observed
     h = Multinomial(probs = p)
     # Sample the observed value from the Gaussian of the selected component.  
-    y = Normal(loc = bs.gather(mu,h), scale = bs.gather(sigma,h), observed = true)
+    y = Normal(loc = inf.gather(mu,h), scale = inf.gather(sigma,h), observed = true)
 ```
 
 The **data model** must be surrounded by a **with** statement to inidicate that the defined random variables will be reapeatedly used in each data sample.
@@ -44,5 +46,38 @@ The **data model** must be surrounded by a **with** statement to inidicate that 
 Once the prior and data model are defined, the probablitic model itself can be created and compiled:
 ```python
 probmodel = ProbModel(prior = [p,mu,sigma], dataModel = [h, y]) 
-probmodel.compile(optimizer='sgd', infMethod = 'KLqp')
+probmodel.compile(infMethod = 'KLqp', optimizer='sgd')
+```
+During the model compilation we specify the inference method that will be used to learn the model as well as the optimization algorithm. Both the inference method and the optimizer can be further configure. But, as in Keras, a core principle is to try make things reasonbly simple, while allowing the user full control if needed. 
+
+```python
+from keras.optimizers import SGD
+probmodel = ProbModel(prior = [p,mu,sigma], dataModel = [h, y]) 
+sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+probmodel.compile(infMethod = 'KLqp', optimizer=sgd)
+```
+
+Now we can sample data from the modeled if needed:
+```python
+data = inf.sampleData(size = 1000)
+```
+Or you can fit your model with a given data set:
+```python
+probmodel.fit(data_training, epochs=10)
+```
+or update your probablistic model with new data usian Bayes' rule:
+```python
+probmodel.update(new_data_training)
+```
+Query the posterior over a given random varible:
+```python
+x_post = inf.posterior(mu)
+```
+Evaluate your model according to a given metric:
+```python
+metrics = probmodel.evaluate(test_data, metrics = ['log_likelihood', 'mean_squared_error'], targetvar = x)
+```
+Or compute predicitons on new data
+```python
+cluster_assignments = model.predict(test_data, targetvar = h)
 ```
