@@ -213,12 +213,12 @@ A probabilistic model in INFERPY should be compiled before we can access these p
 
 ```python
  probmodel = ProbModel(vars = [theta,mu,sigma,z_n, x_n]) 
- probmodel.compile(infAlg = 'KLqp')
- 
+ probmodel.compile(infMethod = 'KLqp')   
+ model.fit(x_train)
  posterior_mu = probmodel.posterior(mu)
 ```
 
-The compilation process allows to choose the inference algorithm through the 'ingAlg' argument. In the above example we use 'Klqp', **black box variational inference**. Other inference algorithms include: 'NUTS', 'MCMC', 'KLpq', etc. Look at ? for a detailed description of the available inference algorithms. 
+The compilation process allows to choose the inference algorithm through the 'infMethod' argument. In the above example we use 'Klqp', **black box variational inference**. Other inference algorithms include: 'NUTS', 'MCMC', 'KLpq', etc. Look at ? for a detailed description of the available inference algorithms. 
 
 Following INFERPY guiding principles, users can further configure the inference algorithm. 
 
@@ -227,17 +227,77 @@ First, they can define they family 'Q' of approximating distributions,
 ```python
  probmodel = ProbModel(vars = [theta,mu,sigma,z_n, x_n]) 
  
+ q_z_n = inf.inference.Q.Multinomial(bind = mu, initializer='random_unifrom')
  q_mu = inf.inference.Q.PointMass(bind = mu, initializer='random_unifrom')
  q_sigma = inf.inference.Q.PointMass(bind = mu, initializer='ones')
- q_z_n = inf.inference.Q.Multinomial(bind = mu, initializer='random_unifrom')
   
- probmodel.compile(infAlg = 'KLqp', Q = [q_mu, q_sigma, q_z_n])
- 
+ probmodel.compile(infMethod = 'KLqp', Q = [q_mu, q_sigma, q_z_n])
+ model.fit(x_train)
  posterior_mu = probmodel.posterior(mu)
 ```
 
-By default, the posterior **q** belongs to the same distribution family than **p**, but in the above example we show how we can change that (e.g. we set the posterior over **mu** to obtain a point mass estimate). How these **q's** are initialize can also be configure using any of the Keras's initializers. 
+By default, the posterior **q** belongs to the same distribution family than **p** , but in the above example we show how we can change that (e.g. we set the posterior over **mu** to obtain a point mass estimate instead of the Gaussian approximation obatined by default). We can also configure how these **q's** are initialized using any of the Keras's initializers. 
 
+Inspired by Keras semantics, we can furhter configuration of the inference algorithm, 
 
+```python
+ probmodel = ProbModel(vars = [theta,mu,sigma,z_n, x_n]) 
+ 
+ q_z_n = inf.inference.Q.Multinomial(bind = mu, initializer='random_unifrom')
+ q_mu = inf.inference.Q.PointMass(bind = mu, initializer='random_unifrom')
+ q_sigma = inf.inference.Q.PointMass(bind = mu, initializer='ones')
+ 
+ sgd = keras.optimizers.SGD(lr=0.01, momentum=0.9, nesterov=True)
+ infkl_qp = inf.inference.KLqp(optimizer = sgd, dataSize = N)
+ probmodel.compile(infMethod = infkl_qp, Q = [q_mu, q_sigma, q_z_n])
 
+ model.fit(x_train)
+ posterior_mu = probmodel.posterior(mu)
+```
 
+Have a look at Inference Zoo to explore other configuration options. 
+
+In the last part of this guide, we highlight that INFERPY directly builds on top of Edward's compositionality idea to design complex infererence algorithms. 
+
+```python
+ probmodel = ProbModel(vars = [theta,mu,sigma,z_n, x_n]) 
+ 
+ q_z_n = inf.inference.Q.Multinomial(bind = mu, initializer='random_unifrom')
+ q_mu = inf.inference.Q.PointMass(bind = mu, initializer='random_unifrom')
+ q_sigma = inf.inference.Q.PointMass(bind = mu, initializer='ones')
+ 
+ infkl_qp = inf.inference.KLqp(optimizer = 'sgd', Q = [q_z_n], innerIter = 10)
+ infMAP = inf.inference.MAP(optimizer = 'sgd', Q = [q_mu, q_sigma])
+
+ probmodel.compile(infMethod = [infkl_qp,infMAP])
+ 
+ model.fit(x_train)
+ posterior_mu = probmodel.posterior(mu)
+```
+
+With the above sintaxis, we perform a variational EM algorithm, where the E step is repeated 10 times for every MAP step.
+
+More flexibility is also available by defining how each mini batch is process by the inference algorithm. The following piece code is equivalent to the above one, 
+
+```python
+ probmodel = ProbModel(vars = [theta,mu,sigma,z_n, x_n]) 
+
+ q_z_n = inf.inference.Q.Multinomial(bind = mu, initializer='random_unifrom')
+ q_mu = inf.inference.Q.PointMass(bind = mu, initializer='random_unifrom')
+ q_sigma = inf.inference.Q.PointMass(bind = mu, initializer='ones')
+ 
+ infkl_qp = inf.inference.KLqp(optimizer = 'sgd', Q = [q_z_n])
+ infMAP = inf.inference.MAP(optimizer = 'sgd', Q = [q_mu, q_sigma])
+
+ emAlg = lambda (infMethod, dataBatch):
+    for _ in range(10)
+        infMethod[0].update(data = dataBatch)
+    
+    infMethod[1].update(data = dataBatch)
+    return 
+ 
+ probmodel.compile(infMethod = [infkl_qp,infMAP], ingAlg = emAlg)
+ 
+ model.fit(x_train, EPOCHS = 10)
+ posterior_mu = probmodel.posterior(mu)
+```
