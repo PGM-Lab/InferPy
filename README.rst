@@ -21,7 +21,17 @@ The core data structures of INFERPY is a a **probabilistic model**, defined as a
 Let's look at a simple examle. We start defining hhe **prior** over the parameters of a **mixture of Gaussians** model: 
 
 
-.. highlight:: python
+.. code-block:: python
    import numpy as np
    import inferpy as inf
    from inferpy.models import Normal, InverseGamma, Dirichlet
+   # K defines the number of components. 
+   K=10
+   #Prior for the means of the Gaussians 
+   mu = Normal(loc = 0, scale = 1, shape=[K,d])
+   #Prior for the precision of the Gaussians 
+   sigma = InverseGamma(concentration = 1, rate = 1, shape=[K,d])
+   #Prior for the mixing proportions
+   p = Dirichlet(np.ones(K))
+
+The **shape** argument in the constructor defines the number (and dimension) of variables contained in a random variable object. For example, **mu** contains K*d varaibles laid in a Kxd matrix. 
