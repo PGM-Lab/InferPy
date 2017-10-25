@@ -1,4 +1,4 @@
-# INFERPY: The Python Library for Probabilistic Modelling
+# INFERPY: A Python Library for Probabilistic Modelling
 
 INFERPY is a high-level API for probabilistic modelling written in Python and capable of running on top of Edward, Tensorflow and Apache Spark. INFERPY's API is strongly inspired by Keras and it has a focus on enabling flexible data processing, simple probablistic modelling, scalable inference and robust model validation. 
 
@@ -98,7 +98,7 @@ cluster_assignments = probmodel.predict(test_data, targetvar = h)
 
 
 ## Getting Started
-### Probabilistic Model
+### Guide to Building Hirearchical Probabilistic Models
 
 INFERPY focuses on *hirearchical probabilistic models* which usually are structured in two different layers:
 
@@ -132,6 +132,7 @@ with inf.replicate(size = N)
 
 #Probabilistic Model
 probmodel = ProbModel(prior = [p,mu,sigma,z_n,x_n]) 
+probmodel.compile()
 ```
 
 The ```with inf.replicate(size = N)``` sintaxis is used to replicate the random variables contained within this construct. It follows from the standard *plateau notation* to define the data generation part of a probabilistic model. Internally, ```with inf.replicate(size = N)``` construct modifies the random variable shape by adding an extra dimension. For the above example, z_n's shape is [N,1], and x_n's shape is [N,d].  
@@ -154,24 +155,89 @@ with inf.replicate(size = 5)
 Multivariate distributions can be defined similarly. Similiarly to Edward's approach, the multivariate dimension is the innermost (right-most) dimension of the parameters. 
 ```python
 # 2 x 3 matrix of K-dimensional multivariate normals
-x  = MultivariateNormal(loc = np.zeros((2,3,K)), scale = np.ones((2,3,K,K))) 
+x  = MultivariateNormal(loc = np.zeros((2,3,K)), scale = np.ones((2,3,K,K)), observed = true) 
 
 # 2 x 3 matrix of K-dimensional multivariate normals
-y = MultivariateNormal (loc = np.zeros(K), scale = np.ones((K,K)), shape = [2,3])
+y = MultivariateNormal (loc = np.zeros(K), scale = np.ones((K,K)), shape = [2,3], observed = true)
 ```
 
 The argument **observed = true** in the constructor of a random variable is used to indicate whether a variable is observable or not.  
 
-A **probabilistic model** defines a joint distribution $p(theta,mu,sigma,z_n, x_n)$ over observable and non-observable variables, 
+A **probabilistic model** defines a joint distribution over observable and non-observable variables.  $p(theta,mu,sigma,z_n, x_n)$ for the running example, 
+
 ```python
 from inferpy import ProbModel
 probmodel = ProbModel(vars = [theta,mu,sigma,z_n, x_n]) 
+probmodel.compile()
 ```
+
+The model must be **compiled** before it can be used. In the next section, we will describe how to configure the 
+
 Like any  random variable object, a probabilistic model is equipped with methods such as *log_prob()* and *sample()*. Then, we can sample data from the model anbd compute the log-likelihood of a data set:
 ```python
 data = probmodel.sample(size = 1000)
 log_like = probmodel.log_prob(data)
 ```
 
-Folowing Edward's approach, a random variable $x$ is associated to a tensor $x^*$ in the computational graph handled by TensorFlow, where the computations takes place. This tensor *x** contains the samples of the random variable $x$, i.e. $x^*\sim p(x|\theta)$. In this way, random variables can be involved in complex deterministic operations containing deep neural networks, math operations and another libraries compatible with Edward and Tensorflow. 
+Folowing Edward's approach, a random variable $x$ is associated to a tensor $x^*$ in the computational graph handled by TensorFlow, where the computations takes place. This tensor *x** contains the samples of the random variable $x$, i.e. $x^*\sim p(x|\theta)$. In this way, random variables can be involved in complex deterministic operations containing deep neural networks, math operations and another libraries compatible with Tensorflow (such as Keras). 
+
+Finally, a probablistic model have the following methods:
+
+- ```probmodel.summary()```: prints a summary representation of the model. 
+- ```probmodel.get_config()```: returns a dictionary containing the configuration of the model. The model can be reinstantiated from its config via:
+
+```python 
+config = probmodel.get_config()
+probmodel = ProbModel.from_config(config)
+```
+- ```model.to_json()```: returns a representation of the model as a JSON string. Note that the representation does not include the weights, only the architecture. You can reinstantiate the same model (with reinitialized weights) from the JSON string via:
+```python
+from models import model_from_json
+
+json_string = model.to_json()
+model = model_from_json(json_string)
+```
+
+
+## Guide to Approximate Inference in Probabilistic Models
+
+The Inference API defines the set of algorithms and methods used to perform inference in a probabilistic model $p(x,z,\theta)$ (where $x$ are the observations, $z$ the local hidden varaibles, and $\theta$ the global parameters of the model). More precesily, the inference problem redues to compute the posterior probability over the latent variables given a data sample $p(z,\theta|x_{train}), because by looking at these posteriors we can uncover the hidden structure in the data. For the running example, $p(mu|x_{train})$ tells us where the centroids of the data while $p(z_n|x_{train}$ shows us to which centroid belongs every data point. 
+
+INFERPY inherits Edward's approach an consider approximate inference solutions, 
+
+$$ q(z,\theta) \approx p(z,\theta | x_{train})$$, 
+
+in which the task is to approximate the posterior $p(z,\theta | x_{train})$ using a family of distritions, $q(z,\theta; \labmda)$, indexed by parameters $\lambda$. 
+
+A probabilistic model in INFERPY should be compiled before we can access these posteriors,
+
+```python
+ probmodel = ProbModel(vars = [theta,mu,sigma,z_n, x_n]) 
+ probmodel.compile(infAlg = 'KLqp')
+ 
+ posterior_mu = probmodel.posterior(mu)
+```
+
+The compilation process allows to choose the inference algorithm through the 'ingAlg' argument. In the above example we use 'Klqp', **black box variational inference**. Other inference algorithms include: 'NUTS', 'MCMC', 'KLpq', etc. Look at ? for a detailed description of the available inference algorithms. 
+
+Following INFERPY guiding principles, users can further configure the inference algorithm. 
+
+First, they can define they family 'Q' of approximating distributions, 
+
+```python
+ probmodel = ProbModel(vars = [theta,mu,sigma,z_n, x_n]) 
+ 
+ q_mu = inf.inference.Q.PointMass(bind = mu, initializer='random_unifrom')
+ q_sigma = inf.inference.Q.PointMass(bind = mu, initializer='ones')
+ q_z_n = inf.inference.Q.Multinomial(bind = mu, initializer='random_unifrom')
+  
+ probmodel.compile(infAlg = 'KLqp', Q = [q_mu, q_sigma, q_z_n])
+ 
+ posterior_mu = probmodel.posterior(mu)
+```
+
+By default, the posterior **q** belongs to the same distribution family than **p**, but in the above example we show how we can change that (e.g. we set the posterior over **mu** to obtain a point mass estimate). How these **q's** are initialize can also be configure using any of the Keras's initializers. 
+
+
+
 
