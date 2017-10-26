@@ -8,6 +8,8 @@ Use INFERPY is you need a probabilistic programming language that:
  - Run seamlessly on CPU and GPU (by relying on Tensorflow). 
  - Process seamlessly small data sets or large distributed data sets (by relying on Apache Spark). . 
 
+----
+
 ## Getting Started: 30 seconds to INFERPY 
 
 The core data structures of INFERPY is a a **probabilistic model**, defined as a set of **random variables** with a conditional independence structure. Like in Edward, a **random varible** is an object parameterized by a set of tensors. 
@@ -89,6 +91,8 @@ Or compute predicitons on new data
 cluster_assignments = probmodel.predict(test_data, targetvar = h)
 ```
 
+----
+
 ## Guiding Principles
 
 - INFERPY's probability distribuionts are mainly inherited from TensorFlow Distribuitons package. INFERPY's API is fully compatible with tf.distributions' API. The 'shape' argument was added as a simplifing option when defining multidimensional distributions. 
@@ -96,9 +100,10 @@ cluster_assignments = probmodel.predict(test_data, targetvar = h)
 - INFERPY seamsly process data contained in a numpy array, Tensorflow's tensor, Tensorflow's Dataset (tf.Data API) or Apache Spark's DataFrame. 
 - INFERPY also includes novel distributed statistical inference algorithms by combining Tensorflow and Apache Spark computing engines. 
 
+----
 
 ## Getting Started
-### Guide to Building Hirearchical Probabilistic Models
+### Guide to Building Probabilistic Models
 
 INFERPY focuses on *hirearchical probabilistic models* which usually are structured in two different layers:
 
@@ -151,6 +156,8 @@ The ```with inf.replicate(size = N)``` sintaxis can  also be used to define mult
 with inf.replicate(size = 5)
     x = Normal (loc = 0, scale = 1)
 ```
+More detailed inforamtion about the semantics of ```with inf.replicate(size = N)``` and how to define more expressive and complex models can be found in ?. 
+
 
 Multivariate distributions can be defined similarly. Similiarly to Edward's approach, the multivariate dimension is the innermost (right-most) dimension of the parameters. 
 ```python
@@ -198,6 +205,7 @@ json_string = model.to_json()
 model = model_from_json(json_string)
 ```
 
+----
 
 ## Guide to Approximate Inference in Probabilistic Models
 
@@ -301,3 +309,56 @@ More flexibility is also available by defining how each mini batch is process by
  model.fit(x_train, EPOCHS = 10)
  posterior_mu = probmodel.posterior(mu)
 ```
+
+----
+
+## Guide to Compositional Inference
+
+## Guide to Plateau Probabilistic Models
+
+## Guide to Bayesian Deep Learning
+
+## Guide to Data Handling
+----
+## Guide to Validation of Probabilistic Models
+
+Model validation try to assess how faifhfully the inferered probabilistic model represents and explain the observed data. 
+
+The main tool for model validation consists on analyzing the posterior predictive distribution, 
+
+$$ p(y_{test}, x_{test}|y_{train}, x_{train}) = \int p(y_{test}, x_{test}|z,\theta)p(z,\theta|y_{train}, x_{train}) dzd\theta $$.
+
+This posterior predictive distribution can be used to measure how well the model fits an independent dataset using the test marginallog-likelihood, $\ln p(y_{test}, x_{test}|y_{train}, x_{train})$,  
+
+```python
+log_like = probmodel.evaluate(test_data, metrics = ['log_likelihood'])
+```
+
+In other cases, we may need to evalute the predictive capacity of the model with respect to some target variable $y$, 
+
+$$ p(y_{test}|x_{test}, y_{train}, x_{train}) = \int p(y_{test}|x_{test},z,\theta)p(z,\theta|y_{train}, x_{train}) dzd\theta $$,
+
+So the metrics can be computed with respect to this target variable by using the 'targetvar' argument, 
+
+```python
+log_like, accuracy, mse = probmodel.evaluate(test_data, targetvar = y, metrics = ['log_likelihood', 'accuracy', 'mse'])
+```
+So, the log-likelihood metric as well as the accuracy and the mean square error metric are computed by using the predictive posterior $p(y_{test}|x_{test}, y_{train}, x_{train})$. 
+
+
+Custom evaluation metrics can also be defined, 
+
+```python
+def mean_absolute_error(posterior, observations, weights=None):
+    predictions = tf.map_fn(lambda x : x.getMean(), posterior)
+    
+    return tf.metrics.mean_absolute_error(observations, predictions, weights)
+    
+
+mse, mae = probmodel.evaluate(test_data, targetvar = y, metrics = ['mse', mean_absolute_error])
+```
+
+
+
+
+
