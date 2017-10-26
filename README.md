@@ -164,7 +164,7 @@ The ```with inf.replicate(size = N)``` sintaxis can  also be used to define mult
 with inf.replicate(size = 5)
     x = Normal (loc = 0, scale = 1)
 ```
-More detailed inforamtion about the semantics of ```with inf.replicate(size = N)``` and how to define more expressive and complex models can be found in ?. 
+More detailed inforamtion about the semantics of ```with inf.replicate(size = N)``` can be found in ?. Examples of using this construct to define more expressive and complex models can be found in ?. 
 
 
 Multivariate distributions can be defined similarly. Similiarly to Edward's approach, the multivariate dimension is the innermost (right-most) dimension of the parameters. 
@@ -235,10 +235,6 @@ from models import model_from_json
 json_string = model.to_json()
 model = model_from_json(json_string)
 ```
-
-----
-
-## Guide to Plateau Probabilistic Models
 
 ----
 
@@ -345,9 +341,13 @@ More flexibility is also available by defining how each mini batch is process by
  posterior_mu = probmodel.posterior(mu)
 ```
 
+Have a look again at Inference Zoo to explore other complex compositional options. 
+
 ----
 
-## Guide to Compositional Inference
+## Guide to Compositional Inference 
+
+Talk about inference as optimization, inference.update as a gradient step, etc... Distuinguish from MCMC, etc... 
 
 ----
 
@@ -446,6 +446,11 @@ mse, mae = probmodel.evaluate(test_data, targetvar = y, metrics = ['mse', mean_a
 ----
 
 ## Guide to Data Handling
+
+
+----
+
+# Probabilistic Model Zoo
 
 
 
