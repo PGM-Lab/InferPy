@@ -54,13 +54,21 @@ from inferpy import ProbModel
 probmodel = ProbModel(vars = [p,mu,sigma,z_n, x_n]) 
 probmodel.compile(infMethod = 'KLqp'')
 ```
-During the model compilation we specify the inference method that will be used to learn the model. The inference method can be further configure. But, as in Keras, a core principle is to try make things reasonbly simple, while allowing the user full control if needed. 
+During the model compilation we specify different inference methods that will be used to learn the model. 
+
+```python
+from inferpy import ProbModel
+probmodel = ProbModel(vars = [p,mu,sigma,z_n, x_n]) 
+probmodel.compile(infMethod = 'MCMC')
+```
+
+The inference method can be further configure. But, as in Keras, a core principle is to try make things reasonbly simple, while allowing the user the full control if needed. 
 
 ```python
 from keras.optimizers import SGD
-probmodel = ProbModel(prior = [p,mu,sigma], dataModel = [h, y]) 
+probmodel = ProbModel(vars = [p,mu,sigma,z_n, x_n]) 
 sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
-infklqp = inf.KLqp(optimizer = sgd, dataSize = N)
+infklqp = inf.inference.KLqp(optimizer = sgd, dataSize = N)
 probmodel.compile(infMethod = infklqp)
 ```
 
@@ -186,7 +194,30 @@ data = probmodel.sample(size = 1000)
 log_like = probmodel.log_prob(data)
 ```
 
-Folowing Edward's approach, a random variable $x$ is associated to a tensor $x^*$ in the computational graph handled by TensorFlow, where the computations takes place. This tensor *x** contains the samples of the random variable $x$, i.e. $x^*\sim p(x|\theta)$. In this way, random variables can be involved in complex deterministic operations containing deep neural networks, math operations and another libraries compatible with Tensorflow (such as Keras). 
+Folowing Edward's approach, a random variable $x$ is associated to a tensor $x^*$ in the computational graph handled by TensorFlow, where the computations takes place. This tensor $x^*$ contains the samples of the random variable $x$, i.e. $x^*\sim p(x|\theta)$. In this way, random variables can be involved in expressive deterministic operations. For example, the following piece of code corresponds to a zero inflated linear regression model 
+
+```python
+
+#Prior
+w = Normal(0, 1, dim=d)
+w0 = Normal(0, 1)
+p = Beta(1,1)
+
+#Likelihood model
+with inf.replicate(size = 1000):
+    x = Normal(0,1000, dim=d, observed = true)
+    h = Binomial(p)
+    y0 = Normal(w0 + inf.matmul(x,w, transpose_b = true ), 1),
+    y1 = Delta(0.0)
+    y = Deterministic(h*y0 + (1-h)*y1, observed = true)
+
+probmodel = ProbModel(vars = [w,w0,p,x,h,y0,y1,y]) 
+probmodel.compile()
+data = probmodel.sample(size = 1000)
+probmodel.fit(data)
+```
+
+A special case, it is the inclusion of deep neural networks within our probabilistic model to capture complex non-linear dependencies between the random variables. This is extensively treated in the the Guide to Bayesian Deep Learning. 
 
 Finally, a probablistic model have the following methods:
 
@@ -204,6 +235,10 @@ from models import model_from_json
 json_string = model.to_json()
 model = model_from_json(json_string)
 ```
+
+----
+
+## Guide to Plateau Probabilistic Models
 
 ----
 
@@ -314,11 +349,61 @@ More flexibility is also available by defining how each mini batch is process by
 
 ## Guide to Compositional Inference
 
-## Guide to Plateau Probabilistic Models
+----
 
 ## Guide to Bayesian Deep Learning
 
-## Guide to Data Handling
+INFERPY inherits Edward's approach for representing probabilistic models as (stochastic) computational graphs. As describe above, a random variable $x$ is associated to a tensor $x^*$ in the computational graph handled by TensorFlow, where the computations takes place. This tensor $x^*$ contains the samples of the random variable $x$, i.e. $x^* \sim p(x|\theta)$. In this way, random variables can be involved in complex deterministic operations containing deep neural networks, math operations and another libraries compatible with Tensorflow (such as Keras).
+
+Bayesian deep learning or deep probabilistic programming enbraces the idea of employing deep neural networks within a probabilistic model in order to capture complex non-linear dependencies between the variables. 
+
+InferPy's API gives support to this powerful and flexible modelling framework. Let us start by showing how a variational autoencoder over binary data can be defined by mixing Kearas and InferPy code. 
+
+```python
+from keras.models import Sequential
+from keras.layers import Dense, Activation
+
+M = 1000
+dim_z = 10
+dim_x = 100
+
+#Define the decoder network
+input_z  = keras.layers.Input(input_dim = dim_z)
+layer = keras.layers.Dense(256, activation = 'relu')(input_z)
+output_x = keras.layers.Dense(dim_x)(layer)
+decoder_nn = keras.models.Model(inputs = input, outputs = output_x)
+
+#define the generative model
+with inf.replicate(size = N)
+ z = Normal(0,1, dim = dim_z)
+ x = Bernoulli(logits = decoder_nn(z.value()), observed = true)
+
+#define the encoder network
+input_x  = keras.layers.Input(input_dim = d_x)
+layer = keras.layers.Dense(256, activation = 'relu')(input_x)
+output_loc = keras.layers.Dense(dim_z)(layer)
+output_scale = keras.layers.Dense(dim_z, activation = 'softplus')(layer)
+encoder_loc = keras.models.Model(inputs = input, outputs = output_mu)
+encoder_scale = keras.models.Model(inputs = input, outputs = output_scale)
+
+#define the Q distribution
+q_z = Normal(loc = encoder_loc(x.value()), scale = encoder_scale(x.value()))
+
+#compile and fit the model with training data
+probmodel.compile(infMethod = 'KLqp', Q = {z : q_z})
+probmodel.fit(x_train)
+
+#extract the hidden representation from a set of observations
+hidden_encoding = probmodel.predict(x_pred, targetvar = z)
+```
+
+In this case, the parameters of the encoder and decoder neural networks are automatically managed by Keras. These parameters are them treated as model parameters and not exposed to the user. In consequence, we can not be Bayesian about them by defining specific prior distributions. In this example (?) , we show how we can avoid that by introducing extra complexity in the code. 
+
+Other examples of probabilisitc models using deep neural networks are:
+ - Bayesian Neural Networks
+ - Mixture Density Networks
+ - ...
+
 ----
 ## Guide to Validation of Probabilistic Models
 
@@ -357,6 +442,10 @@ def mean_absolute_error(posterior, observations, weights=None):
 
 mse, mae = probmodel.evaluate(test_data, targetvar = y, metrics = ['mse', mean_absolute_error])
 ```
+
+----
+
+## Guide to Data Handling
 
 
 
