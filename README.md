@@ -1,8 +1,8 @@
-# INFERPY: A Python Library for Probabilistic Modelling
+# InferPy: A Python Library for Probabilistic Modelling
 
-INFERPY is a high-level API for probabilistic modelling written in Python and capable of running on top of Edward, Tensorflow and Apache Spark. INFERPY's API is strongly inspired by Keras and it has a focus on enabling flexible data processing, simple probablistic modelling, scalable inference and robust model validation. 
+InferPy is a high-level API for probabilistic modelling written in Python and capable of running on top of Edward, Tensorflow and Apache Spark. InferPy's API is strongly inspired by Keras and it has a focus on enabling flexible data processing, simple probablistic modelling, scalable inference and robust model validation. 
 
-Use INFERPY is you need a probabilistic programming language that:
+Use InferPy is you need a probabilistic programming language that:
  - Has a simple and user friendly API (inspired by Keras).
  - Allows for easy and fast prototyping of simple probabilistic models or complex probabilistics constructs containing deep neural networks (by relying on Edward).   
  - Run seamlessly on CPU and GPU (by relying on Tensorflow). 
@@ -10,9 +10,9 @@ Use INFERPY is you need a probabilistic programming language that:
 
 ----
 
-## Getting Started: 30 seconds to INFERPY 
+## Getting Started: 30 seconds to InferPy 
 
-The core data structures of INFERPY is a a **probabilistic model**, defined as a set of **random variables** with a conditional independence structure. Like in Edward, a **random varible** is an object parameterized by a set of tensors. 
+The core data structures of InferPy is a a **probabilistic model**, defined as a set of **random variables** with a conditional independence structure. Like in Edward, a **random varible** is an object parameterized by a set of tensors. 
 
 Let's look at a simple examle. We start defining hhe **prior** over the parameters of a **mixture of Gaussians** model: 
 
@@ -452,7 +452,41 @@ mse, mae = probmodel.evaluate(test_data, targetvar = y, metrics = ['mse', mean_a
 
 # Probabilistic Model Zoo
 
+## Mixture of Gaussians
+
+```python
+d=3
+K=10
+N=1000
+#Prior
+with inf.replicate(size = K):
+    #Shape [K,d]
+    mu = Normal(loc = 0, scale =1, dim=d)
+    #Shape [K,d]
+    sigma = InverseGamma(concentration = 1, rate = 1, dim=d)
+
+# Shape [1,K]
+p = Dirichlet(np.ones(K))
+
+#Data Model
+with inf.replicate(size = N):
+    # Shape [N,1]
+    z_n = Multinomial(probs = p)
+    # Shape [N,d]
+    x_n = Normal(loc = bs.gather(mu,z_n), scale = bs.gather(sigma,z_n), observed = true)
+    
+model = ProbModel(vars = [p,mu,sigma,z_n, x_n]) 
+
+data = model.sample(size=N)
+
+log_prob = model.log_prob(sample)
+
+model.compile(infMethod = 'KLqp')
+
+model.fit(data)
+```
 
 
+## Linear Factor Model (PCA)
 
 
