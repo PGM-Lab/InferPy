@@ -33,7 +33,7 @@ p = Dirichlet(np.ones(K))
 ```
 The **shape** argument in the constructor defines the number (and dimension) of variables contained in a random variable object. For example, **mu** contains K*d varaibles laid in a Kxd matrix. 
 
-INFERPY supports the definition of **plateau notation** by using the construct ```with inf.replicate(size = N) ```, which replicates N times the random variables enclosed within this anotator. This is usefuel when defining the model for the data:
+InferPy supports the definition of **plateau notation** by using the construct ```with inf.replicate(size = N) ```, which replicates N times the random variables enclosed within this anotator. This is usefuel when defining the model for the data:
 
 ```python
 # Number of observations
@@ -103,22 +103,22 @@ cluster_assignments = probmodel.predict(test_data, targetvar = h)
 
 ## Guiding Principles
 
-- INFERPY's probability distribuionts are mainly inherited from TensorFlow Distribuitons package. INFERPY's API is fully compatible with tf.distributions' API. The 'shape' argument was added as a simplifing option when defining multidimensional distributions. 
-- INFERPY directly relies on top of Edward's inference engine and includes all the inference algorithms included in this package. As Edward's inference engine relies on TensorFlow computing engine, INFERPY also relies on it too.  
-- INFERPY seamsly process data contained in a numpy array, Tensorflow's tensor, Tensorflow's Dataset (tf.Data API) or Apache Spark's DataFrame. 
-- INFERPY also includes novel distributed statistical inference algorithms by combining Tensorflow and Apache Spark computing engines. 
+- InferPy's probability distribuionts are mainly inherited from TensorFlow Distribuitons package. InferPy's API is fully compatible with tf.distributions' API. The 'shape' argument was added as a simplifing option when defining multidimensional distributions. 
+- InferPy directly relies on top of Edward's inference engine and includes all the inference algorithms included in this package. As Edward's inference engine relies on TensorFlow computing engine, InferPy also relies on it too.  
+- InferPy seamsly process data contained in a numpy array, Tensorflow's tensor, Tensorflow's Dataset (tf.Data API) or Apache Spark's DataFrame. 
+- InferPy also includes novel distributed statistical inference algorithms by combining Tensorflow and Apache Spark computing engines. 
 
 ----
 
 ## Getting Started
 ### Guide to Building Probabilistic Models
 
-INFERPY focuses on *hirearchical probabilistic models* which usually are structured in two different layers:
+InferPy focuses on *hirearchical probabilistic models* which usually are structured in two different layers:
 
 - A **prior model** defining a joint distribution $p(\theta)$ over the global parameters of the model, $\theta$.  
 - A **data or observation model** defining a joint conditional distribution $p(x,h|\theta)$ over the observed quantities $x$ and the the local hidden variables $h$ governing the observation $x$. This data model should be specified in a single-sample basis. There are many models of interest without local hidden variables, in that case we simply specify the conditional $p(x|\theta)$. More flexible ways of defining the data model can be found in ?. 
 
-This is how a mixture of Gaussians models is denfined in INFERPY: 
+This is how a mixture of Gaussians models is denfined in InferPy: 
 ```python
 import numpy as np
 import inferpy as inf
@@ -242,13 +242,13 @@ model = model_from_json(json_string)
 
 The Inference API defines the set of algorithms and methods used to perform inference in a probabilistic model $p(x,z,\theta)$ (where $x$ are the observations, $z$ the local hidden varaibles, and $\theta$ the global parameters of the model). More precesily, the inference problem redues to compute the posterior probability over the latent variables given a data sample $p(z,\theta|x_{train}), because by looking at these posteriors we can uncover the hidden structure in the data. For the running example, $p(mu|x_{train})$ tells us where the centroids of the data while $p(z_n|x_{train}$ shows us to which centroid belongs every data point. 
 
-INFERPY inherits Edward's approach an consider approximate inference solutions, 
+InferPy inherits Edward's approach an consider approximate inference solutions, 
 
 $$ q(z,\theta) \approx p(z,\theta | x_{train})$$, 
 
 in which the task is to approximate the posterior $p(z,\theta | x_{train})$ using a family of distritions, $q(z,\theta; \labmda)$, indexed by parameters $\lambda$. 
 
-A probabilistic model in INFERPY should be compiled before we can access these posteriors,
+A probabilistic model in InferPy should be compiled before we can access these posteriors,
 
 ```python
  probmodel = ProbModel(vars = [theta,mu,sigma,z_n, x_n]) 
@@ -259,7 +259,7 @@ A probabilistic model in INFERPY should be compiled before we can access these p
 
 The compilation process allows to choose the inference algorithm through the 'infMethod' argument. In the above example we use 'Klqp', **black box variational inference**. Other inference algorithms include: 'NUTS', 'MCMC', 'KLpq', etc. Look at ? for a detailed description of the available inference algorithms. 
 
-Following INFERPY guiding principles, users can further configure the inference algorithm. 
+Following InferPy guiding principles, users can further configure the inference algorithm. 
 
 First, they can define they family 'Q' of approximating distributions, 
 
@@ -296,7 +296,7 @@ Inspired by Keras semantics, we can furhter configuration of the inference algor
 
 Have a look at Inference Zoo to explore other configuration options. 
 
-In the last part of this guide, we highlight that INFERPY directly builds on top of Edward's compositionality idea to design complex infererence algorithms. 
+In the last part of this guide, we highlight that InferPy directly builds on top of Edward's compositionality idea to design complex infererence algorithms. 
 
 ```python
  probmodel = ProbModel(vars = [theta,mu,sigma,z_n, x_n]) 
@@ -353,7 +353,7 @@ Talk about inference as optimization, inference.update as a gradient step, etc..
 
 ## Guide to Bayesian Deep Learning
 
-INFERPY inherits Edward's approach for representing probabilistic models as (stochastic) computational graphs. As describe above, a random variable $x$ is associated to a tensor $x^*$ in the computational graph handled by TensorFlow, where the computations takes place. This tensor $x^*$ contains the samples of the random variable $x$, i.e. $x^* \sim p(x|\theta)$. In this way, random variables can be involved in complex deterministic operations containing deep neural networks, math operations and another libraries compatible with Tensorflow (such as Keras).
+InferPy inherits Edward's approach for representing probabilistic models as (stochastic) computational graphs. As describe above, a random variable $x$ is associated to a tensor $x^*$ in the computational graph handled by TensorFlow, where the computations takes place. This tensor $x^*$ contains the samples of the random variable $x$, i.e. $x^* \sim p(x|\theta)$. In this way, random variables can be involved in complex deterministic operations containing deep neural networks, math operations and another libraries compatible with Tensorflow (such as Keras).
 
 Bayesian deep learning or deep probabilistic programming enbraces the idea of employing deep neural networks within a probabilistic model in order to capture complex non-linear dependencies between the variables. 
 
