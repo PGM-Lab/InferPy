@@ -454,6 +454,9 @@ mse, mae = probmodel.evaluate(test_data, targetvar = y, metrics = ['mse', mean_a
 
 ## Mixture of Gaussians
 
+![Mixture of Gaussians](https://github.com/amidst/InferPy/blob/master/docs/imgs/MoG.png)
+
+Version A 
 ```python
 d=3
 K=10
@@ -484,9 +487,226 @@ log_prob = model.log_prob(sample)
 model.compile(infMethod = 'KLqp')
 
 model.fit(data)
+
+print(probmodel.posterior([mu,sigma]))
+
 ```
 
+Version B
+```python
+d=3
+K=10
+N=1000
+#Prior
+mu = Normal(loc = 0, scale =1, shape = [K,d])
+sigma = InverseGamma(concentration = 1, rate = 1, shape = [K,d])
+
+# Shape [1,K]
+p = Dirichlet(np.ones(K))
+
+#Data Model
+z_n = Multinomial(probs = p, shape = [N,1])
+# Shape [N,d]
+x_n = Normal(loc = bs.gather(mu,z_n), scale = bs.gather(sigma,z_n), observed = true)
+    
+probmodel = ProbModel(vars = [p,mu,sigma,z_n, x_n]) 
+
+data = probmodel.sample(size=N)
+
+log_prob = probmodel.log_prob(sample)
+
+probmodel.compile(infMethod = 'KLqp')
+
+probmodel.fit(data)
+
+print(probmodel.posterior([mu,sigma]))
+```
+
+---
 
 ## Linear Factor Model (PCA)
 
+![Linear Factor Model](https://github.com/amidst/InferPy/blob/master/docs/imgs/LinearFactor.png)
 
+```python
+K = 5
+d = 10
+N=200
+
+with inf.replicate(size = K)
+    # Shape [K,d]
+    mu = Normal(0,1, dim = d)
+
+# Shape [1,d]
+mu0 = Normal(0,1, dim = d)
+
+# Shape [1,1]
+sigma = InverseGamma(1,1, dim = 1)
+
+with inf.replicate(size = N):
+    # Shape [N,K]
+    w_n = Normal(0,1, dim = K)
+    # inf.matmul(w_n,mu) has shape [N,K] x [K,d] = [N,d] by broadcasting mu. 
+    # Shape [1,d] + [N,d] = [N,d] by broadcasting mu0
+    x = Normal(mu0 + inf.matmul(w,mu), sigma, observed = true)
+
+probmodel = ProbModel([mu,mu0,sigma,w, x]) 
+
+data = probmodel.sample(size=N)
+
+log_prob = probmodel.log_prob(sample)
+
+probmodel.compile(infMethod = 'KLqp')
+
+probmodel.fit(data)
+
+print(probmodel.posterior([mu,mu0]))
+```
+
+---
+
+## PCA with ARD Prior (PCA)
+
+```python
+K = 5
+d = 10
+N=200
+
+with inf.replicate(size = K)
+    # Shape [K,d]
+    mu = Normal(0,1, dim = d)
+
+# Shape [1,d]
+mu0 = Normal(0,1, dim = d)
+
+# Shape [1,1]
+sigma = InverseGamma(1,1, dim = 1)
+
+with inf.replicate(size = N):
+    # Shape [N,K]
+    w_n = Normal(0,1, dim = K)
+    # inf.matmul(w_n,mu) has shape [N,K] x [K,d] = [N,d] by broadcasting mu. 
+    # Shape [1,d] + [N,d] = [N,d] by broadcasting mu0
+    x = Normal(mu0 + inf.matmul(w,mu), sigma, observed = true)
+
+probmodel = ProbModel([mu,mu0,sigma,w, x]) 
+
+data = probmodel.sample(size=N)
+
+log_prob = probmodel.log_prob(sample)
+
+probmodel.compile(infMethod = 'KLqp')
+
+probmodel.fit(data)
+
+print(probmodel.posterior([mu,mu0]))
+```
+
+---
+
+## Mixed Membership Model
+
+![Mixed Membership Model](https://github.com/amidst/InferPy/blob/master/docs/imgs/LinearFactor.png)
+
+```python
+K = 5
+d = 10
+N=200
+M=50
+
+with inf.replicate(size = K)
+    #Shape = [K,d]
+    mu = Normal(0,1, dim = d)
+    #Shape = [K,d]
+    sigma = InverseGamma(1,1, dim = d)
+
+with inf.replicate(size = N):
+    #Shape = [N,K]
+    theta_n = Dirichlet(np.ones(K))
+    with inf.replicate(size = M):
+        # Shape [N*M,1]
+        z_mn = Multinomial(theta_n)
+        # Shape [N*M,d]
+        x = Normal(tf.gather(mu,z_mn), tf.gather(sigma,z_mn), observed = true)
+
+probmodel = ProbModel([mu,sigma,theta_n,z_mn,x]) 
+
+data = probmodel.sample(size=N)
+
+log_prob = probmodel.log_prob(sample)
+
+probmodel.compile(infMethod = 'KLqp')
+
+probmodel.fit(data)
+
+print(probmodel.posterior([mu,sigma]))
+
+```
+
+---
+
+## Matrix Factorization
+
+![Matrix Factorization Model](https://github.com/amidst/InferPy/blob/master/docs/imgs/MatrixFactorization.png)
+
+Version A
+```python
+N=200
+M=50
+K=5
+
+with inf.replicate(name = 'A', size = M)
+    # Shape [M,K]
+    gamma_m = Normal(0,1, dim = K)
+
+with inf.replicate(name = 'B', size = N):
+    # Shape [N,K]
+    w_n = Normal(0,1, dim = K)
+    
+with inf.replicate(compound = ['A', 'B']):
+    # x_mn has shape [N,K] x [K,M] = [N,M]
+    x_nm = Normal(tf.matmul(w_n,gamma_m, transpose_b = true), 1, observed = true)
+
+
+probmodel = ProbModel([w_n,gamma_m,x_nm]) 
+
+data = probmodel.sample(size=N)
+
+log_prob = probmodel.log_prob(sample)
+
+probmodel.compile(infMethod = 'KLqp')
+
+probmodel.fit(data)
+
+print(probmodel.posterior([w_n,gamma_m]))
+
+```
+
+Version B
+```python
+N=200
+M=50
+K=5
+
+# Shape [M,K]
+gamma_m = Normal(0,1, shape = [M,K])
+
+# Shape [N,K]
+w_n = Normal(0,1, shape = [N,K])
+    
+# x_mn has shape [N,K] x [K,M] = [N,M]
+x_nm = Normal(tf.matmul(w_n,gamma_m, transpose_b = true), 1, observed = true)
+
+probmodel = ProbModel([w_n,gamma_m,x_nm]) 
+
+data = probmodel.sample(size=N)
+
+log_prob = probmodel.log_prob(sample)
+
+probmodel.compile(infMethod = 'KLqp')
+
+probmodel.fit(data)
+
+print(probmodel.posterior([w_n,gamma_m]))
+
+```
