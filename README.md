@@ -73,7 +73,7 @@ probmodel.compile(infMethod = infklqp)
 
 Every random variable object is equipped with methods such as *log_prob()* and *sample()*. Similarly, a probabilistic model is also equipped with the same methods. Then, we can sample data from the model anbd compute the log-likelihood of a data set:
 ```python
-data = probmodel.sample(vars = [x_n], size = 100)
+data = probmodel.sample(size = 100)
 log_like = probmodel.log_prob(data)
 ```
 
@@ -355,7 +355,7 @@ Have a look again at Inference Zoo to explore other complex compositional option
 
 InferPy inherits Edward's approach for representing probabilistic models as (stochastic) computational graphs. As describe above, a random variable $x$ is associated to a tensor $x^*$ in the computational graph handled by TensorFlow, where the computations takes place. This tensor $x^*$ contains the samples of the random variable $x$, i.e. $x^* \sim p(x|\theta)$. In this way, random variables can be involved in complex deterministic operations containing deep neural networks, math operations and another libraries compatible with Tensorflow (such as Keras).
 
-Bayesian deep learning or deep probabilistic programming enbraces the idea of employing deep neural networks within a probabilistic model in order to capture complex non-linear dependencies between the variables. 
+Bayesian deep learning or deep probabilistic programming enbraces the idea of employing deep neural networks within a probabilistic model in order to capture complex non-linear dependencies between variables. 
 
 InferPy's API gives support to this powerful and flexible modelling framework. Let us start by showing how a variational autoencoder over binary data can be defined by mixing Keras and InferPy code. 
 
@@ -403,6 +403,38 @@ Other examples of probabilisitc models using deep neural networks are:
  - Bayesian Neural Networks
  - Mixture Density Networks
  - ...
+ 
+ 
+We can also define a Keras model whose input is an observation and its output its the expected value of the posterior over the hidden variables, $E[p(z|x)]$, by using the method 'toKeras', as a way to create more expressive models. 
+
+```python
+from keras.layers import Conv2D, MaxPooling2D, Flatten
+from keras.layers import Input, LSTM, Embedding, Dense
+from keras.models import Model, Sequential
+
+#We define a Keras' model whose input is data sample 'x' and the output is the encoded vector E[p(z|x)]
+variational_econder_keras = probmodel.toKeras(targetvar = z)
+
+vision_model = Sequential()
+vision_model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
+vision_model.add(Conv2D(64, (3, 3), activation='relu'))
+vision_model.add(MaxPooling2D((2, 2)))
+vision_model.add(Flatten())
+
+# Now let's get a tensor with the output of our vision model:
+encoded_image = vision_model(input_x)
+
+# Let's concatenate the vae vector and the convolutional image vector:
+merged = keras.layers.concatenate([variational_econder_keras, encoded_image])
+
+# And let's train a logistic regression over 100 categories on top:
+output = Dense(100, activation='softmax')(merged)
+
+# This is our final model:
+classifier = Model(inputs=[input_x], outputs=output)
+
+# The next stage would be training this model on actual data.
+```
 
 ----
 ## Guide to Validation of Probabilistic Models
@@ -413,7 +445,7 @@ The main tool for model validation consists on analyzing the posterior predictiv
 
 $$ p(y_{test}, x_{test}|y_{train}, x_{train}) = \int p(y_{test}, x_{test}|z,\theta)p(z,\theta|y_{train}, x_{train}) dzd\theta $$.
 
-This posterior predictive distribution can be used to measure how well the model fits an independent dataset using the test marginallog-likelihood, $\ln p(y_{test}, x_{test}|y_{train}, x_{train})$,  
+This posterior predictive distribution can be used to measure how well the model fits an independent dataset using the test marginal log-likelihood, $\ln p(y_{test}, x_{test}|y_{train}, x_{train})$,  
 
 ```python
 log_like = probmodel.evaluate(test_data, metrics = ['log_likelihood'])
@@ -436,10 +468,8 @@ Custom evaluation metrics can also be defined,
 ```python
 def mean_absolute_error(posterior, observations, weights=None):
     predictions = tf.map_fn(lambda x : x.getMean(), posterior)
-    
     return tf.metrics.mean_absolute_error(observations, predictions, weights)
     
-
 mse, mae = probmodel.evaluate(test_data, targetvar = y, metrics = ['mse', mean_absolute_error])
 ```
 
