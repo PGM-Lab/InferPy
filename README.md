@@ -54,7 +54,7 @@ Once the random variables of the  model are defined, the probablitic model itsel
 ```python
 from inferpy import ProbModel
 probmodel = ProbModel(vars = [p,mu,sigma,z_n,x_n]) 
-probmodel.compile(infMethod = 'KLqp'')
+probmodel.compile(infMethod = 'KLqp')
 ```
 During the model compilation we specify different inference methods that will be used to learn the model. 
 
@@ -295,8 +295,8 @@ Inspired by Keras semantics, we can furhter configure the inference algorithm,
  q_sigma = inf.inference.Q.PointMass(bind = sigma, initializer='ones')
  
  sgd = keras.optimizers.SGD(lr=0.01, momentum=0.9, nesterov=True)
- infkl_qp = inf.inference.KLqp(optimizer = sgd, dataSize = N)
- probmodel.compile(infMethod = infkl_qp, Q = [q_mu, q_sigma, q_z_n])
+ infkl_qp = inf.inference.KLqp(Q = [q_mu, q_sigma, q_z_n], optimizer = sgd, dataSize = N)
+ probmodel.compile(infMethod = infkl_qp)
 
  model.fit(x_train)
  posterior_mu = probmodel.posterior(mu)
@@ -313,8 +313,8 @@ In the last part of this guide, we highlight that InferPy directly builds on top
  q_mu = inf.inference.Q.PointMass(bind = mu, initializer='random_unifrom')
  q_sigma = inf.inference.Q.PointMass(bind = sigma, initializer='ones')
  
- infkl_qp = inf.inference.KLqp(optimizer = 'sgd', Q = [q_z_n], innerIter = 10)
- infMAP = inf.inference.MAP(optimizer = 'sgd', Q = [q_mu, q_sigma])
+ infkl_qp = inf.inference.KLqp(Q = [q_z_n], optimizer = 'sgd', innerIter = 10)
+ infMAP = inf.inference.MAP(Q = [q_mu, q_sigma], optimizer = 'sgd')
 
  probmodel.compile(infMethod = [infkl_qp,infMAP])
  
