@@ -24,16 +24,19 @@ from inferpy.models import Normal, InverseGamma, Dirichlet
 
 # K defines the number of components. 
 K=10
-#Prior for the means of the Gaussians 
-mu = Normal(loc = 0, scale = 1, shape=[K,d])
-#Prior for the precision of the Gaussians 
-sigma = InverseGamma(concentration = 1, rate = 1, shape=[K,d])
+with inf.replicate(size = K)
+    #Prior for the means of the Gaussians 
+    mu = Normal(loc = 0, scale = 1)
+    #Prior for the precision of the Gaussians 
+    sigma = InverseGamma(concentration = 1, rate = 1)
+    
 #Prior for the mixing proportions
 p = Dirichlet(np.ones(K))
 ```
-The **shape** argument in the constructor defines the number (and dimension) of variables contained in a random variable object. For example, **mu** contains K*d varaibles laid in a Kxd matrix. 
+InferPy supports the definition of **plateau notation** by using the construct ```with inf.replicate(size = K) ```, which replicates K times the random variables enclosed within this anotator. In that way, we define a bunch of K different Gaussians and InverseGamma. 
 
-InferPy supports the definition of **plateau notation** by using the construct ```with inf.replicate(size = N) ```, which replicates N times the random variables enclosed within this anotator. This is usefuel when defining the model for the data:
+
+This ```with inf.replicate(size = N) ``` construct is also usefuel when defining the model for the data:
 
 ```python
 # Number of observations
