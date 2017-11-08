@@ -33,7 +33,7 @@ with inf.replicate(size = K)
 #Prior for the mixing proportions
 p = Dirichlet(np.ones(K))
 ```
-InferPy supports the definition of **plateau notation** by using the construct ```with inf.replicate(size = K) ```, which replicates K times the random variables enclosed within this anotator. In that way, we define a bunch of K different Gaussians and InverseGamma. 
+InferPy supports the definition of **plateau notation** by using the construct ```with inf.replicate(size = K) ```, which replicates K times the random variables enclosed within this anotator. Every replicated variable is assumed to be **independent**.
 
 
 This ```with inf.replicate(size = N) ``` construct is also usefuel when defining the model for the data:
@@ -48,7 +48,7 @@ with inf.replicate(size = N)
     # Sample the observed value from the Gaussian of the selected component.  
     x_n = Normal(loc = tf.gather(mu,z_n), scale = tf.gather(sigma,z_n), observed = true)
 ```
-As commented above, the variable z_n and x_n are surrounded by a **with** statement to inidicate that the defined random variables will be reapeatedly used in each data sample.
+As commented above, the variable z_n and x_n are surrounded by a **with** statement to inidicate that the defined random variables will be reapeatedly used in each data sample. In this case, every replicated variable is conditionally idependent given the variables mu and sigma defined outside the **with** statement.  
 
 Once the random variables of the  model are defined, the probablitic model itself can be created and compiled. The probabilistic model defines a joint probability distribuiton over all these random variables.  
 ```python
@@ -149,7 +149,9 @@ probmodel = ProbModel(prior = [p,mu,sigma,z_n,x_n])
 probmodel.compile()
 ```
 
-The ```with inf.replicate(size = N)``` sintaxis is used to replicate the random variables contained within this construct. It follows from the so-called *plateau notation* to define the data generation part of a probabilistic model. Internally, ```with inf.replicate(size = N)``` construct modifies the random variable shape by adding an extra dimension. For the above example, z_n's shape is [N,1], and x_n's shape is [N,d].  
+The ```with inf.replicate(size = N)``` sintaxis is used to replicate the random variables contained within this construct. It follows from the so-called *plateau notation* to define the data generation part of a probabilistic model. Every replicated variable is **conditionally idependent** given the previous random variables (if any) defined outside the **with** statement. 
+
+Internally, ```with inf.replicate(size = N)``` construct modifies the random variable shape by adding an extra dimension. For the above example, z_n's shape is [N,1], and x_n's shape is [N,d].  
 
 Following Edward's approach, a random variable $x$ is an object parametrized by a tensor $\theta$ (i.e. a TensorFlow's tensor or numpy's ndarray). The number of random variables in one object is determined by the dimensions of its parameters (like in Edward) or by the 'shape' or 'dim' argument (inspired by PyMC3 and Keras):
 
@@ -480,6 +482,38 @@ mse, mae = probmodel.evaluate(test_data, targetvar = y, metrics = ['mse', mean_a
 
 ## Guide to Data Handling
 
+```python
+import numpy as np
+import inferpy as inf
+from inferpy.models import Normal, InverseGamma, Dirichlet
+
+#We first define the probabilistic model 
+with inf.ProbModel() as probmodel:
+    # K defines the number of components. 
+    K=10
+    #Prior for the means of the Gaussians 
+    mu = Normal(loc = 0, scale = 1, shape=[K,d])
+    #Prior for the precision of the Gaussians 
+    invgamma = InverseGamma(concentration = 1, rate = 1, shape=[K,d])
+    #Prior for the mixing proportions
+    theta = Dirichlet(np.ones(K))
+
+    # Number of observations
+    N = 1000
+    #data Model
+    with inf.replicate(size = N, batch_size = 100)
+        # Sample the component indicator of the mixture. This is a latent variable that can not be observed
+        z_n = Multinomial(probs = theta)
+        # Sample the observed value from the Gaussian of the selected component.  
+        x_n = Normal(loc = tf.gather(mu,z_n), scale = tf.gather(invgamma,z_n), observed = true)
+
+#compile the probabilistic model
+probmodel.compile(infAlg = 'klqp')
+
+#fit the model with data
+probmodel.fit(data)
+
+```
 
 ----
 
