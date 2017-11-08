@@ -70,7 +70,7 @@ The inference method can be further configure. But, as in Keras, a core principl
 from keras.optimizers import SGD
 probmodel = ProbModel(vars = [p,mu,sigma,z_n,x_n]) 
 sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
-infklqp = inf.inference.KLqp(optimizer = sgd, dataSize = N)
+infklqp = inf.inference.KLqp(optimizer = sgd, loss="ELBO")
 probmodel.compile(infMethod = infklqp)
 ```
 
@@ -277,7 +277,7 @@ First, they can define they family 'Q' of approximating distributions,
  q_z_n = inf.inference.Q.Multinomial(bind = z_n, initializer='random_unifrom')
  q_mu = inf.inference.Q.PointMass(bind = mu, initializer='random_unifrom')
  q_sigma = inf.inference.Q.PointMass(bind = sigma, initializer='ones')
-  
+ 
  probmodel.compile(infMethod = 'KLqp', Q = [q_mu, q_sigma, q_z_n])
  model.fit(x_train)
  posterior_mu = probmodel.posterior(mu)
@@ -295,7 +295,7 @@ Inspired by Keras semantics, we can furhter configure the inference algorithm,
  q_sigma = inf.inference.Q.PointMass(bind = sigma, initializer='ones')
  
  sgd = keras.optimizers.SGD(lr=0.01, momentum=0.9, nesterov=True)
- infkl_qp = inf.inference.KLqp(Q = [q_mu, q_sigma, q_z_n], optimizer = sgd, dataSize = N)
+ infkl_qp = inf.inference.KLqp(Q = [q_mu, q_sigma, q_z_n], optimizer = sgd, loss="ELBO")
  probmodel.compile(infMethod = infkl_qp)
 
  model.fit(x_train)
