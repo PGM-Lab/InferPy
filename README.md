@@ -488,7 +488,7 @@ import inferpy as inf
 from inferpy.models import Normal, InverseGamma, Dirichlet
 
 #We first define the probabilistic model 
-with inf.ProbModel() as probmodel:
+with inf.ProbModel() as mixture_model:
     # K defines the number of components. 
     K=10
     #Prior for the means of the Gaussians 
@@ -508,10 +508,10 @@ with inf.ProbModel() as probmodel:
         x_n = Normal(loc = tf.gather(mu,z_n), scale = tf.gather(invgamma,z_n), observed = true)
 
 #compile the probabilistic model
-probmodel.compile(infAlg = 'klqp')
+mixture_model.compile(infAlg = 'klqp')
 
 #fit the model with data
-probmodel.fit(data)
+mixture_model.fit(data)
 
 ```
 
