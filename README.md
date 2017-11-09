@@ -46,7 +46,7 @@ with inf.replicate(size = N)
     # Sample the component indicator of the mixture. This is a latent variable that can not be observed
     z_n = Multinomial(probs = p)
     # Sample the observed value from the Gaussian of the selected component.  
-    x_n = Normal(loc = tf.gather(mu,z_n), scale = tf.gather(sigma,z_n), observed = true)
+    x_n = Normal(loc = inf.gather(mu,z_n), scale = inf.gather(sigma,z_n), observed = true)
 ```
 As commented above, the variable z_n and x_n are surrounded by a **with** statement to inidicate that the defined random variables will be reapeatedly used in each data sample. In this case, every replicated variable is conditionally idependent given the variables mu and sigma defined outside the **with** statement.  
 
