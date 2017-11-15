@@ -648,7 +648,7 @@ print(probmodel.posterior([w0,w]))
 
 ## Mixture of Gaussians
 
-![Mixture of Gaussians](https://github.com/amidst/InferPy/blob/master/docs/imgs/MoG.png)
+![Mixture of Gaussians](https://github.com/amidst/InferPy/blob/master/docs/_static/imgs/MoG.png)
 
 Version A 
 ```python
@@ -720,7 +720,7 @@ print(probmodel.posterior([mu,sigma]))
 
 ## Linear Factor Model (PCA)
 
-![Linear Factor Model](https://github.com/amidst/InferPy/blob/master/docs/imgs/LinearFactor.png)
+![Linear Factor Model](https://github.com/amidst/InferPy/blob/master/docs/_static/imgs/LinearFactor.png)
 
 ```python
 K = 5
@@ -801,7 +801,7 @@ print(probmodel.posterior([alpha,mu,mu0,sigma]))
 
 ## Mixed Membership Model
 
-![Mixed Membership Model](https://github.com/amidst/InferPy/blob/master/docs/imgs/LinearFactor.png)
+![Mixed Membership Model](https://github.com/amidst/InferPy/blob/master/docs/_static/imgs/LinearFactor.png)
 
 ```python
 K = 5
@@ -879,7 +879,7 @@ print(probmodel.posterior(dir))
 
 ## Matrix Factorization
 
-![Matrix Factorization Model](https://github.com/amidst/InferPy/blob/master/docs/imgs/MatrixFactorization.png)
+![Matrix Factorization Model](https://github.com/amidst/InferPy/blob/master/docs/_static/imgs/MatrixFactorization.png)
 
 Version A
 ```python
