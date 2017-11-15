@@ -89,15 +89,8 @@ todo_include_todos = False
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-#html_theme = 'bizstyle'
-html_theme = "sphinx_rtd_theme"
-html_theme_path = ["_themes", ]
-
-#html_theme = 'bootstrap'
-#html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
-
-
-
+html_theme = 'sphinx_rtd_theme'
+html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 
 # Theme options are theme-specific and customize the look and feel of a theme
@@ -110,6 +103,15 @@ html_theme_path = ["_themes", ]
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+# html_style_path = 'css/pytorch_theme.css'
+html_context = {
+    'css_files': [
+        '_static/css/inferpy_theme.css'
+    ],
+}
+
+
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
