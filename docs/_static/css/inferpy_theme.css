@@ -4750,6 +4750,7 @@ a.wy-text-neutral:hover {
 h1, h2, .rst-content .toctree-wrapper p.caption, h3, h4, h5, h6, legend {
     margin-top: 0;
     font-weight: 700;
+    color: #00402C;
     font-family:  FontAwesome, Arial, sans-serif
 }
 
