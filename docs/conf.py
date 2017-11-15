@@ -91,7 +91,7 @@ todo_include_todos = False
 #
 #html_theme = 'bizstyle'
 html_theme = "sphinx_rtd_theme"
-
+html_theme_path = ["_themes", ]
 
 #html_theme = 'bootstrap'
 #html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
