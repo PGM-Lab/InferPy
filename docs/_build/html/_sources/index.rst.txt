@@ -17,9 +17,11 @@ Use INFERPY is you need a probabilistic programming language that:
 
 
 .. toctree::
-	:maxdepth: 2
+   :glob:
+   :maxdepth: 2
+   :caption: Notes
 
-
+   notes/*
 
 
 Indices and tables

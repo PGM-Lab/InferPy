@@ -1,0 +1,523 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Getting Started &mdash; InferPy 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/inferpy_theme.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="InferPy 1.0 documentation" href="../index.html"/>
+        <link rel="prev" title="INFERPY: A Python Library for Probabilistic Modelling" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> InferPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Notes</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#seconds-to-inferpy">30 seconds to InferPy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#guiding-principles">Guiding Principles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#guide-to-building-probabilistic-models">Guide to Building Probabilistic Models</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">InferPy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Getting Started</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/notes/gettingstarted.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="seconds-to-inferpy">
+<h2>30 seconds to InferPy<a class="headerlink" href="#seconds-to-inferpy" title="Permalink to this headline">¶</a></h2>
+<p>The core data structures of InferPy is a a <strong>probabilistic model</strong>,
+defined as a set of <strong>random variables</strong> with a conditional independence
+structure. Like in Edward, a <strong>random varible</strong> is an object
+parameterized by a set of tensors.</p>
+<p>Let’s look at a simple examle. We start defining the <strong>prior</strong> of the
+parameters of a <strong>mixture of Gaussians</strong> model:</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">inferpy</span> <span class="k">as</span> <span class="nn">inf</span>
+<span class="kn">from</span> <span class="nn">inferpy.models</span> <span class="k">import</span> <span class="n">Normal</span><span class="p">,</span> <span class="n">InverseGamma</span><span class="p">,</span> <span class="n">Dirichlet</span>
+
+<span class="c1"># K defines the number of components.</span>
+<span class="n">K</span><span class="o">=</span><span class="mi">10</span>
+<span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="n">K</span><span class="p">)</span>
+    <span class="c1">#Prior for the means of the Gaussians</span>
+    <span class="n">mu</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="n">loc</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="c1">#Prior for the precision of the Gaussians</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">InverseGamma</span><span class="p">(</span><span class="n">concentration</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">rate</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="c1">#Prior for the mixing proportions</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">Dirichlet</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">K</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>InferPy supports the definition of <strong>plateau notation</strong> by using the
+construct <code class="docutils literal"><span class="pre">with</span> <span class="pre">inf.replicate(size</span> <span class="pre">=</span> <span class="pre">K)</span></code>, which replicates K times the
+random variables enclosed within this anotator. Every replicated
+variable is assumed to be <strong>independent</strong>.</p>
+<p>This <code class="docutils literal"><span class="pre">with</span> <span class="pre">inf.replicate(size</span> <span class="pre">=</span> <span class="pre">N)</span></code> construct is also usefuel when
+defining the model for the data:</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Number of observations</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="c1">#data Model</span>
+<span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="n">N</span><span class="p">)</span>
+    <span class="c1"># Sample the component indicator of the mixture. This is a latent variable that can not be observed</span>
+    <span class="n">z_n</span> <span class="o">=</span> <span class="n">Multinomial</span><span class="p">(</span><span class="n">probs</span> <span class="o">=</span> <span class="n">p</span><span class="p">)</span>
+    <span class="c1"># Sample the observed value from the Gaussian of the selected component.</span>
+    <span class="n">x_n</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="n">loc</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span><span class="n">z_n</span><span class="p">),</span> <span class="n">scale</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span><span class="n">z_n</span><span class="p">),</span> <span class="n">observed</span> <span class="o">=</span> <span class="n">true</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>As commented above, the variable z_n and x_n are surrounded by a
+<strong>with</strong> statement to inidicate that the defined random variables will
+be reapeatedly used in each data sample. In this case, every replicated
+variable is conditionally idependent given the variables mu and sigma
+defined outside the <strong>with</strong> statement.</p>
+<p>Once the random variables of the model are defined, the probablitic
+model itself can be created and compiled. The probabilistic model
+defines a joint probability distribuiton over all these random
+variables.</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">inferpy</span> <span class="k">import</span> <span class="n">ProbModel</span>
+<span class="n">probmodel</span> <span class="o">=</span> <span class="n">ProbModel</span><span class="p">(</span><span class="nb">vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">,</span><span class="n">mu</span><span class="p">,</span><span class="n">sigma</span><span class="p">,</span><span class="n">z_n</span><span class="p">,</span><span class="n">x_n</span><span class="p">])</span>
+<span class="n">probmodel</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">infMethod</span> <span class="o">=</span> <span class="s1">&#39;KLqp&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>During the model compilation we specify different inference methods that
+will be used to learn the model.</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">inferpy</span> <span class="k">import</span> <span class="n">ProbModel</span>
+<span class="n">probmodel</span> <span class="o">=</span> <span class="n">ProbModel</span><span class="p">(</span><span class="nb">vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">,</span><span class="n">mu</span><span class="p">,</span><span class="n">sigma</span><span class="p">,</span><span class="n">z_n</span><span class="p">,</span><span class="n">x_n</span><span class="p">])</span>
+<span class="n">probmodel</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">infMethod</span> <span class="o">=</span> <span class="s1">&#39;MCMC&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The inference method can be further configure. But, as in Keras, a core
+principle is to try make things reasonbly simple, while allowing the
+user the full control if needed.</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">keras.optimizers</span> <span class="k">import</span> <span class="n">SGD</span>
+<span class="n">probmodel</span> <span class="o">=</span> <span class="n">ProbModel</span><span class="p">(</span><span class="nb">vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">,</span><span class="n">mu</span><span class="p">,</span><span class="n">sigma</span><span class="p">,</span><span class="n">z_n</span><span class="p">,</span><span class="n">x_n</span><span class="p">])</span>
+<span class="n">sgd</span> <span class="o">=</span> <span class="n">SGD</span><span class="p">(</span><span class="n">lr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">decay</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">nesterov</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">infklqp</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">KLqp</span><span class="p">(</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">sgd</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;ELBO&quot;</span><span class="p">)</span>
+<span class="n">probmodel</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">infMethod</span> <span class="o">=</span> <span class="n">infklqp</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Every random variable object is equipped with methods such as
+<em>log_prob()</em> and <em>sample()</em>. Similarly, a probabilistic model is also
+equipped with the same methods. Then, we can sample data from the model
+anbd compute the log-likelihood of a data set:</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">probmodel</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">log_like</span> <span class="o">=</span> <span class="n">probmodel</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Of course, you can fit your model with a given data set:</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">probmodel</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data_training</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Update your probablistic model with new data using the Bayes’ rule:</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">probmodel</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">new_data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Query the posterior over a given random varible:</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">mu_post</span> <span class="o">=</span> <span class="n">probmodel</span><span class="o">.</span><span class="n">posterior</span><span class="p">(</span><span class="n">mu</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Evaluate your model according to a given metric:</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">log_like</span> <span class="o">=</span> <span class="n">probmodel</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">test_data</span><span class="p">,</span> <span class="n">metrics</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;log_likelihood&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Or compute predicitons on new data</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">cluster_assignments</span> <span class="o">=</span> <span class="n">probmodel</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_data</span><span class="p">,</span> <span class="n">targetvar</span> <span class="o">=</span> <span class="n">z_n</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="guiding-principles">
+<h2>Guiding Principles<a class="headerlink" href="#guiding-principles" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>InferPy’s probability distribuions are mainly inherited from
+TensorFlow Distribuitons package. InferPy’s API is fully compatible
+with tf.distributions’ API. The ‘shape’ argument was added as a
+simplifing option when defining multidimensional distributions.</li>
+<li>InferPy directly relies on top of Edward’s inference engine and
+includes all the inference algorithms included in this package. As
+Edward’s inference engine relies on TensorFlow computing engine,
+InferPy also relies on it too.</li>
+<li>InferPy seamsly process data contained in a numpy array, Tensorflow’s
+tensor, Tensorflow’s Dataset (tf.Data API) or Apache Spark’s
+DataFrame.</li>
+<li>InferPy also includes novel distributed statistical inference
+algorithms by combining Tensorflow and Apache Spark computing
+engines.</li>
+</ul>
+</div>
+<hr class="docutils" />
+<div class="section" id="guide-to-building-probabilistic-models">
+<h2>Guide to Building Probabilistic Models<a class="headerlink" href="#guide-to-building-probabilistic-models" title="Permalink to this headline">¶</a></h2>
+<p>InferPy focuses on <em>hirearchical probabilistic models</em> which usually are
+structured in two different layers:</p>
+<ul class="simple">
+<li>A <strong>prior model</strong> defining a joint distribution <span class="math">\(p(\theta)\)</span>
+over the global parameters of the model, <span class="math">\(\theta\)</span>.</li>
+<li>A <strong>data or observation model</strong> defining a joint conditional
+distribution <span class="math">\(p(x,h|\theta)\)</span> over the observed quantities
+<span class="math">\(x\)</span> and the the local hidden variables <span class="math">\(h\)</span> governing the
+observation <span class="math">\(x\)</span>. This data model should be specified in a
+single-sample basis. There are many models of interest without local
+hidden variables, in that case we simply specify the conditional
+<span class="math">\(p(x|\theta)\)</span>. More flexible ways of defining the data model
+can be found in ?.</li>
+</ul>
+<p>This is how a mixture of Gaussians models is denfined in InferPy:</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">inferpy</span> <span class="k">as</span> <span class="nn">inf</span>
+<span class="kn">from</span> <span class="nn">inferpy.models</span> <span class="k">import</span> <span class="n">Normal</span><span class="p">,</span> <span class="n">InverseGamma</span><span class="p">,</span> <span class="n">Dirichlet</span>
+
+<span class="c1"># K defines the number of components.</span>
+<span class="n">K</span><span class="o">=</span><span class="mi">10</span>
+<span class="c1">#Prior for the means of the Gaussians</span>
+<span class="n">mu</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="n">loc</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="n">K</span><span class="p">,</span><span class="n">d</span><span class="p">])</span>
+<span class="c1">#Prior for the precision of the Gaussians</span>
+<span class="n">invgamma</span> <span class="o">=</span> <span class="n">InverseGamma</span><span class="p">(</span><span class="n">concentration</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">rate</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="n">K</span><span class="p">,</span><span class="n">d</span><span class="p">])</span>
+<span class="c1">#Prior for the mixing proportions</span>
+<span class="n">theta</span> <span class="o">=</span> <span class="n">Dirichlet</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">K</span><span class="p">))</span>
+
+<span class="c1"># Number of observations</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="c1">#data Model</span>
+<span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="n">N</span><span class="p">)</span>
+    <span class="c1"># Sample the component indicator of the mixture. This is a latent variable that can not be observed</span>
+    <span class="n">z_n</span> <span class="o">=</span> <span class="n">Multinomial</span><span class="p">(</span><span class="n">probs</span> <span class="o">=</span> <span class="n">theta</span><span class="p">)</span>
+    <span class="c1"># Sample the observed value from the Gaussian of the selected component.</span>
+    <span class="n">x_n</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="n">loc</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span><span class="n">z_n</span><span class="p">),</span> <span class="n">scale</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">invgamma</span><span class="p">,</span><span class="n">z_n</span><span class="p">),</span> <span class="n">observed</span> <span class="o">=</span> <span class="n">true</span><span class="p">)</span>
+
+<span class="c1">#Probabilistic Model</span>
+<span class="n">probmodel</span> <span class="o">=</span> <span class="n">ProbModel</span><span class="p">(</span><span class="n">prior</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">,</span><span class="n">mu</span><span class="p">,</span><span class="n">sigma</span><span class="p">,</span><span class="n">z_n</span><span class="p">,</span><span class="n">x_n</span><span class="p">])</span>
+<span class="n">probmodel</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">with</span> <span class="pre">inf.replicate(size</span> <span class="pre">=</span> <span class="pre">N)</span></code> sintaxis is used to replicate the
+random variables contained within this construct. It follows from the
+so-called <em>plateau notation</em> to define the data generation part of a
+probabilistic model. Every replicated variable is <strong>conditionally
+idependent</strong> given the previous random variables (if any) defined
+outside the <strong>with</strong> statement.</p>
+<p>Internally, <code class="docutils literal"><span class="pre">with</span> <span class="pre">inf.replicate(size</span> <span class="pre">=</span> <span class="pre">N)</span></code> construct modifies the
+random variable shape by adding an extra dimension. For the above
+example, z_n’s shape is [N,1], and x_n’s shape is [N,d].</p>
+<p>Following Edward’s approach, a random variable <span class="math">\(x\)</span> is an object
+parametrized by a tensor <span class="math">\(\theta\)</span> (i.e. a TensorFlow’s tensor or
+numpy’s ndarray). The number of random variables in one object is
+determined by the dimensions of its parameters (like in Edward) or by
+the ‘shape’ or ‘dim’ argument (inspired by PyMC3 and Keras):</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="c1"># vector of 5 univariate standard normals</span>
+<span class="n">x</span>  <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="n">loc</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dim</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># vector of 5 univariate standard normals</span>
+<span class="n">x</span>  <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="n">loc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="n">scale</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+
+<span class="c1"># vector of 5 univariate standard normals</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">Normal</span> <span class="p">(</span><span class="n">loc</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">with</span> <span class="pre">inf.replicate(size</span> <span class="pre">=</span> <span class="pre">N)</span></code> sintaxis can also be used to define
+multi-dimensional objects, the following code is also equivalent to the
+above ones:</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="c1"># vector of 5 univariate standard normals</span>
+<span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">Normal</span> <span class="p">(</span><span class="n">loc</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>More detailed inforamtion about the semantics of
+<code class="docutils literal"><span class="pre">with</span> <span class="pre">inf.replicate(size</span> <span class="pre">=</span> <span class="pre">N)</span></code> can be found in ?. Examples of using
+this construct to define more expressive and complex models can be found
+in ?.</p>
+<p>Multivariate distributions can be defined similarly. Following Edward’s
+approach, the multivariate dimension is the innermost (right-most)
+dimension of the parameters.</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="c1"># 2 x 3 matrix of K-dimensional multivariate normals</span>
+<span class="n">x</span>  <span class="o">=</span> <span class="n">MultivariateNormal</span><span class="p">(</span><span class="n">loc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">K</span><span class="p">]),</span> <span class="n">scale</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">K</span><span class="p">,</span><span class="n">K</span><span class="p">]),</span> <span class="n">observed</span> <span class="o">=</span> <span class="n">true</span><span class="p">)</span>
+
+<span class="c1"># 2 x 3 matrix of K-dimensional multivariate normals</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">MultivariateNormal</span> <span class="p">(</span><span class="n">loc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">K</span><span class="p">),</span> <span class="n">scale</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">K</span><span class="p">,</span><span class="n">K</span><span class="p">]),</span> <span class="n">shape</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">observed</span> <span class="o">=</span> <span class="n">true</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The argument <strong>observed = true</strong> in the constructor of a random variable
+is used to indicate whether a variable is observable or not.</p>
+<p>A <strong>probabilistic model</strong> defines a joint distribution over observable
+and non-observable variables, <span class="math">\(p(theta,mu,sigma,z_n, x_n)\)</span> for the
+running example,</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">inferpy</span> <span class="k">import</span> <span class="n">ProbModel</span>
+<span class="n">probmodel</span> <span class="o">=</span> <span class="n">ProbModel</span><span class="p">(</span><span class="nb">vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">theta</span><span class="p">,</span><span class="n">mu</span><span class="p">,</span><span class="n">sigma</span><span class="p">,</span><span class="n">z_n</span><span class="p">,</span><span class="n">x_n</span><span class="p">])</span>
+<span class="n">probmodel</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The model must be <strong>compiled</strong> before it can be used.</p>
+<p>Like any random variable object, a probabilistic model is equipped with
+methods such as <em>log_prob()</em> and <em>sample()</em>. Then, we can sample data
+from the model anbd compute the log-likelihood of a data set:</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">probmodel</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">log_like</span> <span class="o">=</span> <span class="n">probmodel</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Folowing Edward’s approach, a random variable <span class="math">\(x\)</span> is associated to
+a tensor <span class="math">\(x^*\)</span> in the computational graph handled by TensorFlow,
+where the computations takes place. This tensor <span class="math">\(x^*\)</span> contains the
+samples of the random variable <span class="math">\(x\)</span>, i.e.
+<span class="math">\(x^*\sim p(x|\theta)\)</span>. In this way, random variables can be
+involved in expressive deterministic operations. For example, the
+following piece of code corresponds to a zero inflated linear regression
+model</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="c1">#Prior</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
+<span class="n">w0</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">Beta</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1">#Likelihood model</span>
+<span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1000</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="n">d</span><span class="p">,</span> <span class="n">observed</span> <span class="o">=</span> <span class="n">true</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">Binomial</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+    <span class="n">y0</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="n">w0</span> <span class="o">+</span> <span class="n">inf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">w</span><span class="p">,</span> <span class="n">transpose_b</span> <span class="o">=</span> <span class="n">true</span><span class="p">),</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">y1</span> <span class="o">=</span> <span class="n">Delta</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">Deterministic</span><span class="p">(</span><span class="n">h</span><span class="o">*</span><span class="n">y0</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">h</span><span class="p">)</span><span class="o">*</span><span class="n">y1</span><span class="p">,</span> <span class="n">observed</span> <span class="o">=</span> <span class="n">true</span><span class="p">)</span>
+
+<span class="n">probmodel</span> <span class="o">=</span> <span class="n">ProbModel</span><span class="p">(</span><span class="nb">vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span><span class="p">,</span><span class="n">w0</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">h</span><span class="p">,</span><span class="n">y0</span><span class="p">,</span><span class="n">y1</span><span class="p">,</span><span class="n">y</span><span class="p">])</span>
+<span class="n">probmodel</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">probmodel</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">probmodel</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A special case, it is the inclusion of deep neural networks within our
+probabilistic model to capture complex non-linear dependencies between
+the random variables. This is extensively treated in the the Guide to
+Bayesian Deep Learning.</p>
+<p>Finally, a probablistic model have the following methods:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">probmodel.summary()</span></code>: prints a summary representation of the
+model.</li>
+<li><code class="docutils literal"><span class="pre">probmodel.get_config()</span></code>: returns a dictionary containing the
+configuration of the model. The model can be reinstantiated from its
+config via:</li>
+</ul>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="n">probmodel</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+<span class="n">probmodel</span> <span class="o">=</span> <span class="n">ProbModel</span><span class="o">.</span><span class="n">from_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">model.to_json()</span></code>: returns a representation of the model as a JSON
+string. Note that the representation does not include the weights,
+only the architecture. You can reinstantiate the same model (with
+reinitialized weights) from the JSON string via: ```python from
+models import model_from_json</li>
+</ul>
+<p>json_string = model.to_json() model = model_from_json(json_string)
+```</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../index.html" class="btn btn-neutral" title="INFERPY: A Python Library for Probabilistic Modelling" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Andrés R. Masegosa, Rafael Cabañas.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
