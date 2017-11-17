@@ -6,6 +6,17 @@
 InferPy: A Python Library for Probabilistic Modelling
 =====================================================
 
+.. image:: _static/img/logo.png
+   	:scale: 90 %
+   	:align: center
+
+|
+
+
+
+
+
+
 InferPy is a high-level API for probabilistic modelling written in Python and capable of running on top of Edward, Tensorflow and Apache Spark. InferPy's API is strongly inspired by Keras and it has a focus on enabling flexible data processing, simple probablistic modelling, scalable inference and robust model validation. 
 
 Use InferPy is you need a probabilistic programming language that:

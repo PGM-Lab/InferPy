@@ -103,7 +103,7 @@ html_theme_options = {
     'logo_only': True,
 }
 
-html_logo = '_static/img/logo-neg.png'
+html_logo = '_static/img/logo-doc.png'
 
 
 # Add any paths that contain custom static files (such as style sheets) here,

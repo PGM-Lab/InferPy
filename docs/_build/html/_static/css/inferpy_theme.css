@@ -3748,7 +3748,7 @@ button[disabled] {
 }
 
 .btn-link:visited {
-    color: #9B59B6
+    color: #029D6B
 }
 
 .wy-btn-group .btn, .wy-control .btn {
@@ -4662,7 +4662,7 @@ a:hover {
 }
 
 a:visited {
-    color: #9B59B6
+    color: #029D6B
 }
 
 html {
@@ -4750,7 +4750,8 @@ a.wy-text-neutral:hover {
 h1, h2, .rst-content .toctree-wrapper p.caption, h3, h4, h5, h6, legend {
     margin-top: 0;
     font-weight: 700;
-    font-family: "Roboto Slab", "ff-tisa-web-pro", "Georgia", Arial, sans-serif
+    color: #00402C;
+    font-family:  FontAwesome, Arial, sans-serif
 }
 
 p {
@@ -4890,7 +4891,7 @@ article ol li ul li {
     position: absolute;
     top: 0px;
     left: 0px;
-    background: #9B59B6;
+    background: #029D6B;
     color: #fff;
     padding: 6px 12px
 }
