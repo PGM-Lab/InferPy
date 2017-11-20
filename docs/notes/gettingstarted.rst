@@ -31,7 +31,7 @@ parameters of a **mixture of Gaussians** model:
     p = Dirichlet(np.ones(K))
 
 InferPy supports the definition of **plateau notation** by using the
-construct :python:`with inf.replicate(size = K)`, which replicates K times the
+construct ``with inf.replicate(size = K)``, which replicates K times the
 random variables enclosed within this anotator. Every replicated
 variable is assumed to be **independent**.
 
@@ -253,11 +253,11 @@ dimension of the parameters.
     # 2 x 3 matrix of K-dimensional multivariate normals
     y = MultivariateNormal (loc = np.zeros(K), scale = np.ones([K,K]), shape = [2,3], observed = true)
 
-The argument **observed = true** in the constructor of a random variable
+The argument ``observed = true`` in the constructor of a random variable
 is used to indicate whether a variable is observable or not.
 
 A **probabilistic model** defines a joint distribution over observable
-and non-observable variables, :math:`p(theta,mu,sigma,z_n, x_n)` for the
+and non-observable variables, :math:`p(\theta,\mu,\sigma,z_n, x_n)` for the
 running example,
 
 .. code:: python
@@ -269,7 +269,7 @@ running example,
 The model must be **compiled** before it can be used.
 
 Like any random variable object, a probabilistic model is equipped with
-methods such as *log\_prob()* and *sample()*. Then, we can sample data
+methods such as ``log\_prob()`` and ``sample()``. Then, we can sample data
 from the model anbd compute the log-likelihood of a data set:
 
 .. code:: python
@@ -345,9 +345,9 @@ inference in a probabilistic model :math:`p(x,z,\theta)` (where
 and :math:`\theta` the global parameters of the model). More precisely,
 the inference problem reduces to compute the posterior probability over
 the latent variables given a data sample
-$p(z,:raw-latex:`\theta`\|x\_{train}), because by looking at these
+:math:`p(z,\theta | x_{train})`, because by looking at these
 posteriors we can uncover the hidden structure in the data. For the
-running example, :math:`p(mu|x_{train})` tells us where the centroids of
+running example, :math:`p(\mu|x_{train})` tells us where the centroids of
 the data are, while :math:`p(z_n|x_{train})` shows us to which centroid
 every data point belongs to.
 
@@ -356,11 +356,11 @@ solutions,
 
 .. math::  q(z,\theta) \approx p(z,\theta | x_{train})
 
-,
+
 
 in which the task is to approximate the posterior
 :math:`p(z,\theta | x_{train})` using a family of distributions,
-:math:`q(z,\theta; \labmda)`, indexed by a parameter vector
+:math:`q(z,\theta; \lambda)`, indexed by a parameter vector
 :math:`\lambda`.
 
 A probabilistic model in InferPy should be compiled before we can access
@@ -374,8 +374,8 @@ these posteriors,
      posterior_mu = probmodel.posterior(mu)
 
 The compilation process allows to choose the inference algorithm through
-the 'infMethod' argument. In the above example we use 'Klqp'. Other
-inference algorithms include: 'NUTS', 'MCMC', 'KLpq', etc. Look at ? for
+the ``infMethod`` argument. In the above example we use ``'Klqp'``. Other
+inference algorithms include: ``'NUTS'``, ``'MCMC'``, ``'KLpq'``, etc. Look at ? for
 a detailed description of the available inference algorithms.
 
 Following InferPy guiding principles, users can further configure the
@@ -548,7 +548,7 @@ Bayesian Neural Networks - Mixture Density Networks - ...
 
 We can also define a Keras model whose input is an observation and its
 output its the expected value of the posterior over the hidden
-variables, :math:`E[p(z|x)]`, by using the method 'toKeras', as a way to
+variables, :math:`E[p(z|x)]`, by using the method ``toKeras``, as a way to
 create more expressive models.
 
 .. code:: python

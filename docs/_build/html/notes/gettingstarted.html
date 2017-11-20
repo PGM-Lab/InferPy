@@ -196,7 +196,7 @@ parameters of a <strong>mixture of Gaussians</strong> model:</p>
 </pre></div>
 </div>
 <p>InferPy supports the definition of <strong>plateau notation</strong> by using the
-construct <code class="code python docutils literal"><span class="keyword"><span class="pre">with</span></span> <span class="name"><span class="pre">inf</span></span><span class="operator"><span class="pre">.</span></span><span class="name"><span class="pre">replicate</span></span><span class="punctuation"><span class="pre">(</span></span><span class="name"><span class="pre">size</span></span> <span class="operator"><span class="pre">=</span></span> <span class="name"><span class="pre">K</span></span><span class="punctuation"><span class="pre">)</span></span></code>, which replicates K times the
+construct <code class="docutils literal"><span class="pre">with</span> <span class="pre">inf.replicate(size</span> <span class="pre">=</span> <span class="pre">K)</span></code>, which replicates K times the
 random variables enclosed within this anotator. Every replicated
 variable is assumed to be <strong>independent</strong>.</p>
 <p>This <code class="docutils literal"><span class="pre">with</span> <span class="pre">inf.replicate(size</span> <span class="pre">=</span> <span class="pre">N)</span></code> construct is also usefuel when
@@ -243,7 +243,7 @@ user the full control if needed.</p>
 </pre></div>
 </div>
 <p>Every random variable object is equipped with methods such as
-<em>log_prob()</em> and <em>sample()</em>. Similarly, a probabilistic model is also
+<code class="docutils literal"><span class="pre">log_prob()</span></code> and <code class="docutils literal"><span class="pre">sample()</span></code>. Similarly, a probabilistic model is also
 equipped with the same methods. Then, we can sample data from the model
 anbd compute the log-likelihood of a data set:</p>
 <div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">probmodel</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span>
@@ -382,10 +382,10 @@ dimension of the parameters.</p>
 <span class="n">y</span> <span class="o">=</span> <span class="n">MultivariateNormal</span> <span class="p">(</span><span class="n">loc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">K</span><span class="p">),</span> <span class="n">scale</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">K</span><span class="p">,</span><span class="n">K</span><span class="p">]),</span> <span class="n">shape</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">observed</span> <span class="o">=</span> <span class="n">true</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The argument <strong>observed = true</strong> in the constructor of a random variable
+<p>The argument <code class="docutils literal"><span class="pre">observed</span> <span class="pre">=</span> <span class="pre">true</span></code> in the constructor of a random variable
 is used to indicate whether a variable is observable or not.</p>
 <p>A <strong>probabilistic model</strong> defines a joint distribution over observable
-and non-observable variables, <span class="math">\(p(theta,mu,sigma,z_n, x_n)\)</span> for the
+and non-observable variables, <span class="math">\(p(\theta,\mu,\sigma,z_n, x_n)\)</span> for the
 running example,</p>
 <div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">inferpy</span> <span class="k">import</span> <span class="n">ProbModel</span>
 <span class="n">probmodel</span> <span class="o">=</span> <span class="n">ProbModel</span><span class="p">(</span><span class="nb">vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">theta</span><span class="p">,</span><span class="n">mu</span><span class="p">,</span><span class="n">sigma</span><span class="p">,</span><span class="n">z_n</span><span class="p">,</span><span class="n">x_n</span><span class="p">])</span>
@@ -394,7 +394,7 @@ running example,</p>
 </div>
 <p>The model must be <strong>compiled</strong> before it can be used.</p>
 <p>Like any random variable object, a probabilistic model is equipped with
-methods such as <em>log_prob()</em> and <em>sample()</em>. Then, we can sample data
+methods such as <code class="docutils literal"><span class="pre">log\_prob()</span></code> and <code class="docutils literal"><span class="pre">sample()</span></code>. Then, we can sample data
 from the model anbd compute the log-likelihood of a data set:</p>
 <div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">probmodel</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">)</span>
 <span class="n">log_like</span> <span class="o">=</span> <span class="n">probmodel</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -462,19 +462,18 @@ inference in a probabilistic model <span class="math">\(p(x,z,\theta)\)</span> (
 and <span class="math">\(\theta\)</span> the global parameters of the model). More precisely,
 the inference problem reduces to compute the posterior probability over
 the latent variables given a data sample
-$p(z,:raw-latex:<cite>theta</cite>|x_{train}), because by looking at these
+<span class="math">\(p(z,\theta | x_{train})\)</span>, because by looking at these
 posteriors we can uncover the hidden structure in the data. For the
-running example, <span class="math">\(p(mu|x_{train})\)</span> tells us where the centroids of
+running example, <span class="math">\(p(\mu|x_{train})\)</span> tells us where the centroids of
 the data are, while <span class="math">\(p(z_n|x_{train})\)</span> shows us to which centroid
 every data point belongs to.</p>
 <p>InferPy inherits Edward’s approach an consider approximate inference
 solutions,</p>
 <div class="math">
 \[q(z,\theta) \approx p(z,\theta | x_{train})\]</div>
-<p>,</p>
 <p>in which the task is to approximate the posterior
 <span class="math">\(p(z,\theta | x_{train})\)</span> using a family of distributions,
-<span class="math">\(q(z,\theta; \labmda)\)</span>, indexed by a parameter vector
+<span class="math">\(q(z,\theta; \lambda)\)</span>, indexed by a parameter vector
 <span class="math">\(\lambda\)</span>.</p>
 <p>A probabilistic model in InferPy should be compiled before we can access
 these posteriors,</p>
@@ -485,8 +484,8 @@ these posteriors,</p>
 </pre></div>
 </div>
 <p>The compilation process allows to choose the inference algorithm through
-the ‘infMethod’ argument. In the above example we use ‘Klqp’. Other
-inference algorithms include: ‘NUTS’, ‘MCMC’, ‘KLpq’, etc. Look at ? for
+the <code class="docutils literal"><span class="pre">infMethod</span></code> argument. In the above example we use <code class="docutils literal"><span class="pre">'Klqp'</span></code>. Other
+inference algorithms include: <code class="docutils literal"><span class="pre">'NUTS'</span></code>, <code class="docutils literal"><span class="pre">'MCMC'</span></code>, <code class="docutils literal"><span class="pre">'KLpq'</span></code>, etc. Look at ? for
 a detailed description of the available inference algorithms.</p>
 <p>Following InferPy guiding principles, users can further configure the
 inference algorithm.</p>
@@ -638,7 +637,7 @@ complexity in the code.</p>
 Bayesian Neural Networks - Mixture Density Networks - …</p>
 <p>We can also define a Keras model whose input is an observation and its
 output its the expected value of the posterior over the hidden
-variables, <span class="math">\(E[p(z|x)]\)</span>, by using the method ‘toKeras’, as a way to
+variables, <span class="math">\(E[p(z|x)]\)</span>, by using the method <code class="docutils literal"><span class="pre">toKeras</span></code>, as a way to
 create more expressive models.</p>
 <div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">keras.layers</span> <span class="k">import</span> <span class="n">Conv2D</span><span class="p">,</span> <span class="n">MaxPooling2D</span><span class="p">,</span> <span class="n">Flatten</span>
 <span class="kn">from</span> <span class="nn">keras.layers</span> <span class="k">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">LSTM</span><span class="p">,</span> <span class="n">Embedding</span><span class="p">,</span> <span class="n">Dense</span>
