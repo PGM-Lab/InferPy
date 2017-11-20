@@ -27,6 +27,8 @@ Use InferPy is you need a probabilistic programming language that:
 * Process seamlessly small data sets or large distributed data sets (by relying on Apache Spark). . 
 
 
+
+
 .. toctree::
    :glob:
    :maxdepth: 2
@@ -41,3 +43,9 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+
+.. role:: bash(code)
+   :language: bash
+.. role:: python(code)
+   :language: python
