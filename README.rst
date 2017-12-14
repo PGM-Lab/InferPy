@@ -43,7 +43,7 @@ parameterized by a set of tensors.
 Let's look at a simple (Bayesian) **probabilistic component analysis** model. Graphically the model can 
 be defined as follows, 
 
-.. figure:: ../_static/imgs/LinearFactor.png
+.. figure:: docs/_static/imgs/LinearFactor.png
    :alt: Linear Factor Model
    :scale: 50 %
    :align: center
