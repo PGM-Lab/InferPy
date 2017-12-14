@@ -1,7 +1,7 @@
 InferPy: Deep Probabilistic Modelling Made Easy
 ===============================================
 
-.. image:: _static/img/logo.png
+.. image:: docs/_static/img/logo.png
    	:scale: 90 %
    	:align: center
 
