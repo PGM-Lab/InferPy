@@ -1,11 +1,10 @@
-InferPy: Deep Probabilistic Modelling Made Easy
-===============================================
 
 .. image:: docs/_static/img/logo.png
    	:scale: 90 %
    	:align: center
 
-|
+InferPy: Deep Probabilistic Modelling Made Easy
+===============================================
 
 
 InferPy is a high-level API for probabilistic modeling written in Python and 
