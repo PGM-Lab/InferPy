@@ -1,66 +1,54 @@
-Getting Started
+Quick Start
 =====================================================
 
 30 seconds to InferPy
 --------------------------------------
 
-The core data structures of InferPy is a **probabilistic model**,
+The core data structures of InferPy is a a **probabilistic model**,
 defined as a set of **random variables** with a conditional independence
 structure. Like in Edward, a **random varible** is an object
 parameterized by a set of tensors.
 
-Let's look at a simple (Bayesian) **probabilistic component analysis** model. Graphically the model can 
-be defined as follows, 
-
-.. figure:: ../_static/imgs/LinearFactor.png
-   :alt: Linear Factor Model
-   :scale: 50 %
-   :align: center
-   
-   Bayesian PCA
-
-We start defining the **prior** of the global parameters, 
+Let's look at a simple examle. We start defining the **prior** of the
+parameters of a **mixture of Gaussians** model:
 
 .. code:: python
 
     import numpy as np
     import inferpy as inf
     from inferpy.models import Normal, InverseGamma, Dirichlet
-	
+
     # K defines the number of components. 
     K=10
-    
-    #Prior for the principal components
     with inf.replicate(size = K)
-    	mu = Normal(loc = 0, scale = 1, dime = d)
-
-    # Prior for the intercept component
-    mu0 = Normal(loc = 0, scale = 1, dim = d)
-	
-    # Variance of the Normal
-    variance = 1.0
+        #Prior for the means of the Gaussians 
+        mu = Normal(loc = 0, scale = 1)
+        #Prior for the precision of the Gaussians 
+        sigma = InverseGamma(concentration = 1, rate = 1)
+        
+    #Prior for the mixing proportions
+    p = Dirichlet(np.ones(K))
 
 InferPy supports the definition of **plateau notation** by using the
 construct ``with inf.replicate(size = K)``, which replicates K times the
 random variables enclosed within this anotator. Every replicated
 variable is assumed to be **independent**.
 
-This ``with inf.replicate(size = N)`` construct is also useful when
+This ``with inf.replicate(size = N)`` construct is also usefuel when
 defining the model for the data:
 
 .. code:: python
 
     # Number of observations
     N = 1000
-    
     #data Model
-    with inf.replicate(size = N):
-	    # Latent representation of the sample
-    	w_n = Normal(loc = 0, scale = 1, dim = K)
-    	# Observed sample. The dimensionality of mu is [K,d]. 
-    	x = Normal(loc = mu0 + inf.matmul(w_n,mu), scale = alpha, observed = true)
+    with inf.replicate(size = N)
+        # Sample the component indicator of the mixture. This is a latent variable that can not be observed
+        z_n = Multinomial(probs = p)
+        # Sample the observed value from the Gaussian of the selected component.  
+        x_n = Normal(loc = inf.gather(mu,z_n), scale = inf.gather(sigma,z_n), observed = true)
 
-As commented above, the variable ``w_n`` and ``x_n`` are surrounded by a
+As commented above, the variable ``z_n`` and ``x_n`` are surrounded by a
 ``with`` statement to inidicate that the defined random variables will
 be reapeatedly used in each data sample. In this case, every replicated
 variable is conditionally idependent given the variables mu and sigma
@@ -74,7 +62,7 @@ variables.
 .. code:: python
 
     from inferpy import ProbModel
-    probmodel = ProbModel(vars = [mu0,mu,w_n,x_n]) 
+    probmodel = ProbModel(vars = [p,mu,sigma,z_n,x_n]) 
     probmodel.compile(infMethod = 'KLqp')
 
 During the model compilation we specify different inference methods that
@@ -83,8 +71,8 @@ will be used to learn the model.
 .. code:: python
 
     from inferpy import ProbModel
-    pca = ProbModel(vars = [mu0,mu,w_n,x_n]) 
-    pca.compile(infMethod = 'MCMC')
+    probmodel = ProbModel(vars = [p,mu,sigma,z_n,x_n]) 
+    probmodel.compile(infMethod = 'MCMC')
 
 The inference method can be further configure. But, as in Keras, a core
 principle is to try make things reasonbly simple, while allowing the
@@ -93,10 +81,10 @@ user the full control if needed.
 .. code:: python
 
     from keras.optimizers import SGD
-    pca = ProbModel(vars = [p,mu,sigma,z_n,x_n]) 
+    probmodel = ProbModel(vars = [p,mu,sigma,z_n,x_n]) 
     sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
     infklqp = inf.inference.KLqp(optimizer = sgd, loss="ELBO")
-    pca.compile(infMethod = infklqp)
+    probmodel.compile(infMethod = infklqp)
 
 Every random variable object is equipped with methods such as
 ``log_prob()`` and ``sample()``. Similarly, a probabilistic model is also
@@ -105,38 +93,38 @@ anbd compute the log-likelihood of a data set:
 
 .. code:: python
 
-    data = pca.sample(size = 100)
+    data = probmodel.sample(size = 100)
     log_like = probmodel.log_prob(data)
 
 Of course, you can fit your model with a given data set:
 
 .. code:: python
 
-    pca.fit(data_training, epochs=10)
+    probmodel.fit(data_training, epochs=10)
 
 Update your probablistic model with new data using the Bayes' rule:
 
 .. code:: python
 
-    pca.update(new_data)
+    probmodel.update(new_data)
 
 Query the posterior over a given random varible:
 
 .. code:: python
 
-    mu_post = pca.posterior(mu)
+    mu_post = probmodel.posterior(mu)
 
 Evaluate your model according to a given metric:
 
 .. code:: python
 
-    log_like = pca.evaluate(test_data, metrics = ['log_likelihood'])
+    log_like = probmodel.evaluate(test_data, metrics = ['log_likelihood'])
 
 Or compute predicitons on new data
 
 .. code:: python
 
-    latent_representation = pca.predict(test_data, targetvar = w_n)
+    cluster_assignments = probmodel.predict(test_data, targetvar = z_n)
 
 --------------
 
@@ -144,14 +132,15 @@ Guiding Principles
 ------------------
 
 -  InferPy's probability distribuions are mainly inherited from
-   TensorFlow Distribuitons package. 
-   .. InferPy's API is fully compatible with tf.distributions' API. The 'shape' argument was added as a simplifing option when defining multidimensional distributions.
+   TensorFlow Distribuitons package. InferPy's API is fully compatible
+   with tf.distributions' API. The 'shape' argument was added as a
+   simplifing option when defining multidimensional distributions.
 -  InferPy directly relies on top of Edward's inference engine and
    includes all the inference algorithms included in this package. As
    Edward's inference engine relies on TensorFlow computing engine,
    InferPy also relies on it too.
 -  InferPy seamsly process data contained in a numpy array, Tensorflow's
-   tensor, Tensorflow's Dataset (tf.Data API), Pandas' DataFrame or Apache Spark's
+   tensor, Tensorflow's Dataset (tf.Data API) or Apache Spark's
    DataFrame.
 -  InferPy also includes novel distributed statistical inference
    algorithms by combining Tensorflow and Apache Spark computing

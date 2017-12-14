@@ -576,3 +576,6 @@ Variational Autoencoder
 
     #extract the hidden representation from a set of observations
     hidden_encoding = probmodel.predict(x_pred, targetvar = z)
+    
+
+
