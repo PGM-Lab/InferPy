@@ -46,7 +46,8 @@ complex probability constructs containing deep neural networks.
    
    notes/getting30s
    notes/gettingGuiding
-   notes/gettingInstallation
+   
+.. notes/gettingInstallation
 
 
 .. toctree::
