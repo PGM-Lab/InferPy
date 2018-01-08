@@ -27,6 +27,10 @@ We start defining the **prior** of the global parameters,
     # K defines the number of components. 
     K=10
     
+    # d defines the number of dimensions
+    d=5 
+    
+    
     #Prior for the principal components
     with inf.replicate(size = K)
     	mu = Normal(loc = 0, scale = 1, dim = d)
