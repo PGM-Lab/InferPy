@@ -1,2 +1,4 @@
 *.idea*
 /docs/_build/
+/env/
+

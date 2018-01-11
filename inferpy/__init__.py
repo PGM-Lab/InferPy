@@ -1,1 +1,1 @@
-print("importing simple_package")
+from inferpy.replicate import *
