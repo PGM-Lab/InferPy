@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+from functools import reduce
+=======
 from functools import reduce # Valid in Python 2.6+, required in Python 3
+>>>>>>> 7336269c3037a882c57af3063e887eec2e47741a
 
 
 class replicate():

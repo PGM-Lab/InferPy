@@ -1,4 +1,7 @@
 *.idea*
 /docs/_build/
-/env/
+/env*/
+*.pyc
+*_ignored*
+
 
