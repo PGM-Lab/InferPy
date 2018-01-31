@@ -20,4 +20,3 @@ wheel==0.30.0
 numpy==1.14.0
 pip==9.0.1
 setuptools==18.0.1
-wheel==0.24.0
