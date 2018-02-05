@@ -1,13 +1,8 @@
-<<<<<<< HEAD
 from functools import reduce
-=======
-from functools import reduce # Valid in Python 2.6+, required in Python 3
->>>>>>> 7336269c3037a882c57af3063e887eec2e47741a
-
 
 class replicate():
 
-	sizes = []
+	sizes = [1]
 
 	def __init__(self,size):
 		replicate.sizes.append(size)
@@ -27,8 +22,9 @@ class replicate():
 	def printSize():
 		print("size is "+str(replicate.getSize()))
 
-
-
+	@staticmethod
+	def inReplicate():
+		return len(replicate.sizes)>1
 
 if __name__ == "__main__":
 
