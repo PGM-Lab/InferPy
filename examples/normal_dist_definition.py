@@ -16,3 +16,7 @@ sample_x = x.sample([4,10])
 
 # the shape of the sample is (4, 10, 6, 2)
 print(sample_x.shape)
+
+# get the underlying distribution Edward object
+ed_x = x.dist
+
