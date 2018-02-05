@@ -1,15 +1,112 @@
+# Copyright 2016 The TensorFlow Authors. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
+
+"""The Normal (Gaussian) distribution class."""
+
 from inferpy.replicate import *
 import inferpy.config as inf_conf
 import edward.models as base_models
 import numpy as np
 
+
 class Normal:
+
+	"""The Normal distribution with location `loc` and `scale` parameters.
+
+	#### Mathematical details
+
+	The probability density function (pdf) is,
+
+	```none
+	pdf(x; mu, sigma) = exp(-0.5 (x - mu)**2 / sigma**2) / Z
+	Z = (2 pi sigma**2)**0.5
+	```
+	where `loc = mu` is the mean, `scale = sigma` is the std. deviation, and, `Z`
+	is the normalization constant.
+
+	The Normal distribution is a member of the [location-scale family](
+	https://en.wikipedia.org/wiki/Location-scale_family), i.e., it can be
+	constructed as,
+
+	```none
+	X ~ Normal(loc=0, scale=1)
+	Y = loc + scale * X
+	```
+
+	This class allows the definition of a variable normal distributed of
+	dimension higher than 1. Each of the dimensions are independent.
+
+
+	```python
+
+	import inferpy as inf
+
+	# define a 2-dimension Normal distribution of 2·3=6 batches
+	with inf.replicate(size=2):
+		with inf.replicate(size=3):
+			x = inf.models.Normal(loc=0., scale=1., dim=2)
+
+
+	# print its parameters
+	print(x.loc)
+	print(x.scale)
+
+
+	# the shape of the distribution is (6,2)
+	print(x.shape)
+
+	# get a sample
+	sample_x = x.sample([4,10])
+
+	# the shape of the sample is (4, 10, 6, 2)
+	print(sample_x.shape)
+
+	# get the underlying distribution Edward's object
+	ed_x = x.dist
+
+	```
+
+
+	"""
+
 	def __init__(self, loc, scale, dim=None, name="inf_Normal"):
+
+		""" Construct Normal distributions with mean, stddev and dimension `loc`, `scale`
+		 and `dim`
+
+		The parameters `loc` and `scale` must be shaped in a way that supports
+	    broadcasting (e.g. `loc + scale` is a valid operation). If dim is specified,
+	    it should be consistent with the lengths of `loc` and `scale`
+
+
+	    Args:
+	        loc (float): scalar or vector indicating the mean of the distribution at each dimension.
+	        scale (float): scalar or vector indicating the stddev of the distribution at each dimension.
+	        dim (int): optional scalar indicating the number of dimensions
+
+	    Raises
+	        ValueError: if the parameters are not consistent
+			AttributeError: if any of the properties is changed once the object is constructed
+
+		"""
+
 
 		self.__check_params(loc, scale, dim)
 
 		param_dim = 1
-		if dim!=None: param_dim
+		if dim != None: param_dim
 
 		# shape = (batches, dimension)
 		self_shape = (replicate.getSize(), np.max([np.size(loc), np.size(scale), param_dim]))
@@ -18,7 +115,7 @@ class Normal:
 		if np.isscalar(loc):
 			loc_rep = np.tile(loc, (self_shape[0], self_shape[1]))
 		else:
-			loc_rep =  np.tile(loc, (self_shape[0], 1))
+			loc_rep = np.tile(loc, (self_shape[0], 1))
 
 		if np.isscalar(scale):
 			scale_rep = np.tile(scale, (self_shape[0], self_shape[1]))
@@ -31,33 +128,40 @@ class Normal:
 
 	# getter methods
 
-
 	@property
 	def loc(self):
+		"""Distribution parameter for the mean."""
 		return inf_conf.tf_sess.run(self.dist.loc)
 
 	@property
 	def scale(self):
+		"""Distribution parameter for standard deviation."""
 		return inf_conf.tf_sess.run(self.dist.scale)
 
 	@property
 	def dim(self):
+		""" Dimensionality of variable """
 		return self.dist.shape.as_list()[1]
+
 	@property
 	def batches(self):
+		""" Number of batches of the variable"""
 		return self.dist.shape.as_list()[0]
 
 	@property
 	def shape(self):
-		#return self.__shape
+		""" shape of the variable, i.e. (batches, dim)"""
 		return self.dist.shape.as_list()
 
 	@property
 	def dist(self):
+		"""Underlying Edward object"""
 		return self.__dist
 
 
+
 	def __check_params(self, loc, scale, dim):
+		"""private method that checks the consistency of the input parameters"""
 
 		# loc and scale cannot be multidimensional arrays (by now)
 		if np.ndim(loc) > 1 or np.ndim(scale) > 1:
@@ -79,7 +183,8 @@ class Normal:
 			raise ValueError("scale length is not consistent with value in dim")
 
 
+
+
 	def sample(self, v):
+		""" Method for obaining a sample of shape v"""
 		return inf_conf.tf_sess.run(self.dist.sample(v))
-
-

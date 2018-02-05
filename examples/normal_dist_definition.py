@@ -9,6 +9,9 @@ with inf.replicate(size=2):
 # print its parameters
 print(x.loc)
 print(x.scale)
+
+
+# the shape of the distribution is (6,2)
 print(x.shape)
 
 # get a sample
