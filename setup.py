@@ -1,4 +1,5 @@
 from setuptools import setup
+from inferpy.version import __version__
 
 exec(open('inferpy/version.py').read())
 
@@ -28,9 +29,6 @@ setup(
                  'Operating System :: POSIX :: Linux',
                  'Operating System :: MacOS :: MacOS X',
                  'Operating System :: Microsoft :: Windows',
-<<<<<<< HEAD
-=======
                  'Programming Language :: Python :: 2.7',
->>>>>>> 7336269c3037a882c57af3063e887eec2e47741a
                  'Programming Language :: Python :: 3.4'],
 )
