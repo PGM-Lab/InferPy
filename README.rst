@@ -1,4 +1,8 @@
 
+.. image:: https://travis-ci.org/PGMLabSpain/InferPy.svg?branch=master
+    :target: https://travis-ci.org/PGMLabSpain/InferPy
+
+
 .. image:: docs/_static/img/logo.png
    	:scale: 90 %
    	:align: center
