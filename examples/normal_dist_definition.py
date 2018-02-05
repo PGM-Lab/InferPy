@@ -1,6 +1,6 @@
 import inferpy as inf
 
-# define a 2-dimension Normal distribution of 2·3=6 batches 
+# define a 2-dimension Normal distribution of 2·3=6 batches
 with inf.replicate(size=2):
 	with inf.replicate(size=3):
 		x = inf.models.Normal(loc=0., scale=1., dim=2)
