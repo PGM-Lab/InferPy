@@ -21,7 +21,7 @@ import numpy as np
 
 class Normal:
 
-	"""The Normal distribution with location `loc` and `scale` parameters.
+	"""The Normal distribution with location `loc` and `scale` parameters. 
 
 	#### Mathematical details
 
