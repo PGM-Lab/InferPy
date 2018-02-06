@@ -181,8 +181,6 @@ class Normal:
 			raise ValueError("scale length is not consistent with value in dim")
 
 
-
-
 	def sample(self, v):
 		""" Method for obaining a sample of shape v"""
 		return inf_conf.tf_sess.run(self.dist.sample(v))
