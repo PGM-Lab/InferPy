@@ -11,10 +11,6 @@
 #
 # All configuration values have a default; values that are commented out
 # serve to show the default.
-
-# If extensions (or modules to document with autodoc) are in another directory,
-# add these directories to sys.path here. If the directory is relative to the
-# documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import os
 import sys
@@ -22,9 +18,19 @@ import sys
 import sphinx_rtd_theme
 
 
-#sys.path.insert(0, os.path.abspath('../src/'))
-sys.path.insert(0, os.path.abspath('../inferpy'))
+# If extensions (or modules to document with autodoc) are in another directory,
+# add these directories to sys.path here. If the directory is relative to the
+# documentation root, use os.path.abspath to make it absolute, like shown here.
 
+#sys.path.insert(0, os.path.abspath('../src/'))
+#sys.path.insert(0, os.path.abspath('../inferpy/'))
+#sys.path.insert(0, os.path.abspath('../'))
+#sys.path.insert(0, os.path.abspath('../..'))
+
+#sys.path.insert(0, os.path.abspath('../inferpy/'))
+
+#sys.path.append('/Users/rcabanas/Documents/UAL/inferpy/repo/InferPy/')
+sys.path.insert(0, os.path.abspath('..'))
 
 # -- General configuration ------------------------------------------------
 
@@ -37,7 +43,23 @@ sys.path.insert(0, os.path.abspath('../inferpy'))
 # ones.
 extensions = ['sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
-    'sphinx.ext.githubpages']
+    'sphinx.ext.githubpages',
+    'sphinx.ext.autodoc',
+    'sphinxcontrib.napoleon']
+
+# Napoleon settings
+napoleon_google_docstring = True
+napoleon_numpy_docstring = True
+napoleon_include_init_with_doc = False
+napoleon_include_private_with_doc = False
+napoleon_include_special_with_doc = False
+napoleon_use_admonition_for_examples = False
+napoleon_use_admonition_for_notes = False
+napoleon_use_admonition_for_references = False
+napoleon_use_ivar = False
+napoleon_use_param = True
+napoleon_use_rtype = True
+napoleon_use_keyword = True
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -130,6 +152,10 @@ html_sidebars = {
         'searchbox.html',
     ]
 }
+
+
+# A list of ignored prefixes for module index sorting.
+modindex_common_prefix = ['inferpy.']
 
 
 # -- Options for HTMLHelp output ------------------------------------------

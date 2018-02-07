@@ -69,6 +69,12 @@ complex probability constructs containing deep neural networks.
    
    notes/probzoo
 
+.. toctree::
+   :maxdepth: 1
+   :caption: Package Reference
+
+   modules/inferpy
+   modules/inferpy.models
 
 
 .. Indices and tables
@@ -77,6 +83,8 @@ complex probability constructs containing deep neural networks.
   * :ref:`genindex`
   * :ref:`modindex`
   * :ref:`search`
+  
+
 
 
 .. role:: bash(code)
