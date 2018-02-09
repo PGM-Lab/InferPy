@@ -22,4 +22,3 @@ print(sample_x.shape)
 
 # get the underlying distribution Edward object
 ed_x = x.dist
-

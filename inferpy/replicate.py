@@ -82,8 +82,8 @@ class replicate():
         print("total size: " + str(replicate.get_total_size()))
 
     @staticmethod
-    def inside():
-        """Detects if a replicate construct has been initialized
+    def in_replicate():
+        """Check if a replicate construct has been initialized
 
         Returns:
              True if the method is inside a construct replicate (of size different to 1).
