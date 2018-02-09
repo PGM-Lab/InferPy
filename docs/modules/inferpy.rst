@@ -13,13 +13,6 @@ Subpackages
 Submodules
 ----------
 
-inferpy\.config module
-----------------------
-
-.. automodule:: inferpy.config
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 inferpy\.replicate module
 -------------------------

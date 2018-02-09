@@ -15,76 +15,56 @@
 
 """The Normal (Gaussian) distribution class."""
 
-from inferpy.replicate import *
-import inferpy.config as inf_conf
 import edward.models as base_models
+import inferpy.util.runtime as inf_rt
 import numpy as np
+from inferpy.replicate import *
+
+
+# \frac{1}{{\sigma \sqrt {2\pi } }}e^{{{ - \left( {x - \mu } \right)^2 }\mathord{\left/ {\vphantom {{ - \left( {x - \mu } \right)^2 } {2\sigma ^2 }}} \right. \kern-\nulldelimiterspace} {2\sigma ^2 }}}
+
+#..math::
+#
+#f(x |\mu, \sigma ^ 2)=
+#
+#         e^{{{ - \left( {x - \mu } \right)^2 }\mathord{\left/ {\vphantom {{ - \left( {x - \mu } \right)^2 } {2\sigma ^2 }}} \right.\kern-\nulldelimiterspace} {2\sigma ^2 }}}
+
 
 
 class Normal:
 
-    """The Normal distribution with location `loc` and `scale` parameters.
+    """ Class implementing the Normal distribution with location `loc`, `scale` and `dim` parameters.
 
-    #### Mathematical details
+    The probability density of the normal distribution is,
 
-    The probability density function (pdf) is,
+    .. math::
 
-    ```none
-    pdf(x; mu, sigma) = exp(-0.5 (x - mu)**2 / sigma**2) / Z
-    Z = (2 pi sigma**2)**0.5
-    ```
-    where `loc = mu` is the mean, `scale = sigma` is the std. deviation, and, `Z`
-    is the normalization constant.
+      f(x|\mu,\sigma^2)=\\frac{1}{{\\sigma \\sqrt {2\\pi}}} e^{-\\frac{(x-\\mu)^2}{2 \\sigma ^2}}
 
-    The Normal distribution is a member of the [location-scale family](
-    https://en.wikipedia.org/wiki/Location-scale_family), i.e., it can be
-    constructed as,
 
-    ```none
-    X ~ Normal(loc=0, scale=1)
-    Y = loc + scale * X
-    ```
+    where
+
+    - :math:`\mu`  is the mean or expectation of the distribution (i.e. `location`),
+    - :math:`\sigma`  is the standard deviation (i.e. `scale`), and
+    - :math:`\sigma^{2}` is the variance.
+
+
+
+    The Normal distribution is a member of the `location-scale
+    family <https://en.wikipedia.org/wiki/Location-scale_family>`_.
 
     This class allows the definition of a variable normal distributed of
-    dimension higher than 1. Each of the dimensions are independent.
+    any dimension. Each of the dimensions are independent. For example:
 
+    .. literalinclude:: ../../examples/normal_dist_definition.py
 
-    ```python
-
-    import inferpy as inf
-
-    # define a 2-dimension Normal distribution of 2·3=6 batches
-    with inf.replicate(size=2):
-        with inf.replicate(size=3):
-            x = inf.models.Normal(loc=0., scale=1., dim=2)
-
-
-    # print its parameters
-    print(x.loc)
-    print(x.scale)
-
-
-    # the shape of the distribution is (6,2)
-    print(x.shape)
-
-    # get a sample
-    sample_x = x.sample([4,10])
-
-    # the shape of the sample is (4, 10, 6, 2)
-    print(sample_x.shape)
-
-    # get the underlying distribution Edward's object
-    ed_x = x.dist
-
-    ```
 
 
     """
 
     def __init__(self, loc, scale, dim=None, name="inf_Normal"):
 
-        """ Construct Normal distributions with mean, stddev and dimension `loc`, `scale`
-         and `dim`
+        """Construct Normal distributions
 
         The parameters `loc` and `scale` must be shaped in a way that supports
         broadcasting (e.g. `loc + scale` is a valid operation). If dim is specified,
@@ -132,12 +112,12 @@ class Normal:
     @property
     def loc(self):
         """Distribution parameter for the mean."""
-        return inf_conf.tf_sess.run(self.dist.loc)
+        return inf_rt.tf_sess.run(self.dist.loc)
 
     @property
     def scale(self):
         """Distribution parameter for standard deviation."""
-        return inf_conf.tf_sess.run(self.dist.scale)
+        return inf_rt.tf_sess.run(self.dist.scale)
 
     @property
     def dim(self):
@@ -186,4 +166,4 @@ class Normal:
 
     def sample(self, v):
         """ Method for obaining a sample of shape v"""
-        return inf_conf.tf_sess.run(self.dist.sample(v))
+        return inf_rt.tf_sess.run(self.dist.sample(v))
