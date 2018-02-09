@@ -16,8 +16,8 @@
 """The Normal (Gaussian) distribution class."""
 
 import edward.models as base_models
-import inferpy.util.runtime as inf_rt
 import numpy as np
+import inferpy.util
 from inferpy.replicate import *
 
 
@@ -112,12 +112,12 @@ class Normal:
     @property
     def loc(self):
         """Distribution parameter for the mean."""
-        return inf_rt.tf_sess.run(self.dist.loc)
+        return inferpy.util.runtime.tf_sess.run(self.dist.loc)
 
     @property
     def scale(self):
         """Distribution parameter for standard deviation."""
-        return inf_rt.tf_sess.run(self.dist.scale)
+        return inferpy.util.runtime.tf_sess.run(self.dist.scale)
 
     @property
     def dim(self):
@@ -166,4 +166,4 @@ class Normal:
 
     def sample(self, v):
         """ Method for obaining a sample of shape v"""
-        return inf_rt.tf_sess.run(self.dist.sample(v))
+        return inferpy.util.runtime.tf_sess.run(self.dist.sample(v))

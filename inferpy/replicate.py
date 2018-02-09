@@ -76,7 +76,7 @@ class replicate():
         return reduce(lambda x, y: x * y, replicate.__sizes)
 
     @staticmethod
-    def print():
+    def print_total_size():
         """Static that prints the total size
         """
         print("total size: " + str(replicate.get_total_size()))
