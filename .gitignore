@@ -6,5 +6,7 @@
 
 
 */log/*
-*/dist/*
-*/egg-info/*
+*dist/*
+*egg-info*
+.eggs/*
+/build/*

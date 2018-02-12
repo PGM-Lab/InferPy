@@ -18,20 +18,14 @@
 import edward.models as base_models
 import numpy as np
 import inferpy.util
+from inferpy.models.random_variable import *
 from inferpy.replicate import *
 
 
-# \frac{1}{{\sigma \sqrt {2\pi } }}e^{{{ - \left( {x - \mu } \right)^2 }\mathord{\left/ {\vphantom {{ - \left( {x - \mu } \right)^2 } {2\sigma ^2 }}} \right. \kern-\nulldelimiterspace} {2\sigma ^2 }}}
-
-#..math::
-#
-#f(x |\mu, \sigma ^ 2)=
-#
-#         e^{{{ - \left( {x - \mu } \right)^2 }\mathord{\left/ {\vphantom {{ - \left( {x - \mu } \right)^2 } {2\sigma ^2 }}} \right.\kern-\nulldelimiterspace} {2\sigma ^2 }}}
 
 
 
-class Normal:
+class Normal(RandomVariable):
 
     """ Class implementing the Normal distribution with location `loc`, `scale` and `dim` parameters.
 
@@ -105,7 +99,7 @@ class Normal:
 
         # build the distribution
 
-        self.__dist = base_models.Normal(loc=loc_rep, scale=scale_rep, name=name)
+        super(Normal, self).__init__(base_models.Normal(loc=loc_rep, scale=scale_rep, name=name))
 
     # getter methods
 
@@ -119,25 +113,6 @@ class Normal:
         """Distribution parameter for standard deviation."""
         return inferpy.util.runtime.tf_sess.run(self.dist.scale)
 
-    @property
-    def dim(self):
-        """ Dimensionality of variable """
-        return self.dist.shape.as_list()[1]
-
-    @property
-    def batches(self):
-        """ Number of batches of the variable"""
-        return self.dist.shape.as_list()[0]
-
-    @property
-    def shape(self):
-        """ shape of the variable, i.e. (batches, dim)"""
-        return self.dist.shape.as_list()
-
-    @property
-    def dist(self):
-        """Underlying Edward object"""
-        return self.__dist
 
 
 
@@ -163,7 +138,3 @@ class Normal:
         if dim != None and len_scale > 1 and dim != len_scale:
             raise ValueError("scale length is not consistent with value in dim")
 
-
-    def sample(self, v):
-        """ Method for obaining a sample of shape v"""
-        return inferpy.util.runtime.tf_sess.run(self.dist.sample(v))
