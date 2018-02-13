@@ -28,7 +28,7 @@ class ProbModel():
 
     __active_models = []
 
-    def __init__(self,distlist=[]):
+    def __init__(self, varlist=[]):
         """Initializes the ...
 
         Args:
@@ -36,7 +36,7 @@ class ProbModel():
 
         """
 
-        for d in distlist:
+        for d in varlist:
             if not isinstance(d, inferpy.models.RandomVariable):
                 raise ValueError("The input argument is not a list of RandomVariables")
 
@@ -44,17 +44,17 @@ class ProbModel():
             raise inferpy.util.ScopeException("Nested probabilistic models cannot be defined")
 
 
-        self.distlist=distlist
+        self.varlist=varlist
 
     # properties and setters
 
     @property
-    def distlist(self):
-        return self.__distlist
+    def varlist(self):
+        return self.__varlist
 
-    @distlist.setter
-    def distlist(self,distlist):
-        self.__distlist = distlist
+    @varlist.setter
+    def varlist(self,varlist):
+        self.__varlist = varlist
 
 
     # other methods
@@ -69,13 +69,13 @@ class ProbModel():
     def __exit__(self, exc_type, exc_val, exc_tb):
         ProbModel.__active_models.pop()
 
-    def add_dist(self, d):
+    def add_var(self, v):
 
-        if isinstance(d, inferpy.models.RandomVariable) == False:
+        if isinstance(v, inferpy.models.RandomVariable) == False:
             raise ValueError("The input argument is not a RandomVariable")
 
-        if(d not in self.distlist):
-            self.distlist.append(d)
+        if(v not in self.varlist):
+            self.varlist.append(v)
 
     @staticmethod
     def get_active_model():

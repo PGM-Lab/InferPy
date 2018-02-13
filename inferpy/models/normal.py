@@ -56,7 +56,7 @@ class Normal(RandomVariable):
 
     """
 
-    def __init__(self, loc, scale, dim=None, name="inf_Normal"):
+    def __init__(self, loc, scale, dim=None, observed=False, name="inf_Normal"):
 
         """Construct Normal distributions
 
@@ -100,6 +100,7 @@ class Normal(RandomVariable):
         # build the distribution
 
         super(Normal, self).__init__(base_models.Normal(loc=loc_rep, scale=scale_rep, name=name))
+        self.observed=observed
 
     # getter methods
 
