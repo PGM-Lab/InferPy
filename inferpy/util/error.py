@@ -1,0 +1,2 @@
+class ScopeException(Exception):
+    pass

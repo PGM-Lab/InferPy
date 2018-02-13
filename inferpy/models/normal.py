@@ -81,7 +81,7 @@ class Normal(RandomVariable):
 
 
         param_dim = 1
-        if dim != None: param_dim
+        if dim != None: param_dim = dim
 
         # shape = (batches, dimension)
         self_shape = (replicate.get_total_size(), np.max([np.size(loc), np.size(scale), param_dim]))

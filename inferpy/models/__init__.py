@@ -2,3 +2,4 @@
 #
 
 from inferpy.models.normal import *
+from inferpy.models.random_variable import *
