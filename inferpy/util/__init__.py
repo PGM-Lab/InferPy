@@ -7,3 +7,4 @@ useful for the main functionality provided by inferpy """
 
 from inferpy.util.runtime import *
 from inferpy.util.error import *
+from inferpy.util.wrappers import *

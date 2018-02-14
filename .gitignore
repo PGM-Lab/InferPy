@@ -5,7 +5,7 @@
 *_ignored*
 
 
-*/log/*
+*log/*
 *dist/*
 *egg-info*
 .eggs/*

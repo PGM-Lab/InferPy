@@ -1,7 +1,11 @@
 import inferpy.util
+from inferpy.util import tf_run_wrapper
 
 from inferpy.prob_model import ProbModel
 import tensorflow as tf
+
+
+
 
 
 class RandomVariable(object):
@@ -50,22 +54,24 @@ class RandomVariable(object):
     def observed(self,observed):
         self.__observed=observed
 
-
+    @tf_run_wrapper
     def sample(self, v):
         """ Method for obaining a sample of shape v"""
-        return inferpy.util.runtime.tf_sess.run(self.dist.sample(v))
+        return self.dist.sample(v)
 
+    @tf_run_wrapper
     def prob(self, v):
-        return inferpy.util.runtime.tf_sess.run(
-            self.dist.prob(tf.cast(v, tf.float64))
-        )
+        return self.dist.prob(tf.cast(v, tf.float64))
 
+    @tf_run_wrapper
     def log_prob(self, v):
-        return inferpy.util.runtime.tf_sess.run(
-            self.dist.log_prob(tf.cast(v, tf.float64))
-    )
+        return self.dist.log_prob(tf.cast(v, tf.float64))
+
 
 
     def __repr__(self):
         return "<inferpy RandomVariable '%s' shape=%s dtype=%s>" % (
             self.name, self.shape, self.dist.dtype.name)
+
+
+

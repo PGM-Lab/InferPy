@@ -18,6 +18,8 @@
 import edward.models as base_models
 import numpy as np
 import inferpy.util
+
+from inferpy.util import tf_run_wrapper
 from inferpy.models.random_variable import *
 from inferpy.replicate import *
 
@@ -105,14 +107,17 @@ class Normal(RandomVariable):
     # getter methods
 
     @property
+    @tf_run_wrapper
     def loc(self):
         """Distribution parameter for the mean."""
-        return inferpy.util.runtime.tf_sess.run(self.dist.loc)
+        return self.dist.loc
+
 
     @property
+    @tf_run_wrapper
     def scale(self):
         """Distribution parameter for standard deviation."""
-        return inferpy.util.runtime.tf_sess.run(self.dist.scale)
+        return self.dist.scale
 
 
 
