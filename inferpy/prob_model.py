@@ -74,8 +74,15 @@ class ProbModel():
         if isinstance(v, inferpy.models.RandomVariable) == False:
             raise ValueError("The input argument is not a RandomVariable")
 
-        if(v not in self.varlist):
+        if v not in self.varlist:
             self.varlist.append(v)
+
+
+    def log_prob(self, sample_list):
+        pass
+
+
+    # static methods
 
     @staticmethod
     def get_active_model():
