@@ -16,8 +16,7 @@ class RandomVariable(object):
         self._dist = dist
 
         if ProbModel.is_active():
-            print("is active")
-            ProbModel.get_active_model().distlist.append(self)
+            ProbModel.get_active_model().varlist.append(self)
 
 
     @property
@@ -43,7 +42,7 @@ class RandomVariable(object):
     @property
     def name(self):
         """ name of the variable"""
-        return self.dist.name
+        return self.dist.name[0:-1]
 
 
     @property
@@ -66,6 +65,16 @@ class RandomVariable(object):
     @tf_run_wrapper
     def log_prob(self, v):
         return self.dist.log_prob(tf.cast(v, tf.float64))
+
+    @tf_run_wrapper
+    def prod_prob(self, v):
+        return tf.reduce_prod(self.dist.prob(tf.cast(v, tf.float64)))
+
+    @tf_run_wrapper
+    def sum_log_prob(self, v):
+        return tf.reduce_sum(self.dist.log_prob(tf.cast(v, tf.float64)))
+
+
 
 
 

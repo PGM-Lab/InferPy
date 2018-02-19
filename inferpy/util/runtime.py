@@ -19,5 +19,25 @@
 
 
 import tensorflow as tf
+from inferpy.util.wrappers import singleton
 
-tf_sess = tf.Session()
+
+
+
+@singleton
+class Runtime():
+    #def __init__(self):
+    tf_run_default = True
+    tf_sess = tf.Session()
+
+
+
+
+
+
+
+
+
+
+
+

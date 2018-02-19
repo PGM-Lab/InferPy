@@ -21,6 +21,9 @@ sample_x = x.sample([4,10])
 print(sample_x.shape)
 
 
+x.sample(1, tf_run=False)
+x.sample(1)
+
 # probability and log probability of the sample
 x.prob(sample_x)
 
@@ -29,3 +32,6 @@ x.log_prob(sample_x)
 
 # get the underlying distribution Edward object
 ed_x = x.dist
+
+x = inf.models.Normal(loc=0., scale=1., dim=1)
+x.sample([2,2])

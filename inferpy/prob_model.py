@@ -19,6 +19,8 @@
 
 import inferpy.util
 import inferpy.models
+from inferpy.util import tf_run_wrapper
+
 
 class ProbModel():
     """Class implementing a probabilistic model
@@ -78,12 +80,46 @@ class ProbModel():
             self.varlist.append(v)
 
 
-    def log_prob(self, sample_list):
-        pass
+    def get_var(self,name):
+        for v in self.varlist:
+            if v.name ==  name:
+                return v
+        return None
 
+
+
+    @tf_run_wrapper
+    def log_prob(self, sample_dict):
+
+        sd = {}
+
+        for k, v in sample_dict.iteritems():
+            var=self.get_var(k)
+            sd.update({k: var.log_prob(v, tf_run=False )})
+
+
+        return sd
+
+    @tf_run_wrapper
+    def sum_log_prob(self, sample_dict):
+
+        lp=0
+
+        for k, v in sample_dict.iteritems():
+            var = self.get_var(k)
+            lp += var.sum_log_prob(v, tf_run=False)
+
+        return lp
+
+    @tf_run_wrapper
+    def sample(self):
+        sd = {}
+        for v in self.varlist:
+            sd.update({v.name:v.sample(1, tf_run=False)})
+
+        return sd
 
     # static methods
-
     @staticmethod
     def get_active_model():
         if ProbModel.is_active():
