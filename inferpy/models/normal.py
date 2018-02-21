@@ -58,7 +58,7 @@ class Normal(RandomVariable):
 
     """
 
-    def __init__(self, loc, scale, dim=None, observed=False, name="inf_Normal"):
+    def __init__(self, loc, scale, dim=None, observed=True, name="inf_Normal"):
 
         """Construct Normal distributions
 
@@ -78,7 +78,6 @@ class Normal(RandomVariable):
 
         """
 
-
         self.__check_params(loc, scale, dim)
 
 
@@ -88,21 +87,12 @@ class Normal(RandomVariable):
         # shape = (batches, dimension)
         self_shape = (replicate.get_total_size(), np.max([np.size(loc), np.size(scale), param_dim]))
 
-        # build the loc and scale matrix
-        if np.isscalar(loc):
-            loc_rep = np.tile(loc, (self_shape[0], self_shape[1]))
-        else:
-            loc_rep = np.tile(loc, (self_shape[0], 1))
-
-        if np.isscalar(scale):
-            scale_rep = np.tile(scale, (self_shape[0], self_shape[1]))
-        else:
-            scale_rep = np.tile(scale, (self_shape[0], 1))
+        loc_rep = self.__reshape_param(loc, self_shape)
+        scale_rep = self.__reshape_param(scale, self_shape)
 
         # build the distribution
 
-        super(Normal, self).__init__(base_models.Normal(loc=loc_rep, scale=scale_rep, name=name))
-        self.observed=observed
+        super(Normal, self).__init__(base_models.Normal(loc=loc_rep, scale=scale_rep, name=name), observed=observed)
 
     # getter methods
 
@@ -144,3 +134,31 @@ class Normal(RandomVariable):
         if dim != None and len_scale > 1 and dim != len_scale:
             raise ValueError("scale length is not consistent with value in dim")
 
+
+    def __reshape_param(self,param, self_shape):
+
+        N = self_shape[0]
+        D = self_shape[1]
+
+
+        # get a D*N unidimensional vector
+
+        if np.shape(param) in [(), (1,)] or isinstance(param, RandomVariable):
+            param_vect = np.repeat(param, D * N).tolist()
+        else:
+            param_vect = np.tile(param, N).tolist()
+
+        # transform the numerical values into tensors
+
+        for i in range(0, D * N):
+            if np.isscalar(param_vect[i]):
+                param_vect[i] = [[tf.constant(param_vect[i], dtype="float64")]]
+            elif isinstance(param_vect[i], RandomVariable):
+                param_vect[i] = param_vect[i].dist
+
+
+        # reshape the list
+
+        param_tf_mat = tf.reshape(tf.stack(param_vect), [N, D])
+
+        return param_tf_mat

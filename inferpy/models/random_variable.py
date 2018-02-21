@@ -12,8 +12,9 @@ class RandomVariable(object):
     """Base class for random variables.
     """
 
-    def __init__(self, dist):
+    def __init__(self, dist, observed):
         self._dist = dist
+        self.observed = observed
 
         if ProbModel.is_active():
             ProbModel.get_active_model().varlist.append(self)
@@ -47,16 +48,16 @@ class RandomVariable(object):
 
     @property
     def observed(self):
-        return self.observed
+        return self.__observed
 
     @observed.setter
     def observed(self,observed):
         self.__observed=observed
 
     @tf_run_wrapper
-    def sample(self, v):
+    def sample(self, size=1):
         """ Method for obaining a sample of shape v"""
-        return self.dist.sample(v)
+        return self.dist.sample(size)
 
     @tf_run_wrapper
     def prob(self, v):

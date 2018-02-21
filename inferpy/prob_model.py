@@ -64,6 +64,25 @@ class ProbModel():
     def compile(self):
         pass
 
+    def get_observed_vars(self):
+        vl = []
+        for v in self.varlist:
+            if v.observed:
+                vl.append(v)
+        return vl
+
+    def get_latent_vars(self):
+        vl = []
+        for v in self.varlist:
+            if v.observed==False:
+                vl.append(v)
+        return vl
+
+
+
+
+
+
     def __enter__(self):
         ProbModel.__active_models.append(self)
         return self
@@ -95,7 +114,7 @@ class ProbModel():
 
         for k, v in sample_dict.iteritems():
             var=self.get_var(k)
-            sd.update({k: var.log_prob(v, tf_run=False )})
+            sd.update({k: var.log_prob(v, tf_run=False)})
 
 
         return sd
@@ -112,12 +131,22 @@ class ProbModel():
         return lp
 
     @tf_run_wrapper
-    def sample(self):
+    def sample(self, size=1):
         sd = {}
         for v in self.varlist:
-            sd.update({v.name:v.sample(1, tf_run=False)})
+            sd.update({v.name:v.sample(size, tf_run=False)})
 
         return sd
+
+    def get_config(self):
+        raise NotImplementedError
+
+    def to_json(self):
+        raise NotImplementedError
+
+    def summary(self):
+        raise NotImplementedError
+
 
     # static methods
     @staticmethod
