@@ -28,12 +28,16 @@ class RandomVariable(object):
     @property
     def dim(self):
         """ Dimensionality of variable """
-        return self.dist.shape.as_list()[1]
+        return self.dist.shape.as_list()[-1]
 
     @property
     def batches(self):
         """ Number of batches of the variable"""
-        return self.dist.shape.as_list()[0]
+
+        dist_shape = self.dist.shape.as_list()
+        if len(dist_shape)>1:
+            return dist_shape[-2]
+        return 1
 
     @property
     def shape(self):
@@ -56,8 +60,15 @@ class RandomVariable(object):
 
     @tf_run_wrapper
     def sample(self, size=1):
-        """ Method for obaining a sample of shape v"""
-        return self.dist.sample(size)
+        """ Method for obaining a samples"""
+        s = self.dist.sample(size)
+
+
+        if self.batches == 1:
+            s = tf.reshape(s, [size, self.dim])
+
+        return s
+
 
     @tf_run_wrapper
     def prob(self, v):

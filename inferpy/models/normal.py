@@ -58,7 +58,7 @@ class Normal(RandomVariable):
 
     """
 
-    def __init__(self, loc, scale, dim=None, observed=True, name="inf_Normal"):
+    def __init__(self, loc, scale, dim=None, observed=False, name="inf_Normal"):
 
         """Construct Normal distributions
 
@@ -159,6 +159,11 @@ class Normal(RandomVariable):
 
         # reshape the list
 
-        param_tf_mat = tf.reshape(tf.stack(param_vect), [N, D])
+        if N>1:
+            param_tf_mat = tf.reshape(tf.stack(param_vect), (N, D))
+        else:
+            param_tf_mat = tf.reshape(tf.stack(param_vect), (D,))
+
+
 
         return param_tf_mat

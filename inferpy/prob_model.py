@@ -22,7 +22,7 @@ import inferpy.models
 from inferpy.util import tf_run_wrapper
 
 
-class ProbModel():
+class ProbModel(object):
     """Class implementing a probabilistic model
 
 
@@ -58,26 +58,29 @@ class ProbModel():
     def varlist(self,varlist):
         self.__varlist = varlist
 
-
-    # other methods
-
-    def compile(self):
-        pass
-
-    def get_observed_vars(self):
+    @property
+    def observed_vars(self):
         vl = []
         for v in self.varlist:
             if v.observed:
                 vl.append(v)
         return vl
 
-    def get_latent_vars(self):
+
+    @property
+    def latent_vars(self):
         vl = []
         for v in self.varlist:
             if v.observed==False:
                 vl.append(v)
         return vl
 
+
+
+    # other methods
+
+    def compile(self):
+        pass
 
 
 
