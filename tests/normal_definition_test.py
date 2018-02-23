@@ -18,7 +18,7 @@ class Normal_test_definition(unittest.TestCase):
 		mean_x = np.mean(sample_x)
 
 
-		self.assertTrue(shape_x == (100,1,3))
+		self.assertTrue(shape_x == (100,3))
 		self.assertTrue(abs(mean_x - np.mean(loc)) < np.max(scale))
 
 

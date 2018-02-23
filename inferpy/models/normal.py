@@ -152,7 +152,7 @@ class Normal(RandomVariable):
 
         for i in range(0, D * N):
             if np.isscalar(param_vect[i]):
-                param_vect[i] = [[tf.constant(param_vect[i], dtype="float64")]]
+                param_vect[i] = [[tf.constant(param_vect[i], dtype="float32")]]
             elif isinstance(param_vect[i], RandomVariable):
                 param_vect[i] = param_vect[i].dist
 

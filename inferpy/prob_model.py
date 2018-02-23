@@ -20,6 +20,9 @@
 import inferpy.util
 import inferpy.models
 from inferpy.util import tf_run_wrapper
+import tensorflow as tf
+import edward as ed
+import numpy as np
 
 
 class ProbModel(object):
@@ -77,10 +80,6 @@ class ProbModel(object):
 
 
 
-    # other methods
-
-    def compile(self):
-        pass
 
 
 
