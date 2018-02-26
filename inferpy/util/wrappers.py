@@ -37,9 +37,9 @@ def multishape(f):
 
         first_arg = 1
 
-        if np.shape(args[first_arg]) == [1]:            # single element
+        if np.ndim(args[first_arg]) == 0:            # single element
             return f(*args, **kwargs)
-        elif len(np.shape(args[first_arg]))==1:         # unidimensional vector
+        elif np.ndim(args[first_arg]) == 1:        # unidimensional vector
             output = []
             for i in args[1]:
 

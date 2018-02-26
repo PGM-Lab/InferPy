@@ -34,7 +34,7 @@ class ProbModel(object):
 
     __active_models = []
 
-    def __init__(self, varlist=[]):
+    def __init__(self, input_varlist=[]):
         """Initializes the ...
 
         Args:
@@ -42,7 +42,7 @@ class ProbModel(object):
 
         """
 
-        for d in varlist:
+        for d in input_varlist:
             if not isinstance(d, inferpy.models.RandomVariable):
                 raise ValueError("The input argument is not a list of RandomVariables")
 
@@ -50,7 +50,7 @@ class ProbModel(object):
             raise inferpy.util.ScopeException("Nested probabilistic models cannot be defined")
 
 
-        self.varlist=varlist
+        self.varlist=input_varlist
 
         self.q_vars = {}
         self.data = {}

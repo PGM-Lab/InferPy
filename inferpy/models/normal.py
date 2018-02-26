@@ -22,6 +22,7 @@ import inferpy.util
 from inferpy.util import tf_run_wrapper
 from inferpy.models.random_variable import *
 from inferpy.replicate import *
+from inferpy.util import get_total_dimension
 
 
 
@@ -85,7 +86,7 @@ class Normal(RandomVariable):
         if dim != None: param_dim = dim
 
         # shape = (batches, dimension)
-        self_shape = (replicate.get_total_size(), np.max([np.size(loc), np.size(scale), param_dim]))
+        self_shape = (replicate.get_total_size(), np.max([get_total_dimension(loc), get_total_dimension(scale), param_dim]))
 
         loc_rep = self.__reshape_param(loc, self_shape)
         scale_rep = self.__reshape_param(scale, self_shape)
@@ -115,24 +116,39 @@ class Normal(RandomVariable):
     def __check_params(self, loc, scale, dim):
         """private method that checks the consistency of the input parameters"""
 
+
         # loc and scale cannot be multidimensional arrays (by now)
         if np.ndim(loc) > 1 or np.ndim(scale) > 1:
             raise ValueError("loc and scale cannot be multidimensional arrays")
 
-        len_loc = np.size(loc)
-        len_scale = np.size(scale)
+
+        dim_loc = get_total_dimension(loc)
+        dim_scale = get_total_dimension(scale)
+
 
         # loc and scale lengths must be equal or must be scalars
-        if len_loc > 1 and len_scale > 1 and len_loc != len_scale:
+        if dim_loc > 1 and dim_scale > 1 and dim_loc != dim_scale:
             raise ValueError("loc and scale lengths must be equal or must be 1")
 
         # loc can be a scalar or a vector of length dim
-
-        if dim != None and len_loc > 1 and dim != len_loc:
+        if dim != None and dim_loc > 1 and dim != dim_loc:
             raise ValueError("loc length is not consistent with value in dim")
 
-        if dim != None and len_scale > 1 and dim != len_scale:
+        if dim != None and dim_scale > 1 and dim != dim_scale:
             raise ValueError("scale length is not consistent with value in dim")
+
+    def __compute_shape(self, loc, scale, param_dim):
+
+        N = replicate.get_total_size()
+        loc_size = np.size(loc)
+        loc_scale = np.size(scale)
+
+       # if isinstance(loc, RandomVariable):
+
+
+
+        self_shape = (N, np.max([loc_size, loc_scale, param_dim]))
+
 
 
     def __reshape_param(self,param, self_shape):
@@ -143,14 +159,15 @@ class Normal(RandomVariable):
 
         # get a D*N unidimensional vector
 
-        if np.shape(param) in [(), (1,)] or isinstance(param, RandomVariable):
+        if np.shape(param) in [(), (1,)] or\
+                (isinstance(param, RandomVariable) and param.dim==1):
             param_vect = np.repeat(param, D * N).tolist()
         else:
             param_vect = np.tile(param, N).tolist()
 
         # transform the numerical values into tensors
 
-        for i in range(0, D * N):
+        for i in range(0, len(param_vect)):
             if np.isscalar(param_vect[i]):
                 param_vect[i] = [[tf.constant(param_vect[i], dtype="float32")]]
             elif isinstance(param_vect[i], RandomVariable):
@@ -160,7 +177,7 @@ class Normal(RandomVariable):
         # reshape the list
 
         if N>1:
-            param_tf_mat = tf.reshape(tf.stack(param_vect), (N, D))
+            param_tf_mat = tf.reshape(tf.stack(param_vect), (N, -1))
         else:
             param_tf_mat = tf.reshape(tf.stack(param_vect), (D,))
 
