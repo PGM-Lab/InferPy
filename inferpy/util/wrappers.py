@@ -31,6 +31,29 @@ def tf_run_wrapper(f):
 
 
 
+def multishape(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+
+        first_arg = 1
+
+        if np.shape(args[first_arg]) == [1]:            # single element
+            return f(*args, **kwargs)
+        elif len(np.shape(args[first_arg]))==1:         # unidimensional vector
+            output = []
+            for i in args[1]:
+
+                if first_arg == 1:
+                    output.append(f(args[0], i, **kwargs))
+                else:
+                    output.append(f(i, **kwargs))
+            return output
+        else:
+            raise ValueError("@multishape wrapper can only be applied to single elements or to 1-dimension vectors")
+
+
+    return wrapper
+
 
 def singleton(class_):
     class class_w(class_):

@@ -20,6 +20,7 @@
 import inferpy.util
 import inferpy.models
 from inferpy.util import tf_run_wrapper
+from inferpy.util import multishape
 import tensorflow as tf
 import edward as ed
 import numpy as np
@@ -111,8 +112,8 @@ class ProbModel(object):
         self.inference.run()
         self.propagated = True
 
+    @multishape
     def posterior(self, latent_var):
-
 
         if self.propagated == False:
             self.inference.run()
