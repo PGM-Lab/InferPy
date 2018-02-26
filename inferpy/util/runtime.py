@@ -20,6 +20,7 @@
 
 import tensorflow as tf
 from inferpy.util.wrappers import singleton
+import edward as ed
 
 
 
@@ -28,7 +29,17 @@ from inferpy.util.wrappers import singleton
 class Runtime():
     #def __init__(self):
     tf_run_default = True
-    tf_sess = tf.Session()
+
+
+    tf_sess = ed.get_session()
+    init_g = tf.global_variables_initializer()
+    init_l = tf.local_variables_initializer()
+    tf_sess.run(init_g)
+    tf_sess.run(init_l)
+
+
+
+
 
 
 

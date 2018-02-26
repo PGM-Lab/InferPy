@@ -58,7 +58,7 @@ class Normal(RandomVariable):
 
     """
 
-    def __init__(self, loc, scale, dim=None, observed=False, name="inf_Normal"):
+    def __init__(self, loc=0, scale=1, dim=None, observed=False, name="inf_Normal"):
 
         """Construct Normal distributions
 
@@ -167,3 +167,9 @@ class Normal(RandomVariable):
 
 
         return param_tf_mat
+
+
+    def __repr__(self):
+        return "<inferpy Normal '%s', loc=%s, scale=%s, shape=%s dtype=%s>" % (
+            self.name, self.loc, self.scale, self.shape, self.dist.dtype.name)
+

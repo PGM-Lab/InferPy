@@ -51,6 +51,11 @@ class ProbModel(object):
 
         self.varlist=varlist
 
+        self.q_vars = {}
+        self.data = {}
+
+        self.propagated = False
+
     # properties and setters
 
     @property
@@ -78,11 +83,45 @@ class ProbModel(object):
                 vl.append(v)
         return vl
 
+    # other methods
+
+    def compile(self):
+
+        self.q_vars = {}
+        for v in self.latent_vars:
+            qv = ed.models.Normal(loc=tf.Variable(np.zeros(v.dim), dtype="float32"),
+                                  scale=tf.Variable(np.ones(v.dim), dtype="float32"),
+                                  name = "q_"+v.name)
+
+            self.q_vars.update({v.dist: qv})
+
+        self.propagated = False
 
 
+    def fit(self, data):
+
+        self.data = {}
+
+        for k, v in data.iteritems():
+            self.data.update({self.get_var(k).dist: v})
+
+        self.q_vars.get(self.latent_vars[0].dist)
+
+        self.inference = ed.KLqp(self.q_vars, self.data)
+        self.inference.run()
+        self.propagated = True
+
+    def posterior(self, latent_var):
 
 
+        if self.propagated == False:
+            self.inference.run()
+            self.propagated = True
 
+        post = inferpy.models.Normal(name="post_"+latent_var.name)
+        post.dist = self.inference.latent_vars.get(latent_var.dist)
+
+        return post
 
 
     def __enter__(self):
@@ -99,6 +138,7 @@ class ProbModel(object):
 
         if v not in self.varlist:
             self.varlist.append(v)
+            self.propagated = False
 
 
     def get_var(self,name):

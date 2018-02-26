@@ -3,6 +3,8 @@ from inferpy.util import tf_run_wrapper
 
 from inferpy.prob_model import ProbModel
 import tensorflow as tf
+import edward as ed
+
 
 
 
@@ -58,6 +60,17 @@ class RandomVariable(object):
     def observed(self,observed):
         self.__observed=observed
 
+
+    @dist.setter
+    def dist(self, dist):
+        """ Set the Underlying Edward object"""
+
+        if isinstance(dist, ed.models.RandomVariable)==False:
+            raise ValueError("Type of input distribution is nor correct")
+
+        self._dist = dist
+
+
     @tf_run_wrapper
     def sample(self, size=1):
         """ Method for obaining a samples"""
@@ -87,12 +100,9 @@ class RandomVariable(object):
         return tf.reduce_sum(self.dist.log_prob(tf.cast(v, tf.float64)))
 
 
-
-
-
-    def __repr__(self):
-        return "<inferpy RandomVariable '%s' shape=%s dtype=%s>" % (
-            self.name, self.shape, self.dist.dtype.name)
+def __repr__(self):
+    return "<inferpy RandomVariable '%s' shape=%s dtype=%s>" % (
+        self.name, self.shape, self.dist.dtype.name)
 
 
 
