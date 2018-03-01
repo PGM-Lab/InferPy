@@ -1,5 +1,8 @@
 import unittest
 import edward as ed
+
+
+reload(ed)
 ed.set_seed(1234)
 
 import inferpy as inf
@@ -85,8 +88,8 @@ class param_inference_test(unittest.TestCase):
         print(m.posterior(theta1).loc[0])
         print(m.posterior(theta2).loc[0])
 
-        self.assertTrue(abs(m.posterior(theta1).loc[0]-29.100826)<0.000001)
-        self.assertTrue(abs(m.posterior(theta2).loc[0]-9.958248)<0.000001)
+        self.assertTrue(abs(m.posterior(theta1).loc[0]-29.10924)<0.000001)
+        self.assertTrue(abs(m.posterior(theta2).loc[0]-9.936194)<0.000001)
 
 
 
