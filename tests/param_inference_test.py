@@ -117,11 +117,11 @@ class param_inference_test(unittest.TestCase):
         self.assertTrue(abs(p1 - 29.017122) < 0.000001)
 
 
-        self.assertTrue(abs(p2_1 - 29.37763) < 0.000001)
-        self.assertTrue(abs(p2_2 - 9.875541) < 0.000001)
+        self.assertTrue(abs(p2_1 - 29.116755) < 0.000001)
+        self.assertTrue(abs(p2_2 - 9.7884035) < 0.000001)
 
-        self.assertTrue(abs(p3_1-29.1559)<0.000001)
-        self.assertTrue(abs(p3_2-9.723072)<0.000001)
+        self.assertTrue(abs(p3_1-29.07829)<0.000001)
+        self.assertTrue(abs(p3_2-9.619476)<0.000001)
 
 
 

@@ -168,7 +168,10 @@ class Normal(RandomVariable):
 
 
 
-        if np.all(map(lambda x: np.isscalar(x), param_vect)):            # only numerical values
+
+
+
+        if np.all(list(map(lambda x: np.isscalar(x), param_vect))):            # only numerical values
 
             # reshape the list
             if N > 1:

@@ -25,6 +25,9 @@ import tensorflow as tf
 import edward as ed
 import numpy as np
 
+from six import iteritems
+
+
 
 class ProbModel(object):
     """Class implementing a probabilistic model
@@ -103,7 +106,7 @@ class ProbModel(object):
 
         self.data = {}
 
-        for k, v in data.iteritems():
+        for k, v in iteritems(data):
             self.data.update({self.get_var(k).dist: v})
 
         self.q_vars.get(self.latent_vars[0].dist)
@@ -155,7 +158,7 @@ class ProbModel(object):
 
         sd = {}
 
-        for k, v in sample_dict.iteritems():
+        for k, v in iteritems(sample_dict):
             var=self.get_var(k)
             sd.update({k: var.log_prob(v, tf_run=False)})
 
@@ -167,7 +170,7 @@ class ProbModel(object):
 
         lp=0
 
-        for k, v in sample_dict.iteritems():
+        for k, v in iteritems(sample_dict):
             var = self.get_var(k)
             lp += var.sum_log_prob(v, tf_run=False)
 
