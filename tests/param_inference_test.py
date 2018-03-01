@@ -5,8 +5,7 @@ import edward as ed
 import tensorflow as tf
 import numpy as np
 
-np.random.seed(1234)
-tf.set_random_seed(1234)
+
 
 import inferpy as inf
 
@@ -16,6 +15,10 @@ import inferpy as inf
 
 class param_inference_test(unittest.TestCase):
     def test(self):
+
+
+        np.random.seed(1234)
+        tf.set_random_seed(1234)
 
         #### learning a 1-dim parameter from 1-dim data
 
@@ -36,13 +39,17 @@ class param_inference_test(unittest.TestCase):
 
         m.fit(data)
 
-        print(m.posterior(theta).loc[0])
-        self.assertTrue(abs(m.posterior(theta).loc[0]-29.017122)<0.000001)
+        p1 = m.posterior(theta).loc[0]
+
+
 
 
 
         #### learning a 2-dim parameter from 2-dim data
 
+
+        np.random.seed(1234)
+        tf.set_random_seed(1234)
 
         N = 50
         sampling_mean = [30., 10.]
@@ -61,15 +68,19 @@ class param_inference_test(unittest.TestCase):
 
         m.fit(data)
 
-        print(m.posterior(theta).loc[0])
-        print(m.posterior(theta).loc[1])
+        p2_1 = m.posterior(theta).loc[0]
+        p2_2 = m.posterior(theta).loc[1]
 
 
-        self.assertTrue(abs(m.posterior(theta).loc[0]-28.963005)<0.000001)
-        self.assertTrue(abs(m.posterior(theta).loc[1]-9.735327)<0.000001)
+
+
 
 
         #### learning two 1-dim parameter from 2-dim data
+
+
+        np.random.seed(1234)
+        tf.set_random_seed(1234)
 
 
         N = 50
@@ -90,12 +101,27 @@ class param_inference_test(unittest.TestCase):
 
         m.fit(data)
 
+        p3_1 = m.posterior(theta1).loc[0]
+        p3_2 = m.posterior(theta2).loc[0]
 
-        print(m.posterior(theta1).loc[0])
-        print(m.posterior(theta2).loc[0])
 
-        self.assertTrue(abs(m.posterior(theta1).loc[0]-29.10924)<0.000001)
-        self.assertTrue(abs(m.posterior(theta2).loc[0]-9.936194)<0.000001)
+        ## asserts
+
+
+        print(p1)
+        print(p2_1)
+        print(p2_2)
+        print(p3_1)
+        print(p3_2)
+
+        self.assertTrue(abs(p1 - 29.017122) < 0.000001)
+
+
+        self.assertTrue(abs(p2_1 - 29.37763) < 0.000001)
+        self.assertTrue(abs(p2_2 - 9.875541) < 0.000001)
+
+        self.assertTrue(abs(p3_1-29.1559)<0.000001)
+        self.assertTrue(abs(p3_2-9.723072)<0.000001)
 
 
 
