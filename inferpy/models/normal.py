@@ -59,7 +59,7 @@ class Normal(RandomVariable):
 
     """
 
-    def __init__(self, loc=0, scale=1, dim=None, observed=False, name="inf_Normal"):
+    def __init__(self, loc=0, scale=1, dim=None, observed=False, name="Normal"):
 
         """Construct Normal distributions
 
@@ -165,22 +165,37 @@ class Normal(RandomVariable):
         else:
             param_vect = np.tile(param, N).tolist()
 
-        # transform the numerical values into tensors
-
-        for i in range(0, len(param_vect)):
-            if np.isscalar(param_vect[i]):
-                param_vect[i] = [[tf.constant(param_vect[i], dtype="float32")]]
-            elif isinstance(param_vect[i], RandomVariable):
-                param_vect[i] = param_vect[i].dist
 
 
-        # reshape the list
 
-        if N>1:
-            param_tf_mat = tf.reshape(tf.stack(param_vect), (N, -1))
-        else:
-            param_tf_mat = tf.reshape(tf.stack(param_vect), (D,))
+        if np.all(map(lambda x: np.isscalar(x), param_vect)):            # only numerical values
 
+            # reshape the list
+            if N > 1:
+                param_np_mat = np.reshape(np.stack(param_vect), (N, -1))
+            else:
+                param_np_mat = np.reshape(np.stack(param_vect), (D,))
+
+            #transform in tf
+            param_tf_mat = tf.constant(param_np_mat, dtype="float32")
+
+        else:                                                           # with a tensor
+
+            # transform the numerical values into tensors
+            for i in range(0, len(param_vect)):
+                if np.isscalar(param_vect[i]):
+                    param_vect[i] = [[tf.constant(param_vect[i], dtype="float32")]]
+                elif isinstance(param_vect[i], RandomVariable):
+                    param_vect[i] = param_vect[i].dist
+
+            # reshape the list
+            if N>1:
+                param_tf_mat = tf.reshape(tf.stack(param_vect), (N, -1))
+            else:
+                if D>1:
+                    param_tf_mat = tf.reshape(tf.stack(param_vect), (D,))
+                else:
+                    param_tf_mat = param_vect[0]
 
 
         return param_tf_mat

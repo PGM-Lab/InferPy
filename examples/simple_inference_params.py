@@ -1,8 +1,10 @@
-import inferpy as inf
 import edward as ed
+ed.set_seed(1234)
+import inferpy as inf
 
 
 #### learning a 1-dim parameter from 1-dim data
+
 
 N = 50
 sampling_mean = [30.]
@@ -24,14 +26,10 @@ data = {x.name : x_train}
 
 m.fit(data)
 
-m.posterior(theta)
-
-
+m.posterior(theta).loc[0]  #29.017122
 
 
 #### learning a 2-dim parameter from 2-dim data
-
-
 
 N = 50
 sampling_mean = [30., 10.]
@@ -91,4 +89,12 @@ data = {x.name : x_train}
 
 m.fit(data)
 
-m.posterior([theta1, theta2])
+m.posterior(theta1).loc
+m.posterior(theta2).loc
+
+
+
+theta = inf.models.Normal(loc=[0., 0.], scale=1.)
+x = inf.models.Normal(loc=theta, scale=1., observed=True)
+x.shape
+theta.shape

@@ -99,10 +99,9 @@ class RandomVariable(object):
     def sum_log_prob(self, v):
         return tf.reduce_sum(self.dist.log_prob(tf.cast(v, tf.float64)))
 
-
-def __repr__(self):
-    return "<inferpy RandomVariable '%s' shape=%s dtype=%s>" % (
-        self.name, self.shape, self.dist.dtype.name)
+    def __repr__(self):
+        return "<inferpy RandomVariable '%s' shape=%s dtype=%s>" % (
+            self.name, self.shape, self.dist.dtype.name)
 
 
 
