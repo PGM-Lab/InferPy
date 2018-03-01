@@ -1,11 +1,17 @@
 import unittest
+
+
 import edward as ed
+import tensorflow as tf
+import numpy as np
 
-
-reload(ed)
-ed.set_seed(1234)
+np.random.seed(1234)
+tf.set_random_seed(1234)
 
 import inferpy as inf
+
+
+
 
 
 class param_inference_test(unittest.TestCase):
