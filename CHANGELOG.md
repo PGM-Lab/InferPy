@@ -7,9 +7,13 @@ data processing, easy-to-code probablistic modelling, scalable inference and rob
 Changes:
 - Fixed some bugs
 - RandomVariable base class
-- optional parameter for returning a Tensorflow object
+- Optional parameter for returning a Tensorflow object
+- Latent variables
+- Dependency between variables
+- Definition of probabilistic models
+- Inference with KLqp
 
-**Release Date**: xx/02/2018
+**Release Date**: 02/03/2018
 **Further Information**: [Documentation](http://inferpy.readthedocs.io/)
 
 
