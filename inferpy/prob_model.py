@@ -84,9 +84,6 @@ class ProbModel(object):
 
         self.propagated = False
 
-        print(varlist)
-        print(self.varlist)
-
     # properties and setters
 
     @property
