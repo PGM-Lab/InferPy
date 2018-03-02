@@ -13,6 +13,13 @@ Subpackages
 Submodules
 ----------
 
+inferpy\.prob\_model module
+---------------------------
+
+.. automodule:: inferpy.prob_model
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 inferpy\.replicate module
 -------------------------

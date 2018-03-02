@@ -12,6 +12,14 @@ inferpy\.models\.normal module
     :undoc-members:
     :show-inheritance:
 
+inferpy\.models\.random\_variable module
+----------------------------------------
+
+.. automodule:: inferpy.models.random_variable
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
