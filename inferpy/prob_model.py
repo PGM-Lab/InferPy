@@ -55,7 +55,7 @@ class ProbModel(object):
     of the construct 'with' that are active"""
 
 
-    def __init__(self, varlist=[]):
+    def __init__(self, varlist=None):
         """Initializes a probabilistic model
 
         Args:
@@ -63,7 +63,14 @@ class ProbModel(object):
 
         """
 
-        for d in varlist:
+
+        if varlist==None:
+            self.varlist = []
+        else:
+            self.varlist=varlist
+
+
+        for d in self.varlist:
             if not isinstance(d, inferpy.models.RandomVariable):
                 raise ValueError("The input argument is not a list of RandomVariables")
 
@@ -71,12 +78,14 @@ class ProbModel(object):
             raise inferpy.util.ScopeException("Nested probabilistic models cannot be defined")
 
 
-        self.varlist=varlist
 
         self.q_vars = {}
         self.data = {}
 
         self.propagated = False
+
+        print(varlist)
+        print(self.varlist)
 
     # properties and setters
 
