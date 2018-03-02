@@ -166,11 +166,6 @@ class Normal(RandomVariable):
             param_vect = np.tile(param, N).tolist()
 
 
-
-
-
-
-
         if np.all(list(map(lambda x: np.isscalar(x), param_vect))):            # only numerical values
 
             # reshape the list

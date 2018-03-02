@@ -16,9 +16,6 @@ import inferpy as inf
 class param_inference_test(unittest.TestCase):
     def test(self):
 
-
-
-
         #### learning a 1-dim parameter from 1-dim data
 
         N = 500

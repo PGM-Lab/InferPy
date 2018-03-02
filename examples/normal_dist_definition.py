@@ -34,5 +34,3 @@ x.log_prob(sample_x)
 # get the underlying distribution Edward object
 ed_x = x.dist
 
-x = inf.models.Normal(loc=0., scale=1., dim=1)
-x.sample([2,2])

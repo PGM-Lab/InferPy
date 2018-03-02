@@ -1,5 +1,4 @@
 import edward as ed
-ed.set_seed(1234)
 import inferpy as inf
 
 
@@ -86,15 +85,8 @@ x_train = inf.models.Normal(loc=sampling_mean, scale=1.).sample(N)
 data = {x.name : x_train}
 
 
-
 m.fit(data)
 
 m.posterior(theta1).loc
 m.posterior(theta2).loc
 
-
-
-theta = inf.models.Normal(loc=[0., 0.], scale=1.)
-x = inf.models.Normal(loc=theta, scale=1., observed=True)
-x.shape
-theta.shape

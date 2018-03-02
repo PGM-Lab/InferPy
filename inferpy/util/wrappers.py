@@ -1,6 +1,8 @@
 from functools import wraps
 import inferpy as inf
 import numpy as np
+from six import iteritems
+
 
 def tf_run_wrapper(f):
     @wraps(f)
@@ -20,7 +22,7 @@ def tf_run_wrapper(f):
                     output_eval.append(inf.util.Runtime.tf_sess.run(t))
             elif type(output_tf).__name__ == dict.__name__:
                 output_eval = {}
-                for k, v in output_tf.iteritems():
+                for k, v in iteritems(output_tf):
                     output_eval.update({k:inf.util.Runtime.tf_sess.run(v)})
             else:
                 output_eval = inf.util.Runtime.tf_sess.run(f(*args, **kwargs))
