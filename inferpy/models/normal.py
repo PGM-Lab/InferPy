@@ -182,7 +182,7 @@ class Normal(RandomVariable):
             # transform the numerical values into tensors
             for i in range(0, len(param_vect)):
                 if np.isscalar(param_vect[i]):
-                    param_vect[i] = [[tf.constant(param_vect[i], dtype="float32")]]
+                    param_vect[i] = [tf.constant(param_vect[i], dtype="float32")]
                 elif isinstance(param_vect[i], RandomVariable):
                     param_vect[i] = param_vect[i].dist
 

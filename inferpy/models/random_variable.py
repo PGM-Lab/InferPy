@@ -131,4 +131,70 @@ class RandomVariable(object):
             self.name, self.shape, self.dist.dtype.name)
 
 
+# List of Python operators that we allow to override.
+BINARY_OPERATORS = {
+    # Binary.
+    "__add__",
+    "__radd__",
+    "__sub__",
+    "__rsub__",
+    "__mul__",
+    "__rmul__",
+    "__div__",
+    "__rdiv__",
+    "__truediv__",
+    "__rtruediv__",
+    "__floordiv__",
+    "__rfloordiv__",
+    "__mod__",
+    "__rmod__",
+    "__lt__",
+    "__le__",
+    "__gt__",
+    "__ge__",
+#    "__and__",
+#    "__rand__",
+#    "__or__",
+#    "__ror__",
+#    "__xor__",
+#    "__rxor__",
+    "__getitem__",
+    "__pow__",
+    "__rpow__",
+#    "__matmul__",
+#    "__rmatmul__"
+
+}
+UNARY_OPERATORS = {
+    # Unary.
+#    "__invert__",
+    "__neg__",
+    "__abs__"
+}
+
+
+def __add_operator(cls, name, unary=False):
+
+    if unary==False:
+        def operator(self, other):
+            if isinstance(other, RandomVariable):
+                return getattr(self.dist, name)(other.dist)
+            return getattr(self.dist, name)(other)
+    else:
+        def operator(self):
+            return getattr(self.dist, name)()
+
+
+    operator.__doc__ = "documentation for "+name
+    operator.__name__ =name
+    setattr(cls, operator.__name__, operator)
+
+
+for x in BINARY_OPERATORS:
+    __add_operator(RandomVariable,x)
+
+
+
+for x in UNARY_OPERATORS:
+    __add_operator(RandomVariable,x, unary=True)
 
