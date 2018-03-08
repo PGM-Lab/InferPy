@@ -18,11 +18,13 @@
 from inferpy.util import tf_run_wrapper
 
 from inferpy.prob_model import ProbModel
+
+
+import inferpy.models
+
+
 import tensorflow as tf
 import edward as ed
-
-
-
 
 
 
@@ -30,29 +32,45 @@ class RandomVariable(object):
     """Base class for random variables.
     """
 
-    def __init__(self, dist, observed):
-        self._dist = dist
-        self.observed = observed
+    def __init__(self, base_object=None, observed=False):
 
-        if ProbModel.is_active():
-            ProbModel.get_active_model().varlist.append(self)
+        if base_object != None:
+
+            self.base_object = base_object
+
+            self.observed = observed
+
+            if  ProbModel.is_active() and not self.is_generic_variable():
+                ProbModel.get_active_model().varlist.append(self)
+
+
 
 
     @property
     def dist(self):
         """Underlying Edward object"""
-        return self._dist
+
+        if self.is_generic_variable():
+            return None
+
+        return self._base_object
+
+    @property
+    def base_object(self):
+        """Underlying Tensorflow object"""
+        return self._base_object
+
 
     @property
     def dim(self):
         """ Dimensionality of variable """
-        return self.dist.shape.as_list()[-1]
+        return self.base_object.shape.as_list()[-1]
 
     @property
     def batches(self):
         """ Number of batches of the variable"""
 
-        dist_shape = self.dist.shape.as_list()
+        dist_shape = self.base_object.shape.as_list()
         if len(dist_shape)>1:
             return dist_shape[-2]
         return 1
@@ -60,12 +78,12 @@ class RandomVariable(object):
     @property
     def shape(self):
         """ shape of the variable, i.e. (batches, dim)"""
-        return self.dist.shape.as_list()
+        return self.base_object.shape.as_list()
 
     @property
     def name(self):
         """ name of the variable"""
-        return self.dist.name[0:-1]
+        return self.base_object.name[0:-1]
 
 
     @property
@@ -84,9 +102,19 @@ class RandomVariable(object):
         """ Set the Underlying Edward object"""
 
         if isinstance(dist, ed.models.RandomVariable)==False:
-            raise ValueError("Type of input distribution is nor correct")
+            raise ValueError("Type of input distribution is not correct")
 
-        self._dist = dist
+        self._base_object = dist
+
+    @base_object.setter
+    def base_object(self, tensor):
+        """ Set the Underlying tensorflow object"""
+
+        if isinstance(tensor, tf.Tensor)==False and \
+                        isinstance(tensor, ed.RandomVariable) == False:
+            raise ValueError("Type of input object is not correct")
+
+        self._base_object = tensor
 
 
     @tf_run_wrapper
@@ -101,9 +129,12 @@ class RandomVariable(object):
 
 
         """
-        s = self.dist.sample(size)
 
-        return s
+        if self.is_generic_variable():
+            return self.base_object
+
+        return self.dist.sample(size)
+
 
 
     @tf_run_wrapper
@@ -126,9 +157,13 @@ class RandomVariable(object):
         """ Method for computing the sum of the log probability of a sample v (or a set of samples)"""
         return tf.reduce_sum(self.dist.log_prob(tf.cast(v, tf.float32)))
 
+
+    def is_generic_variable(self):
+        return isinstance(self._base_object, ed.RandomVariable) == False
+
     def __repr__(self):
         return "<inferpy RandomVariable '%s' shape=%s dtype=%s>" % (
-            self.name, self.shape, self.dist.dtype.name)
+            self.name, self.shape, self.base_object.dtype.name)
 
 
 # List of Python operators that we allow to override.
@@ -175,18 +210,27 @@ UNARY_OPERATORS = {
 
 def __add_operator(cls, name, unary=False):
 
+    import inferpy.models.deterministic
+
     if unary==False:
         def operator(self, other):
+
+            res = inferpy.models.Deterministic()
+
             if isinstance(other, RandomVariable):
-                return getattr(self.dist, name)(other.dist)
-            return getattr(self.dist, name)(other)
+                res.base_object = getattr(self.base_object, name)(other.base_object)
+            else:
+                res.base_object = getattr(self.base_object, name)(other)
+            return res
     else:
         def operator(self):
-            return getattr(self.dist, name)()
+            res = inferpy.models.Deterministic()
+            res.base_object = getattr(self.base_object, name)()
+            return res
 
 
     operator.__doc__ = "documentation for "+name
-    operator.__name__ =name
+    operator.__name__ = name
     setattr(cls, operator.__name__, operator)
 
 
@@ -194,7 +238,10 @@ for x in BINARY_OPERATORS:
     __add_operator(RandomVariable,x)
 
 
-
 for x in UNARY_OPERATORS:
     __add_operator(RandomVariable,x, unary=True)
+
+
+
+
 

@@ -71,7 +71,7 @@ class ProbModel(object):
 
 
         for d in self.varlist:
-            if not isinstance(d, inferpy.models.RandomVariable):
+            if not self.compatible_var(d):
                 raise ValueError("The input argument is not a list of RandomVariables")
 
         if ProbModel.is_active():
@@ -132,9 +132,10 @@ class ProbModel(object):
         for v in self.latent_vars:
             qv = ed.models.Normal(loc=tf.Variable(np.zeros(v.dim), dtype="float32"),
                                   scale=tf.Variable(np.ones(v.dim), dtype="float32"),
-                                  name = "q_"+v.name)
+                                  name = "q_"+str.replace(v.name, ":", ""))
 
-            self.q_vars.update({v.dist: qv})
+            self.q_vars.update({v.base_object: qv})
+
 
         self.propagated = False
 
@@ -192,12 +193,15 @@ class ProbModel(object):
     def add_var(self, v):
         """ Method for adding a new random variable. After use, the model should be re-compiled """
 
-        if isinstance(v, inferpy.models.RandomVariable) == False:
-            raise ValueError("The input argument is not a RandomVariable")
+        if not self.compatible_var(v):
+            raise ValueError("The input argument must be a non-generic random variable")
 
         if v not in self.varlist:
             self.varlist.append(v)
             self.reset_compilation()
+
+    def compatible_var(self, v):
+        return isinstance(v, inferpy.models.RandomVariable) and not v.is_generic_variable()
 
 
     def get_var(self,name):
