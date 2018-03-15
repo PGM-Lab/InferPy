@@ -221,16 +221,16 @@ def def_random_variable(var):
 
 
 
-    if not v.has_key(BASE_CLASS_NAME):
+    if not BASE_CLASS_NAME in v:
         v.update({BASE_CLASS_NAME : v.get(CLASS_NAME)})
 
-    if not v.has_key(PARAMS):
+    if not PARAMS in v:
         init_func = getattr(getattr(tf.contrib.distributions, v.get(BASE_CLASS_NAME)), "__init__")
         sig = inspect.getargspec(init_func)
         v.update({PARAMS: [x for x in sig.args if x not in ['self', 'validate_args', 'allow_nan_stats', 'name', 'dtype'] ]})
 
 
-    if not v.has_key(IS_SIMPLE):
+    if not IS_SIMPLE in v:
         v.update({IS_SIMPLE : {}})
 
 
