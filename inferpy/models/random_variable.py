@@ -19,10 +19,6 @@ from inferpy.util import tf_run_wrapper
 
 from inferpy.prob_model import ProbModel
 
-
-import inferpy.models
-
-
 import tensorflow as tf
 import edward as ed
 
@@ -193,7 +189,7 @@ BINARY_OPERATORS = {
 #    "__ror__",
 #    "__xor__",
 #    "__rxor__",
-    "__getitem__",
+#    "__getitem__",
     "__pow__",
     "__rpow__",
 #    "__matmul__",
@@ -240,7 +236,6 @@ for x in BINARY_OPERATORS:
 
 for x in UNARY_OPERATORS:
     __add_operator(RandomVariable,x, unary=True)
-
 
 
 
