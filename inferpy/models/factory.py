@@ -114,12 +114,14 @@ def __add_constructor(cls, class_name, base_class_name, params, is_simple):
                 param_dist[p] = self.__reshape_param(v, self_shape, d.get(p))
 
         ## Build the underliying tf object
-        dist = getattr(ed.models, class_name)(**param_dist)
 
-        observed = False
-        if kwargs.get("observed") != None:
-            observed = kwargs.get("observed")
+        observed = kwargs.get("observed") if  kwargs.get("observed") != None else False
+        validate_args = kwargs.get("validate_args") if  kwargs.get("validate_args") != None else False
+        allow_nan_stats = kwargs.get("allow_nan_stats") if  kwargs.get("allow_nan_stats") != None else True
 
+
+
+        dist = getattr(ed.models, class_name)(validate_args= validate_args, allow_nan_stats=allow_nan_stats, **param_dist)
 
         super(self.__class__, self).__init__(dist, observed=observed)
 
@@ -161,22 +163,9 @@ def __reshape_param(self, param, self_shape, d=1):
 
 
     # get a D*N unidimensional vector
-    ###check shape of param == td(D)/d
-
-
 
     k = N if get_total_dimension(param)/d == D else D*N
     param_vect = np.tile(param, k).tolist()
-
-
-
-#    if (d==1 and np.shape(param) in [(), (1,)]) or \
-#            (d>1 and np.shape(param)== (1,)) or \
-#            (isinstance(param, RandomVariable) and param.dim == d):
-#        param_vect = np.tile(param, D * N).tolist()
-#    else:
-#        param_vect = np.tile(param, N).tolist()
-
 
     ### reshape  ####
     all_num = len([x for x in param_vect if not np.isscalar(x)]) == 0
@@ -251,7 +240,70 @@ def def_random_variable(var):
 
     globals()[newclass.__name__] = newclass
 
+####
 
+class Beta(RandomVariable):
+    def __init__(
+            concentration1=None,
+            concentration0=None,
+            validate_args=False,
+            allow_nan_stats=True,
+            observed=False,
+            dim=None,
+            name='Beta'):
+        pass
+
+class Exponential(RandomVariable):
+    def __init__(
+            rate,
+            validate_args=False,
+            allow_nan_stats=True,
+            observed = False,
+            dim = None,
+            name='Exponential'):
+        pass
+
+class Uniform(RandomVariable):
+    def __init__(
+            low=None,
+            high=None,
+            validate_args=False,
+            allow_nan_stats=True,
+            name='Uniform',
+            observed=False,
+            dim=None):
+        pass
+
+class Poisson(RandomVariable):
+    def __init__(
+            rate,
+            validate_args=False,
+            allow_nan_stats=True,
+            name='Poisson',
+            observed=False,
+            dim=None):
+        pass
+
+class Categorical(RandomVariable):
+    def __init__(
+            logits=None,
+            probs=None,
+            validate_args=False,
+            allow_nan_stats=True,
+            name='Categorical',
+            observed=False,
+            dim=None):
+        pass
+
+class Dirichlet(RandomVariable):
+    def __init__(
+            concentration,
+            validate_args=False,
+            allow_nan_stats=True,
+            name='Dirichlet',
+            observed=False,
+            dim=None):
+        pass
 
 ####### run-time definition of random variables #########
 
@@ -263,12 +315,14 @@ for v in ALLOWED_VARS:
 
 
 
+NON_SIMPLE_VARS = [{CLASS_NAME : "Categorical", IS_SIMPLE : {"probs" : False, "logits": False}},
+                   {CLASS_NAME: "Multinomial", IS_SIMPLE: {"total_count":True,"probs": False, "logits": False}},
+                   {CLASS_NAME: "Dirichlet", IS_SIMPLE: {"concentration": False}}
+                   ]
 
-
-
-
-
-DISCRETE_VARS = [{CLASS_NAME : "Categorical", IS_SIMPLE : {"probs" : False, "logits": False}}]
-
-for v in DISCRETE_VARS:
+for v in NON_SIMPLE_VARS:
     def_random_variable(v)
+
+
+#####
+
