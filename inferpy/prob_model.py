@@ -21,12 +21,16 @@ import inferpy.util
 import inferpy.models
 from inferpy.util import tf_run_wrapper
 from inferpy.util import multishape
+from inferpy.util import input_model_data
 import tensorflow as tf
 import edward as ed
 import numpy as np
 
 from six import iteritems
+from functools import wraps
 
+
+import pandas as pd
 
 
 class ProbModel(object):
@@ -139,7 +143,7 @@ class ProbModel(object):
 
         self.propagated = False
 
-
+    @input_model_data
     def fit(self, data):
 
         """ Assings data to the observed variables"""
@@ -153,6 +157,8 @@ class ProbModel(object):
             self.data.update({self.get_var(k).dist: v})
 
         self.q_vars.get(self.latent_vars[0].dist)
+
+
 
         self.inference = ed.KLqp(self.q_vars, self.data)
         self.inference.run()
@@ -292,6 +298,5 @@ class ProbModel(object):
              Otherwise False is return
         """
         return len(ProbModel.__active_models)>0
-
 
 

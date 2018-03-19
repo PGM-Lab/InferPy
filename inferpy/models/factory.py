@@ -244,6 +244,7 @@ def def_random_variable(var):
 
 class Beta(RandomVariable):
     def __init__(
+            self,
             concentration1=None,
             concentration0=None,
             validate_args=False,
@@ -251,20 +252,25 @@ class Beta(RandomVariable):
             observed=False,
             dim=None,
             name='Beta'):
-        pass
+        self.concentration1 = concentration1
+        self.concentration0 = concentration0
+
+
 
 class Exponential(RandomVariable):
     def __init__(
+            self,
             rate,
             validate_args=False,
             allow_nan_stats=True,
             observed = False,
             dim = None,
             name='Exponential'):
-        pass
+        self.rate = rate
 
 class Uniform(RandomVariable):
     def __init__(
+            self,
             low=None,
             high=None,
             validate_args=False,
@@ -272,20 +278,22 @@ class Uniform(RandomVariable):
             name='Uniform',
             observed=False,
             dim=None):
-        pass
+        self.low = low
 
 class Poisson(RandomVariable):
     def __init__(
+            self,
             rate,
             validate_args=False,
             allow_nan_stats=True,
             name='Poisson',
             observed=False,
             dim=None):
-        pass
+        self.rate = rate
 
 class Categorical(RandomVariable):
     def __init__(
+            self,
             logits=None,
             probs=None,
             validate_args=False,
@@ -293,17 +301,33 @@ class Categorical(RandomVariable):
             name='Categorical',
             observed=False,
             dim=None):
-        pass
+        self.logits = logits
+        self.probs = probs
+
+class Multinomial(RandomVariable):
+    def __init__(
+            self,
+            total_count=None,
+            logits=None,
+            probs=None,
+            validate_args=False,
+            allow_nan_stats=True,
+            name='Categorical',
+            observed=False,
+            dim=None):
+        self.logits = logits
+        self.probs = probs
+        self.total_count = None
 
 class Dirichlet(RandomVariable):
-    def __init__(
+    def __init__(self,
             concentration,
             validate_args=False,
             allow_nan_stats=True,
             name='Dirichlet',
             observed=False,
             dim=None):
-        pass
+        self.concentration=concentration
 
 ####### run-time definition of random variables #########
 

@@ -3,6 +3,9 @@ import inferpy as inf
 import numpy as np
 from six import iteritems
 
+import pandas as pd
+
+
 
 def tf_run_wrapper(f):
     @wraps(f)
@@ -57,6 +60,9 @@ def multishape(f):
     return wrapper
 
 
+
+
+
 def singleton(class_):
     class class_w(class_):
         _instance = None
@@ -76,3 +82,28 @@ def singleton(class_):
     class_w.__name__ = class_.__name__
     return class_w
 
+def input_model_data(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+
+        self = args[0]
+        data = args[1]
+
+        if isinstance(data, pd.DataFrame):
+            newdata =  {}
+
+            for k, v in iteritems(data.to_dict(orient="list")):
+                if self.get_var(k) != None:
+
+                    newdata.update({k : np.reshape(v, (np.size(v),1))})
+
+
+        elif isinstance(data, dict):
+            newdata = data
+        else:
+            raise ValueError("Wrong input data type: it should be a pandas dataframe or a dictionary")
+
+
+        return f(self,newdata)
+
+    return wrapper
