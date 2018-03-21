@@ -59,70 +59,78 @@ def __add_constructor(cls, class_name, base_class_name, params, is_simple):
         param_dist = {}
         args_list = list(args)
 
-        for p_name in params:
 
+
+        for p_name in params:
             if len(args_list) > 0:
                 if p_name in kwargs:
                     raise ValueError("Wrong positional or keyword argument")
 
                 param_dist.update({p_name : args_list[0]})
                 args_list = args_list[1:]
-
             else:
+                if kwargs.get(p_name) != None:
+                    param_dist.update({p_name : kwargs.get(p_name)})
 
-                param_dist.update({p_name : kwargs.get(p_name)})
 
 
-        # get ndim range and domain sizes for each parameter
 
-        nd_range = {}
-        d = {}
-        for p,v in six.iteritems(param_dist):
+        if len(param_dist)>0:
+
+            nd_range = {}
+            d = {}
+            for p,v in six.iteritems(param_dist):
+                    if v != None:
+                        nd_range.update({p: [0,1] if is_simple.get(p) in [None, True] else [1,2]})
+                        d.update({p: 1 if is_simple.get(p) in [None, True] else get_total_dimension(v if ndim(v)==1 else v[0])})
+
+
+            #check the number of dimensions
+            self.__check_ndim(param_dist, nd_range)
+
+
+
+            # get the final shape
+
+            param_dim = 1
+            if kwargs.get("dim") != None: param_dim = kwargs.get("dim")
+
+            self_shape = (inf.replicate.get_total_size(),
+                          np.max([get_total_dimension(v)/d.get(p)
+                                  for p,v in six.iteritems(param_dist) if p != None and v!=None] +
+                                 [param_dim]))
+
+
+            # check that dimensions are consistent
+
+            p_expand = [p for p, v in six.iteritems(param_dist) if p!=None and v!=None and get_total_dimension(v)>d.get(p)]
+            f_expand = [get_total_dimension(param_dist.get(p))/d.get(p) for p in p_expand]
+
+            if len([x for x in f_expand if x not in [1,self_shape[1]]])>1:
+                raise ValueError("Inconsistent parameter dimensions")
+
+            # reshape the parameters
+
+            for p,v in six.iteritems(param_dist):
                 if v != None:
-                    nd_range.update({p: [0,1] if is_simple.get(p) in [None, True] else [1,2]})
-                    d.update({p: 1 if is_simple.get(p) in [None, True] else get_total_dimension(v if ndim(v)==1 else v[0])})
+                    if isinstance(v, inf.models.RandomVariable)  and self_shape==tuple(v.shape):
+                        param_dist[p] = param_to_tf(v)
+                    else:
+                        param_dist[p] = self.__reshape_param(v, self_shape, d.get(p))
 
+            ## Build the underliying tf object
 
-        #check the number of dimensions
-        self.__check_ndim(param_dist, nd_range)
-
-
-
-        # get the final shape
-
-        param_dim = 1
-        if kwargs.get("dim") != None: param_dim = kwargs.get("dim")
-
-        self_shape = (inf.replicate.get_total_size(),
-                      np.max([get_total_dimension(v)/d.get(p)
-                              for p,v in six.iteritems(param_dist) if p != None and v!=None] +
-                             [param_dim]))
-
-
-        # check that dimensions are consistent
-
-        p_expand = [p for p, v in six.iteritems(param_dist) if p!=None and v!=None and get_total_dimension(v)>d.get(p)]
-        f_expand = [get_total_dimension(param_dist.get(p))/d.get(p) for p in p_expand]
-
-        if len([x for x in f_expand if x not in [1,self_shape[1]]])>1:
-            raise ValueError("Inconsistent parameter dimensions")
-
-        # reshape the parameters
-
-        for p,v in six.iteritems(param_dist):
-            if v != None:
-                param_dist[p] = self.__reshape_param(v, self_shape, d.get(p))
-
-        ## Build the underliying tf object
-
-        observed = kwargs.get("observed") if  kwargs.get("observed") != None else False
-        validate_args = kwargs.get("validate_args") if  kwargs.get("validate_args") != None else False
-        allow_nan_stats = kwargs.get("allow_nan_stats") if  kwargs.get("allow_nan_stats") != None else True
+            validate_args = kwargs.get("validate_args") if  kwargs.get("validate_args") != None else False
+            allow_nan_stats = kwargs.get("allow_nan_stats") if  kwargs.get("allow_nan_stats") != None else True
 
 
 
-        dist = getattr(ed.models, class_name)(validate_args= validate_args, allow_nan_stats=allow_nan_stats, **param_dist)
+            dist = getattr(ed.models, class_name)(validate_args= validate_args, allow_nan_stats=allow_nan_stats, **param_dist)
 
+        else:
+            dist = None
+
+        observed = kwargs.get("observed") if kwargs.get("observed") != None else False
         super(self.__class__, self).__init__(dist, observed=observed)
 
 
@@ -136,9 +144,10 @@ def __add_repr(cls, class_name, params):
 
     def repr(self):
 
-        s = ", ".join([p+"="+str(getattr(self,p)) for p in params])
+        if self.base_object != None:
+            s = ", ".join([p+"="+str(getattr(self,p)) for p in params])
+            return "<inferpy "+class_name+" "+self.name+", "+s+", dtype= "+self.dist.dtype.name+" >"
 
-        return "<inferpy "+class_name+" "+self.name+", "+s+", dtype= "+self.dist.dtype.name+" >"
 
     repr.__doc__ = "__repr__ for "+class_name
     repr.__name__ = "__repr__"
@@ -237,10 +246,23 @@ def def_random_variable(var):
     __add_repr(newclass, v.get(CLASS_NAME), v.get(PARAMS))
 
 
+    newclass.PARAMS = v.get(PARAMS)
+
+
+
 
     globals()[newclass.__name__] = newclass
 
 ####
+
+class Normal(RandomVariable):
+    def __init__(self, loc=0, scale=1,
+                 validate_args=False,
+                 allow_nan_stats=True,
+                 dim=None, observed=False, name="Normal"):
+        self.loc = loc
+        self.scale = scale
+
 
 class Beta(RandomVariable):
     def __init__(
@@ -301,8 +323,8 @@ class Categorical(RandomVariable):
             name='Categorical',
             observed=False,
             dim=None):
-        self.logits = logits
-        self.probs = probs
+        self.default_logits = logits
+        self.default_probs = probs
 
 class Multinomial(RandomVariable):
     def __init__(
@@ -331,7 +353,7 @@ class Dirichlet(RandomVariable):
 
 ####### run-time definition of random variables #########
 
-ALLOWED_VARS = ["Beta","Exponential","Uniform","Poisson"]
+ALLOWED_VARS = ["Normal", "Beta","Exponential","Uniform","Poisson"]
 
 
 for v in ALLOWED_VARS:
@@ -349,4 +371,3 @@ for v in NON_SIMPLE_VARS:
 
 
 #####
-

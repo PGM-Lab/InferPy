@@ -28,7 +28,7 @@ from inferpy.util import get_total_dimension
 
 
 
-class Normal(RandomVariable):
+class Normal_old(RandomVariable):
 
     """ Class implementing the Normal distribution with location `loc`, `scale` and `dim` parameters.
 
@@ -198,6 +198,7 @@ class Normal(RandomVariable):
 
         return param_tf_mat
 
+    PARAMS = ["loc", "scale"]
 
     def __repr__(self):
         return "<inferpy Normal '%s', loc=%s, scale=%s, shape=%s dtype=%s>" % (

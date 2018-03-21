@@ -34,3 +34,5 @@ x.log_prob(sample_x)
 # get the underlying distribution Edward object
 ed_x = x.dist
 
+
+

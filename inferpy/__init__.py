@@ -10,3 +10,10 @@ from inferpy.prob_model import *
 
 from inferpy.version import *
 
+from inferpy.qmodel import *
+
+
+## basic funcitons
+
+def matmul(A,B):
+    return A.__matmul__(B)

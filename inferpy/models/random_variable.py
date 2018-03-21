@@ -30,9 +30,9 @@ class RandomVariable(object):
 
     def __init__(self, base_object=None, observed=False):
 
-        if base_object != None:
+        self.base_object = base_object
 
-            self.base_object = base_object
+        if base_object != None:
 
             self.observed = observed
 
@@ -54,7 +54,9 @@ class RandomVariable(object):
     @property
     def base_object(self):
         """Underlying Tensorflow object"""
+
         return self._base_object
+
 
 
     @property
@@ -107,7 +109,7 @@ class RandomVariable(object):
         """ Set the Underlying tensorflow object"""
 
         if isinstance(tensor, tf.Tensor)==False and \
-                        isinstance(tensor, ed.RandomVariable) == False:
+                        isinstance(tensor, ed.RandomVariable) == False and tensor != None:
             raise ValueError("Type of input object is not correct")
 
         self._base_object = tensor
@@ -192,8 +194,8 @@ BINARY_OPERATORS = {
 #    "__getitem__",
     "__pow__",
     "__rpow__",
-#    "__matmul__",
-#    "__rmatmul__"
+    "__matmul__",
+    "__rmatmul__"
 
 }
 UNARY_OPERATORS = {

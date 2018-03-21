@@ -29,6 +29,8 @@ import numpy as np
 from six import iteritems
 from functools import wraps
 
+from inferpy.qmodel import Qmodel
+
 
 import pandas as pd
 
@@ -134,10 +136,11 @@ class ProbModel(object):
 
         self.q_vars = {}
         for v in self.latent_vars:
-            qv = ed.models.Normal(loc=tf.Variable(np.zeros(v.dim), dtype="float32"),
-                                  scale=tf.Variable(np.ones(v.dim), dtype="float32"),
-                                  name = "q_"+str.replace(v.name, ":", ""))
+            #qv = ed.models.Normal(loc=tf.Variable(np.zeros(v.dim), dtype="float32"),
+            #                      scale=tf.Variable(np.ones(v.dim), dtype="float32"),
+            #                      name = "q_"+str.replace(v.name, ":", ""))
 
+            qv = Qmodel.generate_ed_qvar(v)
             self.q_vars.update({v.base_object: qv})
 
 
@@ -181,7 +184,7 @@ class ProbModel(object):
             self.inference.run()
             self.propagated = True
 
-        post = inferpy.models.Normal(name="post_"+latent_var.name)
+        post = getattr(inferpy.models, type(latent_var).__name__)(name="post_"+latent_var.name)
         post.dist = self.inference.latent_vars.get(latent_var.dist)
 
         return post
