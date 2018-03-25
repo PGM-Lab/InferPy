@@ -20,7 +20,7 @@ class param_inference_test(unittest.TestCase):
 
         N = 500
         sampling_mean = [30.]
-        sampling_std = 0.0000001
+        sampling_std = 0.000000001
         sess = ed.util.get_session()
 
         with inf.ProbModel() as m:
@@ -104,13 +104,13 @@ class param_inference_test(unittest.TestCase):
         print(p3_1)
         print(p3_2)
 
-        self.assertTrue(abs(p1 - 29.57) < 0.1)
+        self.assertTrue(abs(p1 - 29.66) < 0.1)
 
 
-        self.assertTrue(abs(p2_1 - 29.57) < 0.1)
+        self.assertTrue(abs(p2_1 - 29.66) < 0.1)
         self.assertTrue(abs(p2_2 - 9.98) < 0.1)
 
-        self.assertTrue(abs(p3_1-29.57)<0.1)
+        self.assertTrue(abs(p3_1-29.66)<0.1)
         self.assertTrue(abs(p3_2-9.98)<0.1)
 
 
