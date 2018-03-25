@@ -12,5 +12,5 @@ This module contains a constant string with the version of inferpy, i.e.:
 
 """
 
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 VERSION = __version__
