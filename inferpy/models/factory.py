@@ -96,9 +96,9 @@ def __add_constructor(cls, class_name, base_class_name, params, is_simple):
             if kwargs.get("dim") != None: param_dim = kwargs.get("dim")
 
             self_shape = (inf.replicate.get_total_size(),
-                          np.max([get_total_dimension(v)/d.get(p)
+                          int(np.max([get_total_dimension(v)/d.get(p)
                                   for p,v in six.iteritems(param_dist) if p != None and v!=None] +
-                                 [param_dim]))
+                                 [param_dim])))
 
 
             # check that dimensions are consistent
@@ -169,6 +169,8 @@ def __reshape_param(self, param, self_shape, d=1):
 
     N = self_shape[0]
     D = self_shape[1]
+
+
 
 
     # get a D*N unidimensional vector
