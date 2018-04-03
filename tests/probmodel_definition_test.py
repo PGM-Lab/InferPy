@@ -24,8 +24,7 @@ class Probmodel_test_definition(unittest.TestCase):
         print("sample:")
         print(m_sample)
 
-        self.assertTrue(np.abs(np.mean(m_sample["y"]-m_sample["x"])) < 1)
-
+        self.assertTrue(np.abs(np.mean(list(m_sample.values())[0]-list(m_sample.values())[1])) < 1)
 
 
         # compute the log_prob for each element in the sample
