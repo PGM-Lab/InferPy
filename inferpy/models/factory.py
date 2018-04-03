@@ -121,7 +121,7 @@ def __add_constructor(cls, class_name, base_class_name, params, is_simple):
 
             validate_args = kwargs.get("validate_args") if  kwargs.get("validate_args") != None else False
             allow_nan_stats = kwargs.get("allow_nan_stats") if  kwargs.get("allow_nan_stats") != None else True
-            name = kwargs.get("name")
+            name = kwargs.get("name") if kwargs.get("name") != None else class_name
 
 
             dist = getattr(ed.models, class_name)(name=name, validate_args= validate_args, allow_nan_stats=allow_nan_stats, **param_dist)
