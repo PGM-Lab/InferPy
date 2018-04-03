@@ -18,17 +18,45 @@ def tf_run_wrapper(f):
 
 
         if tf_run:
+
+            # transforms in a list
             output_tf = f(*args, **kwargs)
-            if type(output_tf).__module__ == np.__name__:
-                output_eval = np.array([])
-                for t in output_tf:
-                    output_eval.append(inf.util.Runtime.tf_sess.run(t))
+            if type(output_tf).__module__ == np.__name__ or type(output_tf).__name__ == list.__name__:
+                output_tf_vect = output_tf
+            elif type(output_tf).__name__ == dict.__name__:
+                output_tf_vect = list(output_tf.values())
+            else:
+                output_tf_vect = [output_tf]
+
+            # evaluation
+            output_eval_vect = inf.util.Runtime.tf_sess.run(output_tf_vect)
+
+
+            # transforms in original type
+            if type(output_tf).__module__ == np.__name__ or type(output_tf).__name__ == list.__name__:
+                output_eval = output_eval_vect
             elif type(output_tf).__name__ == dict.__name__:
                 output_eval = {}
+                i = 0
                 for k, v in iteritems(output_tf):
-                    output_eval.update({k:inf.util.Runtime.tf_sess.run(v)})
+                    output_eval.update({k: output_eval_vect[i]})
+                    i = i+1
             else:
-                output_eval = inf.util.Runtime.tf_sess.run(f(*args, **kwargs))
+                output_eval = output_eval_vect[0]
+
+
+            ###
+            #output_tf = f(*args, **kwargs)
+            #if type(output_tf).__module__ == np.__name__:
+            #    output_eval = np.array([])
+            #    for t in output_tf:
+            #        output_eval.append(inf.util.Runtime.tf_sess.run(t))
+            #elif type(output_tf).__name__ == dict.__name__:
+            #    output_eval = {}
+            #    for k, v in iteritems(output_tf):
+            #        output_eval.update({k:inf.util.Runtime.tf_sess.run(v)})
+            #else:
+            #    output_eval = inf.util.Runtime.tf_sess.run(f(*args, **kwargs))
 
             return output_eval
         return f(*args, **kwargs)

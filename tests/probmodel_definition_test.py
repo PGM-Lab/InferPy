@@ -2,6 +2,7 @@ import unittest
 
 import inferpy as inf
 from inferpy.models import Normal
+import numpy as np
 
 
 class Probmodel_test_definition(unittest.TestCase):
@@ -9,8 +10,8 @@ class Probmodel_test_definition(unittest.TestCase):
 
 
         with inf.ProbModel() as m:
-            x = Normal(loc=1., scale=1., name="x", observed=True)
-            y = Normal(loc=x, scale=1., dim=3, name="y")
+            x = Normal(loc=1., scale=100, name="x", observed=True)
+            y = Normal(loc=x, scale=0.0001, dim=3, name="y")
 
         # print the list of variables
         print(m.varlist)
@@ -20,6 +21,12 @@ class Probmodel_test_definition(unittest.TestCase):
         # get a sample
 
         m_sample = m.sample()
+        print("sample:")
+        print(m_sample)
+
+        self.assertTrue(np.abs(np.mean(m_sample["y"]-m_sample["x"])) < 1)
+
+
 
         # compute the log_prob for each element in the sample
         print(m.log_prob(m_sample))

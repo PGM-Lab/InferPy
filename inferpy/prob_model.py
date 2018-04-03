@@ -255,8 +255,10 @@ class ProbModel(object):
     def sample(self, size=1):
         """ Generates a sample for eache variable in the model """
         sd = {}
+
+
         for v in self.varlist:
-            sd.update({v.name:v.sample(size, tf_run=False)})
+            sd.update({v.name: tf.reshape(v.dist, shape=v.shape)})
 
         return sd
 
