@@ -15,5 +15,4 @@ from inferpy.qmodel import *
 
 ## basic funcitons
 
-def matmul(A,B):
-    return A.__matmul__(B)
+from inferpy.util.ops import *

@@ -42,27 +42,6 @@ class param_inference_test(unittest.TestCase):
 
 
 
-        #### learning a 2-dim parameter from 2-dim data
-
-
-        sampling_mean = [30., 10.]
-        sess = ed.util.get_session()
-
-        with inf.ProbModel() as m:
-            theta = inf.models.Normal(loc=0., scale=1., dim=2)
-
-            with inf.replicate(size=N):
-                x = inf.models.Normal(loc=theta, scale=1., observed=True)
-
-        m.compile()
-
-        x_train = inf.models.Normal(loc=sampling_mean, scale=sampling_std).sample(N)
-        data = {x.name: x_train}
-
-        m.fit(data)
-
-        p2_1 = m.posterior(theta).loc[0]
-        p2_2 = m.posterior(theta).loc[1]
 
 
 
@@ -89,6 +68,7 @@ class param_inference_test(unittest.TestCase):
         x_train = inf.models.Normal(loc=sampling_mean, scale=sampling_std).sample(N)
         data = {x.name: x_train}
 
+
         m.fit(data)
 
         p3_1 = m.posterior(theta1).loc[0]
@@ -99,16 +79,14 @@ class param_inference_test(unittest.TestCase):
 
 
         print(p1)
-        print(p2_1)
-        print(p2_2)
+
         print(p3_1)
         print(p3_2)
 
         self.assertTrue(abs(p1 - 29.66) < 0.1)
 
 
-        self.assertTrue(abs(p2_1 - 29.66) < 0.1)
-        self.assertTrue(abs(p2_2 - 9.98) < 0.1)
+
 
         self.assertTrue(abs(p3_1-29.66)<0.1)
         self.assertTrue(abs(p3_2-9.98)<0.1)

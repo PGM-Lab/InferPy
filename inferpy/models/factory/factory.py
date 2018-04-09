@@ -12,6 +12,8 @@ from inferpy.util import get_total_dimension
 from inferpy.util import param_to_tf
 from inferpy.util import ndim
 
+from inferpy.models.factory.params import *
+
 import six
 
 import inspect
@@ -52,6 +54,7 @@ def __add_property(cls, name, from_dist=False):
     setattr(cls, param.__name__, property(param))
 
 
+
 def __add_constructor(cls, class_name, base_class_name, params, is_simple):
 
     def constructor(self,*args, **kwargs):
@@ -59,63 +62,12 @@ def __add_constructor(cls, class_name, base_class_name, params, is_simple):
         param_dist = {}
         args_list = list(args)
 
+        param_list = ParamList(params,args_list,kwargs,is_simple,param_dim=kwargs.get("dim"))
 
+        if not param_list.is_empty():
 
-        for p_name in params:
-            if len(args_list) > 0:
-                if p_name in kwargs:
-                    raise ValueError("Wrong positional or keyword argument")
-
-                param_dist.update({p_name : args_list[0]})
-                args_list = args_list[1:]
-            else:
-                if kwargs.get(p_name) != None:
-                    param_dist.update({p_name : kwargs.get(p_name)})
-
-
-
-        if len(param_dist)>0:
-
-            nd_range = {}
-            d = {}
-            for p,v in six.iteritems(param_dist):
-                    if v != None:
-                        nd_range.update({p: [0,1] if is_simple.get(p) in [None, True] else [1,2]})
-                        d.update({p: 1 if is_simple.get(p) in [None, True] else get_total_dimension(v if ndim(v)==1 else v[0])})
-
-
-            #check the number of dimensions
-            self.__check_ndim(param_dist, nd_range)
-
-
-
-            # get the final shape
-
-            param_dim = 1
-            if kwargs.get("dim") != None: param_dim = kwargs.get("dim")
-
-            self_shape = (inf.replicate.get_total_size(),
-                          int(np.max([get_total_dimension(v)/d.get(p)
-                                  for p,v in six.iteritems(param_dist) if p != None and v!=None] +
-                                 [param_dim])))
-
-
-            # check that dimensions are consistent
-
-            p_expand = [p for p, v in six.iteritems(param_dist) if p!=None and v!=None and get_total_dimension(v)>d.get(p)]
-            f_expand = [get_total_dimension(param_dist.get(p))/d.get(p) for p in p_expand]
-
-            if len([x for x in f_expand if x not in [1,self_shape[1]]])>1:
-                raise ValueError("Inconsistent parameter dimensions")
-
-            # reshape the parameters
-
-            for p,v in six.iteritems(param_dist):
-                if v != None:
-                    if isinstance(v, inf.models.RandomVariable)  and self_shape==tuple(v.shape):
-                        param_dist[p] = param_to_tf(v)
-                    else:
-                        param_dist[p] = self.__reshape_param(v, self_shape, d.get(p))
+            param_list.check_params()
+            param_dist = param_list.get_reshaped_param_dict()
 
             ## Build the underliying tf object
 
@@ -154,60 +106,6 @@ def __add_repr(cls, class_name, params):
 
 
 
-def __check_ndim(self, params, nd_range):
-    for p in [x for x in params if params.get(x)!=None]:
-
-        n = ndim(params.get(p))
-        low = nd_range.get(p)[0]
-        up = nd_range.get(p)[1]
-
-        if n < low or n > up:
-            raise ValueError("Wrong parameter dimension ("+str(n)+") but should be in interval ["+str(low)+","+str(up)+"]")
-
-def __reshape_param(self, param, self_shape, d=1):
-
-    N = self_shape[0]
-    D = self_shape[1]
-
-
-
-
-    # get a D*N unidimensional vector
-
-    k = N if get_total_dimension(param)/d == D else D*N
-    param_vect = np.tile(param, k).tolist()
-
-    ### reshape  ####
-    all_num = len([x for x in param_vect if not np.isscalar(x)]) == 0
-
-    if not all_num:
-        param_vect = [param_to_tf(x) for x in param_vect]
-
-    if N > 1:
-        real_shape = [N, -1]
-    else:
-        real_shape = [D]
-    if d > 1: real_shape = real_shape + [d]
-
-    if all_num:
-        param_np_mat = np.reshape(np.stack(param_vect), tuple(real_shape))
-        param_tf_mat = tf.constant(param_np_mat, dtype="float32")
-    else:
-        if D == 1 and N == 1:
-            param_tf_mat = param_vect[0]
-        else:
-
-            param_tf_mat = tf.reshape(tf.stack(param_vect), tuple(real_shape))
-
-
-
-    return param_tf_mat
-
-
-#####
-
-
-
 def def_random_variable(var):
 
 
@@ -234,9 +132,7 @@ def def_random_variable(var):
 
 
 
-    newclass = type(v.get(CLASS_NAME), (RandomVariable,),
-                    {"__check_ndim" : __check_ndim,
-                     "__reshape_param" : __reshape_param})
+    newclass = type(v.get(CLASS_NAME), (RandomVariable,),{})
 
 
 

@@ -162,7 +162,6 @@ class ProbModel(object):
         self.q_vars.get(self.latent_vars[0].dist)
 
 
-
         self.inference = ed.KLqp(self.q_vars, self.data)
         self.inference.run()
         self.propagated = True

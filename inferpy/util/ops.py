@@ -2,6 +2,7 @@ import numpy as np
 import inferpy.models
 import tensorflow as tf
 import collections
+import six
 
 
 
@@ -49,3 +50,22 @@ def ndim(v):
                         else ndim(x.sample(1)[0]))
                   for x in v]
     return np.max(out)
+
+
+
+def case_states(var, d, default=None, exclusive=True, strict=False, name='case'):
+    out_d = {}
+
+
+    def f(p): return tf.constant(p)
+
+
+    for s, p in six.iteritems(d):
+
+        out_d.update({tf.reduce_all(tf.equal(var.dist, tf.constant(s))): (lambda pp : lambda: f(pp))(p)})
+
+    return tf.case(out_d, default=default, exclusive=exclusive,strict=strict,name=name)
+
+
+def matmul(A,B):
+    return A.__matmul__(B)

@@ -131,7 +131,13 @@ class RandomVariable(object):
         if self.is_generic_variable():
             return self.base_object
 
-        return self.dist.sample(size)
+
+        s = self.dist.sample(size)
+
+        if self.dim > 1 and self.batches == 1:
+            s = tf.reshape(s, shape=(size,self.dim))
+
+        return s
 
 
 

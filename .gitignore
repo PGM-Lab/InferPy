@@ -3,7 +3,7 @@
 /env*/
 *.pyc
 *_ignored*
-
+*_old.py
 
 *log/*
 *dist/*

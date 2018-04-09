@@ -19,7 +19,6 @@ class Probmodel_test_definition(unittest.TestCase):
         print(m.observed_vars)
 
         # get a sample
-
         m_sample = m.sample()
         print("sample:")
         print(m_sample)
