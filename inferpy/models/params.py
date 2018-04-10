@@ -65,7 +65,8 @@ class Param(object):
 
     @property
     def batches(self):
-        return int(self.p_value.batches / self.dim_elem)
+        return int(self.p_value.batches)
+
 
     @property
     def input_value(self):
@@ -117,7 +118,10 @@ class ParamValue(object):
         if kb == 1 and kd == 1:
             return ret
 
-        if kd > 1: ret = ret.__repeat(kd)
+
+
+
+        if kd > 1 or kb > 1 and self.ndim==0: ret = ret.__repeat(kd)
         if kb > 1: ret = ret.__repeat(kb)
 
         return ret
@@ -129,6 +133,9 @@ class ParamValue(object):
 
     def get_std_value(self):
         return self.value
+
+    def get_param_tensor(self):
+        return self.tensor
 
 
 
@@ -160,11 +167,10 @@ class ParamValueScalar(ParamValue):
 
     @property
     def tensor(self):
-        return tf.constant(self.value, dtype="float32")
+        return tf.constant([self.value], dtype="float32")
 
-
-
-
+    def get_param_tensor(self):
+        return tf.constant([self.value], dtype="float32")
 
 
 
@@ -175,8 +181,8 @@ class ParamValueArray(ParamValue):
         for v in value:
             child_p = new_ParamValue(v)
 
-            if child_p.ndim != elem_ndim and elem_ndim != None:
-                raise ValueError("Array Parameter with wrong number of dimension")
+        #    if child_p.ndim != elem_ndim and elem_ndim != None:
+        #        raise ValueError("Array Parameter with wrong number of dimension")
 
             self.value.append(child_p)
 
@@ -223,6 +229,8 @@ class ParamValueArray(ParamValue):
 
 
 
+
+
 class ParamValueTensor(ParamValue):
 
     def __init__(self, value):
@@ -251,6 +259,15 @@ class ParamValueTensor(ParamValue):
     @property
     def tensor(self):
         return self.value
+
+    def get_param_tensor(self):
+
+        v = self.value
+
+        if self.value.shape == ():
+            v = tf.reshape(v, shape=(1,1))
+
+        return v
 
 
 class ParamValueInfVar(ParamValue):
@@ -379,25 +396,17 @@ class ParamList(object):
 
         for p in self.plist:
 
-            v = p.p_value.repeat(D / p.dim, N / p.batches).tensor
+            v = p.p_value.repeat(D / p.dim, N / p.batches).get_param_tensor()
 
-            v2 = p.p_value.repeat(D / p.dim, N / p.batches)
 
-            if v.shape == ():
-                v = tf.reshape(v, shape=(1,))
-
-            if (D == 1 and N > 1) or (D > 1 and N == 1):
-                v = tf.reshape(v, shape=(N,D))
+            # complex params should have at least 2 dimensions
+            if not p.is_simple and len(v.shape.as_list())<2:
+                v = tf.stack([v])
 
 
 
             d.update({p.name : v})
 
         return d
-
-
-
-
-
 
 

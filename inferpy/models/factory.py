@@ -1,18 +1,9 @@
-import os
-import tensorflow as tf
-import inferpy as inf
 import edward as ed
-import numpy as np
-
-
 
 ###
 from inferpy.util import tf_run_wrapper
-from inferpy.util import get_total_dimension
-from inferpy.util import param_to_tf
-from inferpy.util import ndim
 
-from inferpy.models.factory.params import *
+from inferpy.models.params import *
 
 import six
 
@@ -145,10 +136,9 @@ def def_random_variable(var):
 
     newclass.PARAMS = v.get(PARAMS)
 
-
-
-
     globals()[newclass.__name__] = newclass
+
+
 
 ####
 
@@ -255,6 +245,7 @@ ALLOWED_VARS = ["Normal", "Beta","Exponential","Uniform","Poisson"]
 
 for v in ALLOWED_VARS:
     def_random_variable(v)
+    g = globals()
 
 
 
@@ -268,3 +259,4 @@ for v in NON_SIMPLE_VARS:
 
 
 #####
+
