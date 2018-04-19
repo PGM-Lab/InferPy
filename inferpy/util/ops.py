@@ -67,5 +67,21 @@ def case_states(var, d, default=None, exclusive=True, strict=False, name='case')
     return tf.case(out_d, default=default, exclusive=exclusive,strict=strict,name=name)
 
 
+
+def case(d, default=None, exclusive=True, strict=False, name='case'):
+    out_d = {}
+
+
+    def f(p): return tf.constant(p)
+
+
+    for c, p in six.iteritems(d):
+
+        out_d.update({tf.reduce_all(tf.equal(c.base_object, True)): (lambda pp : lambda: f(pp))(p)})
+
+    return tf.case(out_d, default=default, exclusive=exclusive,strict=strict,name=name)
+
+
+
 def matmul(A,B):
     return A.__matmul__(B)

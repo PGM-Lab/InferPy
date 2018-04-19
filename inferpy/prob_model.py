@@ -209,7 +209,8 @@ class ProbModel(object):
             self.reset_compilation()
 
     def compatible_var(self, v):
-        return isinstance(v, inferpy.models.RandomVariable) and not v.is_generic_variable()
+        return (isinstance(v, inferpy.models.RandomVariable)
+                or isinstance(v, ed.models.RandomVariable)) and not v.is_generic_variable()
 
 
     def get_var(self,name):

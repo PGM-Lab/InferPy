@@ -3,7 +3,7 @@ import tensorflow as tf
 import inferpy as inf
 
 from abc import abstractproperty, abstractmethod
-
+import edward as ed
 
 
 
@@ -86,6 +86,9 @@ def new_ParamValue(value, elem_ndim=0):
         p = ParamValueTensor(value)
     elif isinstance(value, inf.models.RandomVariable):
         p = ParamValueInfVar(value)
+    elif isinstance(value, ed.models.RandomVariable):
+        p = ParamValueTensor(value)
+
     else:
         raise ValueError("Wrong parameter value")
 
@@ -294,6 +297,45 @@ class ParamValueInfVar(ParamValue):
     @property
     def tensor(self):
         return self.value.base_object
+
+
+
+class ParamValueEdVar(ParamValue):
+
+    def __init__(self, value):
+        if value.shape == ():
+            value = tf.reshape(value, shape=(1,))
+
+
+    @abstractproperty
+    def ndim(self):
+        shape = self.value.shape
+        return 0 if shape in ([], [1])  else  len(shape)
+
+    @abstractproperty
+    def total_dim(self):
+        return 1 if len(self.value.shape.as_list()) == 0 else self.value.shape.as_list()[-1]
+
+    @abstractproperty
+    def batches(self):
+        return 1 if len(self.value.shape.as_list()) < 2 else self.value.shape.as_list()[0]
+
+    def all_scalar(self):
+        return False
+
+    @property
+    def tensor(self):
+        return self.value
+
+    def get_param_tensor(self):
+
+        v = self.value
+
+        if self.value.shape == ():
+            v = tf.reshape(v, shape=(1,1))
+
+        return v
+
 
 
 
