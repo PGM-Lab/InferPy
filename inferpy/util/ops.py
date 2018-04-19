@@ -74,10 +74,13 @@ def case(d, default=None, exclusive=True, strict=False, name='case'):
 
     def f(p): return tf.constant(p)
 
-
     for c, p in six.iteritems(d):
 
         out_d.update({tf.reduce_all(tf.equal(c.base_object, True)): (lambda pp : lambda: f(pp))(p)})
+
+
+    if default != None:
+        default = (lambda pp : lambda: f(pp))(default)
 
     return tf.case(out_d, default=default, exclusive=exclusive,strict=strict,name=name)
 

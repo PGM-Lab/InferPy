@@ -24,6 +24,7 @@ import edward as ed
 
 
 
+
 class RandomVariable(object):
     """Base class for random variables.
     """
@@ -170,6 +171,8 @@ class RandomVariable(object):
             self.name, self.shape, self.base_object.dtype.name)
 
 
+
+
 # List of Python operators that we allow to override.
 BINARY_OPERATORS = {
     # Binary.
@@ -247,12 +250,11 @@ for x in UNARY_OPERATORS:
 
 
 
-
-def __add_other_operator():
+def __add_equal_operator():
 
     import inferpy.models.deterministic
 
-    name = "__eq__"
+    name = "equal"
     cls = RandomVariable
     def operator(self, other):
 
@@ -271,5 +273,5 @@ def __add_other_operator():
     setattr(cls, operator.__name__, operator)
 
 
-__add_other_operator()
+__add_equal_operator()
 
