@@ -20,10 +20,11 @@
 import edward as ed
 import tensorflow as tf
 from six import iteritems
-import inferpy as inf
 
 import inferpy.models
 import inferpy.util
+import inferpy as inf
+
 from inferpy.util import input_model_data
 from inferpy.util import multishape
 from inferpy.util import tf_run_wrapper
