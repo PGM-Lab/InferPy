@@ -13,4 +13,5 @@ from inferpy.version import *
 
 from inferpy.util.ops import *
 
-from inferpy.inferences import Qmodel
+#from inferpy.inferences import Qmodel
+from inferpy.inferences.qmodel import Qmodel
