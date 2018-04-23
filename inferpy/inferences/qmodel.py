@@ -3,7 +3,7 @@ import numpy as np
 import tensorflow as tf
 import edward as ed
 
-
+import inferpy.inferences
 
 
 
@@ -17,7 +17,7 @@ class Qmodel(object):
 
     @staticmethod
     def build_from_pmodel(p):
-        return Qmodel([Qmodel.new_qvar(v) for v in p.latent_vars])
+        return inferpy.inferences.Qmodel([inferpy.inferences.Qmodel.new_qvar(v) for v in p.latent_vars])
 
 
 
