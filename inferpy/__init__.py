@@ -2,10 +2,11 @@
 #
 
 
-from inferpy import inferences
 from inferpy import models
 from inferpy import util
-from inferpy.inferences.prob_model import *
+from inferpy import inferences
+
+
 from inferpy.replicate import *
 from inferpy.version import *
 
