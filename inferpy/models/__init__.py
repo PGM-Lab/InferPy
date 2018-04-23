@@ -8,6 +8,8 @@ from inferpy.models.deterministic import *
 
 from inferpy.models.factory import *
 
+from inferpy.inferences.qmodel import Qmodel
+
 
 
 
