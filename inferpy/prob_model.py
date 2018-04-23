@@ -20,10 +20,10 @@
 import edward as ed
 import tensorflow as tf
 from six import iteritems
+import inferpy as inf
 
 import inferpy.models
 import inferpy.util
-from inferpy.inferences.qmodel import Qmodel
 from inferpy.util import input_model_data
 from inferpy.util import multishape
 from inferpy.util import tf_run_wrapper
@@ -129,7 +129,7 @@ class ProbModel(object):
         """ This method initializes the structures for making inference in the model."""
 
         if Q == None:
-            Q = Qmodel.build_from_pmodel(self)
+            Q = inf.Qmodel.build_from_pmodel(self)
 
         self.q_vars = Q.dict
 
