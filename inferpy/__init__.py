@@ -4,6 +4,8 @@
 
 from inferpy import models
 from inferpy import util
+from inferpy import inferences
+
 from inferpy.prob_model import *
 from inferpy.replicate import *
 from inferpy.version import *
@@ -14,3 +16,4 @@ from inferpy.util.ops import *
 
 #from inferpy.inferences import Qmodel
 from inferpy.inferences.qmodel import Qmodel
+
