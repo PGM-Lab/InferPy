@@ -23,7 +23,8 @@ from six import iteritems
 
 import inferpy.models
 import inferpy.util
-import inferpy.inferences
+
+import inferpy as inf
 
 from inferpy.util import input_model_data
 from inferpy.util import multishape
@@ -130,7 +131,7 @@ class ProbModel(object):
         """ This method initializes the structures for making inference in the model."""
 
         if Q == None:
-            Q = inferpy.inferences.Qmodel.build_from_pmodel(self)
+            Q = inf.Qmodel.build_from_pmodel(self)
 
         self.q_vars = Q.dict
 

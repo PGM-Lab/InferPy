@@ -16,8 +16,7 @@
 
 
 from inferpy.util import tf_run_wrapper
-import inferpy.inferences
-
+import inferpy as inf
 import tensorflow as tf
 import edward as ed
 
@@ -37,8 +36,8 @@ class RandomVariable(object):
 
             self.observed = observed
 
-            if  inferpy.inferences.ProbModel.is_active() and not self.is_generic_variable():
-                inferpy.inferences.ProbModel.get_active_model().varlist.append(self)
+            if  inf.ProbModel.is_active() and not self.is_generic_variable():
+                inf.ProbModel.get_active_model().varlist.append(self)
 
 
 
