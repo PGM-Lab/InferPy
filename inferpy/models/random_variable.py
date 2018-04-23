@@ -32,6 +32,7 @@ class RandomVariable(object):
     def __init__(self, base_object=None, observed=False):
 
         self.base_object = base_object
+        self.__bind = None
 
         if base_object != None:
 
@@ -94,6 +95,22 @@ class RandomVariable(object):
     def observed(self,observed):
         """ modifies the boolean property that determines if a variable is observed or not """
         self.__observed=observed
+
+
+    @property
+    def bind(self):
+        """  """
+        return self.__bind
+
+    @bind.setter
+    def bind(self,bind):
+        """  """
+
+        if not isinstance(bind, RandomVariable):
+            raise ValueError("object to bind is not RandomVariable")
+
+        self.__bind=bind
+
 
 
     @dist.setter
@@ -169,6 +186,9 @@ class RandomVariable(object):
     def __repr__(self):
         return "<inferpy RandomVariable '%s' shape=%s dtype=%s>" % (
             self.name, self.shape, self.base_object.dtype.name)
+
+
+
 
 
 

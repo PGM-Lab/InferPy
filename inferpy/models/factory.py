@@ -52,27 +52,29 @@ def __add_constructor(cls, class_name, base_class_name, params, is_simple):
 
         param_dist = {}
         args_list = list(args)
-
-        param_list = ParamList(params,args_list,kwargs,is_simple,param_dim=kwargs.get("dim"))
-
-        if not param_list.is_empty():
-
-            param_list.check_params()
-            param_dist = param_list.get_reshaped_param_dict()
-
-            ## Build the underliying tf object
-
-            validate_args = kwargs.get("validate_args") if  kwargs.get("validate_args") != None else False
-            allow_nan_stats = kwargs.get("allow_nan_stats") if  kwargs.get("allow_nan_stats") != None else True
-            name = kwargs.get("name") if kwargs.get("name") != None else class_name
-
-
-            dist = getattr(ed.models, class_name)(name=name, validate_args= validate_args, allow_nan_stats=allow_nan_stats, **param_dist)
-
-        else:
-            dist = None
-
+        dist = None
         observed = kwargs.get("observed") if kwargs.get("observed") != None else False
+
+
+        if len(args)+len(kwargs)>0:
+            param_list = ParamList(params,args_list,kwargs,is_simple,param_dim=kwargs.get("dim"))
+
+            if not param_list.is_empty():
+
+                param_list.check_params()
+                param_dist = param_list.get_reshaped_param_dict()
+
+                ## Build the underliying tf object
+
+                validate_args = kwargs.get("validate_args") if  kwargs.get("validate_args") != None else False
+                allow_nan_stats = kwargs.get("allow_nan_stats") if  kwargs.get("allow_nan_stats") != None else True
+                name = kwargs.get("name") if kwargs.get("name") != None else class_name
+
+
+                dist = getattr(ed.models, class_name)(name=name, validate_args= validate_args, allow_nan_stats=allow_nan_stats, **param_dist)
+
+
+
         super(self.__class__, self).__init__(dist, observed=observed)
 
 
@@ -88,7 +90,11 @@ def __add_repr(cls, class_name, params):
 
         if self.base_object != None:
             s = ", ".join([p+"="+str(getattr(self,p)) for p in params])
+
+
             return "<inferpy "+class_name+" "+self.name+", "+s+", dtype= "+self.dist.dtype.name+" >"
+        else:
+            return ""
 
 
     repr.__doc__ = "__repr__ for "+class_name

@@ -17,22 +17,16 @@
 """Module with the probabilistic model functionality.
 """
 
-import inferpy.util
-import inferpy.models
-from inferpy.util import tf_run_wrapper
-from inferpy.util import multishape
-from inferpy.util import input_model_data
-import tensorflow as tf
 import edward as ed
-import numpy as np
-
+import tensorflow as tf
 from six import iteritems
-from functools import wraps
 
-from inferpy.qmodel import Qmodel
-
-
-import pandas as pd
+import inferpy.models
+import inferpy.util
+from inferpy.inferences.qmodel import Qmodel
+from inferpy.util import input_model_data
+from inferpy.util import multishape
+from inferpy.util import tf_run_wrapper
 
 
 class ProbModel(object):
@@ -77,7 +71,7 @@ class ProbModel(object):
 
 
         for d in self.varlist:
-            if not self.compatible_var(d):
+            if not ProbModel.compatible_var(d):
                 raise ValueError("The input argument is not a list of RandomVariables")
 
         if ProbModel.is_active():
@@ -130,19 +124,14 @@ class ProbModel(object):
 
     # other methods
 
-    def compile(self):
+    def compile(self, Q=None):
 
         """ This method initializes the structures for making inference in the model."""
 
-        self.q_vars = {}
-        for v in self.latent_vars:
-            #qv = ed.models.Normal(loc=tf.Variable(np.zeros(v.dim), dtype="float32"),
-            #                      scale=tf.Variable(np.ones(v.dim), dtype="float32"),
-            #                      name = "q_"+str.replace(v.name, ":", ""))
+        if Q == None:
+            Q = Qmodel.build_from_pmodel(self)
 
-            qv = Qmodel.generate_ed_qvar(v)
-            self.q_vars.update({v.base_object: qv})
-
+        self.q_vars = Q.dict
 
         self.propagated = False
 
@@ -201,16 +190,17 @@ class ProbModel(object):
     def add_var(self, v):
         """ Method for adding a new random variable. After use, the model should be re-compiled """
 
-        if not self.compatible_var(v):
+        if not ProbModel.compatible_var(v):
             raise ValueError("The input argument must be a non-generic random variable")
 
         if v not in self.varlist:
             self.varlist.append(v)
             self.reset_compilation()
-
-    def compatible_var(self, v):
+    @staticmethod
+    def compatible_var(v):
         return (isinstance(v, inferpy.models.RandomVariable)
-                or isinstance(v, ed.models.RandomVariable)) and not v.is_generic_variable()
+                #or isinstance(v, ed.models.RandomVariable)
+                ) and not v.is_generic_variable()
 
 
     def get_var(self,name):
