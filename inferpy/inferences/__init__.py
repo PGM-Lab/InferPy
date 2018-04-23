@@ -2,3 +2,4 @@
 #
 
 from inferpy.inferences.qmodel import *
+from inferpy.inferences.prob_model import *
