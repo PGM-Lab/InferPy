@@ -233,6 +233,8 @@ UNARY_OPERATORS = {
 }
 
 
+
+
 def __add_operator(cls, name, unary=False):
 
     import inferpy.models.deterministic

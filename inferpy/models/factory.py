@@ -119,7 +119,12 @@ def def_random_variable(var):
         v.update({BASE_CLASS_NAME : v.get(CLASS_NAME)})
 
     if not PARAMS in v:
-        init_func = getattr(getattr(tf.contrib.distributions, v.get(BASE_CLASS_NAME)), "__init__")
+
+        if BASE_CLASS_NAME in [c.__name__ for c in tf.contrib.distributions.Distribution.__subclasses__()]:
+            init_func = getattr(getattr(tf.contrib.distributions, v.get(BASE_CLASS_NAME)), "__init__")
+        else:
+            init_func = getattr(getattr(ed.models, v.get(BASE_CLASS_NAME)), "__init__")
+
         sig = inspect.getargspec(init_func)
         v.update({PARAMS: [x for x in sig.args if x not in ['self', 'validate_args', 'allow_nan_stats', 'name', 'dtype'] ]})
 
@@ -244,12 +249,22 @@ class Dirichlet(RandomVariable):
             dim=None):
         self.concentration=concentration
 
+class PointMass(RandomVariable):
+    def __init__(self,
+                 params,
+                 validate_args=False,
+                 allow_nan_stats=True,
+                 name="PointMass",
+                 observed=False,
+                 dim=None):
+        pass
+
 ####### run-time definition of random variables #########
 
-ALLOWED_VARS = ["Normal", "Beta","Exponential","Uniform","Poisson"]
+SIMPLE_VARS = ["Normal","Beta","Exponential","Uniform","Poisson"]
 
 
-for v in ALLOWED_VARS:
+for v in SIMPLE_VARS:
     def_random_variable(v)
     g = globals()
 

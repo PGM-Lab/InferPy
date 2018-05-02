@@ -21,12 +21,18 @@ with inf.ProbModel() as m:
 
 # define the Qmodel
 
-q_theta1 = inf.Qmodel.new_qvar(theta1)
-q_theta2 = inf.Qmodel.new_qvar(theta2, initializer="ones")
-
-qmodel = inf.Qmodel([q_theta1,q_theta2])
 
 
+# define with any type
+q_theta1 = inf.Qmodel.Uniform(theta1)
+q_theta2 = inf.Qmodel.new_qvar(theta2)
+
+inf.models.ALLOWED_VARS
+
+
+qmodel = inf.Qmodel([q_theta1, q_theta2])
+
+inf.Qmodel.Normal(theta1)
 
 m.compile(Q=qmodel)
 
@@ -37,6 +43,10 @@ data = {x.name : x_train}
 
 m.fit(data)
 
-m.posterior(theta1).loc
-m.posterior(theta2).loc
+m.posterior(theta1).base_object
+
+m.posterior(theta2)
+
+
+
 

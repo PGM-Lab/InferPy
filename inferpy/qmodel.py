@@ -63,7 +63,7 @@ class Qmodel(object):
 
 
     @staticmethod
-    def __generate_ed_qvar(v, initializer):
+    def __generate_ed_qvar(v, initializer, vartype):
         qparams = {}
 
         if initializer == "ones":
@@ -75,39 +75,60 @@ class Qmodel(object):
 
 
 
+        #make of type vartype
 
-        for p_name in v.PARAMS:
+
+        for p_name in getattr(inf.models, vartype).PARAMS:
             if p_name not in ["logits"]:
-                qparams.update({p_name: tf.Variable(init_f(np.shape(getattr(v, p_name))), dtype="float32")})
+                qparams.update({p_name: tf.Variable(init_f(v.shape), dtype="float32")})
 
-        qvar =  getattr(ed.models, type(v).__name__)(name = "q_"+str.replace(v.name, ":", ""), **qparams)
+        qvar =  getattr(ed.models, vartype)(name = "q_"+str.replace(v.name, ":", ""), **qparams)
 
         return qvar
 
 
+ #   @staticmethod
+ #   def new_qvar(v, initializer='ones'):
+ #       return Qmodel.__new_qvar(v,initializer,None)
+
     @staticmethod
-    def new_qvar(v, initializer='ones'):
+    def new_qvar(v, initializer='ones', vartype = None):
 
         if not inf.ProbModel.compatible_var(v):
             raise ValueError("Non-compatible variable")
         elif v.observed:
             raise ValueError("Variable "+v.name+" cannot be observed")
 
+        if vartype == None:
+            vartype = type(v).__name__
 
-        qv = getattr(inf.models, type(v).__name__)()
-        qv.dist = Qmodel.__generate_ed_qvar(v, initializer)
+
+        qv = getattr(inf.models, vartype)()
+        qv.dist = Qmodel.__generate_ed_qvar(v, initializer, vartype)
         qv.bind = v
         return qv
 
 
 
+####
 
 
 
 
 
+def __add__new_qvar(vartype):
+
+    name = vartype.__name__
+
+    def f(cls,v, initializer='ones'):
+        return cls.new_qvar(v,initializer,name)
 
 
+    f.__doc__ = "documentation for " + name
+    f.__name__ = name
+
+    setattr(Qmodel, f.__name__, classmethod(f))
 
 
-
+for vartype in inf.models.RandomVariable.__subclasses__():
+    __add__new_qvar(vartype)

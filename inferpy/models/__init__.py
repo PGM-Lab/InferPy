@@ -12,4 +12,12 @@ from inferpy.models.factory import *
 
 
 
+# IMPLEMENTED RANDOM VARIABELS
+
+
+
+ALLOWED_VARS = [cls.__name__ for cls in RandomVariable.__subclasses__()]
+
+
+
 

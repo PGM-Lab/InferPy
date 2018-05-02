@@ -152,6 +152,8 @@ class Deterministic(RandomVariable):
 
 
     def __repr__(self):
-        return "<inferpy Deterministic '%s', shape=%s dtype=%s>" % (
-            self.name, self.shape, type(self.loc))
+        return "<inferpy Deterministic '%s', shape=%s>" % (
+            self.name, self.shape)
+
+
 

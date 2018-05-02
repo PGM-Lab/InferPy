@@ -174,8 +174,16 @@ class ProbModel(object):
             self.inference.run()
             self.propagated = True
 
-        post = getattr(inferpy.models, type(latent_var).__name__)(name="post_"+latent_var.name)
-        post.dist = self.inference.latent_vars.get(latent_var.dist)
+        ed_post = self.inference.latent_vars.get(latent_var.dist)
+        vartype = type(ed_post).__name__
+
+
+        if vartype in inferpy.models.ALLOWED_VARS:
+            post = getattr(inferpy.models, vartype)(name="post_" + latent_var.name)
+        else:
+            post = inf.models.Deterministic()
+
+        post.base_object = ed_post
 
         return post
 
