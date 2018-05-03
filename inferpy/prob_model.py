@@ -23,6 +23,7 @@ from six import iteritems
 
 import inferpy.models
 import inferpy.util
+import inferpy.inferences
 
 import inferpy as inf
 
@@ -126,9 +127,14 @@ class ProbModel(object):
 
     # other methods
 
-    def compile(self, Q=None):
+    def compile(self, infMethod="KLqp", Q=None):
 
         """ This method initializes the structures for making inference in the model."""
+
+        if infMethod not in inferpy.inferences.INF_METHODS:
+            raise ValueError("Unsupported inference method: "+infMethod)
+
+        self.infMethod = infMethod
 
         if Q == None:
             Q = inf.Qmodel.build_from_pmodel(self)
@@ -153,7 +159,8 @@ class ProbModel(object):
         self.q_vars.get(self.latent_vars[0].dist)
 
 
-        self.inference = ed.KLqp(self.q_vars, self.data)
+
+        self.inference = getattr(ed.inferences, self.infMethod)(self.q_vars, self.data)
         self.inference.run()
         self.propagated = True
 
