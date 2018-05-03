@@ -16,7 +16,7 @@ from inferpy.models.factory import *
 
 
 
-ALLOWED_VARS = [cls.__name__ for cls in RandomVariable.__subclasses__()]
+ALLOWED_VARS = list(np.unique([cls.__name__ for cls in RandomVariable.__subclasses__()]))
 
 
 

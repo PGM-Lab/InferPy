@@ -120,12 +120,15 @@ def def_random_variable(var):
 
     if not PARAMS in v:
 
-        if BASE_CLASS_NAME in [c.__name__ for c in tf.contrib.distributions.Distribution.__subclasses__()]:
-            init_func = getattr(getattr(tf.contrib.distributions, v.get(BASE_CLASS_NAME)), "__init__")
-        else:
-            init_func = getattr(getattr(ed.models, v.get(BASE_CLASS_NAME)), "__init__")
+        lst = [c.__name__ for c in tf.contrib.distributions.Distribution.__subclasses__()]
 
-        sig = inspect.getargspec(init_func)
+
+        if v.get(BASE_CLASS_NAME) in [c.__name__ for c in tf.contrib.distributions.Distribution.__subclasses__()]:
+            init_f = getattr(getattr(tf.contrib.distributions, v.get(BASE_CLASS_NAME)), "__init__")
+        else:
+            init_f = getattr(getattr(ed.models, v.get(BASE_CLASS_NAME)), "__init__")
+
+        sig = inspect.getargspec(init_f)
         v.update({PARAMS: [x for x in sig.args if x not in ['self', 'validate_args', 'allow_nan_stats', 'name', 'dtype'] ]})
 
 
