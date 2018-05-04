@@ -5,7 +5,9 @@
 from inferpy import models
 from inferpy import util
 
-from inferpy.inferences import INF_METHODS
+from inferpy import inferences
+
+
 
 from inferpy.replicate import *
 from inferpy.version import *
