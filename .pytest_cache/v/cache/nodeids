@@ -1,0 +1,6 @@
+[
+  "tests/test_normal_definition.py::Normal_test_definition::test", 
+  "tests/test_operators.py::operators_test::test", 
+  "tests/test_param_inference.py::param_inference_test::test", 
+  "tests/test_probmodel_definition.py::Probmodel_test_definition::test"
+]
