@@ -1,5 +1,4 @@
 import inferpy as inf
-import numpy as np
 import tensorflow as tf
 import edward as ed
 
