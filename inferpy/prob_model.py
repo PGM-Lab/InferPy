@@ -24,10 +24,6 @@ from six import iteritems
 import inferpy as inf
 
 
-import inferpy.models
-import inferpy.util
-
-
 from inferpy.util import input_model_data
 from inferpy.util import multishape
 from inferpy.util import tf_run_wrapper
@@ -132,7 +128,7 @@ class ProbModel(object):
 
         """ This method initializes the structures for making inference in the model."""
 
-        if infMethod not in inferpy.inferences.INF_METHODS:
+        if infMethod not in inf.inferences.INF_METHODS:
             raise ValueError("Unsupported inference method: "+infMethod)
 
         self.infMethod = infMethod
@@ -186,8 +182,8 @@ class ProbModel(object):
         vartype = type(ed_post).__name__
 
 
-        if vartype in inferpy.models.ALLOWED_VARS:
-            post = getattr(inferpy.models, vartype)(name="post_" + latent_var.name)
+        if vartype in inf.models.ALLOWED_VARS:
+            post = getattr(inf.models, vartype)(name="post_" + latent_var.name)
         else:
             post = inf.models.Deterministic()
 
@@ -216,7 +212,7 @@ class ProbModel(object):
             self.reset_compilation()
     @staticmethod
     def compatible_var(v):
-        return (isinstance(v, inferpy.models.RandomVariable)
+        return (isinstance(v, inf.models.RandomVariable)
                 #or isinstance(v, ed.models.RandomVariable)
                 ) and not v.is_generic_variable()
 
