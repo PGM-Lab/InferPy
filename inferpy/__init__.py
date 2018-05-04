@@ -4,7 +4,7 @@
 
 from inferpy import models
 from inferpy import util
-#from inferpy import inferences
+from inferpy import inferences
 
 from inferpy.replicate import *
 from inferpy.version import *

@@ -26,7 +26,6 @@ import inferpy as inf
 
 import inferpy.models
 import inferpy.util
-import inferpy.inferences
 
 
 from inferpy.util import input_model_data
