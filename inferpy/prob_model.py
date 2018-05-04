@@ -133,8 +133,8 @@ class ProbModel(object):
 
         """ This method initializes the structures for making inference in the model."""
 
-        if infMethod not in inferpy.inferences.INF_METHODS:
-            raise ValueError("Unsupported inference method: "+infMethod)
+#        if infMethod not in inferpy.inferences.INF_METHODS:
+#            raise ValueError("Unsupported inference method: "+infMethod)
 
         self.infMethod = infMethod
 
