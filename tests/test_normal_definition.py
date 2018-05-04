@@ -1,6 +1,6 @@
 import unittest
 
-import inferpy as inf
+import inferpy
 import numpy as np
 
 
@@ -12,7 +12,7 @@ class Normal_test_definition(unittest.TestCase):
 		dim = 3
 		N = 100
 
-		x = inf.models.Normal(loc=loc, scale=scale, dim=dim)
+		x = inferpy.models.Normal(loc=loc, scale=scale, dim=dim)
 		sample_x = x.sample(N)
 		shape_x = np.shape(sample_x)
 		mean_x = np.mean(sample_x)
