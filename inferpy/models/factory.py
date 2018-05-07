@@ -180,6 +180,7 @@ class Beta(RandomVariable):
 
 
 
+
 class Exponential(RandomVariable):
     def __init__(
             self,
@@ -252,19 +253,55 @@ class Dirichlet(RandomVariable):
             dim=None):
         self.concentration=concentration
 
-class PointMass(RandomVariable):
-    def __init__(self,
-                 params,
+class Gamma(RandomVariable):
+    def __init__(
+            self,
+            alpha, beta,
+            validate_args=False,
+            allow_nan_stats=True,
+            observed=False,
+            dim=None,
+            name='Gamma'):
+        self.alpha = alpha
+        self.beta = beta
+
+class InverseGamma(RandomVariable):
+    def __init__(
+            self,
+            alpha, beta,
+            validate_args=False,
+            allow_nan_stats=True,
+            observed=False,
+            dim=None,
+            name='InverseGamma'):
+        self.alpha = alpha
+        self.beta = beta
+
+class Bernoulli(RandomVariable):
+    def __init__(
+            self,
+            logits=None,
+            probs=None,
+            validate_args=False,
+            allow_nan_stats=True,
+            name='Bernoulli',
+            observed=False,
+            dim=None):
+        self.default_logits = logits
+        self.default_probs = probs
+
+class Laplace(RandomVariable):
+    def __init__(self, loc, scale,
                  validate_args=False,
                  allow_nan_stats=True,
-                 name="PointMass",
-                 observed=False,
-                 dim=None):
-        pass
+                 dim=None, observed=False, name="Laplace"):
+        self.loc = loc
+        self.scale = scale
+
 
 ####### run-time definition of random variables #########
 
-SIMPLE_VARS = ["Normal","Beta","Exponential","Uniform","Poisson"]
+SIMPLE_VARS = ["Normal","Beta", "Exponential","Uniform","Poisson", "Gamma", "InverseGamma", "Laplace"]
 
 
 for v in SIMPLE_VARS:
@@ -275,7 +312,8 @@ for v in SIMPLE_VARS:
 
 NON_SIMPLE_VARS = [{CLASS_NAME : "Categorical", IS_SIMPLE : {"probs" : False, "logits": False}},
                    {CLASS_NAME: "Multinomial", IS_SIMPLE: {"total_count":True,"probs": False, "logits": False}},
-                   {CLASS_NAME: "Dirichlet", IS_SIMPLE: {"concentration": False}}
+                   {CLASS_NAME: "Dirichlet", IS_SIMPLE: {"concentration": False}},
+                   {CLASS_NAME : "Bernoulli", IS_SIMPLE : {"probs" : False, "logits": False}},
                    ]
 
 for v in NON_SIMPLE_VARS:
