@@ -4,7 +4,7 @@
 
 from inferpy import models
 from inferpy import util
-from inferpy.inferences import inference
+#from inferpy.inferences import inference
 
 
 from inferpy.replicate import *
@@ -18,3 +18,4 @@ from inferpy.util.ops import *
 
 
 
+INF_METHODS = ["KLpq", "KLqp", "Laplace", "ReparameterizationEntropyKLqp", "ReparameterizationKLKLqp", "ReparameterizationKLqp", "ScoreEntropyKLqp", "ScoreKLKLqp", "ScoreKLqp", "ScoreRBKLqp", "WakeSleep"]

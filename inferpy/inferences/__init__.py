@@ -2,4 +2,4 @@
 #
 
 
-from inferpy.inferences.inference import *
+#from inferpy.inferences.inference import *
