@@ -67,6 +67,22 @@ class operators_test(unittest.TestCase):
         op2 = abs(x.sample())
         self.assertTrue(np.all(abs(op1 - op2) < th))
 
+
+        op1 = ((x>0) & (x>80)).sample()
+        op2 = (x.sample()>0) & (x.sample()>80)
+        self.assertTrue(np.all(op1 == op2))
+
+        op1 = ((x>0) | (x>80)).sample()
+        op2 = (x.sample()>0) | (x.sample()>80)
+        self.assertTrue(np.all(op1 == op2))
+
+
+
+        op1 = (x>0).equal(x>1).sample()
+        op2 = (x.sample()>0)==(x.sample()>1)
+        self.assertTrue(np.all(op1 == op2))
+
+
 if __name__ == '__main__':
     unittest.main()
 
