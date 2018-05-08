@@ -1,20 +1,15 @@
 import inferpy as inf
 from inferpy.models import Normal
 
-K, d, N = 5, 10, 200
-
-
 # K defines the number of components.
 K=10
 
 # d defines the number of dimensions
 d=20
 
-
 #Prior for the principal components
 with inf.replicate(size = K):
     w = Normal(loc = 0, scale = 1, dim = d)
-
 
 
 ###
@@ -54,5 +49,19 @@ pca.compile(infMethod = 'Laplace')
 
 ###
 
-data = pca.sample(size=100)
+# Sample data from the model
+data = pca.sample(size = 100)
 
+# Compute the log-likelihood of a data set
+log_like = pca.log_prob(data)
+
+
+
+###
+
+# compile and fit the model with training data
+pca.compile()
+pca.fit(data)
+
+#extract the hidden representation from a set of observations
+hidden_encoding = pca.posterior(z)
