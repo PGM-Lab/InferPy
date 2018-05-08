@@ -387,7 +387,7 @@ class ParamList(object):
             low = p.nd_range[0]
             up = p.nd_range[1]
 
-            if isinstance(p.p_value, ParamValueInfVar) and p.batches==inf.replicate.get_total_size():
+            if isinstance(p.p_value, ParamValueInfVar) and p.batches>1 and p.batches==inf.replicate.get_total_size():
                 low = low+1
                 up = up+1
 

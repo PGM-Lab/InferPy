@@ -33,7 +33,7 @@ with inf.replicate(size=N):
 from inferpy import ProbModel
 
 # Define the model
-pca = ProbModel(vars = [w,z,x])
+pca = ProbModel(varlist = [w,z,x])
 
 # Compile the model
 pca.compile(infMethod = 'KLqp')
@@ -46,7 +46,7 @@ pca.compile(infMethod = 'KLqp')
 from inferpy import ProbModel
 
 # Define the model
-pca = ProbModel(vars = [w,z,x])
+pca = ProbModel(varlist = [w,z,x])
 
 # Compile the model
 pca.compile(infMethod = 'Laplace')
@@ -55,3 +55,4 @@ pca.compile(infMethod = 'Laplace')
 ###
 
 data = pca.sample(size=100)
+
