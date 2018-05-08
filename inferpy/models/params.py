@@ -358,7 +358,6 @@ class ParamList(object):
                     plist.append(Param(name=p_name, value = kwargs_dict.get(p_name), is_simple=is_simple.get(p_name)))
 
 
-
         self.plist=plist
         self.param_dim = param_dim
 
@@ -388,7 +387,7 @@ class ParamList(object):
             low = p.nd_range[0]
             up = p.nd_range[1]
 
-            if isinstance(p, ParamValueInfVar) and p.batches==inf.replicate.get_total_size():
+            if isinstance(p.p_value, ParamValueInfVar) and p.batches==inf.replicate.get_total_size():
                 low = low+1
                 up = up+1
 

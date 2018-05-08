@@ -1,5 +1,21 @@
-Getting Started: 30 seconds to InferPy
-======================================
+Getting Started:
+================
+
+Installation
+-----------------
+
+Install InferPy from PyPI:
+
+.. code:: bash
+
+   $ pip install inferpy
+
+
+
+
+
+30 seconds to InferPy
+--------------------------
 
 The core data structures of InferPy is a **probabilistic model**,
 defined as a set of **random variables** with a conditional independence
@@ -11,7 +27,7 @@ be defined as follows,
 
 .. figure:: ../_static/imgs/LinearFactor.png
    :alt: Linear Factor Model
-   :scale: 50 %
+   :scale: 35 %
    :align: center
    
    Bayesian PCA
@@ -155,3 +171,5 @@ Or compute predicitons on new data
 
     # Make predictions over a target var
     latent_representation = pca.predict(test_data, targetvar = w_n)
+
+
