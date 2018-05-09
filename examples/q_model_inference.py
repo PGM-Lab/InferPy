@@ -27,8 +27,6 @@ with inf.ProbModel() as m:
 q_theta1 = inf.Qmodel.Uniform(theta1)
 q_theta2 = inf.Qmodel.new_qvar(theta2)
 
-inf.models.ALLOWED_VARS
-
 
 qmodel = inf.Qmodel([q_theta1, q_theta2])
 

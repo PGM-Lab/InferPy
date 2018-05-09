@@ -1,6 +1,9 @@
 Guide to Model Validation
 =========================
 
+.. note:: not implemented yet
+
+
 Model validation try to assess how faifhfully the inferered
 probabilistic model represents and explain the observed data.
 

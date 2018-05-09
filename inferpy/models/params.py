@@ -354,7 +354,7 @@ class ParamList(object):
                 plist.append(Param(name=p_name, value = args_list[0], is_simple=is_simple.get(p_name)))
                 args_list = args_list[1:]
             else:
-                if kwargs_dict.get(p_name) != None:
+                if kwargs_dict.has_key(p_name):
                     plist.append(Param(name=p_name, value = kwargs_dict.get(p_name), is_simple=is_simple.get(p_name)))
 
 

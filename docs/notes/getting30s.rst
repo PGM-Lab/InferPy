@@ -35,7 +35,7 @@ be defined as follows,
 We start defining the **prior** of the global parameters, 
 
 
-.. literalinclude:: ../../examples/docs/30secs/1.py
+.. literalinclude:: ../../examples/docs/getting30s/1.py
    :language: python
    :lines: 1-13
 
@@ -47,14 +47,14 @@ variable is assumed to be **independent**.
 This ``with inf.replicate(size = N)`` construct is also useful when
 defining the model for the data:
 
-.. literalinclude:: ../../examples/docs/30secs/1.py
+.. literalinclude:: ../../examples/docs/getting30s/1.py
    :language: python
    :lines: 17-24
 
 
 
 
-As commented above, the variable ``w_n`` and ``x_n`` are surrounded by a
+As commented above, the variables are surrounded by a
 ``with`` statement to inidicate that the defined random variables will
 be reapeatedly used in each data sample. In this case, every replicated
 variable is conditionally idependent given the variables mu and sigma
@@ -65,7 +65,7 @@ model itself can be created and compiled. The probabilistic model
 defines a joint probability distribuiton over all these random
 variables.
 
-.. literalinclude:: ../../examples/docs/30secs/1.py
+.. literalinclude:: ../../examples/docs/getting30s/1.py
    :language: python
    :lines: 28-34
 
@@ -73,7 +73,7 @@ variables.
 During the model compilation we specify different inference methods that
 will be used to learn the model.
 
-.. literalinclude:: ../../examples/docs/30secs/1.py
+.. literalinclude:: ../../examples/docs/getting30s/1.py
    :language: python
    :lines: 41-47
 
@@ -87,14 +87,14 @@ Every random variable object is equipped with methods such as
 equipped with the same methods. Then, we can sample data from the model
 anbd compute the log-likelihood of a data set:
 
-.. literalinclude:: ../../examples/docs/30secs/1.py
+.. literalinclude:: ../../examples/docs/getting30s/1.py
    :language: python
    :lines: 52-56
 
 Of course, you can fit your model with a given data set:
 
 
-.. literalinclude:: ../../examples/docs/30secs/1.py
+.. literalinclude:: ../../examples/docs/getting30s/1.py
    :language: python
    :lines: 62-67
 

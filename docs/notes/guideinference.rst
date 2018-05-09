@@ -34,34 +34,26 @@ in which the task is to approximate the posterior
 A probabilistic model in InferPy should be compiled before we can access
 these posteriors,
 
-.. code:: python
 
-     pca = ProbModel(vars = [mu,w_n,x_n]) 
-     pca.compile(infMethod = 'KLqp')   
-     pca.fit(x_train)
-     posterior_mu = pca.posterior(mu)
+.. literalinclude:: ../../examples/docs/guideinference/1.py
+   :language: python
+   :lines: 29-31
+
 
 The compilation process allows to choose the inference algorithm through
-the ``infMethod`` argument. In the above example we use ``'Klqp'``. Other
-inference algorithms include: ``'NUTS'``, ``'MCMC'``, ``'KLpq'``, etc. Look at ? for
-a detailed description of the available inference algorithms.
+the ``infMethod`` argument. In the above example we use ``'Klqp'``.
 
 Following InferPy guiding principles, users can further configure the
 inference algorithm. First, they can define a model 'Q' for approximating the 
 posterior distribution,
 
-.. code:: python
 
-     pca = ProbModel(vars = [mu,w_n,x_n]) 
-     
-     q_mu = inf.inference.Q.Normal(bind = mu, initializer='random_unifrom')
-     q_w_n = inf.inference.Q.Normal(bind = w_n, initializer='random_unifrom')
-     
-     qmodel = QModel(vars = [q_mu,q_w_n])
-     
-     pca.compile(infMethod = 'KLqp', Q = qmodel)
-     pca.fit(x_train)
-     posterior_mu = pca.posterior(mu)
+.. literalinclude:: ../../examples/docs/guideinference/1.py
+   :language: python
+   :lines: 36-43
+
+
+
 
 In the 'Q' model we should include a q distribution for every non observed variable in 
 the 'P' model. Otherwise, an error will be raised during model compilation. 
@@ -73,29 +65,10 @@ instead of the Gaussian approximation used by default). We can also
 configure how these **q's** are initialized using any of the Keras's
 initializers.
 
-Inspired by Keras semantics, we can furhter configure the inference
-algorithm,
-
-.. code:: python
-
-     pca = ProbModel(vars = [mu,w_n,x_n]) 
-     
-     q_mu = inf.inference.Q.PointMass(bind = mu, initializer='zeroes')
-     q_w_n = inf.inference.Q.Normal(bind = w_n, initializer='random_unifrom')
-     
-     qmodel = QModel(vars = [q_mu,q_w_n])
-
-     sgd = keras.optimizers.SGD(lr=0.01, momentum=0.9, nesterov=True)
-     infkl_qp = inf.inference.KLqp(Q = qmodel, optimizer = sgd, loss="ELBO")
-     pca.compile(infMethod = infkl_qp)
-
-     pca.fit(x_train)
-     posterior_mu = pca.posterior(mu)
-
-Have a look at Inference Zoo to explore other configuration options.
-
 Compositional Inference
------------------------
+------------------------
+
+.. note:: not implemented yet
 
 InferPy directly builds on top of Edward's compositionality idea to design complex
 infererence algorithms. 

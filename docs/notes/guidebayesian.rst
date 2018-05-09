@@ -1,6 +1,8 @@
 Guide to Bayesian Deep Learning
 ===============================
 
+.. note:: not implemented yet
+
 InferPy inherits Edward's approach for representing probabilistic models
 as (stochastic) computational graphs. As describe above, a random
 variable :math:`x` is associated to a tensor :math:`x^*` in the
