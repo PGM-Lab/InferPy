@@ -110,6 +110,21 @@ samples of the random variable :math:`x`, i.e.
 :math:`x^*\sim p(x|\theta)`. In this way, random variables can be
 involved in expressive deterministic operations.
 
+
+Dependecies between variables are modelled by setting a given variable as a parameter of another variable. For example:
+
+.. literalinclude:: ../../examples/docs/guidemodels/4.py
+   :language: python
+   :lines: 4-9
+
+Moreover, we might consider using the function ``inferpy.case`` as the parameter of other random variables:
+
+.. literalinclude:: ../../examples/docs/guidemodels/4.py
+   :language: python
+   :lines: 12-36
+
+
+
 Supported Probability Distributions
 -----------------------------------
 

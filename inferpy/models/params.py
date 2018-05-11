@@ -4,6 +4,7 @@ import inferpy as inf
 
 from abc import abstractproperty, abstractmethod
 import edward as ed
+import collections
 
 
 
@@ -44,8 +45,11 @@ class Param(object):
             n =  1
         elif self.ndim==1:
             n = self.total_dim
-        else:
+        elif isinstance(self.p_value.value, collections.Iterable):
             n = self.p_value.value[0].total_dim
+        else:
+            n = 1
+
 
         return n
 
@@ -451,3 +455,8 @@ class ParamList(object):
         return d
 
 
+
+
+#a = inf.models.Normal(0,1)
+
+#ParamList(["a", "b"], [a, p] )

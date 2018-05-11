@@ -1,6 +1,6 @@
 import edward as ed
 import inferpy as inf
-from inferpy.models import Normal
+from inferpy.models import Normal, InverseGamma
 
 K, d, N = 5, 10, 200
 
@@ -10,13 +10,15 @@ with inf.ProbModel() as m:
     with inf.replicate(size=K):
         w = Normal(0, 1, dim=d)
 
+    sigma = InverseGamma(1.0,1.0)
+
     # define the generative model
     with inf.replicate(size=N):
         z = Normal(0, 1, dim=K)
         x = Normal(inf.matmul(z,w),
-                   1.0, observed=True, dim=d)
+                   sigma, observed=True, dim=d)
 
-# data generation
+# toy data generation
 x_train = Normal(loc=0, scale=1., dim=d).sample(N)
 data = {x.name: x_train}
 
