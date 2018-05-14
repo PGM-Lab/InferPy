@@ -17,7 +17,7 @@ Changes:
 
 
 
-**Release Date**: 09/05/2018
+**Release Date**: 14/05/2018
 **Further Information**: [Documentation](http://inferpy.readthedocs.io/)
 
 

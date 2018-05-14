@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-InferPy: Deep Probabilistic Modelling Made Easy
+InferPy: Probabilistic Modelling Made Easy
 ===============================================
 
 .. image:: _static/img/logo.png
@@ -20,7 +20,7 @@ easy-to-code probablistic modelling, scalable inference and robust model validat
 Use InferPy is you need a probabilistic programming language that:
 
 * Allows easy and fast prototyping of hierarchical probabilistic models with a simple and user friendly API inspired by Keras. 
-* Defines probabilistic models with complex probabilistic constructs containing deep neural networks.   
+.. * Defines probabilistic models with complex probabilistic constructs containing deep neural networks.
 * Automatically creates computational efficient batched models without the need to deal with complex tensor operations.
 * Run seamlessly on CPU and GPU by relying on Tensorflow. 
 
@@ -35,7 +35,7 @@ verbose and is based on distributions over Tensor objects, which are n-dimension
 complex semantics operations. Probability distributions over Tensors are powerful abstractions 
 but it is not easy to operate with them. InferPy's API is no so general like Edward's API 
 but still covers a wide range of powerful and widely used probabilistic models, which can contain
-complex probability constructs containing deep neural networks.  
+complex probability constructs.
 
 
 .. toctree::
@@ -56,9 +56,11 @@ complex probability constructs containing deep neural networks.
    
    notes/guidemodels
    notes/guideinference
-   notes/guidebayesian
    notes/guidevalidation
    notes/guidedata
+
+..   notes/guidebayesian
+
 
 .. toctree::
    :includehidden:
