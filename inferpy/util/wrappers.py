@@ -69,12 +69,39 @@ def multishape(f):
     def wrapper(*args, **kwargs):
 
         first_arg = 1
+#        if args[first_arg].__class__ in [[].__class__, {}.__class__, np.array([]).__class__]:            # single element
 
         if np.ndim(args[first_arg]) == 0:            # single element
             return f(*args, **kwargs)
         elif np.ndim(args[first_arg]) == 1:        # unidimensional vector
             output = []
             for i in args[1]:
+
+                if first_arg == 1:
+                    output.append(f(args[0], i, **kwargs))
+                else:
+                    output.append(f(i, **kwargs))
+            return output
+        else:
+            raise ValueError("@multishape wrapper can only be applied to single elements or to 1-dimension vectors")
+
+
+    return wrapper
+
+
+
+def static_multishape(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+
+        first_arg = 0
+#        if args[first_arg].__class__ in [[].__class__, {}.__class__, np.array([]).__class__]:            # single element
+
+        if np.ndim(args[first_arg]) == 0:            # single element
+            return f(*args, **kwargs)
+        elif np.ndim(args[first_arg]) == 1:        # unidimensional vector
+            output = []
+            for i in args[first_arg]:
 
                 if first_arg == 1:
                     output.append(f(args[0], i, **kwargs))

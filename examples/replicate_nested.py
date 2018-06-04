@@ -17,6 +17,3 @@ with inf.replicate(size=10):
 
 # Define some random variables here
 print("Variable replicated " + str(inf.replicate.get_total_size()) + " times")
-
-
-print(inf.replicate.in_replicate())

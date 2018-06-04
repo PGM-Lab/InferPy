@@ -46,7 +46,8 @@ class replicate():
         """
 
 
-    __sizes = [1]
+    __active_rep = []
+    __all_rep = []
 
     def __init__(self,size):
         """Initializes the replicate construct
@@ -55,13 +56,26 @@ class replicate():
             size (int): number of times that the variables contained are replicated.
 
         """
-        replicate.__sizes.append(size)
+        self.size = size
+
+        self.varlist=[]
+
+    @staticmethod
+    def __get_all_sizes():
+        return [1]+[r.size for r in replicate.__active_rep]
+
 
     def __enter__(self):
+        replicate.__active_rep.append(self)
+        replicate.__all_rep.append(self)
+
+
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        replicate.__sizes.pop()
+        replicate.__active_rep.pop()
+
+
 
     @staticmethod
     def get_total_size():
@@ -71,9 +85,9 @@ class replicate():
             Integer with the product of sizes
 
         """
-        if len(replicate.__sizes) == 0:
-            return None
-        return reduce(lambda x, y: x * y, replicate.__sizes)
+        if len(replicate.__get_all_sizes()) == 1:
+            return 1
+        return reduce(lambda x, y: x * y, replicate.__get_all_sizes())
 
     @staticmethod
     def print_total_size():
@@ -89,7 +103,21 @@ class replicate():
              True if the method is inside a construct replicate (of size different to 1).
              Otherwise False is return
         """
-        return len(replicate.__sizes)>1
+        return len(replicate.__active_rep)>0
 
 
+
+    # static methods
+    @staticmethod
+    def get_active_replicate():
+
+        """ Return the active replicate defined with the construct 'with' """
+
+        if replicate.in_replicate():
+            return replicate.__active_rep
+        return []
+
+    @staticmethod
+    def get_all_replicate():
+        return replicate.__all_rep
 

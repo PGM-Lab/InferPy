@@ -16,9 +16,11 @@
 
 
 from inferpy.util import tf_run_wrapper
+from inferpy.util import static_multishape
 import inferpy as inf
 import tensorflow as tf
 import edward as ed
+import numpy as np
 
 
 
@@ -27,18 +29,34 @@ class RandomVariable(object):
     """Base class for random variables.
     """
 
+
+    __declared_vars = {}
+
     def __init__(self, base_object=None, observed=False):
 
         self.base_object = base_object
         self.__bind = None
+        self.observed = observed
+        self.copied_from = None
 
         if base_object != None:
 
-            self.observed = observed
+
+
+            if observed and not inf.replicate.in_replicate():
+                raise ValueError("Error: observed variable "+base_object.name+" cannot be declared outside replicate construct")
+
+
+
 
             if  inf.ProbModel.is_active() and not self.is_generic_variable():
                 inf.ProbModel.get_active_model().varlist.append(self)
 
+            if inf.replicate.in_replicate():
+                for r in inf.replicate.get_active_replicate():
+                    r.varlist.append(self)
+
+        RandomVariable.__declared_vars.update({id(self) : self})
 
 
 
@@ -181,12 +199,64 @@ class RandomVariable(object):
     def is_generic_variable(self):
         return isinstance(self._base_object, ed.RandomVariable) == False
 
+
+    def get_replicate_list(self):
+        return [r  for r in inf.replicate.get_all_replicate() if self in r.varlist]
+
+
+    def get_local_hidden(self):
+
+        var_rep = [r.varlist for r in self.get_replicate_list()]
+
+        var_rep_id = [inf.models.RandomVariable.get_key_from_var(vr) for vr in var_rep]
+
+        if len(var_rep) == 0:
+            intersect_id = []
+        elif len(var_rep) == 1:
+            intersect_id = var_rep_id[0]
+        else:
+
+            for i in range(0, len(var_rep_id)):
+                if i == 0:
+                    intersect_id = var_rep_id[0]
+                else:
+                    intersect_id = np.intersect1d(intersect_id, var_rep_id[i])
+
+        intersect_id = [x for x in intersect_id if inf.models.RandomVariable.get_key_from_var(self) != x]
+        intersect = inf.models.RandomVariable.get_var_with_key(intersect_id)
+        intersect = [x for x in intersect if not x.observed]
+
+        return intersect
+
     def __repr__(self):
         return "<inferpy RandomVariable '%s' shape=%s dtype=%s>" % (
             self.name, self.shape, self.base_object.dtype.name)
 
 
+    @staticmethod
+    @static_multishape
+    def get_var_with_key(key):
+        return RandomVariable.__declared_vars.get(key)
 
+    @staticmethod
+    @static_multishape
+    def get_key_from_var(var):
+
+        from six import iteritems
+
+        for (key, value) in iteritems(RandomVariable.__declared_vars):
+            if value==var:
+                return key
+        return None
+
+
+    def copy(self, swap_dict=None, observed=False):
+
+        new_var = getattr(inf.models, type(self).__name__)()
+        new_var.dist = ed.copy(self.dist, swap_dict)
+        new_var.copied_from = self
+        new_var.observed = False
+        return new_var
 
 
 

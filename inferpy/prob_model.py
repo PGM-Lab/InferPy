@@ -75,7 +75,7 @@ class ProbModel(object):
                 raise ValueError("The input argument is not a list of RandomVariables")
 
         if ProbModel.is_active():
-            raise inferpy.util.ScopeException("Nested probabilistic models cannot be defined")
+            raise inf.util.ScopeException("Nested probabilistic models cannot be defined")
 
 
 
@@ -142,7 +142,7 @@ class ProbModel(object):
         self.propagated = False
 
     @input_model_data
-    def fit(self, data):
+    def fit(self, data, reset_tf_vars=True):
 
         """ Assings data to the observed variables"""
 
@@ -154,12 +154,35 @@ class ProbModel(object):
         for k, v in iteritems(data):
             self.data.update({self.get_var(k).dist: v})
 
-        self.q_vars.get(self.latent_vars[0].dist)
-
-
 
         self.inference = getattr(ed.inferences, self.infMethod)(self.q_vars, self.data)
-        self.inference.run()
+
+
+
+        self.inference.initialize()
+
+        sess = inf.util.Runtime.tf_sess
+
+
+
+        if reset_tf_vars:
+            tf.global_variables_initializer().run()
+
+        else:
+
+            for t in tf.global_variables():
+                if not sess.run(tf.is_variable_initialized(t)):
+                    sess.run(tf.variables_initializer([t]))
+
+
+        for _ in range(self.inference.n_iter):
+            info_dict = self.inference.update()
+            self.inference.print_progress(info_dict)
+
+        self.inference.finalize()
+
+
+
         self.propagated = True
 
     @multishape
@@ -310,3 +333,168 @@ class ProbModel(object):
         return len(ProbModel.__active_models)>0
 
 
+    def get_parents(self, v):
+
+        out = []
+        d = self.get_vardict_rev()
+
+        for p in v.dist.get_parents():
+            if d.get(p) not in out:
+                out.append(d.get(p))
+
+        return out
+
+
+    def no_parents(self):
+        return [v for v in self.varlist if len(v.dist.get_parents()) == 0]
+
+    def get_vardict(self):
+        d = {}
+        for v in self.varlist:
+            d.update({v : v.dist})
+
+        return d
+
+
+    def get_vardict_rev(self):
+        d = {}
+        for v in self.varlist:
+            d.update({v.dist : v})
+
+        return d
+
+
+    def copy(self, swap_dict=None):
+
+        new_vars = {} if swap_dict == None else swap_dict
+
+        while len(new_vars.keys()) < len(self.varlist):
+            tocopy = [v for v in self.varlist
+                      if (len(self.get_parents(v)) == 0 or self.get_parents(v) <= new_vars.keys())
+                      and v not in new_vars.keys()]
+
+            v = tocopy[0]
+
+            copy = getattr(inf.models, type(v).__name__)()
+
+            new_vars_ed = {}
+            for (key, value) in iteritems(new_vars):
+                new_vars_ed.update({key.dist : value.dist if isinstance(value, inf.models.RandomVariable) else value})
+
+            copy.dist = ed.copy(v.dist, new_vars_ed)
+            copy.copied_from = v
+
+            new_vars.update({v: copy})
+
+        return ProbModel(varlist=[v for v in new_vars.values() if isinstance(v, inf.models.RandomVariable)])
+
+
+    def get_copy_from(self, original_var):
+        cplst = [v for v in self.varlist if v.copied_from == original_var]
+
+        if len(cplst) == 0:
+            return None
+        return cplst[0]
+
+
+
+    def predict(self, target, data, reset_tf_vars=False):
+
+        # check learnt
+
+        local_hidden = [z for z in target.get_local_hidden() if z not in data.keys()]
+        global_hidden = [h for h in self.latent_vars if h not in local_hidden and h not in data.keys()]
+        other_observed = [a for a in self.observed_vars if a not in data.keys() and a != target]
+
+
+        # add posterior of the latent variables
+        for h in global_hidden:
+            if h not in data.keys():
+                data.update({h: self.posterior(h)})
+
+        data_ed = {}
+        for (key, value) in iteritems(data):
+            data_ed.update(
+                {key.dist if isinstance(key, inf.models.RandomVariable) else key :
+                     value.dist if isinstance(value, inf.models.RandomVariable) else value})
+
+
+
+
+
+
+        q_target = inf.Qmodel.new_qvar(target, check_observed=False)
+
+        latent_vars_ed = {target.dist : q_target.dist}
+
+        for z in local_hidden:
+            qz = inf.Qmodel.new_qvar(z, check_observed=False)
+            latent_vars_ed.update({z.dist : qz.dist})
+
+        for a in other_observed:
+            qa = inf.Qmodel.new_qvar(a, check_observed=False)
+            latent_vars_ed.update({a.dist : qa.dist})
+
+
+
+        inference_pred = ed.ReparameterizationKLqp(latent_vars_ed, data=data_ed)
+        #inference_pred.run()
+        inference_pred.initialize()
+
+        sess = inf.util.Runtime.tf_sess
+
+        if reset_tf_vars:
+            tf.global_variables_initializer().run()
+        else:
+            for t in tf.global_variables():
+                if not sess.run(tf.is_variable_initialized(t)):
+                    sess.run(tf.variables_initializer([t]))
+
+
+        for _ in range(inference_pred.n_iter):
+            info_dict = inference_pred.update()
+            inference_pred.print_progress(info_dict)
+
+        inference_pred.finalize()
+
+
+
+#        tf.graph_util.convert_variables_to_constants(inf.util.Runtime.tf_sess, tf.get_default_graph())
+
+        return q_target
+
+    def predict_old(self, target_var, observations):
+
+        ### copy qvars from the model
+
+        # check learnt
+
+        # add posterior of the latent variables
+        for h in self.latent_vars:
+            if h not in observations.keys():
+                observations.update({h: self.posterior(h)})
+
+        ancestors = target_var.dist.get_ancestors()
+        ancestors_obs = dict([(obs, observations[obs]) for obs in observations.keys() if obs.dist in ancestors])
+
+        m_pred = self.copy(swap_dict=ancestors_obs)
+
+        non_ancestors_obs = dict([(m_pred.get_copy_from(obs), observations[obs]) for obs in observations.keys() if
+                                  obs.dist not in ancestors])
+
+        non_ancestors_obs_ed = {}
+        for (key, value) in iteritems(non_ancestors_obs):
+            non_ancestors_obs_ed.update(
+                {key.dist: value.dist if isinstance(value, inf.models.RandomVariable) else value})
+
+        copy_target = m_pred.get_copy_from(target_var)
+        q_target = inf.Qmodel.new_qvar(copy_target, check_observed=False)
+
+        inference_pred = ed.KLqp({copy_target.dist: q_target.dist},
+                                 data=non_ancestors_obs_ed)
+
+        copy_target.dist.get_parents()
+
+        inference_pred.run()
+
+        return q_target

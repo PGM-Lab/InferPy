@@ -10,8 +10,10 @@ class Probmodel_test_definition(unittest.TestCase):
 
 
         with inf.ProbModel() as m:
-            x = Normal(loc=1., scale=100, name="x", observed=True)
-            y = Normal(loc=x, scale=0.0001, dim=3, name="y")
+            x = Normal(loc=1., scale=100, name="x")
+
+            with inf.replicate(size=100):
+                y = Normal(loc=x, scale=0.0001, dim=3, name="y", observed=True)
 
         # print the list of variables
         print(m.varlist)

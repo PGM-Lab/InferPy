@@ -79,7 +79,18 @@ class Qmodel(object):
 
         for p_name in getattr(inf.models, vartype).PARAMS:
             if p_name not in ["logits"]:
-                qparams.update({p_name: tf.Variable(init_f(v.shape), dtype="float32")})
+
+                var = tf.Variable(init_f(v.shape), dtype="float32", name=v.name+"/"+p_name)
+                inf.util.Runtime.tf_sess.run(tf.variables_initializer([var]))
+
+
+                #var = tf.get_variable(v.name+"/"+p_name, v.shape)
+
+                if p_name == "scale":
+                    var = tf.nn.softplus(var)
+
+                qparams.update({p_name: var})
+
 
         qvar =  getattr(ed.models, vartype)(name = "q_"+str.replace(v.name, ":", ""), **qparams)
 
@@ -91,11 +102,11 @@ class Qmodel(object):
  #       return Qmodel.__new_qvar(v,initializer,None)
 
     @staticmethod
-    def new_qvar(v, initializer='ones', vartype = None):
+    def new_qvar(v, initializer='ones', vartype = None, check_observed = True, name="qvar"):
 
         if not inf.ProbModel.compatible_var(v):
             raise ValueError("Non-compatible variable")
-        elif v.observed:
+        elif v.observed and check_observed:
             raise ValueError("Variable "+v.name+" cannot be observed")
 
         if vartype == None:
