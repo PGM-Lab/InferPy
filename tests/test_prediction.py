@@ -54,6 +54,12 @@ class Prediction_test(unittest.TestCase):
 
         self.assertTrue(np.max((y_pred - y_test) < 0.5))
 
+        import inferpy.criticism.evaluate as idc
+
+
+        
+        idc.evaluate("mean_squared_error", y_pred, data={x:x_test})
+
 
 
 

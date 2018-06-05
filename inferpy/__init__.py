@@ -4,7 +4,12 @@
 
 from inferpy import models
 from inferpy import util
+from inferpy import criticism
 #from inferpy.inferences import inference
+
+
+# Direct imports for convenience
+from inferpy.criticism.evaluate import *
 
 
 from inferpy.replicate import *

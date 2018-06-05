@@ -223,8 +223,21 @@ class RandomVariable(object):
         return intersect
 
     def __repr__(self):
-        return "<inferpy RandomVariable '%s' shape=%s dtype=%s>" % (
+
+        ops = np.get_printoptions()
+
+        np.set_printoptions(threshold=3)
+        np.set_printoptions(edgeitems=1)
+
+        str = "<inferpy RandomVariable '%s' shape=%s dtype=%s>" % (
             self.name, self.shape, self.base_object.dtype.name)
+
+
+        np.set_printoptions(threshold=ops.get("threshold"))
+        np.set_printoptions(threshold=ops.get("edgeitems"))
+
+
+        return str
 
 
     @staticmethod
