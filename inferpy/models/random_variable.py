@@ -43,12 +43,6 @@ class RandomVariable(object):
 
 
 
-            if observed and not inf.replicate.in_replicate():
-                raise ValueError("Error: observed variable "+base_object.name+" cannot be declared outside replicate construct")
-
-
-
-
             if  inf.ProbModel.is_active() and not self.is_generic_variable():
                 inf.ProbModel.get_active_model().varlist.append(self)
 
