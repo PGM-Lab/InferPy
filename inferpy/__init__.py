@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 #
 
-
+from inferpy import criticism
 from inferpy import models
 from inferpy import util
-from inferpy import criticism
+
 #from inferpy.inferences import inference
 
 
