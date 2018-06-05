@@ -14,7 +14,7 @@ setup(
     author='Andrés R. Masegosa, Rafael Cabañas',
     author_email="andresma@ual.es, rcabanas@ual.es",
     packages=['inferpy',
-              'inferpy.models', 'inferpy.util'],
+              'inferpy.models', 'inferpy.util', 'inferpy.criticism'],
     install_requires=['numpy>=1.7', 'tensorflow>=1.2.0rc0'],
     extras_require={
         'tensorflow with gpu': ['tensorflow-gpu>=1.2.0rc0'],
