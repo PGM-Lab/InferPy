@@ -58,7 +58,7 @@ class Prediction_test(unittest.TestCase):
 
 
         
-        idc.evaluate("mean_squared_error", y_pred, data={x:x_test})
+        inf.evaluate("mean_squared_error", y_pred, data={x:x_test})
 
 
 
