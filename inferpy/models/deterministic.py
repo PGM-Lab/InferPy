@@ -15,25 +15,14 @@
 
 """The Deterministic distribution class."""
 
-
-
-from inferpy.models.random_variable import *
-import inferpy.util
-
-
-from inferpy.util import tf_run_wrapper
-from inferpy.replicate import *
-from inferpy.util import get_total_dimension
-
-
+import edward.models as base_models
 import numpy as np
 import tensorflow as tf
 
-import edward.models as base_models
-
-
-
-
+import inferpy.util
+from inferpy.models.random_variable import *
+from inferpy.util import get_total_dimension
+from inferpy.util import tf_run_wrapper
 
 
 class Deterministic(RandomVariable):

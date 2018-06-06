@@ -38,6 +38,9 @@ class Runtime():
     tf_sess.run(init_l)
 
 
+def get_session():
+    return Runtime.tf_sess
+
 
 
 

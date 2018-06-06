@@ -50,16 +50,14 @@ class Prediction_test(unittest.TestCase):
         x_test = inf.models.Normal(loc=10, scale=3, dim=1).sample(N)
         y_test = x_test * f + inf.models.Normal(loc=1, scale=0.1, dim=1).sample(N)
 
-        y_pred = m.predict(y, data={x: x_test}).loc
+        y_pred = m.predict(y, data={x: x_test})
+
 
         self.assertTrue(np.max((y_pred - y_test) < 0.5))
 
-        import inferpy.criticism.evaluate as idc
 
-
-        
-        inf.evaluate("mean_squared_error", y_pred, data={x:x_test})
-
+        inf.evaluate("log_lik", data={x:x_test, y_pred:y_test}, output_key=y_pred)
+        inf.evaluate("mean_squared_error", data={x:x_test, y_pred:y_test}, output_key=y_pred)
 
 
 
