@@ -78,14 +78,303 @@ Following Edward's approach, the multivariate dimension is the innermost (right-
 dimension of the parameters.
 
 
-The argument ``observed = true`` in the constructor of a random variable
-is used to indicate whether a variable is observable or not.
+Any random variable in InferPy contain the following (optional) input parameters
+in the constructor:
+
+- ``validate_args`` : Python boolean indicating that possibly expensive checks with the input parameters are enabled.
+  By default, it is set to ``False``.
+
+- ``allow_nan_stats`` : When ``True``, the value "NaN" is used to indicate the result is undefined. Otherwise an exception is raised.
+  Its default value is ``True``.
+
+- ``name``: Python string with the name of the underlying Tensor object.
+
+- ``observed``: Python boolean which is used to indicate whether a variable is observable or not . The default value is ``False``
+
+- ``dim`: dimension of the variable. The default value is ``None``
+
+
+The specific input argument for each supported distributions are specified in the following section.
+
+
+
+Supported Probability Distributions
+-----------------------------------
+
+
+Supported probability distributions are located in the package ``inferpy.models``. All of them
+have ``inferpy.models.RandomVariable`` as superclass. A list with all the supported distributions can be obtained as
+as follows.
+
+.. code:: python
+
+   >>> inf.models.ALLOWED_VARS
+   ['Bernoulli', 'Beta', 'Categorical', 'Deterministic', 'Dirichlet', 'Exponential', 'Gamma', 'InverseGamma', 'Laplace', 'Multinomial', 'Normal', 'Poisson', 'Uniform']
+
+
+Bernoulli
+~~~~~~~~~~~~~~~
+
+Binary distribution which takes the value 1 with probability :math:`p` and the value with :math:`1-p`. Its probability mass
+function is
+
+.. math::
+
+   p(x;p) =\left\{\begin{array}{cc} p & \mathrm{if\ } x=1 \\
+    1-p & \mathrm{if\ } x=0 \\ \end{array} \right.
+
+
+An example of definition in InferPy of a random variable following a Bernoulli distribution is shown below. Note that the
+input parameter ``probs`` corresponds to :math:`p` in the previous equation.
+
+.. literalinclude:: ../../examples/supported_distributions.py
+   :language: python
+   :lines: 8-12
+
+
+This distribution can be initialized by indicating the logit function of the probability, i.e., :math:`logit(p) = log(\frac{p}{1-p})`
+
+
+Beta
+~~~~~~~~~~~~~~~
+
+Continuous distribution defined in the interval :math:`[0,1]` and parametrized by two positive shape parameters,
+denoted :math:`\alpha` and :math:`\beta`.
+
+.. math::
+
+   p(x;\alpha,\beta)=\frac{x^{\alpha-1}(1-x)^{\beta-1}}{B(\alpha,\beta)}
+
+where `B` is the beta function
+
+.. math::
+
+   B(\alpha,\beta)=\int_{0}^{1}t^{\alpha-1}(1-t)^{\beta-1}dt
+
+
+
+The definition of a random variable following a Beta distribution is done as follows.
+
+.. literalinclude:: ../../examples/supported_distributions.py
+   :language: python
+   :lines: 19-23
+
+Note that the input parameters ``concentration0`` and ``concentration1`` correspond to the shape
+parameters :math:`\alpha` and :math:`\beta` respectively.
+
+
+Categorical
+~~~~~~~~~~~~~~~
+
+Discrete probability distribution that can take :math:`k` possible states or categories. The probability
+of each state is separately defined:
+
+.. math::
+
+   p(x;\mathbf{p}) = p_i
+
+where :math:`\mathbf{p} = (p_1, p_2, \ldots, p_k)` is a k-dimensional vector with the probability associated to each possible state.
+
+
+
+
+
+The definition of a random variable following a Categorical distribution is done as follows.
+
+.. literalinclude:: ../../examples/supported_distributions.py
+   :language: python
+   :lines: 28-32
+
+
+
+
+Deterministic
+~~~~~~~~~~~~~~~
+
+
+The deterministic distribution is a probability distribution in a space (continuous or discrete) that always takes
+the same value :math:`k_0`. Its probability density (or mass) function can be defined as follows.
+
+
+.. math::
+
+   p(x;k_0) =\left\{\begin{array}{cc} 1 & \mathrm{if\ } x=k_0 \\
+    0 & \mathrm{if\ } x \neq k_0 \\ \end{array} \right.
+
+
+
+
+The definition of a random variable following a Beta distribution is done as follows:
+
+.. literalinclude:: ../../examples/supported_distributions.py
+   :language: python
+   :lines: 37
+
+
+where the input parameter ``loc`` corresponds to the value :math:`k_0`.
+
+
+Dirichlet
+~~~~~~~~~~~~~~~
+
+
+Dirichlet distribution is a continuous multivariate probability distribution parameterized by a vector of positive reals
+:math:`(\alpha_1,\alpha_2,\ldots,\alpha_k)`.
+It is a multivariate generalization of the beta distribution. Dirichlet distributions are commonly used as prior
+distributions in Bayesian statistics. The Dirichlet distribution of order :math:`k \geq 2` has the following density function.
+
+
+
+
+.. math::
+
+   p(x_1,x_2,\ldots x_k; \alpha_1,\alpha_2,\ldots,\alpha_k) = {\frac{\Gamma\left(\sum_i \alpha_i\right)}
+   {\prod_i \Gamma(\alpha_i)} \prod_{i=1}^k x_i^{\alpha_i-1}}{}
+
+
+
+
+
+The definition of a random variable following a Beta distribution is done as follows:
+
+.. literalinclude:: ../../examples/supported_distributions.py
+   :language: python
+   :lines: 49-53
+
+where the input parameter ``concentration`` is the vector  :math:`(\alpha_1,\alpha_2,\ldots,\alpha_k)`.
+
+
+
+
+
+Laplace
+~~~~~~~~~~~~~~~
+
+The Laplace distribution is a continuous probability distribution with the following density function
+
+.. math::
+
+   p(x;\mu,\sigma) = \frac{1}{2\sigma} exp \left( - \frac{|x - \mu |}{\sigma}\right)
+
+
+
+
+The definition of a random variable following a Beta distribution is done as follows:
+
+.. literalinclude:: ../../examples/supported_distributions.py
+   :language: python
+   :lines: 80-84
+
+where the input parameter ``loc`` and ``scale`` correspond to :math:`\mu` and :math:`\sigma` respectively.
+
+
+
+
+
+Multinomial
+~~~~~~~~~~~~~~~
+
+The multinomial is a discrete distribution which models the probability of counts resulting from repeating :math:`n`
+times an experiment with :math:`k` possible outcomes. Its probability mass function is defined below.
+
+.. math::
+
+   p(x_1,x_2,\ldots x_k; \mathbf{p}) =  \frac{n!}{\prod_{i=1}^k x_i}\prod_{i=1}^k p_i^{x^i}
+
+
+where :math:`\mathbf{p}` is a k-dimensional vector defined as :math:`\mathbf{p} = (p_1, p_2, \ldots, p_k)` with the probability
+associated to each possible outcome.
+
+
+
+The definition of a random variable following a multinomial distribution is done as follows:
+
+.. literalinclude:: ../../examples/supported_distributions.py
+   :language: python
+   :lines: 93-97
+
+
+
+
+
+Normal
+~~~~~~~~~~~~~~~
+
+The normal (or Gaussian) distribution is a continuous probability distribution with the following density function
+
+.. math::
+
+   p(x;\mu,\sigma) = \frac{1}{2\sigma} exp \left( - \frac{|x - \mu |}{\sigma}\right)
+
+where :math:`\mu`  is the mean or expectation of the distribution, :math:`\sigma`  is the standard deviation, and :math:`\sigma^{2}` is the variance.
+
+
+A normal distribution can be defined as follows.
+
+.. literalinclude:: ../../examples/supported_distributions.py
+   :language: python
+   :lines: 105-109
+
+where the input parameter ``loc`` and ``scale`` correspond to :math:`\mu` and :math:`\sigma` respectively.
+
+
+
+
+Poisson
+~~~~~~~~~~~~~~~
+
+The Poisson distribution is a discrete probability distribution for modelling the number of times an event occurs
+in an interval of time or space. Its probability mass function is
+
+
+.. math::
+
+   p(x;\lambda) = e^{- \lambda} \frac{\lambda^x}{x!}
+
+where :math:`\lambda` is the rate or number of events per interval.
+
+A Poisson distribution can be defined as follows.
+
+.. literalinclude:: ../../examples/supported_distributions.py
+   :language: python
+   :lines: 116-120
+
+
+
+
+
+
+
+Uniform
+~~~~~~~~~~~~~~~
+
+The continuous uniform distribution or rectangular distribution assings the same probability to any :math:`x`  in
+the interval :math:`[a,b]`.
+
+
+.. math::
+
+   p(x;a,b) =\left\{\begin{array}{cc} \frac{1}{b-a} & \mathrm{if\ } x\in [a,b]\\
+    0 & \mathrm{if\ } x\not\in [a,b] \\ \end{array} \right.
+
+
+A uniform distribution can be defined as follows.
+
+.. literalinclude:: ../../examples/supported_distributions.py
+   :language: python
+   :lines: 128-132
+
+
+where the input parameters ``low`` and ``high`` correspond to the lower and upper bounds of the interval :math:`[a,b]`.
+
+
+
 
 Probabilistic Models
 --------------------
-A **probabilistic model** defines a joint distribution over observable 
+A **probabilistic model** defines a joint distribution over observable
 and non-observable variables, :math:`p(\theta,\mu,\sigma,z_n, x_n)` for the
-running example. The variables in the model are the ones defined using the 
+running example. The variables in the model are the ones defined using the
 ``with inf.ProbModel() as pca:`` construct. Alternatively, we can also use a builder,
 
 .. literalinclude:: ../../examples/docs/guidemodels/3.py
@@ -122,20 +411,4 @@ Moreover, we might consider using the function ``inferpy.case`` as the parameter
 .. literalinclude:: ../../examples/docs/guidemodels/4.py
    :language: python
    :lines: 12-36
-
-
-
-Supported Probability Distributions
------------------------------------
-
-
-Supported probability distributions are located in the package ``inferpy.models``. All of them
-have ``inferpy.models.RandomVariable`` as superclass. Those currently implemented are:
-
-.. code:: python
-
-   >>> inf.models.ALLOWED_VARS
-   ['Bernoulli', 'Beta', 'Categorical', 'Deterministic', 'Dirichlet', 'Exponential', 'Gamma', 'InverseGamma', 'Laplace', 'Multinomial', 'Normal', 'Poisson', 'Uniform']
-
-
 
