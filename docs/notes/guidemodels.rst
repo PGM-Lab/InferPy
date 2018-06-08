@@ -279,6 +279,7 @@ where the input parameter ``rate`` corresponds to the value :math:`\lambda`.
 
 
 
+
 Laplace
 ~~~~~~~~~~~~~~~
 
