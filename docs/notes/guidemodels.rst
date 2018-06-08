@@ -98,7 +98,7 @@ in the constructor:
 
 
 Inferpy supports a wide range of probability distributions. Details of the specific arguments 
-for each supported distributions are specified in the followings section.
+for each supported distributions are specified in the following sections.
 
 
 
@@ -265,7 +265,7 @@ Dirichlet
 ~~~~~~~~~~~~~~~
 
 
-Dirichlet distribution is a continuous multivariate probability distribution parameterized by a vector of positive reals
+Dirichlet distribution is a continuous multivariate probability distribution parmeterized by a vector of positive reals
 :math:`(\alpha_1,\alpha_2,\ldots,\alpha_k)`.
 It is a multivariate generalization of the beta distribution. Dirichlet distributions are commonly used as prior
 distributions in Bayesian statistics. The Dirichlet distribution of order :math:`k \geq 2` has the following density function.
@@ -289,8 +289,6 @@ The definition of a random variable following a Beta distribution is done as fol
    :lines: 49-53
 
 where the input parameter ``concentration`` is the vector  :math:`(\alpha_1,\alpha_2,\ldots,\alpha_k)`.
-
-
 
 
 
