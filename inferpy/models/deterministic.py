@@ -25,6 +25,7 @@ from inferpy.util import get_total_dimension
 from inferpy.util import tf_run_wrapper
 
 
+
 class Deterministic(RandomVariable):
 
     """ Class implementing ...
@@ -47,7 +48,7 @@ class Deterministic(RandomVariable):
             if dim != None: param_dim = dim
 
             # shape = (batches, dimension)
-            self_shape = (replicate.get_total_size(), np.max([get_total_dimension(loc), param_dim]))
+            self_shape = (inf.replicate.get_total_size(), np.max([get_total_dimension(loc), param_dim]))
 
             loc_rep = self.__reshape_param(loc, self_shape)
 

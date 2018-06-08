@@ -115,17 +115,20 @@ def def_random_variable(var):
     else:
         v = var
 
-
+    print(v.get(CLASS_NAME))
 
     if not BASE_CLASS_NAME in v:
         v.update({BASE_CLASS_NAME : v.get(CLASS_NAME)})
 
+    print(v.get(CLASS_NAME))
+
     if not PARAMS in v:
 
-        lst = [c.__name__ for c in tf.contrib.distributions.Distribution.__subclasses__()]
+        #lst = [c.__name__ for c in tf.contrib.distributions.Distribution.__subclasses__()]
 
+        lst = tf.distributions._allowed_symbols
 
-        if v.get(BASE_CLASS_NAME) in [c.__name__ for c in tf.contrib.distributions.Distribution.__subclasses__()]:
+        if v.get(BASE_CLASS_NAME) in lst:
             init_f = getattr(getattr(tf.contrib.distributions, v.get(BASE_CLASS_NAME)), "__init__")
         else:
             init_f = getattr(getattr(ed.models, v.get(BASE_CLASS_NAME)), "__init__")
@@ -303,7 +306,8 @@ class Laplace(RandomVariable):
 
 ####### run-time definition of random variables #########
 
-SIMPLE_VARS = ["Normal","Beta", "Exponential","Uniform","Poisson", "Gamma", "InverseGamma", "Laplace"]
+SIMPLE_VARS = ["Normal","Beta", "Exponential","Uniform","Poisson", "Gamma", "Laplace",
+               {CLASS_NAME : "InverseGamma", PARAMS : ['concentration', 'rate', 'self', 'validate_args', 'allow_nan_stats', 'name', 'dtype']}]
 
 
 for v in SIMPLE_VARS:
