@@ -247,6 +247,39 @@ where the input parameter ``concentration`` is the vector  :math:`(\alpha_1,\alp
 
 
 
+
+Exponential
+~~~~~~~~~~~~~~~
+
+The exponential distribution (also known as negative exponential distribution) is defined over a continuous domain and
+describes the time between events in a Poisson point process, i.e., a process in which events occur continuously
+and independently at a constant average rate. Its probability density function is
+
+
+
+.. math::
+
+   p(x;\lambda) =\left\{\begin{array}{cc} \lambda e^{-\lambda x} & \mathrm{if\ } x\geq 0 \\
+    0 & \mathrm{if\ } x < k_0 \\ \end{array} \right.
+
+
+where :math:`\lambda>0` is the rate or inverse scale.
+
+
+The definition of a random variable following a exponential distribution is done as follows:
+
+.. literalinclude:: ../../examples/supported_distributions.py
+   :language: python
+   :lines: 57-61
+
+where the input parameter ``rate`` corresponds to the value :math:`\lambda`.
+
+
+
+
+
+
+
 Laplace
 ~~~~~~~~~~~~~~~
 
