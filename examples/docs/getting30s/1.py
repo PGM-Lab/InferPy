@@ -9,7 +9,7 @@ d=20
 
 #Prior for the principal components
 with inf.replicate(size = K):
-    w = Normal(loc = 0, scale = 1, dim = d)
+    w = Normal(loc = 0, scale = 1, dim = d)  # x.shape = [K,d]
 
 
 ###
@@ -19,8 +19,8 @@ N = 1000
 
 # define the generative model
 with inf.replicate(size=N):
-    z = Normal(0, 1, dim=K)
-    x = Normal(inf.matmul(z,w), 1.0, observed=True, dim=d)
+    z = Normal(0, 1, dim=K)  # z.shape = [N,K]
+    x = Normal(inf.matmul(z,w), 1.0, observed=True, dim=d)  # x.shape = [N,d]
 
 
 ###
@@ -44,7 +44,7 @@ from inferpy import ProbModel
 pca = ProbModel(varlist = [w,z,x])
 
 # Compile the model
-pca.compile(infMethod = 'Laplace')
+pca.compile(infMethod = 'Variational')
 
 
 ###

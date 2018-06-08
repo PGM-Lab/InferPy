@@ -18,9 +18,9 @@ Install InferPy from PyPI:
 --------------------------
 
 The core data structures of InferPy is a **probabilistic model**,
-defined as a set of **random variables** with a conditional independence
-structure. Like in Edward, a **random varible** is an object
-parameterized by a set of tensors.
+defined as a set of **random variables** with a conditional dependency
+structure. A **random varible** is an object
+parameterized by a set of Numpy's arrays.
 
 Let's look at a simple (Bayesian) **probabilistic component analysis** model. Graphically the model can 
 be defined as follows, 
@@ -57,8 +57,8 @@ defining the model for the data:
 As commented above, the variables are surrounded by a
 ``with`` statement to inidicate that the defined random variables will
 be reapeatedly used in each data sample. In this case, every replicated
-variable is conditionally idependent given the variables mu and sigma
-defined outside the ``with`` statement.
+variable is conditionally idependent given the variable :math:`\mathbf{w}`
+defined above.
 
 Once the random variables of the model are defined, the probablitic
 model itself can be created and compiled. The probabilistic model

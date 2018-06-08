@@ -4,21 +4,24 @@ Guide to Building Probabilistic Models
 Getting Started with Probabilistic Models
 ------------------------------------------
 
-InferPy focuses on *hirearchical probabilistic models* which usually are
-structured in two different layers:
+InferPy focuses on *hirearchical probabilistic models* structured 
+in two different layers:
 
--  A **prior model** defining a joint distribution :math:`p(\theta)`
-   over the global parameters of the model, :math:`\theta`.
+-  A **prior model** defining a joint distribution :math:`p(\mathbf{w})`
+   over the global parameters of the model. :math:`\mathbf{w}` can be a single random
+   variable or a bunch of random variables with any given dependency structure. 
 -  A **data or observation model** defining a joint conditional
-   distribution :math:`p(x,h|\theta)` over the observed quantities
-   :math:`x` and the the local hidden variables :math:`h` governing the
-   observation :math:`x`. This data model should be specified in a
+   distribution :math:`p(\mathbf{x},\mathbf{z}|\mathbf{w})` over the observed quantities
+   :math:`\mathbf{x}` and the the local hidden variables :math:`\mathbf{z}` governing the
+   observation :math:`\mathbf{x}`. This data model is specified in a
    single-sample basis. There are many models of interest without local
-   hidden variables, in that case we simply specify the conditional
-   :math:`p(x|\theta)`. More flexible ways of defining the data model
-   can be found in ?.
+   hidden variables, in that case, we simply specify the conditional
+   :math:`p(\mathbf{x}|\mathbf{w})`. Similarly, either :math:`\mathbf{x}` or 
+   :math:`\mathbf{z}` can be a single random variable or a bunch of random variables 
+   with any given dependency structure.
 
-A Bayesian PCA model has the following graphical structure, 
+
+For example, a Bayesian PCA model has the following graphical structure, 
 
 .. figure:: ../_static/imgs/LinearFactor.png
    :alt: Linear Factor Model
@@ -27,7 +30,7 @@ A Bayesian PCA model has the following graphical structure,
    
    Bayesian PCA
 	
-    The **prior model** is the variable :math:`\mu`. The **data model** is the part of the model surrounded by the box indexed by **N**.
+	The **prior model** are the variables :math:`w_k`. The **data model** is the part of the model surrounded by the box indexed by **N**.
 
 
 And this is how this Bayesian PCA model is denfined in InferPy:
@@ -94,9 +97,53 @@ in the constructor:
 - ``dim`: dimension of the variable. The default value is ``None``
 
 
-The specific input argument for each supported distributions are specified in the following section.
+Inferpy supports a wide range of probability distributions. Details of the specific arguments 
+for each supported distributions are specified in the followings section.
 
 
+
+
+
+Probabilistic Models
+--------------------
+A **probabilistic model** defines a joint distribution over observable
+and non-observable variables, :math:`p(\mathbf{w}, \mathbf{z}, \mathbf{x})` for the
+running example. The variables in the model are the ones defined using the
+``with inf.ProbModel() as pca:`` construct. Alternatively, we can also use a builder,
+
+.. literalinclude:: ../../examples/docs/guidemodels/3.py
+   :language: python
+   :lines: 24-25
+
+The model must be **compiled** before it can be used.
+
+Like any random variable object, a probabilistic model is equipped with
+methods such as  ``sample()``, ``log_prob()`` and  ``sum_log_prob()``. Then, we can sample data
+from the model and compute the log-likelihood of a data set:
+
+.. literalinclude:: ../../examples/docs/guidemodels/3.py
+   :language: python
+   :lines: 29-31
+
+
+.. Folowing Edward's approach, a random variable :math:`x` is associated to
+.. a tensor :math:`x^*` in the computational graph handled by TensorFlow,
+.. where the computations takes place. This tensor :math:`x^*` contains the
+.. samples of the random variable :math:`x`, i.e.
+.. :math:`x^*\sim p(x|\theta)`. 
+
+Random variables can be involved in expressive deterministic operations. Dependecies 
+between variables are modelled by setting a given variable as a parameter of another variable. For example:
+
+.. literalinclude:: ../../examples/docs/guidemodels/4.py
+   :language: python
+   :lines: 4-9
+
+Moreover, we might consider using the function ``inferpy.case`` as the parameter of other random variables:
+
+.. literalinclude:: ../../examples/docs/guidemodels/4.py
+   :language: python
+   :lines: 12-36
 
 Supported Probability Distributions
 -----------------------------------
@@ -401,47 +448,4 @@ A uniform distribution can be defined as follows.
 where the input parameters ``low`` and ``high`` correspond to the lower and upper bounds of the interval :math:`[a,b]`.
 
 
-
-
-Probabilistic Models
---------------------
-A **probabilistic model** defines a joint distribution over observable
-and non-observable variables, :math:`p(\theta,\mu,\sigma,z_n, x_n)` for the
-running example. The variables in the model are the ones defined using the
-``with inf.ProbModel() as pca:`` construct. Alternatively, we can also use a builder,
-
-.. literalinclude:: ../../examples/docs/guidemodels/3.py
-   :language: python
-   :lines: 24-25
-
-The model must be **compiled** before it can be used.
-
-Like any random variable object, a probabilistic model is equipped with
-methods such as  ``sample()``, ``log_prob()`` and  ``sum_log_prob()``. Then, we can sample data
-from the model and compute the log-likelihood of a data set:
-
-.. literalinclude:: ../../examples/docs/guidemodels/3.py
-   :language: python
-   :lines: 29-31
-
-
-Folowing Edward's approach, a random variable :math:`x` is associated to
-a tensor :math:`x^*` in the computational graph handled by TensorFlow,
-where the computations takes place. This tensor :math:`x^*` contains the
-samples of the random variable :math:`x`, i.e.
-:math:`x^*\sim p(x|\theta)`. In this way, random variables can be
-involved in expressive deterministic operations.
-
-
-Dependecies between variables are modelled by setting a given variable as a parameter of another variable. For example:
-
-.. literalinclude:: ../../examples/docs/guidemodels/4.py
-   :language: python
-   :lines: 4-9
-
-Moreover, we might consider using the function ``inferpy.case`` as the parameter of other random variables:
-
-.. literalinclude:: ../../examples/docs/guidemodels/4.py
-   :language: python
-   :lines: 12-36
 
