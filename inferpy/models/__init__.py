@@ -10,11 +10,11 @@ from inferpy.models.factory import *
 
 
 
-# IMPLEMENTED RANDOM VARIABELS
+# IMPLEMENTED RANDOM VARIABLES
 
 
 
-ALLOWED_VARS = list(np.unique([cls.__name__ for cls in RandomVariable.__subclasses__()]))
+ALLOWED_VARS = sorted(list(np.unique([cls.__name__ for cls in RandomVariable.__subclasses__()])))
 
 
 
