@@ -129,6 +129,12 @@ class ProbModel(object):
         """ This method initializes the structures for making inference in the model."""
 
 
+        # check if the infMethod is an alias
+        if infMethod in inf.INF_METHODS_ALIAS.keys():
+            infMethod = inf.INF_METHODS_ALIAS.get(infMethod)
+
+
+        # check if the inference method exists
         if infMethod not in inf.INF_METHODS:
             raise ValueError("Unsupported inference method: "+infMethod)
 

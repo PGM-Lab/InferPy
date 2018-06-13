@@ -7,7 +7,7 @@ from os.path import isfile, join
 class Test_examples(unittest.TestCase):
     def test(self):
 
-        #old_cwd = os.getcwd()
+        old_cwd = os.getcwd()
         #os.chdir("../")
 
         #print(old_cwd+" changing to "+os.getcwd())

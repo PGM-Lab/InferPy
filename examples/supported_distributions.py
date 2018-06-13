@@ -12,7 +12,7 @@ x = inf.models.Bernoulli(probs=[0.5])
 x = inf.models.Bernoulli(logits=[0])
 
 
-
+#################   15
 # Beta: continuous distribution defined in the interval [0,1]
 # parametrized by two positive shape parameters, denoted alpha and beta
 
@@ -40,7 +40,7 @@ x = inf.models.Deterministic(loc=5)
 
 x = inf.models.Deterministic(5)
 
-
+############# 43
 
 # Dirichlet: continuous multivariate probability distributions parameterized by a vector
 #  of positive reals. It is a multivariate generalization of the beta distribution. Dirichlet
@@ -52,15 +52,15 @@ x = inf.models.Dirichlet(concentration=[5,1])
 
 x = inf.models.Dirichlet([5,1])
 
-
-# Exponential: NOT WORKING
+#############55
+# Exponential:
 x = inf.models.Exponential(rate=1)
 
 # or simply
 
 x = inf.models.Exponential(1)
 
-# Gamma: NOT WORKING
+# Gamma:
 
 
 
@@ -72,7 +72,7 @@ x = inf.models.Gamma(concentration=3, rate=2)
 
 x = inf.models.InverseGamma(concentration=3, rate=2)
 
-
+###########75
 
 # Laplace: the Laplace distribution is a continuous probability distribution
 
@@ -109,7 +109,7 @@ x = inf.models.Normal(loc=0, scale=1)
 x = inf.models.Normal(0,1)
 
 
-
+########112
 # Poisson
 
 
@@ -120,7 +120,7 @@ x = inf.models.Poisson(rate=4)
 x = inf.models.Poisson(4)
 
 
-
+####### 123
 
 # Uniform
 
@@ -131,3 +131,6 @@ x = inf.models.Uniform(low=1, high=3)
 
 inf.models.Uniform(1,3)
 
+
+
+#136

@@ -100,7 +100,7 @@ in the constructor:
 Inferpy supports a wide range of probability distributions. Details of the specific arguments 
 for each supported distributions are specified in the following sections.
 
-
+`
 
 
 
@@ -179,7 +179,7 @@ input parameter ``probs`` corresponds to :math:`p` in the previous equation.
    :lines: 8-12
 
 
-This distribution can be initialized by indicating the logit function of the probability, i.e., :math:`logit(p) = log(\frac{p}{1-p})`
+This distribution can be initialized by indicating the logit function of the probability, i.e., :math:`logit(p) = log(\frac{p}{1-p})`.
 
 
 Beta
@@ -318,6 +318,64 @@ The definition of a random variable following a exponential distribution is done
    :lines: 57-61
 
 where the input parameter ``rate`` corresponds to the value :math:`\lambda`.
+
+
+
+
+Gamma
+~~~~~~~~~~~~~~~
+
+
+The Gamma distribution is a continuous probability distribution parametrized by a concentration (or shape)
+parameter :math:`\alpha>0`, and an inverse scale parameter :math:`\lambda>0` called rate. Its density function is
+defined as follows.
+
+
+.. math::
+
+   p(x;\alpha, \beta) = \frac{\beta^\alpha x^{\alpha - 1} e^{\beta x}}{\Gamma(\alpha)}
+
+
+for :math:`x > 0` and where :math:`\Gamma(\alpha)` is the gamma function.
+
+
+The definition of a random variable following a gamma distribution is done as follows:
+
+.. literalinclude:: ../../examples/supported_distributions.py
+   :language: python
+   :lines: 67
+
+where the input parameters ``concentration`` and ``rate`` corespond to  :math:`\alpha` and :math:`\beta` respectively.
+
+
+
+
+
+Inverse-gamma
+~~~~~~~~~~~~~~~
+
+
+The Inverse-gamma distribution is a continuous probability distribution which is the distribution of the reciprocal
+of a variable distributed according to the gamma distribution. It is also parametrized by a concentration (or shape)
+parameter :math:`\alpha>0`, and an inverse scale parameter :math:`\lambda>0` called rate. Its density function is
+defined as follows.
+
+
+.. math::
+
+   p(x;\alpha, \beta) = \frac{\beta^\alpha x^{-\alpha - 1} e^{-\frac{\beta}{x}}}{\Gamma(\alpha)}
+
+
+for :math:`x > 0` and where :math:`\Gamma(\alpha)` is the gamma function.
+
+
+The definition of a random variable following a inverse-gamma distribution is done as follows:
+
+.. literalinclude:: ../../examples/supported_distributions.py
+   :language: python
+   :lines: 73
+
+where the input parameters ``concentration`` and ``rate`` corespond to  :math:`\alpha` and :math:`\beta` respectively.
 
 
 

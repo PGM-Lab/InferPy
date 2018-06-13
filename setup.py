@@ -10,11 +10,11 @@ exec(open('inferpy/version.py').read())
 setup(
     name='inferpy',
     version=__version__,
-    description='Deep probabilistic modelling made easy',
+    description='Probabilistic modelling with Tensorflow made easy',
     author='Andrés R. Masegosa, Rafael Cabañas',
     author_email="andresma@ual.es, rcabanas@ual.es",
     packages=['inferpy',
-              'inferpy.models', 'inferpy.util', 'inferpy.criticism'],
+              'inferpy.models', 'inferpy.util', 'inferpy.criticism', 'inferpy.inferences' ],
     install_requires=['numpy>=1.7', 'tensorflow>=1.2.0rc0'],
     extras_require={
         'tensorflow with gpu': ['tensorflow-gpu>=1.2.0rc0'],
