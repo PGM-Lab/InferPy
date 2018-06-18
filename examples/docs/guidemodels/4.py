@@ -34,3 +34,34 @@ with inf.ProbModel() as m4:
     c = inf.models.Normal(loc=inf.case({d.equal(0): 0.,
                                         d.equal(1): 100.}), scale=1., name="c")
 m4.sample()
+
+
+
+
+
+with inf.ProbModel() as m:
+    y =  inf.models.Categorical(probs=[0.4,0.6], name="y")
+    x = inf.models.Categorical(probs=inf.case_states(y, {0: [0.0, 1.0],
+                                                         1: [1.0, 0.0] }), name="x")
+m.sample()
+
+
+
+
+with inf.ProbModel() as m:
+    y =  inf.models.Categorical(probs=[0.4,0.6], name="y")
+    with inf.replicate(size=10):
+        x = inf.models.Categorical(probs=inf.case({y.equal(0): [0.5, 0.5],
+                                                    y.equal(1): [1.0, 0.0] }), name="x")
+m.sample()
+
+
+
+
+with inf.ProbModel() as m:
+    y =  inf.models.Categorical(probs=[0.4,0.6], name="y")
+    with inf.replicate(size=10):
+        x = inf.models.Categorical(probs=inf.gather([[0.5, 0.5], [1.0, 0.0]], y), name="x")
+
+
+m.sample()

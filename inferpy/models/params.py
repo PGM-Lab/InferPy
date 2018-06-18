@@ -45,6 +45,8 @@ class Param(object):
             n =  1
         elif self.ndim==1:
             n = self.total_dim
+        elif isinstance(self.p_value.value, tf.Tensor):
+            n = self.p_value.value.get_shape().as_list()[-1]
         elif isinstance(self.p_value.value, collections.Iterable):
             n = self.p_value.value[0].total_dim
         else:

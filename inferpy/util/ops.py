@@ -86,6 +86,19 @@ def case(d, default=None, exclusive=True, strict=False, name='case'):
 
 
 
+def gather(
+        params,
+        indices,
+        validate_indices=None,
+        name=None,
+        axis=0 ):
+
+    tf_params = params.base_object if isinstance(params, inferpy.models.RandomVariable)==True else params
+    tf_indices = indices.base_object if isinstance(indices, inferpy.models.RandomVariable) == True else indices
+
+    return  tf.gather(tf_params, tf_indices, validate_indices, name, axis)
+
+
 def matmul(
         a,
         b,
