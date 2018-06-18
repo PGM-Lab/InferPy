@@ -86,5 +86,25 @@ def case(d, default=None, exclusive=True, strict=False, name='case'):
 
 
 
-def matmul(A,B):
-    return A.__matmul__(B)
+def matmul(
+        a,
+        b,
+        transpose_a=False,
+        transpose_b=False,
+        adjoint_a=False,
+        adjoint_b=False,
+        a_is_sparse=False,
+        b_is_sparse=False,
+        name=None):
+
+    res = inferpy.models.Deterministic()
+
+    op1 = a.base_object if len(a.shape) > 1 else tf.reshape(a.base_object, [1] + a.shape)
+    op2 = b.base_object if len(b.shape) > 1 else tf.reshape(b.base_object, [1] + b.shape)
+
+    res.base_object = tf.matmul(op1, op2, transpose_a, transpose_b, adjoint_a, adjoint_b, a_is_sparse, b_is_sparse, name)
+
+    return res
+
+
+    #return A.__matmul__(B)

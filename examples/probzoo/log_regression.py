@@ -10,13 +10,12 @@ with inf.ProbModel() as m:
 
     #define the weights
     w0 = Normal(0,1)
-    with inf.replicate(size=d):
-        w = Normal(0, 1)
+    w = Normal(0, 1, dim=d)
 
     # define the generative model
     with inf.replicate(size=N):
         x = Normal(0, 1, observed=True, dim=d)
-        p = w0 + inf.matmul(x, w)
+        p = w0 + inf.matmul(x, w, transpose_b=True)
         y = Bernoulli(logits = p, observed=True)
 
 
