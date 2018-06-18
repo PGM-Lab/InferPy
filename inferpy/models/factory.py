@@ -91,10 +91,10 @@ def __add_repr(cls, class_name, params):
     def repr(self):
 
         if self.base_object != None:
-            s = ", ".join([p+"="+str(getattr(self,p)) for p in params])
+            s = ", ".join([p+"="+inf.util.np_str(getattr(self,p)) for p in params])
 
 
-            return "<inferpy "+class_name+" "+self.name+", "+s+", dtype= "+self.dist.dtype.name+" >"
+            return "<inferpy.models."+class_name+" "+self.name+", "+s+", shape="+str(self.shape)+" >"
         else:
             return ""
 

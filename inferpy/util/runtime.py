@@ -30,6 +30,8 @@ class Runtime():
     #def __init__(self):
     tf_run_default = True
 
+    compact_param_str = True
+
 
     tf_sess = ed.get_session()
     init_g = tf.global_variables_initializer()
