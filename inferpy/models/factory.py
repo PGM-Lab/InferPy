@@ -115,16 +115,12 @@ def def_random_variable(var):
     else:
         v = var
 
-    print(v.get(CLASS_NAME))
 
     if not BASE_CLASS_NAME in v:
         v.update({BASE_CLASS_NAME : v.get(CLASS_NAME)})
 
-    print(v.get(CLASS_NAME))
 
     if not PARAMS in v:
-
-        #lst = [c.__name__ for c in tf.contrib.distributions.Distribution.__subclasses__()]
 
         lst = tf.distributions._allowed_symbols
 

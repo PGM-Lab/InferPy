@@ -232,8 +232,13 @@ class ParamValueArray(ParamValue):
             if shape == (1,):
                 return tf_vect[0]
 
-            return tf.reshape(tf.stack(tf_vect), shape)
 
+            m = np.prod([x for x in shape])
+            if  m != self.total_dim:
+                shape = tuple([x for x in shape] + [self.total_dim / m])
+
+
+            return tf.reshape(tf.stack(tf_vect), shape)
 
 
 
