@@ -145,6 +145,29 @@ Moreover, we might consider using the function ``inferpy.case`` as the parameter
    :language: python
    :lines: 12-36
 
+
+Note that we might use the case function inside the replicate construct. The result will be
+a multi-batch random variable having the same distribution for each batch. When obtaining a sample from
+the model, each sample of a given batch in x is independent of the rest.
+
+.. literalinclude:: ../../examples/docs/guidemodels/4.py
+   :language: python
+   :lines: 41-46
+
+
+We can also use the functions ``inferpy.case_states`` or ``inferpy.gather`` for defining
+the same model.
+
+
+.. literalinclude:: ../../examples/docs/guidemodels/4.py
+   :language: python
+   :lines: 50-62
+
+
+
+
+
+
 Supported Probability Distributions
 -----------------------------------
 

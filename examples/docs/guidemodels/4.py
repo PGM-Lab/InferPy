@@ -38,16 +38,6 @@ m4.sample()
 
 
 
-
-with inf.ProbModel() as m:
-    y =  inf.models.Categorical(probs=[0.4,0.6], name="y")
-    x = inf.models.Categorical(probs=inf.case_states(y, {0: [0.0, 1.0],
-                                                         1: [1.0, 0.0] }), name="x")
-m.sample()
-
-
-
-
 with inf.ProbModel() as m:
     y =  inf.models.Categorical(probs=[0.4,0.6], name="y")
     with inf.replicate(size=10):
@@ -57,11 +47,16 @@ m.sample()
 
 
 
+with inf.ProbModel() as m:
+    y =  inf.models.Categorical(probs=[0.4,0.6], name="y")
+    x = inf.models.Categorical(probs=inf.case_states(y, {0: [0.0, 1.0],
+                                                         1: [1.0, 0.0] }), name="x")
+m.sample()
+
 
 with inf.ProbModel() as m:
     y =  inf.models.Categorical(probs=[0.4,0.6], name="y")
     with inf.replicate(size=10):
         x = inf.models.Categorical(probs=inf.gather([[0.5, 0.5], [1.0, 0.0]], y), name="x")
-
 
 m.sample()
