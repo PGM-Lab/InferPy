@@ -56,6 +56,9 @@ def ndim(v):
 def case_states(var, d, default=None, exclusive=True, strict=False, name='case'):
     out_d = {}
 
+    if not isinstance(var, inferpy.models.RandomVariable):
+        var = inferpy.models.Deterministic(var)
+
 
     def f(p): return tf.constant(p)
 
