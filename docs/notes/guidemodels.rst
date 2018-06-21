@@ -164,6 +164,14 @@ the same model.
    :lines: 50-62
 
 
+We can use the function ``inferpy.case_states`` with a list of variables (or multidimensional variables):
+
+
+.. literalinclude:: ../../examples/docs/guidemodels/4.py
+   :language: python
+   :lines: 67-95
+
+
 
 
 

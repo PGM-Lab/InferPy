@@ -10,7 +10,7 @@ import collections
 
 class Param(object):
 
-    def __init__(self, name, value, is_simple=True):
+    def __init__(self, name, value, is_simple=True, duplicate=None):
         self.name = name
         self.is_simple = True if is_simple in [None, True] else False
 
@@ -19,7 +19,8 @@ class Param(object):
 
         self.p_value = new_ParamValue(value, elem_ndim)
 
-
+        if duplicate != None:
+            self.p_value = self.p_value.duplicate(duplicate)
 
 
         self.__input_value = value
@@ -181,6 +182,17 @@ class ParamValueScalar(ParamValue):
     def get_param_tensor(self):
         return tf.constant([self.value], dtype="float32")
 
+    def duplicate(self, op="equal"):
+
+        if op=="equal":
+            new_value = self.value
+        elif op=="negative":
+            new_value = -self.value
+        elif op == "prob_complement":
+            new_value = 1-self.value
+
+
+        return new_ParamValue([self.value, new_value], 0)
 
 
 class ParamValueArray(ParamValue):
@@ -282,6 +294,17 @@ class ParamValueTensor(ParamValue):
             v = tf.reshape(v, shape=(1,1))
 
         return v
+
+    def duplicate(self, op="equal"):
+
+        if op == "equal":
+            new_value = self.value
+        elif op == "negative":
+            new_value = -self.value
+        elif op == "prob_complement":
+            new_value = 1 - self.value
+
+        return new_ParamValue([self.value, new_value], 0)
 
 
 class ParamValueInfVar(ParamValue):
@@ -463,7 +486,3 @@ class ParamList(object):
 
 
 
-
-#a = inf.models.Normal(0,1)
-
-#ParamList(["a", "b"], [a, p] )

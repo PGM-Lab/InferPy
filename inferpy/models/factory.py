@@ -119,7 +119,6 @@ def def_random_variable(var):
     if not BASE_CLASS_NAME in v:
         v.update({BASE_CLASS_NAME : v.get(CLASS_NAME)})
 
-
     if not PARAMS in v:
 
         lst = tf.distributions._allowed_symbols
@@ -178,7 +177,6 @@ class Beta(RandomVariable):
             name='Beta'):
         self.concentration1 = concentration1
         self.concentration0 = concentration0
-
 
 
 
@@ -298,6 +296,7 @@ class Laplace(RandomVariable):
                  dim=None, observed=False, name="Laplace"):
         self.loc = loc
         self.scale = scale
+
 
 
 ####### run-time definition of random variables #########

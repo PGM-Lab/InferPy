@@ -60,3 +60,35 @@ with inf.ProbModel() as m:
         x = inf.models.Categorical(probs=inf.gather([[0.5, 0.5], [1.0, 0.0]], y), name="x")
 
 m.sample()
+
+
+
+
+
+y =  inf.models.Categorical(probs=[0.5,0.5], name="y", dim=2)
+p = inf.case_states(y, {(0,0): [1.0, 0.0, 0.0, 0.0], (0,1): [0.0, 1.0, 0.0, 0.0],
+                        (1, 0): [0.0, 0.0, 1.0, 0.0], (1,1): [0.0, 0.0, 0.0, 1.0]} )
+
+with inf.replicate(size=10):
+    x = inf.models.Categorical(probs=p, name="x")
+
+####
+
+y =  inf.models.Categorical(probs=[0.5,0.5], name="y", dim=1)
+z =  inf.models.Categorical(probs=[0.5,0.5], name="z", dim=1)
+
+
+p = inf.case_states((y,z), {(0,0): [1.0, 0.0, 0.0, 0.0], (0,1): [0.0, 1.0, 0.0, 0.0],
+                            (1, 0): [0.0, 0.0, 1.0, 0.0], (1,1): [0.0, 0.0, 0.0, 1.0]} )
+
+with inf.replicate(size=10):
+    x = inf.models.Categorical(probs=p, name="x")
+
+####
+
+p = inf.case_states([y,z], {(0,0): [1.0, 0.0, 0.0, 0.0], (0,1): [0.0, 1.0, 0.0, 0.0],
+                            (1, 0): [0.0, 0.0, 1.0, 0.0], (1,1): [0.0, 0.0, 0.0, 1.0]} )
+
+with inf.replicate(size=10):
+    x = inf.models.Categorical(probs=p, name="x")
+
