@@ -94,12 +94,12 @@ in the constructor:
 
 - ``observed``: Python boolean which is used to indicate whether a variable is observable or not . The default value is ``False``
 
-- ``dim`: dimension of the variable. The default value is ``None``
+- ``dim``: dimension of the variable. The default value is ``None``
 
 
 Inferpy supports a wide range of probability distributions. Details of the specific arguments 
 for each supported distributions are specified in the following sections.
-
+`
 
 
 
