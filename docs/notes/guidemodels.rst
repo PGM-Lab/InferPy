@@ -100,7 +100,6 @@ in the constructor:
 Inferpy supports a wide range of probability distributions. Details of the specific arguments 
 for each supported distributions are specified in the following sections.
 
-`
 
 
 
