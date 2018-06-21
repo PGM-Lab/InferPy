@@ -23,19 +23,25 @@ def np_str(s):
     except ValueError:
         i = 0
 
+
+
     try:
         j = out.rindex('...')
     except ValueError:
-        j = len(out) - 1
+        j = - 1
 
-    out = out[0:i] + "," + out[j:-1]
 
-    try:
-        k = out.rindex(',')
-    except ValueError:
-        k = len(out) - 1
+    if j>0:
 
-    out = out[0:k]
+        out = out[0:i] + "," + out[j:-1]
+
+        try:
+            k = out.rindex(',')
+        except ValueError:
+            k = len(out) - 1
+
+        out = out[0:k]
+
 
     if isnp:
         out = out.replace("array(", "")
