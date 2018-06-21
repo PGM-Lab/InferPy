@@ -1,6 +1,6 @@
 
 .. image:: https://travis-ci.org/PGMLabSpain/InferPy.svg?branch=master
-    :target: https://travis-ci.org/PGMLabSpain/InferPy
+    :target: https://travis-ci.org/PGM-Lab/InferPy
 
 
 .. image:: docs/_static/img/logo.png
