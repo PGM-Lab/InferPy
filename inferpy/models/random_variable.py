@@ -190,6 +190,23 @@ class RandomVariable(object):
         """ Method for computing the sum of the log probability of a sample v (or a set of samples)"""
         return tf.reduce_sum(self.dist.log_prob(tf.cast(v, tf.float32)))
 
+    @tf_run_wrapper
+    def mean(self, name='mean'):
+        if not self.is_generic_variable():
+            return self.dist.mean(name)
+        return None
+
+    @tf_run_wrapper
+    def variance(self, name='variance'):
+        if not self.is_generic_variable():
+            return self.dist.variance(name)
+        return None
+
+    @tf_run_wrapper
+    def stddev(self, name='stddev'):
+        if not self.is_generic_variable():
+            return self.dist.stddev(name)
+        return None
 
     def is_generic_variable(self):
         return isinstance(self._base_object, ed.RandomVariable) == False
@@ -258,6 +275,8 @@ class RandomVariable(object):
         new_var.copied_from = self
         new_var.observed = False
         return new_var
+
+
 
 
 
