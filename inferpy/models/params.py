@@ -478,6 +478,10 @@ class ParamList(object):
             if not p.is_simple and len(v.shape.as_list())<2:
                 v = tf.stack([v])
 
+            if not p.is_simple and D==1 and N>1:
+                n = p.dim_elem
+                v = tf.reshape(v,[N,D,n])
+
 
 
             d.update({p.name : v})

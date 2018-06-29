@@ -22,20 +22,31 @@ PARAMS = "params"
 BASE_CLASS_NAME = "base_class_name"
 NDIM = "ndim"
 IS_SIMPLE="is_simple"
+PROPS="properties"
 
 
-def __add_property(cls, name, from_dist=False):
+def __add_property(cls, name, call_name = None, from_dist=False, private=True):
 
+    call_name = name if call_name == None else call_name
+    call_name = "__"+call_name if private and not from_dist else call_name
 
     if from_dist:
         @tf_run_wrapper
         def param(self):
             """Distribution parameter for the mean."""
-            return getattr(self.dist, name)
+
+            out = self.dist
+            for m in call_name.split("."):
+                out = getattr(out, m)
+
+            return out
+
+
     else:
         def param(self):
             """Distribution parameter for the mean."""
-            return getattr(self, "__"+name)
+
+            return getattr(self, call_name)
 
 
     cls.__perinstance = True
@@ -140,9 +151,19 @@ def def_random_variable(var):
     newclass = type(v.get(CLASS_NAME), (RandomVariable,),{})
 
 
+    if not PROPS in v:
+        props = {}
+        for p in v.get(PARAMS):
+            props.update({p:p})
 
-    for p in v.get(PARAMS):
-        __add_property(newclass,p, from_dist=True)
+        v.update({PROPS:props})
+
+
+
+
+    #for p in v.get(PARAMS):
+    for p, prop_call in six.iteritems(v.get(PROPS)):
+        __add_property(newclass,p, call_name=prop_call, from_dist=True)
 
     __add_constructor(newclass, v.get(CLASS_NAME), v.get(BASE_CLASS_NAME), v.get(PARAMS), v.get(IS_SIMPLE))
     __add_repr(newclass, v.get(CLASS_NAME), v.get(PARAMS))
@@ -297,6 +318,15 @@ class Laplace(RandomVariable):
         self.loc = loc
         self.scale = scale
 
+class MultivariateNormalDiag(RandomVariable):
+    def __init__(self,
+                 loc=None,
+                 scale_diag=None,
+                 validate_args=False,
+                 allow_nan_stats=True,
+                 name="MultivariateNormalDiag"):
+        self.loc = loc
+        self.scale_diag = scale_diag
 
 
 ####### run-time definition of random variables #########
@@ -315,6 +345,12 @@ NON_SIMPLE_VARS = [{CLASS_NAME : "Categorical", IS_SIMPLE : {"probs" : False, "l
                    {CLASS_NAME: "Multinomial", IS_SIMPLE: {"total_count":True,"probs": False, "logits": False}},
                    {CLASS_NAME: "Dirichlet", IS_SIMPLE: {"concentration": False}},
                    {CLASS_NAME : "Bernoulli", IS_SIMPLE : {"probs" : False, "logits": False}},
+                   {CLASS_NAME: "MultivariateNormalDiag",
+                    IS_SIMPLE: {"loc": False, "scale_diag": False},
+                    PARAMS: ['loc', 'scale_diag'],
+                    PROPS:{'loc': 'loc', 'scale_diag': 'scale.diag'}
+                    }
+
                    ]
 
 for v in NON_SIMPLE_VARS:

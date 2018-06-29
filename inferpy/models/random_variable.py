@@ -75,21 +75,31 @@ class RandomVariable(object):
     @property
     def dim(self):
         """ Dimensionality of variable """
-        return self.base_object.shape.as_list()[-1]
+        return self.base_object.shape.as_list()[- (1 + len(self.event_shape)) ]
 
     @property
     def batches(self):
         """ Number of batches of the variable"""
 
         dist_shape = self.base_object.shape.as_list()
-        if len(dist_shape)>1:
-            return dist_shape[-2]
-        return 1
+
+        if len(dist_shape) - len(self.event_shape) <= 1 :
+            return 1
+        return dist_shape[0]
 
     @property
     def shape(self):
         """ shape of the variable, i.e. (batches, dim)"""
         return self.base_object.shape.as_list()
+
+    @property
+    def event_shape(self):
+        """ event_shape"""
+        if self.is_generic_variable():
+            return []
+
+        return self.base_object.event_shape.as_list()
+
 
     @property
     def name(self):
