@@ -473,7 +473,6 @@ class ParamList(object):
 
             v = p.p_value.repeat(D / p.dim, N / p.batches).get_param_tensor()
 
-
             # complex params should have at least 2 dimensions
             if not p.is_simple and len(v.shape.as_list())<2:
                 v = tf.stack([v])

@@ -461,6 +461,17 @@ The definition of a random variable following a multinomial distribution is done
 
 
 
+Multivariate-Normal
+~~~~~~~~~~~~~~~~~~~~~~~
+
+A multivariate-normal (or Gaussian) defines a set of  normal-distributed variables which are assumed
+to be idependent. In other words, the covariance matrix is diagonal.
+
+A single multivariate-normal distribution defined on :math:`\mathbb{R}^2` can be defined as follows.
+
+.. literalinclude:: ../../examples/supported_distributions.py
+   :language: python
+   :lines: 140-143
 
 
 Normal

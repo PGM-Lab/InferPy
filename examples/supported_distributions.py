@@ -134,3 +134,10 @@ inf.models.Uniform(1,3)
 
 
 #136
+
+
+
+x = inf.models.MultivariateNormalDiag(
+    loc=[1., -1],
+    scale_diag=[1, 2.]
+)
