@@ -395,3 +395,40 @@ def __add_equal_operator():
 
 __add_equal_operator()
 
+
+
+
+
+def __add_getitem_operator():
+
+    import inferpy.models.deterministic
+
+    name = "__getitem__"
+    cls = RandomVariable
+    def operator(self, index):
+
+        res = inferpy.models.Deterministic()
+
+
+        if np.ndim(index)<1:
+            index = [index]
+        elif np.ndim(index)>1:
+            raise ValueError("wrong index dimensions "+str(index))
+
+
+        res_dist = self.base_object
+
+        for i in index:
+            res_dist = tf.gather(res_dist, i)
+
+        res.base_object = res_dist
+
+        return res
+
+
+    operator.__doc__ = "documentation for " + name
+    operator.__name__ = name
+    setattr(cls, operator.__name__, operator)
+
+
+__add_getitem_operator()
