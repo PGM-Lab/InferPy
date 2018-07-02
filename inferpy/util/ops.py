@@ -123,4 +123,20 @@ def matmul(
     return res
 
 
-    #return A.__matmul__(B)
+def dot(x,y):
+
+
+    if len(x.shape) == 1 and len(y.shape)==2:
+
+        a = y
+        b = x
+
+    elif len(x.shape) == 2 and len(y.shape) == 1:
+        a = x
+        b = y
+
+    else:
+        raise ValueError("Wrong dimensions")
+
+
+    return matmul(a, b, transpose_b=True)
