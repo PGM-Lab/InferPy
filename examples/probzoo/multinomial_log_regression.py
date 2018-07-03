@@ -27,7 +27,7 @@ with inf.ProbModel() as m:
 # toy data generation
 x_train = Normal(loc=0, scale=1, dim=d).sample(N)
 y_train = Bernoulli(probs=np.random.rand(K)).sample(N)
-data = {x.name: x_train, y.name: np.reshape(y_train, (N,K))}
+data = {x.name: x_train, y.name: y_train}
 
 
 # compile and fit the model with training data

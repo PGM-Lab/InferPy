@@ -344,7 +344,7 @@ for v in SIMPLE_VARS:
 NON_SIMPLE_VARS = [{CLASS_NAME : "Categorical", IS_SIMPLE : {"probs" : False, "logits": False}},
                    {CLASS_NAME: "Multinomial", IS_SIMPLE: {"total_count":True,"probs": False, "logits": False}},
                    {CLASS_NAME: "Dirichlet", IS_SIMPLE: {"concentration": False}},
-                   {CLASS_NAME : "Bernoulli", IS_SIMPLE : {"probs" : False, "logits": False}},
+                   {CLASS_NAME : "Bernoulli", IS_SIMPLE : {"probs" : True, "logits": True}},
                    {CLASS_NAME: "MultivariateNormalDiag",
                     IS_SIMPLE: {"loc": False, "scale_diag": False},
                     PARAMS: ['loc', 'scale_diag'],

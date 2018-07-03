@@ -5,11 +5,11 @@ inf.models.ALLOWED_VARS
 
 # Bernoulli: binary distribution with probability p and 1-p
 
-x = inf.models.Bernoulli(probs=[0.5])
+x = inf.models.Bernoulli(probs=0.5)
 
 # or
 
-x = inf.models.Bernoulli(logits=[0])
+x = inf.models.Bernoulli(logits=0)
 
 
 #################   15
