@@ -80,9 +80,10 @@ class Qmodel(object):
         for p_name in getattr(inf.models, vartype).PARAMS:
             if p_name not in ["logits"]:
 
-                p = getattr(v,p_name)
+                p_shape = getattr(v,p_name).shape if v.__class__.__name__ == vartype else v.shape
 
-                var = tf.Variable(init_f(p.shape), dtype="float32", name=v.name+"/"+p_name)
+
+                var = tf.Variable(init_f(p_shape), dtype="float32", name=v.name+"/"+p_name)
                 inf.util.Runtime.tf_sess.run(tf.variables_initializer([var]))
 
 
@@ -136,7 +137,7 @@ def __add__new_qvar(vartype):
     name = vartype.__name__
 
     def f(cls,v, initializer='ones'):
-        return cls.new_qvar(v,initializer,name)
+        return cls.new_qvar(v,initializer,vartype=name)
 
 
     f.__doc__ = "documentation for " + name
