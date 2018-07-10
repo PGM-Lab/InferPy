@@ -21,6 +21,7 @@ import inferpy as inf
 import tensorflow as tf
 import edward as ed
 import numpy as np
+import sys
 
 
 
@@ -280,7 +281,7 @@ class RandomVariable(object):
 
     def copy(self, swap_dict=None, observed=False):
 
-        new_var = getattr(inf.models, type(self).__name__)()
+        new_var = getattr(sys.modules[self.__class__.__module__], type(self).__name__)()
         new_var.dist = ed.copy(self.dist, swap_dict)
         new_var.copied_from = self
         new_var.observed = False

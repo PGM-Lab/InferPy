@@ -24,6 +24,8 @@ with inf.ProbModel() as m:
         y = Bernoulli(logits = p, observed=True)
 
 
+y.shape
+
 # toy data generation
 x_train = Normal(loc=0, scale=1, dim=d).sample(N)
 y_train = Bernoulli(probs=np.random.rand(K)).sample(N)

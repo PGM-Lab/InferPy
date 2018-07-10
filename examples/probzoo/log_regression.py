@@ -1,7 +1,6 @@
 import edward as ed
 import inferpy as inf
 from inferpy.models import Normal, Bernoulli, Categorical
-import numpy as np
 
 d, N =  10, 500
 
@@ -15,8 +14,7 @@ with inf.ProbModel() as m:
     # define the generative model
     with inf.replicate(size=N):
         x = Normal(0, 1, observed=True, dim=d)
-        p = w0 + inf.matmul(x, w, transpose_b=True)
-        y = Bernoulli(logits = p, observed=True)
+        y = Bernoulli(logits=w0+inf.dot(x, w), observed=True)
 
 
 # toy data generation
@@ -29,5 +27,7 @@ m.compile()
 m.fit(data)
 
 print(m.posterior([w, w0]))
+
+
 
 

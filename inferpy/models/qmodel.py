@@ -1,7 +1,7 @@
 import inferpy as inf
 import tensorflow as tf
 import edward as ed
-
+import sys
 
 
 
@@ -80,13 +80,15 @@ class Qmodel(object):
         for p_name in getattr(inf.models, vartype).PARAMS:
             if p_name not in ["logits"]:
 
-                var = tf.Variable(init_f(v.shape), dtype="float32", name=v.name+"/"+p_name)
+                p = getattr(v,p_name)
+
+                var = tf.Variable(init_f(p.shape), dtype="float32", name=v.name+"/"+p_name)
                 inf.util.Runtime.tf_sess.run(tf.variables_initializer([var]))
 
 
                 #var = tf.get_variable(v.name+"/"+p_name, v.shape)
 
-                if p_name == "scale":
+                if p_name in ["scale", "probs"]:
                     var = tf.nn.softplus(var)
 
                 qparams.update({p_name: var})
@@ -102,18 +104,21 @@ class Qmodel(object):
  #       return Qmodel.__new_qvar(v,initializer,None)
 
     @staticmethod
-    def new_qvar(v, initializer='ones', vartype = None, check_observed = True, name="qvar"):
+    def new_qvar(v, initializer='ones', varmodule=None, vartype = None, check_observed = True, name="qvar"):
 
         if not inf.ProbModel.compatible_var(v):
             raise ValueError("Non-compatible variable")
         elif v.observed and check_observed:
             raise ValueError("Variable "+v.name+" cannot be observed")
 
+        if varmodule == None:
+            varmodule = sys.modules[v.__class__.__module__]
+
         if vartype == None:
             vartype = type(v).__name__
 
 
-        qv = getattr(inf.models, vartype)()
+        qv = getattr(varmodule, vartype)()
         qv.dist = Qmodel.__generate_ed_qvar(v, initializer, vartype)
         qv.bind = v
         return qv
