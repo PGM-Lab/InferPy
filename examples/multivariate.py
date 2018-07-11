@@ -17,4 +17,3 @@ x.batches       #  10
 x.dim           #  3
 x.event_shape   # [2]
 
-

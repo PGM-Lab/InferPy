@@ -158,7 +158,10 @@ class ProbModel(object):
         self.data = {}
 
         for k, v in iteritems(data):
-            self.data.update({self.get_var(k).dist: v})
+
+            new_k = self.get_var(k).dist if isinstance(k,str) else k.dist
+
+            self.data.update({new_k : v})
 
 
         self.inference = getattr(ed.inferences, self.infMethod)(self.q_vars, self.data)

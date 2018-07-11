@@ -411,6 +411,57 @@ def __add_getitem_operator():
         res = inferpy.models.Deterministic()
 
 
+        if isinstance(index, inf.models.RandomVariable):
+            if index.batches == 1:
+
+                if self.batches > 1:
+                    res_dist = tf.reshape(tf.gather(self.base_object, index.base_object, axis=1),
+                                          (self.batches,1))
+                else:
+                    res_dist = tf.reshape(tf.gather(self.base_object, index.base_object, axis=0), (1, 1))
+
+            else:
+
+                res_dist = tf.reshape(tf.stack([self[index[n,0]][n,0].base_object
+                                                for n in range(0, index.batches)]), (index.batches, 1))
+
+
+        else:
+
+            if np.ndim(index) < 1:
+                index = [index]
+
+            if len(np.shape(index)) < 2:
+                In = range(0, self.batches) if len(index) < 2 else [index[0]]
+                Id = [index[-1]]
+
+                if self.batches>1:
+                    res_dist = tf.gather(tf.gather(self.base_object, In, axis=0), Id, axis=1)
+                else:
+                    res_dist = tf.reshape(tf.gather(self.base_object, Id, axis=0), (1,1))
+            else:
+
+                res_dist = tf.reshape(tf.stack([self[0,index[n][0]].base_object
+                                                for n in range(0, np.shape(index)[0])]), (self.batches,1))
+
+
+        res.base_object = res_dist
+
+        return res
+
+
+
+    operator.__doc__ = "documentation for " + name
+    operator.__name__ = name
+    setattr(cls, operator.__name__, operator)
+
+
+__add_getitem_operator()
+
+
+
+
+"""
         if np.ndim(index)<1:
             index = [index]
         elif np.ndim(index)>1:
@@ -420,16 +471,10 @@ def __add_getitem_operator():
         res_dist = self.base_object
 
         for i in index:
-            res_dist = tf.gather(res_dist, i)
+            res_dist = tf.gather(res_dist, i if not isinstance(i, inf.models.RandomVariable) else i.dist)
 
         res.base_object = res_dist
 
         return res
 
-
-    operator.__doc__ = "documentation for " + name
-    operator.__name__ = name
-    setattr(cls, operator.__name__, operator)
-
-
-__add_getitem_operator()
+"""

@@ -1,26 +1,28 @@
 import edward as ed
 import inferpy as inf
-from inferpy.models import Normal, Bernoulli, Categorical
 import numpy as np
 
 
-# NOT POSSIBLE until implement: gather or case inside replicate
 
-d, N =  10, 500
+K, d, N = 3, 10, 500
 
 # model definition
 with inf.ProbModel() as m:
 
-    #define the weights
-    w0 = Normal(0,1)
-    with inf.replicate(size=d):
-        w = Normal(0, 1)
+    # Prior
+    with inf.replicate(size=K):
+        mu = inf.models.Normal(loc=0, scale=1, dim=d)
+        sigma = inf.models.InverseGamma(concentration=[1], rate=[1], dim=d)
+
+    p = inf.models.Dirichlet([1], dim=K)
 
     # define the generative model
     with inf.replicate(size=N):
-        x = Normal(0, 1, observed=True, dim=d)
-        p = w0 + inf.matmul(x, w)
-        y = Categorical(logits = p, observed=True)
+        z = inf.models.Categorical(logits = p)
+        x = inf.models.Normal(inf.gather(mu,z), scale=inf.gather(sigma,z), observed=True)
+
+
+    mu[z].shape
 
 
 # toy data generation

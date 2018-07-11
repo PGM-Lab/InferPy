@@ -11,7 +11,6 @@ d, N =  5, 20000
 x_train = inf.models.Normal(loc=10, scale=5, dim=d).sample(N)
 y_train = np.matmul(x_train, np.array([10,10,0.1,0.5,2]).reshape((d,1))) \
           + inf.models.Normal(loc=0, scale=5, dim=1).sample(N)
-data = {x.name: x_train, y.name: y_train}
 
 
 
@@ -32,6 +31,8 @@ with inf.ProbModel() as m:
 
 # compile and fit the model with training data
 m.compile()
+
+data = {x: x_train, y: y_train}
 m.fit(data)
 
 print(m.posterior([w, w0]))

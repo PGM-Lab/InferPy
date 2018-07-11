@@ -3,7 +3,7 @@ import inferpy as inf
 
 
 
-class Probmodel_test_definition(unittest.TestCase):
+class Shapes_Test(unittest.TestCase):
     def test(self):
         N = 1
         d = 1
