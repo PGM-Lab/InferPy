@@ -19,7 +19,7 @@ with inf.ProbModel() as m:
     # define the generative model
     with inf.replicate(size=N):
         z = inf.models.Categorical(logits = p)
-        x = inf.models.Normal(inf.gather(mu,z), scale=inf.gather(sigma,z), observed=True)
+        x = inf.models.Normal(mu[z], sigma[z], observed=True)
 
 
     mu[z].shape

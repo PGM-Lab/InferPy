@@ -83,17 +83,6 @@ class operators_test(unittest.TestCase):
         self.assertTrue(np.all(op1 == op2))
 
 
-        ##getitem
-
-        loc = np.reshape(range(0, 100), [10, 10])
-        scale = np.ones([10, 10]) * 0.0000001
-
-        with inf.replicate(size=10):
-            n = inf.models.Normal(loc=loc, scale=scale)
-
-        self.assertTrue(np.abs(n[1, 8].sample() - 18)<0.001)
-        self.assertTrue(np.sum(np.abs(n[0].sample() - [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])) < 0.001)
-        self.assertTrue(np.sum(np.abs(n[3].sample() - [30, 31, 32, 33, 34, 35, 36, 37, 38, 39])) < 0.001)
 
 
 if __name__ == '__main__':
