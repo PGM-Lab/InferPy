@@ -81,7 +81,7 @@ def __add_constructor(cls, class_name, base_class_name, params, is_simple):
 
                 validate_args = kwargs.get("validate_args") if  kwargs.get("validate_args") != None else False
                 allow_nan_stats = kwargs.get("allow_nan_stats") if  kwargs.get("allow_nan_stats") != None else True
-                name = kwargs.get("name") if kwargs.get("name") != None else class_name
+                name = kwargs.get("name") if kwargs.get("name") != None else "inf/"+class_name
 
 
                 dist = getattr(ed.models, class_name)(name=name, validate_args= validate_args, allow_nan_stats=allow_nan_stats, **param_dist)
@@ -140,7 +140,9 @@ def def_random_variable(var):
             init_f = getattr(getattr(ed.models, v.get(BASE_CLASS_NAME)), "__init__")
 
         sig = inspect.getargspec(init_f)
-        v.update({PARAMS: [x for x in sig.args if x not in ['self', 'validate_args', 'allow_nan_stats', 'name', 'dtype'] ]})
+        v.update({PARAMS: [x for x in sig.args ]})
+
+    v.update({PARAMS: [x for x in v.get(PARAMS) if x not in ['self', 'validate_args', 'allow_nan_stats', 'name', 'dtype']]})
 
 
     if not IS_SIMPLE in v:
@@ -154,7 +156,8 @@ def def_random_variable(var):
     if not PROPS in v:
         props = {}
         for p in v.get(PARAMS):
-            props.update({p:p})
+            if p not in ['self', 'validate_args', 'allow_nan_stats', 'name', 'dtype']:
+                props.update({p:p})
 
         v.update({PROPS:props})
 

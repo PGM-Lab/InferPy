@@ -50,6 +50,9 @@ class Param(object):
             n = self.p_value.value.get_shape().as_list()[-1]
         elif isinstance(self.p_value.value, collections.Iterable):
             n = self.p_value.value[0].total_dim
+        elif isinstance(self.p_value.value, inf.models.RandomVariable):
+            n = self.p_value.value.event_shape
+            n = n[0] if len(n)>0 else 1
         else:
             n = 1
 
@@ -246,13 +249,18 @@ class ParamValueArray(ParamValue):
             if shape == (1,):
                 return tf_vect[0]
 
+            return tf.stack(tf_vect)
 
-            m = np.prod([x for x in shape])
-            if  m != self.total_dim:
-                shape = tuple([x for x in shape] + [self.total_dim / m])
+         #   m = np.prod([x for x in tf_array.shape])
+         #   if  m != self.total_dim:
+         #       shape = tuple([x for x in tf_array.shape] + [self.total_dim / m])
+
+        #    event_s = self.tf_array[0].event_shape.as_list() if hasattr(self.tf_array[0], "event_shape") else []
+        #    if len(event_s)>0: shape = [x for x in shape] + event_s
 
 
-            return tf.reshape(tf.stack(tf_vect), shape)
+
+        #    return tf.reshape(tf.stack(tf_vect), shape)
 
 
 
@@ -319,7 +327,9 @@ class ParamValueInfVar(ParamValue):
 
     @abstractproperty
     def total_dim(self):
-        return self.value.dim
+        e = np.sum(self.value.event_shape)
+        d = self.value.dim * e if e >0 else self.value.dim
+        return d
 
     @abstractproperty
     def batches(self):
@@ -477,9 +487,13 @@ class ParamList(object):
             if not p.is_simple and len(v.shape.as_list())<2:
                 v = tf.stack([v])
 
-            if not p.is_simple and D==1 and N>1:
+            if not p.is_simple:
                 n = p.dim_elem
-                v = tf.reshape(v,[N,D,n])
+                final_shape = [N, D,n] if N>1 else [D,n]
+            else:
+                final_shape = [N,D] if N>1 else [D]
+
+            v = tf.reshape(v,final_shape)
 
 
 

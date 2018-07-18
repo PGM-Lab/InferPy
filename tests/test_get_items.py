@@ -34,8 +34,8 @@ class Test_get_items(unittest.TestCase):
 
 
 
-        self.assertTrue(x[0].shape == [N, 1])
-        self.assertTrue(x[10, 0].shape == [1, 1])
+        self.assertTrue(x[0].shape == [1])
+        self.assertTrue(x[10, 0].shape == [1])
 
         self.assertTrue(np.all(abs(x[5, 0].loc - 5) < 0.01))
 
@@ -43,20 +43,20 @@ class Test_get_items(unittest.TestCase):
 
 
 
-        d = 10
-        N = 10
+        d = 5
+        N = 20
 
         L = tf.constant(np.reshape([i for i in range(0, d * N)], (N, d)), dtype="float32")
-
+        n = inf.models.Categorical(probs=[1.0, 0.0], dim=1)
         with inf.replicate(size=N):
-            n = inf.models.Categorical(probs=[1.0, 0.0], dim=1)
+
             x = inf.models.Normal(L, 0.000001, dim=d)
 
-        self.assertTrue(x[0].shape == [N, 1])
-        self.assertTrue(x[10, 0].shape == [1, 1])
+        self.assertTrue(x[0].shape == [d])
+        self.assertTrue(x[10, 0].shape == [1])
 
-        self.assertTrue(np.all(abs(x[5, 0].loc - 50) < 0.01))
-        self.assertTrue(np.all(abs((x[n])[3, 0].loc - 30) < 0.01))
+        self.assertTrue(np.all(abs(x[5, 0].loc - 25) < 0.01))
+        self.assertTrue(np.all(abs((x[n,3]).loc - 3) < 0.01))
 
 
 if __name__ == '__main__':

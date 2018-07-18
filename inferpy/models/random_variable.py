@@ -22,6 +22,7 @@ import tensorflow as tf
 import edward as ed
 import numpy as np
 import sys
+import collections
 
 
 
@@ -175,7 +176,11 @@ class RandomVariable(object):
         s = self.dist.sample(size)
 
         if self.dim > 1 and self.batches == 1:
-            s = tf.reshape(s, shape=(size,self.dim))
+
+
+            final_shape = (size, self.dim) if self.event_shape == [] else (size, self.dim, self.event_shape[0])
+
+            s = tf.reshape(s, shape=final_shape)
 
         return s
 
@@ -400,7 +405,7 @@ __add_equal_operator()
 
 
 
-def __add_getitem_operator():
+def __add_getitem_operator_old():
 
     import inferpy.models.deterministic
 
@@ -454,6 +459,61 @@ def __add_getitem_operator():
     operator.__doc__ = "documentation for " + name
     operator.__name__ = name
     setattr(cls, operator.__name__, operator)
+
+
+
+
+
+def __add_getitem_operator():
+
+    import inferpy.models.deterministic
+
+    name = "__getitem__"
+    cls = RandomVariable
+    def operator(self, index):
+
+        res = inferpy.models.Deterministic()
+
+        res_tf = self.dist
+
+        if not isinstance(index, collections.Iterable):
+            index = [index]
+
+        axis = 0
+        ndim = len(self.shape)
+
+        for i in index:
+            if isinstance(i, inf.models.RandomVariable):
+                res_tf = tf.gather(res_tf, i.base_object, axis=axis)
+            elif isinstance(i, tf.Tensor):
+                res_tf = tf.gather(res_tf, i, axis=axis)
+            else:
+
+                I = tuple([slice(None,None,None) for x in range(0,axis)] + [i])
+                res_tf = res_tf[I]
+
+            ndim_new = len(res_tf._shape_as_list())
+
+            if ndim != ndim_new:
+                ndim = ndim_new
+            else:
+                axis = axis+1
+
+
+
+
+        res.base_object = tf.reshape(res_tf, inf.fix_shape(res_tf.shape))
+
+        return res
+
+
+
+
+
+    operator.__doc__ = "documentation for " + name
+    operator.__name__ = name
+    setattr(cls, operator.__name__, operator)
+
 
 
 __add_getitem_operator()

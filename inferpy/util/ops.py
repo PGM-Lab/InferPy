@@ -140,3 +140,24 @@ def dot(x,y):
 
 
     return matmul(a, b, transpose_b=True)
+
+
+
+def fix_shape(s):
+
+    ret = []
+
+    for i in range(0,len(s)):
+        if i in [0, len(s)-1] or s[i] != 1:
+            ret.append(s[i])
+
+    if len(ret) == 0:
+        return [1]
+
+    return ret
+
+
+
+
+
+
