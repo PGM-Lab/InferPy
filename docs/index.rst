@@ -68,6 +68,8 @@ Use InferPy if you need a probabilistic programming language that:
    :caption: Model Zoo
    
    notes/probzoo
+   notes/inf_vs_ed
+
 
 .. toctree::
    :maxdepth: 1

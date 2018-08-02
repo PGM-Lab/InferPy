@@ -14,8 +14,8 @@ class Qmodel(object):
 
 
     @staticmethod
-    def build_from_pmodel(p):
-        return inf.Qmodel([inf.Qmodel.new_qvar(v) for v in p.latent_vars])
+    def build_from_pmodel(p, empirical=False):
+        return inf.Qmodel([inf.Qmodel.new_qvar(v) if not empirical else inf.Qmodel.new_qvar_empirical(v,1000) for v in p.latent_vars])
 
 
 
@@ -62,7 +62,7 @@ class Qmodel(object):
 
 
     @staticmethod
-    def __generate_ed_qvar(v, initializer, vartype):
+    def __generate_ed_qvar(v, initializer, vartype, params):
         qparams = {}
 
         if initializer == "ones":
@@ -74,56 +74,103 @@ class Qmodel(object):
 
 
 
-        #make of type vartype
+        for p_name in params:
+            if p_name not in ["probs"]:
+
+                p_shape = getattr(v, p_name).shape.as_list() if hasattr(v, p_name) else v.shape
 
 
-        for p_name in getattr(inf.models, vartype).PARAMS:
-            if p_name not in ["logits"]:
-
-                p_shape = getattr(v,p_name).shape if v.__class__.__name__ == vartype else v.shape
-
-
-                var = tf.Variable(init_f(p_shape), dtype="float32", name=v.name+"/"+p_name)
+                var = tf.Variable(init_f(p_shape), dtype="float32", name="q_"+v.name+p_name)
                 inf.util.Runtime.tf_sess.run(tf.variables_initializer([var]))
 
 
-                #var = tf.get_variable(v.name+"/"+p_name, v.shape)
+                var = tf.where(tf.is_nan(var), tf.zeros_like(var), var)
 
-                if p_name in ["scale", "probs"]:
+                if p_name in ["scale"]:
                     var = tf.nn.softplus(var)
+                elif p_name in ["probs"]:
+                    var = tf.clip_by_value(tf.where(tf.is_nan(var), tf.zeros_like(var), var),1e-8, 1)
+                elif p_name in ["logits"]:
+                    var = tf.where(tf.is_nan(var), tf.zeros_like(var), var)
 
                 qparams.update({p_name: var})
 
 
-        qvar =  getattr(ed.models, vartype)(name = "q_"+str.replace(v.name, ":", ""), **qparams)
+        qvar =  getattr(ed.models, vartype)(name = "q_"+str.replace(v.name, ":", ""),allow_nan_stats=False, **qparams)
 
         return qvar
 
 
- #   @staticmethod
- #   def new_qvar(v, initializer='ones'):
- #       return Qmodel.__new_qvar(v,initializer,None)
+
+
+    # rename new_varmodule and new_vartype
+    # name
+
 
     @staticmethod
-    def new_qvar(v, initializer='ones', varmodule=None, vartype = None, check_observed = True, name="qvar"):
+    def new_qvar(v, initializer='ones', qvar_inf_module=None, qvar_inf_type = None, qvar_ed_type = None, check_observed = True, name="qvar"):
 
         if not inf.ProbModel.compatible_var(v):
             raise ValueError("Non-compatible variable")
         elif v.observed and check_observed:
             raise ValueError("Variable "+v.name+" cannot be observed")
 
-        if varmodule == None:
-            varmodule = sys.modules[v.__class__.__module__]
+        ## default values ##
 
-        if vartype == None:
-            vartype = type(v).__name__
+        if qvar_inf_module == None:
+            qvar_inf_module = sys.modules[v.__class__.__module__]
+
+        if qvar_inf_type == None:
+            qvar_inf_type = type(v).__name__
+
+        if qvar_ed_type == None:
+            qvar_ed_type = type(v).__name__
 
 
-        qv = getattr(varmodule, vartype)()
-        qv.dist = Qmodel.__generate_ed_qvar(v, initializer, vartype)
+
+        qv = getattr(qvar_inf_module, qvar_inf_type)()
+        qv.dist = Qmodel.__generate_ed_qvar(v.dist, initializer, qvar_ed_type, v.PARAMS)
         qv.bind = v
         return qv
 
+
+
+
+    @staticmethod
+    def new_qvar_empirical(v, n_post_samples, initializer='ones', check_observed = True, name="qvar"):
+
+
+        if not inf.ProbModel.compatible_var(v):
+            raise ValueError("Non-compatible variable")
+        elif v.observed and check_observed:
+            raise ValueError("Variable "+v.name+" cannot be observed")
+
+
+
+
+        qv = inf.models.Deterministic()
+
+
+        if initializer == "ones":
+            init_f = tf.ones
+        elif initializer == "zeroes":
+            init_f = tf.zeros
+        else:
+            raise ValueError("Unsupported initializer: "+initializer)
+
+
+        var = tf.Variable(init_f([n_post_samples] + v.shape), dtype="float32", name="q_"+v.name + "/params")
+        qv.base_object = ed.models.Empirical(params=var, name = "q_"+str.replace(v.name, ":", ""))
+
+
+        qv.bind = v
+        return qv
+
+
+
+    @staticmethod
+    def Empirical(v, n_post_samples=500, initializer='ones'):
+        return inf.Qmodel.new_qvar_empirical(v, n_post_samples, initializer)
 
 
 ####
@@ -137,7 +184,7 @@ def __add__new_qvar(vartype):
     name = vartype.__name__
 
     def f(cls,v, initializer='ones'):
-        return cls.new_qvar(v,initializer,vartype=name)
+        return cls.new_qvar(v, initializer, qvar_type=name)
 
 
     f.__doc__ = "documentation for " + name
@@ -148,3 +195,5 @@ def __add__new_qvar(vartype):
 
 for vartype in inf.models.RandomVariable.__subclasses__():
     __add__new_qvar(vartype)
+
+

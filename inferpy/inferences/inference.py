@@ -2,7 +2,7 @@
 #
 
 
-INF_METHODS = ["KLpq", "KLqp", "Laplace", "ReparameterizationEntropyKLqp", "ReparameterizationKLKLqp", "ReparameterizationKLqp", "ScoreEntropyKLqp", "ScoreKLKLqp", "ScoreKLqp", "ScoreRBKLqp", "WakeSleep"]
+INF_METHODS = ["KLpq", "KLqp", "Laplace", "ReparameterizationEntropyKLqp", "ReparameterizationKLKLqp", "ReparameterizationKLqp", "ScoreEntropyKLqp", "ScoreKLKLqp", "ScoreKLqp", "ScoreRBKLqp", "WakeSleep", "MetropolisHastings"]
 
-INF_METHODS_ALIAS = {"Variational" : "KLqp"}
+INF_METHODS_ALIAS = {"Variational" : "KLqp", "MCMC":"MetropolisHastings"}
 

@@ -124,7 +124,7 @@ class ProbModel(object):
 
     # other methods
 
-    def compile(self, infMethod="KLqp", Q=None):
+    def compile(self, infMethod="KLqp", Q=None, proposal_vars=None):
 
         """ This method initializes the structures for making inference in the model."""
 
@@ -141,7 +141,11 @@ class ProbModel(object):
         self.infMethod = infMethod
 
         if Q == None:
-            Q = inf.Qmodel.build_from_pmodel(self)
+            Q = inf.Qmodel.build_from_pmodel(self, self.infMethod=="MetropolisHastings")
+
+        if proposal_vars==None and self.__inf_with_proposal_vars():
+            self.proposal_vars = dict([(v.dist, v.dist.copy()) for v in self.latent_vars])
+
 
         self.q_vars = Q.dict
 
@@ -158,15 +162,21 @@ class ProbModel(object):
         self.data = {}
 
         for k, v in iteritems(data):
-
             new_k = self.get_var(k).dist if isinstance(k,str) else k.dist
-
             self.data.update({new_k : v})
 
 
-        self.inference = getattr(ed.inferences, self.infMethod)(self.q_vars, self.data)
+
+        # prepare inference arguments
+        inf_args = {"latent_vars":self.q_vars}
+        if self.__inf_with_proposal_vars():
+            inf_args.update({"proposal_vars":self.proposal_vars})
+
+        inf_args.update({"data": self.data})
 
 
+        # inference
+        self.inference = getattr(ed.inferences, self.infMethod)(**inf_args)
 
         self.inference.initialize()
 
@@ -507,3 +517,9 @@ class ProbModel(object):
         inference_pred.run()
 
         return q_target
+
+
+
+    def __inf_with_proposal_vars(self):
+        import inspect
+        return 'proposal_vars' in inspect.signature(getattr(ed.inferences, self.infMethod)).parameters
