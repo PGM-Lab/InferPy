@@ -184,7 +184,7 @@ def __add__new_qvar(vartype):
     name = vartype.__name__
 
     def f(cls,v, initializer='ones'):
-        return cls.new_qvar(v, initializer, qvar_type=name)
+        return cls.new_qvar(v, initializer, qvar_inf_type=name)
 
 
     f.__doc__ = "documentation for " + name

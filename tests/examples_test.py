@@ -8,7 +8,7 @@ class Test_examples(unittest.TestCase):
     def test(self):
 
         old_cwd = os.getcwd()
-        #os.chdir("../")
+        #os.chdir("../")   #uncomment in local
 
         #print(old_cwd+" changing to "+os.getcwd())
 
