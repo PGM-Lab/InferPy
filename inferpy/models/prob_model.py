@@ -521,5 +521,9 @@ class ProbModel(object):
 
 
     def __inf_with_proposal_vars(self):
-        import inspect
-        return 'proposal_vars' in inspect.signature(getattr(ed.inferences, self.infMethod)).parameters
+
+        import funcsigs
+        return 'proposal_vars' in funcsigs.signature(getattr(ed.inferences, self.infMethod)).parameters
+
+        #import inspect  # not working in 2.7
+        #return 'proposal_vars' in inspect.signature(getattr(ed.inferences, self.infMethod)).parameters
