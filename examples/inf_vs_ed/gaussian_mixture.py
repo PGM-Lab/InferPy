@@ -40,6 +40,8 @@ m.fit(data)
 # print the posterior
 print(m.posterior(mu))
 
+
+
 ######## Edward ##########
 
 

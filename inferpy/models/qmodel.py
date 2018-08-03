@@ -159,7 +159,8 @@ class Qmodel(object):
             raise ValueError("Unsupported initializer: "+initializer)
 
 
-        var = tf.Variable(init_f([n_post_samples] + v.shape), dtype="float32", name="q_"+v.name + "/params")
+        dtype = v.base_object.dtype.name
+        var = tf.Variable(init_f([n_post_samples] + v.shape, dtype=dtype), dtype=dtype, name="q_"+v.name + "/params")
         qv.base_object = ed.models.Empirical(params=var, name = "q_"+str.replace(v.name, ":", ""))
 
 
