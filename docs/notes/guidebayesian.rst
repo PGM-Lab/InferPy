@@ -17,7 +17,7 @@ Bayesian deep learning or deep probabilistic programming enbraces the
 idea of employing deep neural networks within a probabilistic model in
 order to capture complex non-linear dependencies between variables.
 
-InferPy's API gives support to this powerful and flexible modelling
+InferPy's API gives support to this powerful and flexible modeling
 framework. Let us start by showing how a variational autoencoder over
 binary data can be defined by mixing Keras and InferPy code.
 

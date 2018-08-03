@@ -7,14 +7,14 @@
    	:scale: 90 %
    	:align: center
 
-InferPy: Deep Probabilistic Modelling Made Easy
+InferPy: Deep Probabilistic Modeling Made Easy
 ===============================================
 
 
 InferPy is a high-level API for probabilistic modeling written in Python and 
 capable of running on top of Edward and Tensorflow. InferPy's API is 
 strongly inspired by Keras and it has a focus on enabling flexible data processing, 
-easy-to-code probablistic modelling, scalable inference and robust model validation. 
+easy-to-code probablistic modeling, scalable inference and robust model validation.
 
 Use InferPy is you need a probabilistic programming language that:
 

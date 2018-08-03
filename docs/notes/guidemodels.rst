@@ -517,7 +517,7 @@ where the input parameter ``loc`` and ``scale`` correspond to :math:`\mu` and :m
 Poisson
 ~~~~~~~~~~~~~~~
 
-The Poisson distribution is a discrete probability distribution for modelling the number of times an event occurs
+The Poisson distribution is a discrete probability distribution for modeling the number of times an event occurs
 in an interval of time or space. Its probability mass function is
 
 
