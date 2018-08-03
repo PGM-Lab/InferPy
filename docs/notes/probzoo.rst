@@ -29,6 +29,15 @@ Bayesian Multinomial Logistic Regression
 
 --------------
 
+Mixture of Gaussians
+--------------------------
+
+.. literalinclude:: ../../examples/probzoo/gaussian_mixture.py
+   :language: python
+
+--------------
+
+
 Linear Factor Model (PCA)
 -------------------------
 

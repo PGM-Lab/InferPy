@@ -81,6 +81,23 @@ Following Edward's approach, the multivariate dimension is the innermost (right-
 dimension of the parameters.
 
 
+Note that indexing is supported:
+
+
+.. literalinclude:: ../../examples/docs/guidemodels/2.py
+   :language: python
+   :lines: 24-30
+
+
+Moreover, we may use indexation for defining new variables whose indexes may be other (discrete) variables:
+
+
+.. literalinclude:: ../../examples/docs/guidemodels/2.py
+   :language: python
+   :lines: 34-35
+
+
+
 Any random variable in InferPy contain the following (optional) input parameters
 in the constructor:
 
