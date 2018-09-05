@@ -115,25 +115,40 @@ def matmul(
 
     res = inferpy.models.Deterministic()
 
-    op1 = a.base_object if len(a.shape) > 1 else tf.reshape(a.base_object, [1] + a.shape)
-    op2 = b.base_object if len(b.shape) > 1 else tf.reshape(b.base_object, [1] + b.shape)
 
-    res.base_object = tf.matmul(op1, op2, transpose_a, transpose_b, adjoint_a, adjoint_b, a_is_sparse, b_is_sparse, name)
+    a_shape = shape_to_list(a)
+    b_shape = shape_to_list(b)
+
+
+    if isinstance(a, inferpy.models.RandomVariable):
+        a = a.base_object
+
+    if isinstance(b, inferpy.models.RandomVariable):
+        b = b.base_object
+
+
+    a = a if len(a_shape) > 1 else tf.reshape(a, [1] + a_shape)
+    b = b if len(b_shape) > 1 else tf.reshape(b, [1] + b_shape)
+
+    res.base_object = tf.matmul(a, b, transpose_a, transpose_b, adjoint_a, adjoint_b, a_is_sparse, b_is_sparse, name)
 
     return res
 
 
 def dot(x,y):
 
+    x_shape = shape_to_list(x)
+    y_shape = shape_to_list(y)
 
-    if len(x.shape) == 1 and len(y.shape)==2:
+    if len(x_shape) == 1 and len(y_shape)==2:
 
         a = y
         b = x
 
-    elif len(x.shape) == 2 and len(y.shape) == 1:
+    elif len(x_shape) == 2 and len(y_shape) == 1:
         a = x
         b = y
+
 
     else:
         raise ValueError("Wrong dimensions")
@@ -141,6 +156,22 @@ def dot(x,y):
 
     return matmul(a, b, transpose_b=True)
 
+
+
+def shape_to_list(a):
+
+    if isinstance(a, inferpy.models.RandomVariable):
+        a_shape = a.shape
+    elif isinstance(a, np.ndarray):
+        a_shape = list(a.shape)
+    elif isinstance(a, list):
+        a_shape = list(np.shape(a))
+    elif isinstance(a, tf.Tensor):
+        a_shape = a._shape_as_list()
+    else:
+        raise ValueError("Wrong input type "+a)
+
+    return a_shape
 
 
 def fix_shape(s):
