@@ -26,6 +26,3 @@ m.fit(data)
 
 #extract the hidden representation from a set of observations
 hidden_encoding = m.posterior(z)
-
-
-inf.dot(z, w)

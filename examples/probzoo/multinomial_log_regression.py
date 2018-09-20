@@ -14,17 +14,15 @@ with inf.ProbModel() as m:
     #define the weights
     w0 = Normal(0,1, dim=K)
 
-    with inf.replicate(size=d):
-        w = Normal(0, 1, dim=K)
+    with inf.replicate(size=K):
+        w = Normal(0, 1, dim=d)
 
     # define the generative model
     with inf.replicate(size=N):
         x = Normal(0, 1, observed=True, dim=d)
-        p = w0 + inf.matmul(x, w)
-        y = Bernoulli(logits = p, observed=True)
+        y = Bernoulli(logits = w0 + inf.matmul(x, w, transpose_b=True), observed=True)
 
 
-y.shape
 
 # toy data generation
 x_train = Normal(loc=0, scale=1, dim=d).sample(N)
