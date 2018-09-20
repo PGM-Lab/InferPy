@@ -14,7 +14,32 @@ y_train = np.matmul(x_train, np.array([10,10,0.1,0.5,2]).reshape((d,1))) \
 
 
 
-### Edward #####
+############################## InferPy #################################################
+
+# model definition
+with inf.ProbModel() as model:
+
+    # define the weights
+    w0 = inf.models.Normal(0,1)
+    w = inf.models.Normal(0, 1, dim=d)
+
+    # define the generative model
+    with inf.replicate(size=N):
+        x = inf.models.Normal(0, 1, observed=True, dim=d)
+        y = inf.models.Normal(w0 + inf.dot(x,w), 1.0, observed=True)
+
+
+# compile and fit the model with training data
+model.compile()
+data = {x: x_train, y: y_train}
+model.fit(data)
+
+# print the posterior distributions
+print(m.posterior([w, w0]))
+
+
+
+############################## Edward ##################################################
 
 # define the weights
 w0 = ed.models.Normal(loc=tf.zeros(1), scale=tf.ones(1))
@@ -35,30 +60,3 @@ inference.run()
 
 # print the posterior distributions
 print([qw.loc.eval(), qw0.loc.eval()])
-
-
-
-
-### InferPy #######
-
-# model definition
-with inf.ProbModel() as m:
-
-    # define the weights
-    w0 = inf.models.Normal(0,1)
-    w = inf.models.Normal(0, 1, dim=d)
-
-    # define the generative model
-    with inf.replicate(size=N):
-        x = inf.models.Normal(0, 1, observed=True, dim=d)
-        y = inf.models.Normal(w0 + inf.dot(x,w), 1.0, observed=True)
-
-
-# compile and fit the model with training data
-m.compile()
-data = {x: x_train, y: y_train}
-m.fit(data)
-
-# print the posterior distributions
-print(m.posterior([w, w0]))
-
