@@ -14,10 +14,10 @@ y_train = np.matmul(x_train, np.array([10,10,0.1,0.5,2]).reshape((d,1))) \
 
 
 
-### InferPy #######
+############################## InferPy #################################################
 
 # model definition
-with inf.ProbModel() as m:
+with inf.ProbModel() as model:
 
     # define the weights
     w0 = inf.models.Normal(0,1)
@@ -30,16 +30,16 @@ with inf.ProbModel() as m:
 
 
 # compile and fit the model with training data
-m.compile()
+model.compile()
 data = {x: x_train, y: y_train}
-m.fit(data)
+model.fit(data)
 
 # print the posterior distributions
 print(m.posterior([w, w0]))
 
 
 
-### Edward #####
+############################## Edward ##################################################
 
 # define the weights
 w0 = ed.models.Normal(loc=tf.zeros(1), scale=tf.ones(1))
