@@ -35,7 +35,7 @@ data = {x: x_train, y: y_train}
 model.fit(data)
 
 # print the posterior distributions
-print(m.posterior([w, w0]))
+print(model.posterior([w, w0]))
 
 
 
