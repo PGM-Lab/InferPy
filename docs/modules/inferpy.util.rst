@@ -12,6 +12,14 @@ inferpy\.util\.error module
     :undoc-members:
     :show-inheritance:
 
+inferpy\.util\.format module
+----------------------------
+
+.. automodule:: inferpy.util.format
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 inferpy\.util\.ops module
 -------------------------
 

@@ -6,28 +6,13 @@ Subpackages
 
 .. toctree::
 
+    inferpy.criticism
     inferpy.inferences
     inferpy.models
     inferpy.util
 
 Submodules
 ----------
-
-inferpy\.prob\_model module
----------------------------
-
-.. automodule:: inferpy.prob_model
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-inferpy\.replicate module
--------------------------
-
-.. automodule:: inferpy.replicate
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 inferpy\.version module
 -----------------------
