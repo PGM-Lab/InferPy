@@ -36,14 +36,6 @@ inferpy\.models\.prob\_model module
     :undoc-members:
     :show-inheritance:
 
-inferpy\.models\.qmodel module
-------------------------------
-
-.. automodule:: inferpy.models.qmodel
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 inferpy\.models\.random\_variable module
 ----------------------------------------
 

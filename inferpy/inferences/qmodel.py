@@ -1,3 +1,24 @@
+# -*- coding: utf-8 -*-
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
+
+
+"""Module with the required functionality for implementing the Q-models and Q-distributions used by
+some inference algorithms.
+"""
+
+
 import inferpy as inf
 import tensorflow as tf
 import edward as ed
@@ -8,30 +29,59 @@ import sys
 
 class Qmodel(object):
 
+    """Class implementing a Q model
+
+    A Q model approximates the posterior distribution of a probabilistic model P .
+    In the ‘Q’ model we should include a q distribution for every non observed variable in the ‘P’ model.
+    Otherwise, an error will be raised during model compilation.
+
+    An example of use:
+
+    .. literalinclude:: ../../examples/q_model_inference.py
+
+
+    """
+
+
+
     def __init__(self, varlist):
 
         self.varlist = varlist
 
+    """Initializes a Q model
+
+    Args:
+        varlist: list with the variables in the model
+
+    """
 
     @staticmethod
     def build_from_pmodel(p, empirical=False):
+        """Initializes a Q model from a P model
+
+        Args:
+            p: P model of type inferpy.ProbModel
+            empirical: determines if q distributions will be empirical or of the same type than each p distribution.
+
+        """
         return inf.Qmodel([inf.Qmodel.new_qvar(v) if not empirical else inf.Qmodel.new_qvar_empirical(v,1000) for v in p.latent_vars])
 
 
 
     @property
     def dict(self):
+        """ Dictionary where the keys and values are the p and q distributions respectively """
+
+
         d = {}
         for v in self.varlist:
             d.update({v.bind.dist : v.dist})
         return d
 
 
-
-
     @property
     def varlist(self):
-        """ list of variables"""
+        """ list of q variables of Inferpy type"""
         return self.__varlist
 
     @varlist.setter
@@ -63,6 +113,22 @@ class Qmodel(object):
 
     @staticmethod
     def __generate_ed_qvar(v, initializer, vartype, params):
+
+        """ Builds an Edward q-variable for a p-variable
+
+        Args:
+            v: Edward variable to be approximated
+            initializer (str): indicates how the new variable should be initialized. Possible values: "ones" , "zeroes".
+            vartype (str): Edward type of the new variable
+            params: lists of strings indicating the paramaters of the new variable
+
+
+        Returns:
+            Edward variable approximating in input variable
+
+
+        """
+
         qparams = {}
 
         if initializer == "ones":
@@ -102,13 +168,25 @@ class Qmodel(object):
 
 
 
-
-    # rename new_varmodule and new_vartype
-    # name
-
-
     @staticmethod
     def new_qvar(v, initializer='ones', qvar_inf_module=None, qvar_inf_type = None, qvar_ed_type = None, check_observed = True, name="qvar"):
+
+        """ Builds an Inferpy q-variable for a p-variable
+
+        Args:
+            v: Inferpy variable to be approximated
+            initializer (str): indicates how the new variable should be initialized. Possible values: "ones" , "zeroes".
+            qvar_inf_module (str): module of the new Inferpy variable.
+            qvar_inf_type (str): name of the new Inferpy variable.
+            qvar_ed_type (str): full name of the encapsulated Edward variable type.
+            check_observed (bool): To check if p-variable is observed.
+
+        Returns:
+            Inferpy variable approximating in input variable
+
+
+        """
+
 
         if not inf.ProbModel.compatible_var(v):
             raise ValueError("Non-compatible variable")
@@ -188,7 +266,13 @@ def __add__new_qvar(vartype):
         return cls.new_qvar(v, initializer, qvar_inf_type=name)
 
 
-    f.__doc__ = "documentation for " + name
+    f.__doc__ = "Creates a new q-variable of type " + name + "" \
+                                                             "" \
+                                                             "\n\n        Args:" \
+                                                             "\n            v: Inferpy p-variable" \
+                                                             "\n            initializer (str): indicates how the new variable " \
+                                                             "should be initialized. Possible values: 'ones' , 'zeroes'." \
+                                                             "";
     f.__name__ = name
 
     setattr(Qmodel, f.__name__, classmethod(f))

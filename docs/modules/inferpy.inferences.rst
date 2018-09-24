@@ -12,6 +12,14 @@ inferpy\.inferences\.inference module
     :undoc-members:
     :show-inheritance:
 
+inferpy\.inferences\.qmodel module
+----------------------------------
+
+.. automodule:: inferpy.inferences.qmodel
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
