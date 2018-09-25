@@ -20,14 +20,6 @@ inferpy\.models\.factory module
     :undoc-members:
     :show-inheritance:
 
-inferpy\.models\.params module
-------------------------------
-
-.. automodule:: inferpy.models.params
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 inferpy\.models\.prob\_model module
 -----------------------------------
 

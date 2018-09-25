@@ -13,7 +13,7 @@
 # limitations under the License.
 # ==============================================================================
 
-"""The Deterministic distribution class."""
+"""The Deterministic distribution """
 
 import edward.models as base_models
 import numpy as np
@@ -28,14 +28,26 @@ from inferpy.util import tf_run_wrapper
 
 class Deterministic(RandomVariable):
 
-    """ Class implementing ...
+    """ Class implementing a Deterministic variable.
+
+    This allows to encapsulate any Tensor object of Edward variable. Moreover, variables
+    of this type can be intilially empty and later initialized. When operating with InferPy
+    random variables, the result is always a deterministic variable.
+
+    An example of use:
+
+    .. literalinclude:: ../../examples/deterministic_variable.py
+
+
+
+
 
 
     """
 
     def __init__(self, loc=None, dim=None, observed=False, name="Determ", ):
 
-        """Construct Deterministic distribution
+        """Constructor for the Deterministic distribution
 
 
         """

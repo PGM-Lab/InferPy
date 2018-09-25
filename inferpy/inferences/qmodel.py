@@ -57,10 +57,10 @@ class Qmodel(object):
 
     @staticmethod
     def build_from_pmodel(p, empirical=False):
-        """Initializes a Q model from a P model
+        """Initializes a Q model from a P model.
 
         Args:
-            p: P model of type inferpy.ProbModel
+            p: P model of type inferpy.ProbModel.
             empirical: determines if q distributions will be empirical or of the same type than each p distribution.
 
         """
@@ -70,7 +70,7 @@ class Qmodel(object):
 
     @property
     def dict(self):
-        """ Dictionary where the keys and values are the p and q distributions respectively """
+        """ Dictionary where the keys and values are the p and q distributions respectively. """
 
 
         d = {}
@@ -114,13 +114,13 @@ class Qmodel(object):
     @staticmethod
     def __generate_ed_qvar(v, initializer, vartype, params):
 
-        """ Builds an Edward q-variable for a p-variable
+        """ Builds an Edward q-variable for a p-variable.
 
         Args:
-            v: Edward variable to be approximated
+            v: Edward variable to be approximated.
             initializer (str): indicates how the new variable should be initialized. Possible values: "ones" , "zeroes".
-            vartype (str): Edward type of the new variable
-            params: lists of strings indicating the paramaters of the new variable
+            vartype (str): Edward type of the new variable.
+            params: lists of strings indicating the paramaters of the new variable.
 
 
         Returns:
@@ -171,10 +171,10 @@ class Qmodel(object):
     @staticmethod
     def new_qvar(v, initializer='ones', qvar_inf_module=None, qvar_inf_type = None, qvar_ed_type = None, check_observed = True, name="qvar"):
 
-        """ Builds an Inferpy q-variable for a p-variable
+        """ Builds an Inferpy q-variable for a p-variable.
 
         Args:
-            v: Inferpy variable to be approximated
+            v: Inferpy variable to be approximated.
             initializer (str): indicates how the new variable should be initialized. Possible values: "ones" , "zeroes".
             qvar_inf_module (str): module of the new Inferpy variable.
             qvar_inf_type (str): name of the new Inferpy variable.
@@ -182,7 +182,7 @@ class Qmodel(object):
             check_observed (bool): To check if p-variable is observed.
 
         Returns:
-            Inferpy variable approximating in input variable
+            Inferpy variable approximating in input variable.
 
 
         """
@@ -216,6 +216,21 @@ class Qmodel(object):
 
     @staticmethod
     def new_qvar_empirical(v, n_post_samples, initializer='ones', check_observed = True, name="qvar"):
+
+        """ Builds an empirical Inferpy q-variable for a p-variable.
+
+        Args:
+            v: Inferpy variable to be approximated.
+            n_post_samples: number of posterior samples.
+            initializer (str): indicates how the new variable should be initialized. Possible values: "ones" , "zeroes".
+            check_observed (bool): To check if p-variable is observed.
+
+        Returns:
+            Inferpy variable approximating in input variable. The InferPy type will be Deterministic while
+            the encapsulated Edward variable will be of type Empirical.
+
+
+        """
 
 
         if not inf.ProbModel.compatible_var(v):
