@@ -2,14 +2,14 @@
 
 
 Probabilistic Model Zoo
-=======================
+===========================
 
 In this section, we present the code for implementing some models in Inferpy. The corresponding code
 in Edward can be found in the  `Inferpy vs Edward <inf_vs_ed.html>`_ section.
 
 
 Bayesian Linear Regression
---------------------------
+-----------------------------------
 
 Graphically, a (Bayesian) linear regression can be defined as follows,
 

@@ -8,7 +8,7 @@ This section shows the equivalent Edward code for those models in `Probabilistic
 
 
 Bayesian Linear Regression
---------------------------
+------------------------------------
 
 .. literalinclude:: ../../examples/inf_vs_ed/linear_regression.py
    :language: python
