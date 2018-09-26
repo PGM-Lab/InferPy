@@ -1,3 +1,24 @@
+# -*- coding: utf-8 -*-
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
+
+
+"""Module with useful wrappers used for the development of InferPy.
+"""
+
+
+
 from functools import wraps
 import inferpy as inf
 import numpy as np
@@ -8,6 +29,13 @@ import pandas as pd
 
 
 def tf_run_wrapper(f):
+
+    """ When setted to a function f, this wrappers replaces the output tensor of f by its evaluation
+    in the default tensorflow session. In doing so, the API user will only work with standard Python
+    types.
+     """
+
+
     @wraps(f)
     def wrapper(*args, **kwargs):
 
@@ -44,32 +72,21 @@ def tf_run_wrapper(f):
             else:
                 output_eval = output_eval_vect[0]
 
-
-            ###
-            #output_tf = f(*args, **kwargs)
-            #if type(output_tf).__module__ == np.__name__:
-            #    output_eval = np.array([])
-            #    for t in output_tf:
-            #        output_eval.append(inf.util.Runtime.tf_sess.run(t))
-            #elif type(output_tf).__name__ == dict.__name__:
-            #    output_eval = {}
-            #    for k, v in iteritems(output_tf):
-            #        output_eval.update({k:inf.util.Runtime.tf_sess.run(v)})
-            #else:
-            #    output_eval = inf.util.Runtime.tf_sess.run(f(*args, **kwargs))
-
             return output_eval
         return f(*args, **kwargs)
     return wrapper
 
 
 
+
 def multishape(f):
+
+    """ This wrapper allows to apply a function with simple parameters, over multidimensional ones. """
+
     @wraps(f)
     def wrapper(*args, **kwargs):
 
         first_arg = 1
-#        if args[first_arg].__class__ in [[].__class__, {}.__class__, np.array([]).__class__]:            # single element
 
         if np.ndim(args[first_arg]) == 0:            # single element
             return f(*args, **kwargs)
@@ -91,11 +108,13 @@ def multishape(f):
 
 
 def static_multishape(f):
+    """ This wrapper allows to apply a function with simple parameters, over multidimensional ones. """
+
+
     @wraps(f)
     def wrapper(*args, **kwargs):
 
         first_arg = 0
-#        if args[first_arg].__class__ in [[].__class__, {}.__class__, np.array([]).__class__]:            # single element
 
         if np.ndim(args[first_arg]) == 0:            # single element
             return f(*args, **kwargs)
@@ -119,6 +138,8 @@ def static_multishape(f):
 
 
 def singleton(class_):
+    """ wrapper that allows to define a singleton class """
+
     class class_w(class_):
         _instance = None
         def __new__(class_, *args, **kwargs):
@@ -137,7 +158,15 @@ def singleton(class_):
     class_w.__name__ = class_.__name__
     return class_w
 
+
+
+
 def input_model_data(f):
+
+    """ wrapper that transforms, if required, a dataset object, making it suitable for InferPy inference
+    process.
+    """
+
     @wraps(f)
     def wrapper(*args, **kwargs):
 

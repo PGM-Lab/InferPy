@@ -23,10 +23,3 @@ inferpy\.version module
     :show-inheritance:
 
 
-Module contents
----------------
-
-.. automodule:: inferpy
-    :members:
-    :undoc-members:
-    :show-inheritance:

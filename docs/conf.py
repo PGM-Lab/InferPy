@@ -65,6 +65,10 @@ napoleon_use_keyword = True
 ### for not skipping __init__()
 
 def skip(app, what, name, obj, skip, options):
+
+    print(name);
+
+
     if "Param" in name:
         print("EXCLUDING "+name)
         return True

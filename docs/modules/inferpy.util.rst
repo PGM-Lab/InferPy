@@ -45,10 +45,3 @@ inferpy\.util\.wrappers module
     :show-inheritance:
 
 
-Module contents
----------------
-
-.. automodule:: inferpy.util
-    :members:
-    :undoc-members:
-    :show-inheritance:

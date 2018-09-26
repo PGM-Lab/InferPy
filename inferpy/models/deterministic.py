@@ -21,7 +21,6 @@ import tensorflow as tf
 
 import inferpy.util
 from inferpy.models.random_variable import *
-from inferpy.util import get_total_dimension
 from inferpy.util import tf_run_wrapper
 
 
@@ -95,7 +94,7 @@ class Deterministic(RandomVariable):
             raise ValueError("loccannot be a  multidimensional arrays")
 
 
-        dim_loc = get_total_dimension(loc)
+        dim_loc = __get_total_dimension(loc)
 
 
         # loc can be a scalar or a vector of length dim
@@ -158,4 +157,25 @@ class Deterministic(RandomVariable):
             self.name, self.shape)
 
 
+
+    def __get_total_dimension(x):
+
+        D = 0
+
+        if np.ndim(x) == 0:
+            x = [x]
+
+        for xi in x:
+            if np.isscalar(xi):
+                D = D + 1
+            elif isinstance(xi, inferpy.models.RandomVariable):
+                D = D + xi.dim
+            elif isinstance(xi, tf.Tensor):
+                D = D + xi.get_shape().as_list()[-1]
+
+            else:
+                raise ValueError("Wrong input type")
+
+
+        return D
 

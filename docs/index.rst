@@ -45,6 +45,7 @@ Use InferPy if you need a probabilistic programming language that:
    
    notes/getting30s
    notes/gettingGuiding
+   notes/requirements
    
 .. notes/gettingInstallation
 
@@ -76,7 +77,12 @@ Use InferPy if you need a probabilistic programming language that:
    :caption: Package Reference
 
    modules/inferpy
+   modules/inferpy.criticism
+   modules/inferpy.inferences
    modules/inferpy.models
+   modules/inferpy.util
+
+
 
 
 .. Indices and tables

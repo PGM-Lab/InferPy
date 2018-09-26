@@ -21,10 +21,3 @@ inferpy\.inferences\.qmodel module
     :show-inheritance:
 
 
-Module contents
----------------
-
-.. automodule:: inferpy.inferences
-    :members:
-    :undoc-members:
-    :show-inheritance:

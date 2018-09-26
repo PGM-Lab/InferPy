@@ -45,10 +45,3 @@ inferpy\.models\.replicate module
     :show-inheritance:
 
 
-Module contents
----------------
-
-.. automodule:: inferpy.models
-    :members:
-    :undoc-members:
-    :show-inheritance:

@@ -14,6 +14,8 @@
 # ==============================================================================
 
 
+""" Module implementing the shared functionality across all the variable types  """
+
 
 from inferpy.util import tf_run_wrapper
 from inferpy.util import static_multishape
@@ -36,6 +38,17 @@ class RandomVariable(object):
     __declared_vars = {}
 
     def __init__(self, base_object=None, observed=False):
+
+        """ Constructor for the RandomVariable class
+
+            Args:
+                base_object: encapsulated Edward object (optional).
+                observed (bool): specifies if the random variable is observed (True) or observed (False).
+
+
+
+        """
+
 
         self.base_object = base_object
         self.__bind = None
@@ -208,31 +221,50 @@ class RandomVariable(object):
 
     @tf_run_wrapper
     def mean(self, name='mean'):
+
+        """ Method for obaining the mean of this random variable """
+
         if not self.is_generic_variable():
             return self.dist.mean(name)
         return None
 
     @tf_run_wrapper
     def variance(self, name='variance'):
+
+        """ Method for obataining the variance of this random variable"""
+
         if not self.is_generic_variable():
             return self.dist.variance(name)
         return None
 
     @tf_run_wrapper
     def stddev(self, name='stddev'):
+
+        """ Method for obataining the standard deviation of this random variable"""
+
+
         if not self.is_generic_variable():
             return self.dist.stddev(name)
         return None
 
     def is_generic_variable(self):
+        """ Determines if this is a generic variable, i.e., an Edward variable
+        is not encapsulated. """
+
         return isinstance(self._base_object, ed.RandomVariable) == False
 
 
     def get_replicate_list(self):
+
+        """ Returns a list with all the replicate constructs that this variable belongs to.  """
+
         return [r  for r in inf.replicate.get_all_replicate() if self in r.varlist]
 
 
     def get_local_hidden(self):
+
+        """ Returns a list with all the local hidden variables w.r.t. this one. Local hidden variables
+        are those latent variables which are in the same replicate construct.  """
 
         var_rep = [r.varlist for r in self.get_replicate_list()]
 
@@ -258,11 +290,10 @@ class RandomVariable(object):
 
     def __repr__(self):
 
+        """ Representation for this variable"""
+
         str = "<inferpy RandomVariable '%s' shape=%s dtype=%s>" % (
             self.name, self.shape, self.base_object.dtype.name)
-
-
-
 
         return str
 
@@ -285,6 +316,14 @@ class RandomVariable(object):
 
 
     def copy(self, swap_dict=None, observed=False):
+        """ Build a new random variable with the same values.
+        The underlying tensors or edward objects are copied as well.
+
+        Args:
+             swap_dict: random variables, variables, tensors, or operations to swap with.
+             observed: determines if the new variable is observed or not.
+
+        """
 
         new_var = getattr(sys.modules[self.__class__.__module__], type(self).__name__)()
         new_var.dist = ed.copy(self.dist, swap_dict)

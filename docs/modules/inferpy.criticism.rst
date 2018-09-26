@@ -13,10 +13,3 @@ inferpy\.criticism\.evaluate module
     :show-inheritance:
 
 
-Module contents
----------------
-
-.. automodule:: inferpy.criticism
-    :members:
-    :undoc-members:
-    :show-inheritance:

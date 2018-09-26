@@ -41,6 +41,8 @@ class Runtime():
 
 
 def get_session():
+    """ Get the default tensorflow session """
+
     return Runtime.tf_sess
 
 
