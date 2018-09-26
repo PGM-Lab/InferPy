@@ -84,6 +84,14 @@ Use InferPy if you need a probabilistic programming language that:
 
 
 
+.. toctree::
+   :includehidden:
+   :maxdepth: 1
+   :caption: Other
+
+   notes/contact
+
+
 
 .. Indices and tables
   ==================
