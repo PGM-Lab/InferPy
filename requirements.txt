@@ -22,5 +22,5 @@ python-dateutil==2.7.0
 pytz==2018.3
 six==1.11.0
 sphinxcontrib-napoleon==0.6.1
-tensorflow==1.6
+tensorflow==1.7
 Werkzeug==0.14.1
