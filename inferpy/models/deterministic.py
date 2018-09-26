@@ -59,7 +59,7 @@ class Deterministic(RandomVariable):
             if dim != None: param_dim = dim
 
             # shape = (batches, dimension)
-            self_shape = (inf.replicate.get_total_size(), np.max([get_total_dimension(loc), param_dim]))
+            self_shape = (inf.replicate.get_total_size(), np.max([self.__get_total_dimension(loc), param_dim]))
 
             loc_rep = self.__reshape_param(loc, self_shape)
 
@@ -94,7 +94,7 @@ class Deterministic(RandomVariable):
             raise ValueError("loccannot be a  multidimensional arrays")
 
 
-        dim_loc = __get_total_dimension(loc)
+        dim_loc = self.__get_total_dimension(loc)
 
 
         # loc can be a scalar or a vector of length dim
@@ -158,7 +158,7 @@ class Deterministic(RandomVariable):
 
 
 
-    def __get_total_dimension(x):
+    def __get_total_dimension(self, x):
 
         D = 0
 
