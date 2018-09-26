@@ -12,7 +12,7 @@ kiwisolver==1.0.1
 Markdown==2.6.11
 matplotlib==2.2.0
 mock==2.0.0
-numpy==1.14.0
+numpy==1.0
 pandas==0.22.0
 pbr==3.1.1
 pockets==0.6.2
@@ -22,5 +22,5 @@ python-dateutil==2.7.0
 pytz==2018.3
 six==1.11.0
 sphinxcontrib-napoleon==0.6.1
-tensorflow==1.8
+tensorflow==1.5
 Werkzeug==0.14.1

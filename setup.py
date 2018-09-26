@@ -15,9 +15,9 @@ setup(
     author_email="andresma@ual.es, rcabanas@ual.es",
     packages=['inferpy',
               'inferpy.models', 'inferpy.util', 'inferpy.criticism', 'inferpy.inferences' ],
-    install_requires=['numpy>=1.7', 'tensorflow >=1.2.0rc0, <1.8'],
+    install_requires=['numpy>=1.7', 'edward==1.3.5', 'tensorflow >= 1.5, <1.8'],
     extras_require={
-        'tensorflow with gpu': ['tensorflow-gpu>=1.2.0rc0'],
+        'tensorflow with gpu': ['tensorflow-gpu  >= 1.5, <1.8'],
         'visualization': ['matplotlib>=1.3',
                           'pillow>=3.4.2',
                           'seaborn>=0.3.1']},
