@@ -21,18 +21,30 @@ for specific instructions for installing the Python interpreter in your system.
 Edward
 -------------
 
-Edward: 1.3.5
+InferPy requires exactly the version 1.3.5 of `Edward <http://edwardlib.org>`_. You may check the installed
+package version as follows.
 
+
+.. code:: bash
+
+    $ pip freeze | grep edward
 
 Tensorflow
 -----------------
 
-Tensorflow: from version 1.5 up to 1.7
+`Tensorflow <http://www.tensorflow.org/>`_: from version 1.5 up to 1.7 (both included). For checking the installed tensorflow version, type:
 
+.. code:: bash
+
+    $ pip freeze | grep tensorflow
 
 Numpy
 ----------------
 
+`Numpy <http://www.numpy.org/>`_ 1.14 or higher is required. For checking the version of this package, type:
 
 
+.. code:: bash
+
+    $ pip freeze | grep numpy
 

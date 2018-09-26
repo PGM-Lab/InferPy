@@ -36,7 +36,7 @@ Logistic Regression
 
 
 Multinomial Logistic Regression
---------------------------
+--------------------------------------
 
 .. literalinclude:: ../../examples/inf_vs_ed/multinomial_log_regression.py
    :language: python
@@ -44,7 +44,7 @@ Multinomial Logistic Regression
 
 
 Linear Factor Model (PCA)
---------------------------
+----------------------------------
 
 .. literalinclude:: ../../examples/inf_vs_ed/pca.py
    :language: python

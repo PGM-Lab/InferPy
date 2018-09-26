@@ -30,7 +30,7 @@ The InferPy code for this model is shown below,
 
 
 Bayesian Logistic Regression
-----------------------------
+------------------------------------
 
 Graphically, a (Bayesian) logistic regression can be defined as follows,
 
@@ -52,7 +52,7 @@ The InferPy code for this model is shown below,
 --------------
 
 Bayesian Multinomial Logistic Regression
-----------------------------------------
+-----------------------------------------------
 
 
 Graphically, a (Bayesian) multinomial logistic regression can be defined as follows,
