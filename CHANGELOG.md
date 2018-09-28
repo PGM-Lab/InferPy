@@ -1,3 +1,25 @@
+0.1.3
+=====
+InferPy is a high-level API for probabilistic modeling written in Python and capable of running on top of
+Edward and Tensorflow. InferPy’s API is strongly inspired by Keras and it has a focus on enabling flexible
+data processing, easy-to-code probablistic modeling, scalable inference and robust model validation.
+
+
+Changes:
+- Fixed some bugs
+- matmul and dot operations support new input types (numpy, tensorfs, lists and InferPy variables).
+- Extended documentation.
+- Moved Qmodel module to inferences package
+- Multidimensional InferPy variables are now indexed in the same way than
+numpy arrays (get_item operator).
+
+**Release Date**: 28/09/2018
+**Further Information**: [Documentation](http://inferpy.readthedocs.io/)
+
+
+
+
+
 0.1.2
 =====
 InferPy is a high-level API for probabilistic modeling written in Python and capable of running on top of
