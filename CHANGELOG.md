@@ -6,14 +6,16 @@ data processing, easy-to-code probablistic modeling, scalable inference and robu
 
 
 Changes:
-- Fixed some bugs
+- Fixed some bugs.
 - matmul and dot operations support new input types (numpy, tensorfs, lists and InferPy variables).
 - Extended documentation.
-- Moved Qmodel module to inferences package
+- Moved Qmodel module to inferences package.
 - Multidimensional InferPy variables are now indexed in the same way than
 numpy arrays (get_item operator).
+- Auto-install dependencies fixed.
 
-**Release Date**: 28/09/2018
+
+**Release Date**: 02/10/2018
 **Further Information**: [Documentation](http://inferpy.readthedocs.io/)
 
 
