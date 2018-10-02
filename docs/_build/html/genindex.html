@@ -1,0 +1,962 @@
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Index &mdash; InferPy 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/css/inferpy_theme.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="#"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="InferPy 1.0 documentation" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html">
+          
+
+          
+            
+            <img src="_static/logo-doc.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Quick Start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notes/getting30s.html">Getting Started:</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notes/getting30s.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/getting30s.html#seconds-to-inferpy">30 seconds to InferPy</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notes/gettingGuiding.html">Guiding Principles</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notes/gettingGuiding.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/gettingGuiding.html#architecture">Architecture</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notes/requirements.html">Requirements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notes/requirements.html#python">Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/requirements.html#edward">Edward</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/requirements.html#tensorflow">Tensorflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/requirements.html#numpy">Numpy</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notes/guidemodels.html">Guide to Building Probabilistic Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notes/guidemodels.html#getting-started-with-probabilistic-models">Getting Started with Probabilistic Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/guidemodels.html#random-variables">Random Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/guidemodels.html#probabilistic-models">Probabilistic Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/guidemodels.html#supported-probability-distributions">Supported Probability Distributions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="notes/guidemodels.html#bernoulli">Bernoulli</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notes/guidemodels.html#beta">Beta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notes/guidemodels.html#categorical">Categorical</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notes/guidemodels.html#deterministic">Deterministic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notes/guidemodels.html#dirichlet">Dirichlet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notes/guidemodels.html#exponential">Exponential</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notes/guidemodels.html#gamma">Gamma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notes/guidemodels.html#inverse-gamma">Inverse-gamma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notes/guidemodels.html#laplace">Laplace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notes/guidemodels.html#multinomial">Multinomial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notes/guidemodels.html#multivariate-normal">Multivariate-Normal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notes/guidemodels.html#normal">Normal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notes/guidemodels.html#poisson">Poisson</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notes/guidemodels.html#uniform">Uniform</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notes/guideinference.html">Guide to Approximate Inference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notes/guideinference.html#getting-started-with-approximate-inference">Getting Started with Approximate Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/guideinference.html#compositional-inference">Compositional Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/guideinference.html#supported-inference-methods">Supported Inference Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notes/guidevalidation.html">Guide to Model Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notes/guidedata.html">Guide to Data Handling</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Model Zoo</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notes/probzoo.html">Probabilistic Model Zoo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notes/probzoo.html#bayesian-linear-regression">Bayesian Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/probzoo.html#bayesian-logistic-regression">Bayesian Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/probzoo.html#bayesian-multinomial-logistic-regression">Bayesian Multinomial Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/probzoo.html#mixture-of-gaussians">Mixture of Gaussians</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/probzoo.html#linear-factor-model-pca">Linear Factor Model (PCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/probzoo.html#pca-with-ard-prior-pca">PCA with ARD Prior (PCA)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notes/inf_vs_ed.html">Inferpy vs Edward</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notes/inf_vs_ed.html#bayesian-linear-regression">Bayesian Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/inf_vs_ed.html#gaussian-mixture">Gaussian Mixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/inf_vs_ed.html#logistic-regression">Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/inf_vs_ed.html#multinomial-logistic-regression">Multinomial Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/inf_vs_ed.html#linear-factor-model-pca">Linear Factor Model (PCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/inf_vs_ed.html#pca-with-ard-prior-pca">PCA with ARD Prior (PCA)</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Package Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules/inferpy.html">inferpy package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/inferpy.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="modules/inferpy.criticism.html">inferpy.criticism package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="modules/inferpy.criticism.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules/inferpy.criticism.html#module-inferpy.criticism.evaluate">inferpy.criticism.evaluate module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="modules/inferpy.inferences.html">inferpy.inferences package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="modules/inferpy.inferences.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules/inferpy.inferences.html#module-inferpy.inferences.inference">inferpy.inferences.inference module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules/inferpy.inferences.html#module-inferpy.inferences.qmodel">inferpy.inferences.qmodel module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="modules/inferpy.models.html">inferpy.models package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="modules/inferpy.models.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules/inferpy.models.html#module-inferpy.models.deterministic">inferpy.models.deterministic module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules/inferpy.models.html#module-inferpy.models.factory">inferpy.models.factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules/inferpy.models.html#module-inferpy.models.prob_model">inferpy.models.prob_model module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules/inferpy.models.html#module-inferpy.models.random_variable">inferpy.models.random_variable module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules/inferpy.models.html#module-inferpy.models.replicate">inferpy.models.replicate module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="modules/inferpy.util.html">inferpy.util package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="modules/inferpy.util.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules/inferpy.util.html#module-inferpy.util.error">inferpy.util.error module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules/inferpy.util.html#module-inferpy.util.format">inferpy.util.format module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules/inferpy.util.html#module-inferpy.util.ops">inferpy.util.ops module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules/inferpy.util.html#module-inferpy.util.runtime">inferpy.util.runtime module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules/inferpy.util.html#module-inferpy.util.wrappers">inferpy.util.wrappers module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modules/inferpy.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/inferpy.html#module-inferpy.version">inferpy.version module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules/inferpy.criticism.html">inferpy.criticism package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/inferpy.criticism.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/inferpy.criticism.html#module-inferpy.criticism.evaluate">inferpy.criticism.evaluate module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules/inferpy.inferences.html">inferpy.inferences package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/inferpy.inferences.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/inferpy.inferences.html#module-inferpy.inferences.inference">inferpy.inferences.inference module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/inferpy.inferences.html#module-inferpy.inferences.qmodel">inferpy.inferences.qmodel module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules/inferpy.models.html">inferpy.models package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/inferpy.models.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/inferpy.models.html#module-inferpy.models.deterministic">inferpy.models.deterministic module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/inferpy.models.html#module-inferpy.models.factory">inferpy.models.factory module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/inferpy.models.html#module-inferpy.models.prob_model">inferpy.models.prob_model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/inferpy.models.html#module-inferpy.models.random_variable">inferpy.models.random_variable module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/inferpy.models.html#module-inferpy.models.replicate">inferpy.models.replicate module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules/inferpy.util.html">inferpy.util package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/inferpy.util.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/inferpy.util.html#module-inferpy.util.error">inferpy.util.error module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/inferpy.util.html#module-inferpy.util.format">inferpy.util.format module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/inferpy.util.html#module-inferpy.util.ops">inferpy.util.ops module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/inferpy.util.html#module-inferpy.util.runtime">inferpy.util.runtime module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/inferpy.util.html#module-inferpy.util.wrappers">inferpy.util.wrappers module</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Other</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notes/contact.html">Contact and Support</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">InferPy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Index</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+
+<h1 id="index">Index</h1>
+
+<div class="genindex-jumpbox">
+ <a href="#_"><strong>_</strong></a>
+ | <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
+ | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
+ | <a href="#I"><strong>I</strong></a>
+ | <a href="#L"><strong>L</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
+ | <a href="#O"><strong>O</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#Q"><strong>Q</strong></a>
+ | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
+ | <a href="#U"><strong>U</strong></a>
+ | <a href="#V"><strong>V</strong></a>
+ 
+</div>
+<h2 id="_">_</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.__init__">__init__() (inferpy.inferences.qmodel.Qmodel method)</a>
+
+      <ul>
+        <li><a href="modules/inferpy.models.html#inferpy.models.deterministic.Deterministic.__init__">(inferpy.models.deterministic.Deterministic method)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Bernoulli.__init__">(inferpy.models.factory.Bernoulli method)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Beta.__init__">(inferpy.models.factory.Beta method)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Categorical.__init__">(inferpy.models.factory.Categorical method)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Dirichlet.__init__">(inferpy.models.factory.Dirichlet method)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Exponential.__init__">(inferpy.models.factory.Exponential method)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Gamma.__init__">(inferpy.models.factory.Gamma method)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.InverseGamma.__init__">(inferpy.models.factory.InverseGamma method)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Laplace.__init__">(inferpy.models.factory.Laplace method)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Multinomial.__init__">(inferpy.models.factory.Multinomial method)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.MultivariateNormalDiag.__init__">(inferpy.models.factory.MultivariateNormalDiag method)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Normal.__init__">(inferpy.models.factory.Normal method)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Poisson.__init__">(inferpy.models.factory.Poisson method)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Uniform.__init__">(inferpy.models.factory.Uniform method)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.__init__">(inferpy.models.prob_model.ProbModel method)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.__init__">(inferpy.models.random_variable.RandomVariable method)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.replicate.replicate.__init__">(inferpy.models.replicate.replicate method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.add_var">add_var() (inferpy.inferences.qmodel.Qmodel method)</a>
+
+      <ul>
+        <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.add_var">(inferpy.models.prob_model.ProbModel method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.criticism.html#inferpy.criticism.evaluate.ALLOWED_METRICS">ALLOWED_METRICS (in module inferpy.criticism.evaluate)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.base_object">base_object (inferpy.models.random_variable.RandomVariable attribute)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.batches">batches (inferpy.models.random_variable.RandomVariable attribute)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.factory.Bernoulli">Bernoulli (class in inferpy.models.factory)</a>
+</li>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.Bernoulli">Bernoulli() (inferpy.inferences.qmodel.Qmodel class method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.models.html#inferpy.models.factory.Beta">Beta (class in inferpy.models.factory)</a>
+</li>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.Beta">Beta() (inferpy.inferences.qmodel.Qmodel class method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.bind">bind (inferpy.models.random_variable.RandomVariable attribute)</a>
+</li>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.build_from_pmodel">build_from_pmodel() (inferpy.inferences.qmodel.Qmodel static method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.util.html#inferpy.util.ops.case">case() (in module inferpy.util.ops)</a>
+</li>
+      <li><a href="modules/inferpy.util.html#inferpy.util.ops.case_states">case_states() (in module inferpy.util.ops)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.factory.Categorical">Categorical (class in inferpy.models.factory)</a>
+</li>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.Categorical">Categorical() (inferpy.inferences.qmodel.Qmodel class method)</a>
+</li>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.compatible_var">compatible_var() (inferpy.inferences.qmodel.Qmodel static method)</a>
+
+      <ul>
+        <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.compatible_var">(inferpy.models.prob_model.ProbModel static method)</a>
+</li>
+      </ul></li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.compile">compile() (inferpy.models.prob_model.ProbModel method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.models.html#inferpy.models.factory.Dirichlet.concentration">concentration (inferpy.models.factory.Dirichlet attribute)</a>
+
+      <ul>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Gamma.concentration">(inferpy.models.factory.Gamma attribute)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.InverseGamma.concentration">(inferpy.models.factory.InverseGamma attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.factory.Beta.concentration0">concentration0 (inferpy.models.factory.Beta attribute)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.factory.Beta.concentration1">concentration1 (inferpy.models.factory.Beta attribute)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.copy">copy() (inferpy.models.prob_model.ProbModel method)</a>
+
+      <ul>
+        <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.copy">(inferpy.models.random_variable.RandomVariable method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="D">D</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.models.html#inferpy.models.factory.def_random_variable">def_random_variable() (in module inferpy.models.factory)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.deterministic.Deterministic">Deterministic (class in inferpy.models.deterministic)</a>
+</li>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.Deterministic">Deterministic() (inferpy.inferences.qmodel.Qmodel class method)</a>
+</li>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.dict">dict (inferpy.inferences.qmodel.Qmodel attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.dim">dim (inferpy.models.random_variable.RandomVariable attribute)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.factory.Dirichlet">Dirichlet (class in inferpy.models.factory)</a>
+</li>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.Dirichlet">Dirichlet() (inferpy.inferences.qmodel.Qmodel class method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.dist">dist (inferpy.models.random_variable.RandomVariable attribute)</a>
+</li>
+      <li><a href="modules/inferpy.util.html#inferpy.util.ops.dot">dot() (in module inferpy.util.ops)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.Empirical">Empirical() (inferpy.inferences.qmodel.Qmodel static method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.equal">equal() (inferpy.models.random_variable.RandomVariable method)</a>
+</li>
+      <li><a href="modules/inferpy.criticism.html#inferpy.criticism.evaluate.evaluate">evaluate() (in module inferpy.criticism.evaluate)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.event_shape">event_shape (inferpy.models.random_variable.RandomVariable attribute)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.factory.Exponential">Exponential (class in inferpy.models.factory)</a>
+</li>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.Exponential">Exponential() (inferpy.inferences.qmodel.Qmodel class method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.fit">fit() (inferpy.models.prob_model.ProbModel method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.util.html#inferpy.util.ops.fix_shape">fix_shape() (in module inferpy.util.ops)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.models.html#inferpy.models.factory.Gamma">Gamma (class in inferpy.models.factory)</a>
+</li>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.Gamma">Gamma() (inferpy.inferences.qmodel.Qmodel class method)</a>
+</li>
+      <li><a href="modules/inferpy.util.html#inferpy.util.ops.gather">gather() (in module inferpy.util.ops)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.get_active_model">get_active_model() (inferpy.models.prob_model.ProbModel static method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.replicate.replicate.get_active_replicate">get_active_replicate() (inferpy.models.replicate.replicate static method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.replicate.replicate.get_all_replicate">get_all_replicate() (inferpy.models.replicate.replicate static method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.get_config">get_config() (inferpy.models.prob_model.ProbModel method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.get_copy_from">get_copy_from() (inferpy.models.prob_model.ProbModel method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.get_key_from_var">get_key_from_var() (inferpy.models.random_variable.RandomVariable static method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.get_local_hidden">get_local_hidden() (inferpy.models.random_variable.RandomVariable method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.get_parents">get_parents() (inferpy.models.prob_model.ProbModel method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.get_replicate_list">get_replicate_list() (inferpy.models.random_variable.RandomVariable method)</a>
+</li>
+      <li><a href="modules/inferpy.util.html#inferpy.util.runtime.get_session">get_session() (in module inferpy.util.runtime)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.replicate.replicate.get_total_size">get_total_size() (inferpy.models.replicate.replicate static method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.get_var">get_var() (inferpy.models.prob_model.ProbModel method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.get_var_with_key">get_var_with_key() (inferpy.models.random_variable.RandomVariable static method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.get_vardict">get_vardict() (inferpy.models.prob_model.ProbModel method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.get_vardict_rev">get_vardict_rev() (inferpy.models.prob_model.ProbModel method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.models.html#inferpy.models.factory.Uniform.high">high (inferpy.models.factory.Uniform attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.models.html#inferpy.models.replicate.replicate.in_replicate">in_replicate() (inferpy.models.replicate.replicate static method)</a>
+</li>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.inference.INF_METHODS">INF_METHODS (in module inferpy.inferences.inference)</a>
+</li>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.inference.INF_METHODS_ALIAS">INF_METHODS_ALIAS (in module inferpy.inferences.inference)</a>
+</li>
+      <li><a href="modules/inferpy.criticism.html#module-inferpy.criticism.evaluate">inferpy.criticism.evaluate (module)</a>
+</li>
+      <li><a href="modules/inferpy.inferences.html#module-inferpy.inferences.inference">inferpy.inferences.inference (module)</a>
+</li>
+      <li><a href="modules/inferpy.inferences.html#module-inferpy.inferences.qmodel">inferpy.inferences.qmodel (module)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#module-inferpy.models.deterministic">inferpy.models.deterministic (module)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#module-inferpy.models.factory">inferpy.models.factory (module)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#module-inferpy.models.prob_model">inferpy.models.prob_model (module)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#module-inferpy.models.random_variable">inferpy.models.random_variable (module)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#module-inferpy.models.replicate">inferpy.models.replicate (module)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.util.html#module-inferpy.util.error">inferpy.util.error (module)</a>
+</li>
+      <li><a href="modules/inferpy.util.html#module-inferpy.util.format">inferpy.util.format (module)</a>
+</li>
+      <li><a href="modules/inferpy.util.html#module-inferpy.util.ops">inferpy.util.ops (module)</a>
+</li>
+      <li><a href="modules/inferpy.util.html#module-inferpy.util.runtime">inferpy.util.runtime (module)</a>
+</li>
+      <li><a href="modules/inferpy.util.html#module-inferpy.util.wrappers">inferpy.util.wrappers (module)</a>
+</li>
+      <li><a href="modules/inferpy.html#module-inferpy.version">inferpy.version (module)</a>
+</li>
+      <li><a href="modules/inferpy.util.html#inferpy.util.wrappers.input_model_data">input_model_data() (in module inferpy.util.wrappers)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.factory.InverseGamma">InverseGamma (class in inferpy.models.factory)</a>
+</li>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.InverseGamma">InverseGamma() (inferpy.inferences.qmodel.Qmodel class method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.is_active">is_active() (inferpy.models.prob_model.ProbModel static method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.is_compiled">is_compiled() (inferpy.models.prob_model.ProbModel method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.is_generic_variable">is_generic_variable() (inferpy.models.random_variable.RandomVariable method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="L">L</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.models.html#inferpy.models.factory.Laplace">Laplace (class in inferpy.models.factory)</a>
+</li>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.Laplace">Laplace() (inferpy.inferences.qmodel.Qmodel class method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.latent_vars">latent_vars (inferpy.models.prob_model.ProbModel attribute)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.deterministic.Deterministic.loc">loc (inferpy.models.deterministic.Deterministic attribute)</a>
+
+      <ul>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Laplace.loc">(inferpy.models.factory.Laplace attribute)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.MultivariateNormalDiag.loc">(inferpy.models.factory.MultivariateNormalDiag attribute)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Normal.loc">(inferpy.models.factory.Normal attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.log_prob">log_prob() (inferpy.models.prob_model.ProbModel method)</a>
+
+      <ul>
+        <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.log_prob">(inferpy.models.random_variable.RandomVariable method)</a>
+</li>
+      </ul></li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.factory.Bernoulli.logits">logits (inferpy.models.factory.Bernoulli attribute)</a>
+
+      <ul>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Categorical.logits">(inferpy.models.factory.Categorical attribute)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Multinomial.logits">(inferpy.models.factory.Multinomial attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.factory.Uniform.low">low (inferpy.models.factory.Uniform attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.util.html#inferpy.util.ops.matmul">matmul() (in module inferpy.util.ops)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.mean">mean() (inferpy.models.random_variable.RandomVariable method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.factory.Multinomial">Multinomial (class in inferpy.models.factory)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.Multinomial">Multinomial() (inferpy.inferences.qmodel.Qmodel class method)</a>
+</li>
+      <li><a href="modules/inferpy.util.html#inferpy.util.wrappers.multishape">multishape() (in module inferpy.util.wrappers)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.factory.MultivariateNormalDiag">MultivariateNormalDiag (class in inferpy.models.factory)</a>
+</li>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.MultivariateNormalDiag">MultivariateNormalDiag() (inferpy.inferences.qmodel.Qmodel class method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.name">name (inferpy.models.random_variable.RandomVariable attribute)</a>
+</li>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.new_qvar">new_qvar() (inferpy.inferences.qmodel.Qmodel static method)</a>
+</li>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.new_qvar_empirical">new_qvar_empirical() (inferpy.inferences.qmodel.Qmodel static method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.no_parents">no_parents() (inferpy.models.prob_model.ProbModel method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.factory.Normal">Normal (class in inferpy.models.factory)</a>
+</li>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.Normal">Normal() (inferpy.inferences.qmodel.Qmodel class method)</a>
+</li>
+      <li><a href="modules/inferpy.util.html#inferpy.util.format.np_str">np_str() (in module inferpy.util.format)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="O">O</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.observed">observed (inferpy.models.random_variable.RandomVariable attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.observed_vars">observed_vars (inferpy.models.prob_model.ProbModel attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.util.html#inferpy.util.ops.param_to_tf">param_to_tf() (in module inferpy.util.ops)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.factory.Bernoulli.PARAMS">PARAMS (inferpy.models.factory.Bernoulli attribute)</a>
+
+      <ul>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Beta.PARAMS">(inferpy.models.factory.Beta attribute)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Categorical.PARAMS">(inferpy.models.factory.Categorical attribute)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Dirichlet.PARAMS">(inferpy.models.factory.Dirichlet attribute)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Exponential.PARAMS">(inferpy.models.factory.Exponential attribute)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Gamma.PARAMS">(inferpy.models.factory.Gamma attribute)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.InverseGamma.PARAMS">(inferpy.models.factory.InverseGamma attribute)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Laplace.PARAMS">(inferpy.models.factory.Laplace attribute)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Multinomial.PARAMS">(inferpy.models.factory.Multinomial attribute)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.MultivariateNormalDiag.PARAMS">(inferpy.models.factory.MultivariateNormalDiag attribute)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Normal.PARAMS">(inferpy.models.factory.Normal attribute)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Poisson.PARAMS">(inferpy.models.factory.Poisson attribute)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Uniform.PARAMS">(inferpy.models.factory.Uniform attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.models.html#inferpy.models.factory.Poisson">Poisson (class in inferpy.models.factory)</a>
+</li>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.Poisson">Poisson() (inferpy.inferences.qmodel.Qmodel class method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.posterior">posterior() (inferpy.models.prob_model.ProbModel method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.predict">predict() (inferpy.models.prob_model.ProbModel method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.predict_old">predict_old() (inferpy.models.prob_model.ProbModel method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.replicate.replicate.print_total_size">print_total_size() (inferpy.models.replicate.replicate static method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.prob">prob() (inferpy.models.random_variable.RandomVariable method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel">ProbModel (class in inferpy.models.prob_model)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.factory.Bernoulli.probs">probs (inferpy.models.factory.Bernoulli attribute)</a>
+
+      <ul>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Categorical.probs">(inferpy.models.factory.Categorical attribute)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Multinomial.probs">(inferpy.models.factory.Multinomial attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.prod_prob">prod_prob() (inferpy.models.random_variable.RandomVariable method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="Q">Q</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel">Qmodel (class in inferpy.inferences.qmodel)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable">RandomVariable (class in inferpy.models.random_variable)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.factory.Exponential.rate">rate (inferpy.models.factory.Exponential attribute)</a>
+
+      <ul>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Gamma.rate">(inferpy.models.factory.Gamma attribute)</a>
+</li>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.InverseGamma.rate">(inferpy.models.factory.InverseGamma attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.models.html#inferpy.models.replicate.replicate">replicate (class in inferpy.models.replicate)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.reset_compilation">reset_compilation() (inferpy.models.prob_model.ProbModel method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.sample">sample() (inferpy.models.prob_model.ProbModel method)</a>
+
+      <ul>
+        <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.sample">(inferpy.models.random_variable.RandomVariable method)</a>
+</li>
+      </ul></li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.factory.Laplace.scale">scale (inferpy.models.factory.Laplace attribute)</a>
+
+      <ul>
+        <li><a href="modules/inferpy.models.html#inferpy.models.factory.Normal.scale">(inferpy.models.factory.Normal attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.factory.MultivariateNormalDiag.scale_diag">scale_diag (inferpy.models.factory.MultivariateNormalDiag attribute)</a>
+</li>
+      <li><a href="modules/inferpy.util.html#inferpy.util.error.ScopeException">ScopeException</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.shape">shape (inferpy.models.random_variable.RandomVariable attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.util.html#inferpy.util.ops.shape_to_list">shape_to_list() (in module inferpy.util.ops)</a>
+</li>
+      <li><a href="modules/inferpy.util.html#inferpy.util.wrappers.singleton">singleton() (in module inferpy.util.wrappers)</a>
+</li>
+      <li><a href="modules/inferpy.util.html#inferpy.util.wrappers.static_multishape">static_multishape() (in module inferpy.util.wrappers)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.stddev">stddev() (inferpy.models.random_variable.RandomVariable method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.sum_log_prob">sum_log_prob() (inferpy.models.prob_model.ProbModel method)</a>
+
+      <ul>
+        <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.sum_log_prob">(inferpy.models.random_variable.RandomVariable method)</a>
+</li>
+      </ul></li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.summary">summary() (inferpy.models.prob_model.ProbModel method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.util.html#inferpy.util.wrappers.tf_run_wrapper">tf_run_wrapper() (in module inferpy.util.wrappers)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.to_json">to_json() (inferpy.models.prob_model.ProbModel method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.factory.Multinomial.total_count">total_count (inferpy.models.factory.Multinomial attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="U">U</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.models.html#inferpy.models.factory.Uniform">Uniform (class in inferpy.models.factory)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.Uniform">Uniform() (inferpy.inferences.qmodel.Qmodel class method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="V">V</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.variance">variance() (inferpy.models.random_variable.RandomVariable method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.varlist">varlist (inferpy.inferences.qmodel.Qmodel attribute)</a>
+
+      <ul>
+        <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.varlist">(inferpy.models.prob_model.ProbModel attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Andrés R. Masegosa, Rafael Cabañas.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

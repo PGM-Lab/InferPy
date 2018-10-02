@@ -1,0 +1,565 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>inferpy.util.wrappers &mdash; InferPy 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/css/inferpy_theme.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="InferPy 1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html">
+          
+
+          
+            
+            <img src="../../../_static/logo-doc.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Quick Start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/getting30s.html">Getting Started:</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/getting30s.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/getting30s.html#seconds-to-inferpy">30 seconds to InferPy</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/gettingGuiding.html">Guiding Principles</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/gettingGuiding.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/gettingGuiding.html#architecture">Architecture</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/requirements.html">Requirements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#python">Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#edward">Edward</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#tensorflow">Tensorflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#numpy">Numpy</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/guidemodels.html">Guide to Building Probabilistic Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/guidemodels.html#getting-started-with-probabilistic-models">Getting Started with Probabilistic Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/guidemodels.html#random-variables">Random Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/guidemodels.html#probabilistic-models">Probabilistic Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/guidemodels.html#supported-probability-distributions">Supported Probability Distributions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#bernoulli">Bernoulli</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#beta">Beta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#categorical">Categorical</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#deterministic">Deterministic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#dirichlet">Dirichlet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#exponential">Exponential</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#gamma">Gamma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#inverse-gamma">Inverse-gamma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#laplace">Laplace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#multinomial">Multinomial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#multivariate-normal">Multivariate-Normal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#normal">Normal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#poisson">Poisson</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#uniform">Uniform</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/guideinference.html">Guide to Approximate Inference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/guideinference.html#getting-started-with-approximate-inference">Getting Started with Approximate Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/guideinference.html#compositional-inference">Compositional Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/guideinference.html#supported-inference-methods">Supported Inference Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/guidevalidation.html">Guide to Model Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/guidedata.html">Guide to Data Handling</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Model Zoo</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/probzoo.html">Probabilistic Model Zoo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/probzoo.html#bayesian-linear-regression">Bayesian Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/probzoo.html#bayesian-logistic-regression">Bayesian Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/probzoo.html#bayesian-multinomial-logistic-regression">Bayesian Multinomial Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/probzoo.html#mixture-of-gaussians">Mixture of Gaussians</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/probzoo.html#linear-factor-model-pca">Linear Factor Model (PCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/probzoo.html#pca-with-ard-prior-pca">PCA with ARD Prior (PCA)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/inf_vs_ed.html">Inferpy vs Edward</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/inf_vs_ed.html#bayesian-linear-regression">Bayesian Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/inf_vs_ed.html#gaussian-mixture">Gaussian Mixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/inf_vs_ed.html#logistic-regression">Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/inf_vs_ed.html#multinomial-logistic-regression">Multinomial Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/inf_vs_ed.html#linear-factor-model-pca">Linear Factor Model (PCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/inf_vs_ed.html#pca-with-ard-prior-pca">PCA with ARD Prior (PCA)</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Package Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/inferpy.html">inferpy package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../modules/inferpy.criticism.html">inferpy.criticism package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.criticism.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.criticism.html#module-inferpy.criticism.evaluate">inferpy.criticism.evaluate module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../modules/inferpy.inferences.html">inferpy.inferences package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.inferences.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.inferences.html#module-inferpy.inferences.inference">inferpy.inferences.inference module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.inferences.html#module-inferpy.inferences.qmodel">inferpy.inferences.qmodel module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../modules/inferpy.models.html">inferpy.models package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.models.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.deterministic">inferpy.models.deterministic module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.factory">inferpy.models.factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.prob_model">inferpy.models.prob_model module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.random_variable">inferpy.models.random_variable module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.replicate">inferpy.models.replicate module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../modules/inferpy.util.html">inferpy.util package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.util.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.error">inferpy.util.error module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.format">inferpy.util.format module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.ops">inferpy.util.ops module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.runtime">inferpy.util.runtime module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.wrappers">inferpy.util.wrappers module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.html#module-inferpy.version">inferpy.version module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/inferpy.criticism.html">inferpy.criticism package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.criticism.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.criticism.html#module-inferpy.criticism.evaluate">inferpy.criticism.evaluate module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/inferpy.inferences.html">inferpy.inferences package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.inferences.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.inferences.html#module-inferpy.inferences.inference">inferpy.inferences.inference module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.inferences.html#module-inferpy.inferences.qmodel">inferpy.inferences.qmodel module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/inferpy.models.html">inferpy.models package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.models.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.deterministic">inferpy.models.deterministic module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.factory">inferpy.models.factory module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.prob_model">inferpy.models.prob_model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.random_variable">inferpy.models.random_variable module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.replicate">inferpy.models.replicate module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/inferpy.util.html">inferpy.util package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.util.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.error">inferpy.util.error module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.format">inferpy.util.format module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.ops">inferpy.util.ops module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.runtime">inferpy.util.runtime module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.wrappers">inferpy.util.wrappers module</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Other</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/contact.html">Contact and Support</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">InferPy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>inferpy.util.wrappers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for inferpy.util.wrappers</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1"># ==============================================================================</span>
+
+
+<span class="sd">&quot;&quot;&quot;Module with useful wrappers used for the development of InferPy.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">wraps</span>
+<span class="kn">import</span> <span class="nn">inferpy</span> <span class="k">as</span> <span class="nn">inf</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">iteritems</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+
+
+<div class="viewcode-block" id="tf_run_wrapper"><a class="viewcode-back" href="../../../modules/inferpy.util.html#inferpy.util.wrappers.tf_run_wrapper">[docs]</a><span class="k">def</span> <span class="nf">tf_run_wrapper</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot; When setted to a function f, this wrappers replaces the output tensor of f by its evaluation</span>
+<span class="sd">    in the default tensorflow session. In doing so, the API user will only work with standard Python</span>
+<span class="sd">    types.</span>
+<span class="sd">     &quot;&quot;&quot;</span>
+
+
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="s2">&quot;tf_run&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">tf_run</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;tf_run&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tf_run</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">Runtime</span><span class="o">.</span><span class="n">tf_run_default</span>
+
+
+        <span class="k">if</span> <span class="n">tf_run</span><span class="p">:</span>
+
+            <span class="c1"># transforms in a list</span>
+            <span class="n">output_tf</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">output_tf</span><span class="p">)</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">output_tf</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="nb">list</span><span class="o">.</span><span class="vm">__name__</span><span class="p">:</span>
+                <span class="n">output_tf_vect</span> <span class="o">=</span> <span class="n">output_tf</span>
+            <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">output_tf</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="nb">dict</span><span class="o">.</span><span class="vm">__name__</span><span class="p">:</span>
+                <span class="n">output_tf_vect</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">output_tf</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">output_tf_vect</span> <span class="o">=</span> <span class="p">[</span><span class="n">output_tf</span><span class="p">]</span>
+
+            <span class="c1"># evaluation</span>
+            <span class="n">output_eval_vect</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">Runtime</span><span class="o">.</span><span class="n">tf_sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">output_tf_vect</span><span class="p">)</span>
+
+
+            <span class="c1"># transforms in original type</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">output_tf</span><span class="p">)</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">output_tf</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="nb">list</span><span class="o">.</span><span class="vm">__name__</span><span class="p">:</span>
+                <span class="n">output_eval</span> <span class="o">=</span> <span class="n">output_eval_vect</span>
+            <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">output_tf</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="nb">dict</span><span class="o">.</span><span class="vm">__name__</span><span class="p">:</span>
+                <span class="n">output_eval</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">output_tf</span><span class="p">):</span>
+                    <span class="n">output_eval</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="n">output_eval_vect</span><span class="p">[</span><span class="n">i</span><span class="p">]})</span>
+                    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">output_eval</span> <span class="o">=</span> <span class="n">output_eval_vect</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="k">return</span> <span class="n">output_eval</span>
+        <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">wrapper</span></div>
+
+
+
+
+<div class="viewcode-block" id="multishape"><a class="viewcode-back" href="../../../modules/inferpy.util.html#inferpy.util.wrappers.multishape">[docs]</a><span class="k">def</span> <span class="nf">multishape</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot; This wrapper allows to apply a function with simple parameters, over multidimensional ones. &quot;&quot;&quot;</span>
+
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="n">first_arg</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="n">first_arg</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>            <span class="c1"># single element</span>
+            <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="n">first_arg</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>        <span class="c1"># unidimensional vector</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+
+                <span class="k">if</span> <span class="n">first_arg</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">i</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">output</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;@multishape wrapper can only be applied to single elements or to 1-dimension vectors&quot;</span><span class="p">)</span>
+
+
+    <span class="k">return</span> <span class="n">wrapper</span></div>
+
+
+
+<div class="viewcode-block" id="static_multishape"><a class="viewcode-back" href="../../../modules/inferpy.util.html#inferpy.util.wrappers.static_multishape">[docs]</a><span class="k">def</span> <span class="nf">static_multishape</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This wrapper allows to apply a function with simple parameters, over multidimensional ones. &quot;&quot;&quot;</span>
+
+
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="n">first_arg</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="n">first_arg</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>            <span class="c1"># single element</span>
+            <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="n">first_arg</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>        <span class="c1"># unidimensional vector</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">args</span><span class="p">[</span><span class="n">first_arg</span><span class="p">]:</span>
+
+                <span class="k">if</span> <span class="n">first_arg</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">i</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">output</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;@multishape wrapper can only be applied to single elements or to 1-dimension vectors&quot;</span><span class="p">)</span>
+
+
+    <span class="k">return</span> <span class="n">wrapper</span></div>
+
+
+
+
+
+<div class="viewcode-block" id="singleton"><a class="viewcode-back" href="../../../modules/inferpy.util.html#inferpy.util.wrappers.singleton">[docs]</a><span class="k">def</span> <span class="nf">singleton</span><span class="p">(</span><span class="n">class_</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; wrapper that allows to define a singleton class &quot;&quot;&quot;</span>
+
+    <span class="k">class</span> <span class="nc">class_w</span><span class="p">(</span><span class="n">class_</span><span class="p">):</span>
+        <span class="n">_instance</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">class_w</span><span class="o">.</span><span class="n">_instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">class_w</span><span class="o">.</span><span class="n">_instance</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">class_w</span><span class="p">,</span>
+                                    <span class="n">class_</span><span class="p">)</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="n">class_</span><span class="p">,</span>
+                                                    <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+                                                    <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="n">class_w</span><span class="o">.</span><span class="n">_instance</span><span class="o">.</span><span class="n">_sealed</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">return</span> <span class="n">class_w</span><span class="o">.</span><span class="n">_instance</span>
+        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sealed</span><span class="p">:</span>
+                <span class="k">return</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">class_w</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sealed</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">class_w</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">class_</span><span class="o">.</span><span class="vm">__name__</span>
+    <span class="k">return</span> <span class="n">class_w</span></div>
+
+
+
+
+<div class="viewcode-block" id="input_model_data"><a class="viewcode-back" href="../../../modules/inferpy.util.html#inferpy.util.wrappers.input_model_data">[docs]</a><span class="k">def</span> <span class="nf">input_model_data</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot; wrapper that transforms, if required, a dataset object, making it suitable for InferPy inference</span>
+<span class="sd">    process.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="bp">self</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="n">newdata</span> <span class="o">=</span>  <span class="p">{}</span>
+
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">&quot;list&quot;</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_var</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+
+                    <span class="n">newdata</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">k</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">v</span><span class="p">),</span><span class="mi">1</span><span class="p">))})</span>
+
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">newdata</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Wrong input data type: it should be a pandas dataframe or a dictionary&quot;</span><span class="p">)</span>
+
+
+        <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">newdata</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">wrapper</span></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Andrés R. Masegosa, Rafael Cabañas.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

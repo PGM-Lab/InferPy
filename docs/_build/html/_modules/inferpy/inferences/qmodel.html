@@ -1,0 +1,671 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>inferpy.inferences.qmodel &mdash; InferPy 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/css/inferpy_theme.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="InferPy 1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html">
+          
+
+          
+            
+            <img src="../../../_static/logo-doc.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Quick Start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/getting30s.html">Getting Started:</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/getting30s.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/getting30s.html#seconds-to-inferpy">30 seconds to InferPy</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/gettingGuiding.html">Guiding Principles</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/gettingGuiding.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/gettingGuiding.html#architecture">Architecture</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/requirements.html">Requirements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#python">Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#edward">Edward</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#tensorflow">Tensorflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#numpy">Numpy</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/guidemodels.html">Guide to Building Probabilistic Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/guidemodels.html#getting-started-with-probabilistic-models">Getting Started with Probabilistic Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/guidemodels.html#random-variables">Random Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/guidemodels.html#probabilistic-models">Probabilistic Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/guidemodels.html#supported-probability-distributions">Supported Probability Distributions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#bernoulli">Bernoulli</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#beta">Beta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#categorical">Categorical</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#deterministic">Deterministic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#dirichlet">Dirichlet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#exponential">Exponential</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#gamma">Gamma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#inverse-gamma">Inverse-gamma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#laplace">Laplace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#multinomial">Multinomial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#multivariate-normal">Multivariate-Normal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#normal">Normal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#poisson">Poisson</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#uniform">Uniform</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/guideinference.html">Guide to Approximate Inference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/guideinference.html#getting-started-with-approximate-inference">Getting Started with Approximate Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/guideinference.html#compositional-inference">Compositional Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/guideinference.html#supported-inference-methods">Supported Inference Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/guidevalidation.html">Guide to Model Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/guidedata.html">Guide to Data Handling</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Model Zoo</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/probzoo.html">Probabilistic Model Zoo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/probzoo.html#bayesian-linear-regression">Bayesian Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/probzoo.html#bayesian-logistic-regression">Bayesian Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/probzoo.html#bayesian-multinomial-logistic-regression">Bayesian Multinomial Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/probzoo.html#mixture-of-gaussians">Mixture of Gaussians</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/probzoo.html#linear-factor-model-pca">Linear Factor Model (PCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/probzoo.html#pca-with-ard-prior-pca">PCA with ARD Prior (PCA)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/inf_vs_ed.html">Inferpy vs Edward</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/inf_vs_ed.html#bayesian-linear-regression">Bayesian Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/inf_vs_ed.html#gaussian-mixture">Gaussian Mixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/inf_vs_ed.html#logistic-regression">Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/inf_vs_ed.html#multinomial-logistic-regression">Multinomial Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/inf_vs_ed.html#linear-factor-model-pca">Linear Factor Model (PCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/inf_vs_ed.html#pca-with-ard-prior-pca">PCA with ARD Prior (PCA)</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Package Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/inferpy.html">inferpy package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../modules/inferpy.criticism.html">inferpy.criticism package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.criticism.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.criticism.html#module-inferpy.criticism.evaluate">inferpy.criticism.evaluate module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../modules/inferpy.inferences.html">inferpy.inferences package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.inferences.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.inferences.html#module-inferpy.inferences.inference">inferpy.inferences.inference module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.inferences.html#module-inferpy.inferences.qmodel">inferpy.inferences.qmodel module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../modules/inferpy.models.html">inferpy.models package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.models.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.deterministic">inferpy.models.deterministic module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.factory">inferpy.models.factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.prob_model">inferpy.models.prob_model module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.random_variable">inferpy.models.random_variable module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.replicate">inferpy.models.replicate module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../modules/inferpy.util.html">inferpy.util package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.util.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.error">inferpy.util.error module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.format">inferpy.util.format module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.ops">inferpy.util.ops module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.runtime">inferpy.util.runtime module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.wrappers">inferpy.util.wrappers module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.html#module-inferpy.version">inferpy.version module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/inferpy.criticism.html">inferpy.criticism package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.criticism.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.criticism.html#module-inferpy.criticism.evaluate">inferpy.criticism.evaluate module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/inferpy.inferences.html">inferpy.inferences package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.inferences.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.inferences.html#module-inferpy.inferences.inference">inferpy.inferences.inference module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.inferences.html#module-inferpy.inferences.qmodel">inferpy.inferences.qmodel module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/inferpy.models.html">inferpy.models package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.models.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.deterministic">inferpy.models.deterministic module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.factory">inferpy.models.factory module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.prob_model">inferpy.models.prob_model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.random_variable">inferpy.models.random_variable module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.replicate">inferpy.models.replicate module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/inferpy.util.html">inferpy.util package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.util.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.error">inferpy.util.error module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.format">inferpy.util.format module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.ops">inferpy.util.ops module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.runtime">inferpy.util.runtime module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.wrappers">inferpy.util.wrappers module</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Other</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/contact.html">Contact and Support</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">InferPy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>inferpy.inferences.qmodel</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for inferpy.inferences.qmodel</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1"># ==============================================================================</span>
+
+
+<span class="sd">&quot;&quot;&quot;Module with the required functionality for implementing the Q-models and Q-distributions used by</span>
+<span class="sd">some inference algorithms.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">inferpy</span> <span class="k">as</span> <span class="nn">inf</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="kn">import</span> <span class="nn">edward</span> <span class="k">as</span> <span class="nn">ed</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+
+
+
+<div class="viewcode-block" id="Qmodel"><a class="viewcode-back" href="../../../modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel">[docs]</a><span class="k">class</span> <span class="nc">Qmodel</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Class implementing a Q model</span>
+
+<span class="sd">    A Q model approximates the posterior distribution of a probabilistic model P .</span>
+<span class="sd">    In the ‘Q’ model we should include a q distribution for every non observed variable in the ‘P’ model.</span>
+<span class="sd">    Otherwise, an error will be raised during model compilation.</span>
+
+<span class="sd">    An example of use:</span>
+
+<span class="sd">    .. literalinclude:: ../../examples/q_model_inference.py</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+
+<div class="viewcode-block" id="Qmodel.__init__"><a class="viewcode-back" href="../../../modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">varlist</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">varlist</span> <span class="o">=</span> <span class="n">varlist</span></div>
+
+    <span class="sd">&quot;&quot;&quot;Initializes a Q model</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        varlist: list with the variables in the model</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Qmodel.build_from_pmodel"><a class="viewcode-back" href="../../../modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.build_from_pmodel">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">build_from_pmodel</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">empirical</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initializes a Q model from a P model.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            p: P model of type inferpy.ProbModel.</span>
+<span class="sd">            empirical: determines if q distributions will be empirical or of the same type than each p distribution.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">inf</span><span class="o">.</span><span class="n">Qmodel</span><span class="p">([</span><span class="n">inf</span><span class="o">.</span><span class="n">Qmodel</span><span class="o">.</span><span class="n">new_qvar</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">empirical</span> <span class="k">else</span> <span class="n">inf</span><span class="o">.</span><span class="n">Qmodel</span><span class="o">.</span><span class="n">new_qvar_empirical</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="mi">1000</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">latent_vars</span><span class="p">])</span></div>
+
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Dictionary where the keys and values are the p and q distributions respectively. &quot;&quot;&quot;</span>
+
+
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">varlist</span><span class="p">:</span>
+            <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">v</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">dist</span> <span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">dist</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">d</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">varlist</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; list of q variables of Inferpy type&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__varlist</span>
+
+    <span class="nd">@varlist</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">varlist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">varlist</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; modifies the list of variables in the model&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">varlist</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">Qmodel</span><span class="o">.</span><span class="n">compatible_var</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Non-compatible var &quot;</span><span class="o">+</span><span class="n">v</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__varlist</span> <span class="o">=</span> <span class="n">varlist</span>
+
+
+<div class="viewcode-block" id="Qmodel.add_var"><a class="viewcode-back" href="../../../modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.add_var">[docs]</a>    <span class="k">def</span> <span class="nf">add_var</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Method for adding a new q variable &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">Qmodel</span><span class="o">.</span><span class="n">compatible_var</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The input argument must be a q variable&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">varlist</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">varlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="Qmodel.compatible_var"><a class="viewcode-back" href="../../../modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.compatible_var">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">compatible_var</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">inf</span><span class="o">.</span><span class="n">ProbModel</span><span class="o">.</span><span class="n">compatible_var</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">bind</span> <span class="o">!=</span> <span class="kc">None</span></div>
+
+
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__generate_ed_qvar</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">vartype</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot; Builds an Edward q-variable for a p-variable.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            v: Edward variable to be approximated.</span>
+<span class="sd">            initializer (str): indicates how the new variable should be initialized. Possible values: &quot;ones&quot; , &quot;zeroes&quot;.</span>
+<span class="sd">            vartype (str): Edward type of the new variable.</span>
+<span class="sd">            params: lists of strings indicating the paramaters of the new variable.</span>
+
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Edward variable approximating in input variable</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">qparams</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="n">initializer</span> <span class="o">==</span> <span class="s2">&quot;ones&quot;</span><span class="p">:</span>
+            <span class="n">init_f</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">ones</span>
+        <span class="k">elif</span> <span class="n">initializer</span> <span class="o">==</span> <span class="s2">&quot;zeroes&quot;</span><span class="p">:</span>
+            <span class="n">init_f</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">zeros</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unsupported initializer: &quot;</span><span class="o">+</span><span class="n">initializer</span><span class="p">)</span>
+
+
+
+        <span class="k">for</span> <span class="n">p_name</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">p_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;probs&quot;</span><span class="p">]:</span>
+
+                <span class="n">p_shape</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">p_name</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">as_list</span><span class="p">()</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">p_name</span><span class="p">)</span> <span class="k">else</span> <span class="n">v</span><span class="o">.</span><span class="n">shape</span>
+
+
+                <span class="n">var</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">init_f</span><span class="p">(</span><span class="n">p_shape</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float32&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;q_&quot;</span><span class="o">+</span><span class="n">v</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="n">p_name</span><span class="p">)</span>
+                <span class="n">inf</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">Runtime</span><span class="o">.</span><span class="n">tf_sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">variables_initializer</span><span class="p">([</span><span class="n">var</span><span class="p">]))</span>
+
+
+                <span class="n">var</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">is_nan</span><span class="p">(</span><span class="n">var</span><span class="p">),</span> <span class="n">tf</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">var</span><span class="p">),</span> <span class="n">var</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">p_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;scale&quot;</span><span class="p">]:</span>
+                    <span class="n">var</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softplus</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">p_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;probs&quot;</span><span class="p">]:</span>
+                    <span class="n">var</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">clip_by_value</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">is_nan</span><span class="p">(</span><span class="n">var</span><span class="p">),</span> <span class="n">tf</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">var</span><span class="p">),</span> <span class="n">var</span><span class="p">),</span><span class="mf">1e-8</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">p_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;logits&quot;</span><span class="p">]:</span>
+                    <span class="n">var</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">is_nan</span><span class="p">(</span><span class="n">var</span><span class="p">),</span> <span class="n">tf</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">var</span><span class="p">),</span> <span class="n">var</span><span class="p">)</span>
+
+                <span class="n">qparams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">p_name</span><span class="p">:</span> <span class="n">var</span><span class="p">})</span>
+
+
+        <span class="n">qvar</span> <span class="o">=</span>  <span class="nb">getattr</span><span class="p">(</span><span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="p">,</span> <span class="n">vartype</span><span class="p">)(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;q_&quot;</span><span class="o">+</span><span class="nb">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span><span class="n">allow_nan_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">qparams</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">qvar</span>
+
+
+
+<div class="viewcode-block" id="Qmodel.new_qvar"><a class="viewcode-back" href="../../../modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.new_qvar">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">new_qvar</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">initializer</span><span class="o">=</span><span class="s1">&#39;ones&#39;</span><span class="p">,</span> <span class="n">qvar_inf_module</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">qvar_inf_type</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">qvar_ed_type</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">check_observed</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;qvar&quot;</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot; Builds an Inferpy q-variable for a p-variable.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            v: Inferpy variable to be approximated.</span>
+<span class="sd">            initializer (str): indicates how the new variable should be initialized. Possible values: &quot;ones&quot; , &quot;zeroes&quot;.</span>
+<span class="sd">            qvar_inf_module (str): module of the new Inferpy variable.</span>
+<span class="sd">            qvar_inf_type (str): name of the new Inferpy variable.</span>
+<span class="sd">            qvar_ed_type (str): full name of the encapsulated Edward variable type.</span>
+<span class="sd">            check_observed (bool): To check if p-variable is observed.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Inferpy variable approximating in input variable.</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">inf</span><span class="o">.</span><span class="n">ProbModel</span><span class="o">.</span><span class="n">compatible_var</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Non-compatible variable&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">v</span><span class="o">.</span><span class="n">observed</span> <span class="ow">and</span> <span class="n">check_observed</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Variable &quot;</span><span class="o">+</span><span class="n">v</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s2">&quot; cannot be observed&quot;</span><span class="p">)</span>
+
+        <span class="c1">## default values ##</span>
+
+        <span class="k">if</span> <span class="n">qvar_inf_module</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">qvar_inf_module</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__module__</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">qvar_inf_type</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">qvar_inf_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+
+        <span class="k">if</span> <span class="n">qvar_ed_type</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">qvar_ed_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+
+
+
+        <span class="n">qv</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">qvar_inf_module</span><span class="p">,</span> <span class="n">qvar_inf_type</span><span class="p">)()</span>
+        <span class="n">qv</span><span class="o">.</span><span class="n">dist</span> <span class="o">=</span> <span class="n">Qmodel</span><span class="o">.</span><span class="n">__generate_ed_qvar</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">dist</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">qvar_ed_type</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">PARAMS</span><span class="p">)</span>
+        <span class="n">qv</span><span class="o">.</span><span class="n">bind</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="k">return</span> <span class="n">qv</span></div>
+
+
+
+
+<div class="viewcode-block" id="Qmodel.new_qvar_empirical"><a class="viewcode-back" href="../../../modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.new_qvar_empirical">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">new_qvar_empirical</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">n_post_samples</span><span class="p">,</span> <span class="n">initializer</span><span class="o">=</span><span class="s1">&#39;ones&#39;</span><span class="p">,</span> <span class="n">check_observed</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;qvar&quot;</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot; Builds an empirical Inferpy q-variable for a p-variable.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            v: Inferpy variable to be approximated.</span>
+<span class="sd">            n_post_samples: number of posterior samples.</span>
+<span class="sd">            initializer (str): indicates how the new variable should be initialized. Possible values: &quot;ones&quot; , &quot;zeroes&quot;.</span>
+<span class="sd">            check_observed (bool): To check if p-variable is observed.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Inferpy variable approximating in input variable. The InferPy type will be Deterministic while</span>
+<span class="sd">            the encapsulated Edward variable will be of type Empirical.</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">inf</span><span class="o">.</span><span class="n">ProbModel</span><span class="o">.</span><span class="n">compatible_var</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Non-compatible variable&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">v</span><span class="o">.</span><span class="n">observed</span> <span class="ow">and</span> <span class="n">check_observed</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Variable &quot;</span><span class="o">+</span><span class="n">v</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s2">&quot; cannot be observed&quot;</span><span class="p">)</span>
+
+
+
+
+        <span class="n">qv</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">()</span>
+
+
+        <span class="k">if</span> <span class="n">initializer</span> <span class="o">==</span> <span class="s2">&quot;ones&quot;</span><span class="p">:</span>
+            <span class="n">init_f</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">ones</span>
+        <span class="k">elif</span> <span class="n">initializer</span> <span class="o">==</span> <span class="s2">&quot;zeroes&quot;</span><span class="p">:</span>
+            <span class="n">init_f</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">zeros</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unsupported initializer: &quot;</span><span class="o">+</span><span class="n">initializer</span><span class="p">)</span>
+
+
+        <span class="n">dtype</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">base_object</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">init_f</span><span class="p">([</span><span class="n">n_post_samples</span><span class="p">]</span> <span class="o">+</span> <span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;q_&quot;</span><span class="o">+</span><span class="n">v</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;/params&quot;</span><span class="p">)</span>
+        <span class="n">qv</span><span class="o">.</span><span class="n">base_object</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Empirical</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="n">var</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;q_&quot;</span><span class="o">+</span><span class="nb">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+
+
+        <span class="n">qv</span><span class="o">.</span><span class="n">bind</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="k">return</span> <span class="n">qv</span></div>
+
+
+
+<div class="viewcode-block" id="Qmodel.Empirical"><a class="viewcode-back" href="../../../modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.Empirical">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">Empirical</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">n_post_samples</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">initializer</span><span class="o">=</span><span class="s1">&#39;ones&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">inf</span><span class="o">.</span><span class="n">Qmodel</span><span class="o">.</span><span class="n">new_qvar_empirical</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">n_post_samples</span><span class="p">,</span> <span class="n">initializer</span><span class="p">)</span></div></div>
+
+
+<span class="c1">####</span>
+
+
+
+
+
+<span class="k">def</span> <span class="nf">__add__new_qvar</span><span class="p">(</span><span class="n">vartype</span><span class="p">):</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="n">vartype</span><span class="o">.</span><span class="vm">__name__</span>
+
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span><span class="n">v</span><span class="p">,</span> <span class="n">initializer</span><span class="o">=</span><span class="s1">&#39;ones&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">new_qvar</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">qvar_inf_type</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+
+    <span class="n">f</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;Creates a new q-variable of type &quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;&quot;</span> \
+                                                             <span class="s2">&quot;&quot;</span> \
+                                                             <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">        Args:&quot;</span> \
+                                                             <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">            v: Inferpy p-variable&quot;</span> \
+                                                             <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">            initializer (str): indicates how the new variable &quot;</span> \
+                                                             <span class="s2">&quot;should be initialized. Possible values: &#39;ones&#39; , &#39;zeroes&#39;.&quot;</span> \
+                                                             <span class="s2">&quot;&quot;</span><span class="p">;</span>
+    <span class="n">f</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">name</span>
+
+    <span class="nb">setattr</span><span class="p">(</span><span class="n">Qmodel</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">classmethod</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+
+
+<span class="k">for</span> <span class="n">vartype</span> <span class="ow">in</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">RandomVariable</span><span class="o">.</span><span class="n">__subclasses__</span><span class="p">():</span>
+    <span class="n">__add__new_qvar</span><span class="p">(</span><span class="n">vartype</span><span class="p">)</span>
+
+
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Andrés R. Masegosa, Rafael Cabañas.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

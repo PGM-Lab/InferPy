@@ -1,0 +1,420 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Guide to Model Validation &mdash; InferPy 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/inferpy_theme.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="InferPy 1.0 documentation" href="../index.html"/>
+        <link rel="next" title="Guide to Data Handling" href="guidedata.html"/>
+        <link rel="prev" title="Guide to Approximate Inference" href="guideinference.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/logo-doc.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Quick Start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting30s.html">Getting Started:</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting30s.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting30s.html#seconds-to-inferpy">30 seconds to InferPy</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gettingGuiding.html">Guiding Principles</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gettingGuiding.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gettingGuiding.html#architecture">Architecture</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="requirements.html">Requirements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="requirements.html#python">Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="requirements.html#edward">Edward</a></li>
+<li class="toctree-l2"><a class="reference internal" href="requirements.html#tensorflow">Tensorflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="requirements.html#numpy">Numpy</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Guides</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="guidemodels.html">Guide to Building Probabilistic Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guidemodels.html#getting-started-with-probabilistic-models">Getting Started with Probabilistic Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guidemodels.html#random-variables">Random Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guidemodels.html#probabilistic-models">Probabilistic Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guidemodels.html#supported-probability-distributions">Supported Probability Distributions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="guidemodels.html#bernoulli">Bernoulli</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guidemodels.html#beta">Beta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guidemodels.html#categorical">Categorical</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guidemodels.html#deterministic">Deterministic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guidemodels.html#dirichlet">Dirichlet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guidemodels.html#exponential">Exponential</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guidemodels.html#gamma">Gamma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guidemodels.html#inverse-gamma">Inverse-gamma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guidemodels.html#laplace">Laplace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guidemodels.html#multinomial">Multinomial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guidemodels.html#multivariate-normal">Multivariate-Normal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guidemodels.html#normal">Normal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guidemodels.html#poisson">Poisson</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guidemodels.html#uniform">Uniform</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guideinference.html">Guide to Approximate Inference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guideinference.html#getting-started-with-approximate-inference">Getting Started with Approximate Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guideinference.html#compositional-inference">Compositional Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guideinference.html#supported-inference-methods">Supported Inference Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Guide to Model Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guidedata.html">Guide to Data Handling</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Model Zoo</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="probzoo.html">Probabilistic Model Zoo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="probzoo.html#bayesian-linear-regression">Bayesian Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="probzoo.html#bayesian-logistic-regression">Bayesian Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="probzoo.html#bayesian-multinomial-logistic-regression">Bayesian Multinomial Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="probzoo.html#mixture-of-gaussians">Mixture of Gaussians</a></li>
+<li class="toctree-l2"><a class="reference internal" href="probzoo.html#linear-factor-model-pca">Linear Factor Model (PCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="probzoo.html#pca-with-ard-prior-pca">PCA with ARD Prior (PCA)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="inf_vs_ed.html">Inferpy vs Edward</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="inf_vs_ed.html#bayesian-linear-regression">Bayesian Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inf_vs_ed.html#gaussian-mixture">Gaussian Mixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inf_vs_ed.html#logistic-regression">Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inf_vs_ed.html#multinomial-logistic-regression">Multinomial Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inf_vs_ed.html#linear-factor-model-pca">Linear Factor Model (PCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inf_vs_ed.html#pca-with-ard-prior-pca">PCA with ARD Prior (PCA)</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Package Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules/inferpy.html">inferpy package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../modules/inferpy.criticism.html">inferpy.criticism package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.criticism.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.criticism.html#module-inferpy.criticism.evaluate">inferpy.criticism.evaluate module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/inferpy.inferences.html">inferpy.inferences package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.inferences.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.inferences.html#module-inferpy.inferences.inference">inferpy.inferences.inference module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.inferences.html#module-inferpy.inferences.qmodel">inferpy.inferences.qmodel module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/inferpy.models.html">inferpy.models package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.models.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.deterministic">inferpy.models.deterministic module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.factory">inferpy.models.factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.prob_model">inferpy.models.prob_model module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.random_variable">inferpy.models.random_variable module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.replicate">inferpy.models.replicate module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/inferpy.util.html">inferpy.util package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.util.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.error">inferpy.util.error module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.format">inferpy.util.format module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.ops">inferpy.util.ops module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.runtime">inferpy.util.runtime module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.wrappers">inferpy.util.wrappers module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.html#module-inferpy.version">inferpy.version module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/inferpy.criticism.html">inferpy.criticism package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.criticism.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.criticism.html#module-inferpy.criticism.evaluate">inferpy.criticism.evaluate module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/inferpy.inferences.html">inferpy.inferences package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.inferences.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.inferences.html#module-inferpy.inferences.inference">inferpy.inferences.inference module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.inferences.html#module-inferpy.inferences.qmodel">inferpy.inferences.qmodel module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/inferpy.models.html">inferpy.models package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.models.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.deterministic">inferpy.models.deterministic module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.factory">inferpy.models.factory module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.prob_model">inferpy.models.prob_model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.random_variable">inferpy.models.random_variable module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.replicate">inferpy.models.replicate module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/inferpy.util.html">inferpy.util package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.util.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.error">inferpy.util.error module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.format">inferpy.util.format module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.ops">inferpy.util.ops module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.runtime">inferpy.util.runtime module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.wrappers">inferpy.util.wrappers module</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Other</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact and Support</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">InferPy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Guide to Model Validation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/notes/guidevalidation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="guide-to-model-validation">
+<h1>Guide to Model Validation<a class="headerlink" href="#guide-to-model-validation" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">not implemented yet</p>
+</div>
+<p>Model validation try to assess how faifhfully the inferered
+probabilistic model represents and explain the observed data.</p>
+<p>The main tool for model validation consists on analyzing the posterior
+predictive distribution,</p>
+<p><span class="math">\(p(y_{test}, x_{test}|y_{train}, x_{train}) = \int p(y_{test}, x_{test}|z,\theta)p(z,\theta|y_{train}, x_{train}) dzd\theta\)</span></p>
+<p>This posterior predictive distribution can be used to measure how well
+the model fits an independent dataset using the test marginal
+log-likelihood, <span class="math">\(\ln p(y_{test}, x_{test}|y_{train}, x_{train})\)</span>,</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">log_like</span> <span class="o">=</span> <span class="n">probmodel</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">test_data</span><span class="p">,</span> <span class="n">metrics</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;log_likelihood&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>In other cases, we may need to evalute the predictive capacity of the
+model with respect to some target variable <span class="math">\(y\)</span>,</p>
+<p><span class="math">\(p(y_{test}|x_{test}, y_{train}, x_{train}) = \int p(y_{test}|x_{test},z,\theta)p(z,\theta|y_{train}, x_{train}) dzd\theta\)</span></p>
+<p>So the metrics can be computed with respect to this target variable by
+using the ‘targetvar’ argument,</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">log_like</span><span class="p">,</span> <span class="n">accuracy</span><span class="p">,</span> <span class="n">mse</span> <span class="o">=</span> <span class="n">probmodel</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">test_data</span><span class="p">,</span> <span class="n">targetvar</span> <span class="o">=</span> <span class="n">y</span><span class="p">,</span> <span class="n">metrics</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;log_likelihood&#39;</span><span class="p">,</span> <span class="s1">&#39;accuracy&#39;</span><span class="p">,</span> <span class="s1">&#39;mse&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>So, the log-likelihood metric as well as the accuracy and the mean
+square error metric are computed by using the predictive posterior
+<span class="math">\(p(y_{test}|x_{test}, y_{train}, x_{train})\)</span>.</p>
+<p>Custom evaluation metrics can also be defined,</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">mean_absolute_error</span><span class="p">(</span><span class="n">posterior</span><span class="p">,</span> <span class="n">observations</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">map_fn</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span> <span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">getMean</span><span class="p">(),</span> <span class="n">posterior</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">observations</span><span class="p">,</span> <span class="n">predictions</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
+
+<span class="n">mse</span><span class="p">,</span> <span class="n">mae</span> <span class="o">=</span> <span class="n">probmodel</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">test_data</span><span class="p">,</span> <span class="n">targetvar</span> <span class="o">=</span> <span class="n">y</span><span class="p">,</span> <span class="n">metrics</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">mean_absolute_error</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="guidedata.html" class="btn btn-neutral float-right" title="Guide to Data Handling" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="guideinference.html" class="btn btn-neutral" title="Guide to Approximate Inference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Andrés R. Masegosa, Rafael Cabañas.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

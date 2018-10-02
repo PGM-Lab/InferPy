@@ -1,0 +1,755 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>inferpy.models.factory &mdash; InferPy 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/css/inferpy_theme.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="InferPy 1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html">
+          
+
+          
+            
+            <img src="../../../_static/logo-doc.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Quick Start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/getting30s.html">Getting Started:</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/getting30s.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/getting30s.html#seconds-to-inferpy">30 seconds to InferPy</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/gettingGuiding.html">Guiding Principles</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/gettingGuiding.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/gettingGuiding.html#architecture">Architecture</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/requirements.html">Requirements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#python">Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#edward">Edward</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#tensorflow">Tensorflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#numpy">Numpy</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/guidemodels.html">Guide to Building Probabilistic Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/guidemodels.html#getting-started-with-probabilistic-models">Getting Started with Probabilistic Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/guidemodels.html#random-variables">Random Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/guidemodels.html#probabilistic-models">Probabilistic Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/guidemodels.html#supported-probability-distributions">Supported Probability Distributions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#bernoulli">Bernoulli</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#beta">Beta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#categorical">Categorical</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#deterministic">Deterministic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#dirichlet">Dirichlet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#exponential">Exponential</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#gamma">Gamma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#inverse-gamma">Inverse-gamma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#laplace">Laplace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#multinomial">Multinomial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#multivariate-normal">Multivariate-Normal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#normal">Normal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#poisson">Poisson</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/guidemodels.html#uniform">Uniform</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/guideinference.html">Guide to Approximate Inference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/guideinference.html#getting-started-with-approximate-inference">Getting Started with Approximate Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/guideinference.html#compositional-inference">Compositional Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/guideinference.html#supported-inference-methods">Supported Inference Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/guidevalidation.html">Guide to Model Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/guidedata.html">Guide to Data Handling</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Model Zoo</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/probzoo.html">Probabilistic Model Zoo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/probzoo.html#bayesian-linear-regression">Bayesian Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/probzoo.html#bayesian-logistic-regression">Bayesian Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/probzoo.html#bayesian-multinomial-logistic-regression">Bayesian Multinomial Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/probzoo.html#mixture-of-gaussians">Mixture of Gaussians</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/probzoo.html#linear-factor-model-pca">Linear Factor Model (PCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/probzoo.html#pca-with-ard-prior-pca">PCA with ARD Prior (PCA)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/inf_vs_ed.html">Inferpy vs Edward</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/inf_vs_ed.html#bayesian-linear-regression">Bayesian Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/inf_vs_ed.html#gaussian-mixture">Gaussian Mixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/inf_vs_ed.html#logistic-regression">Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/inf_vs_ed.html#multinomial-logistic-regression">Multinomial Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/inf_vs_ed.html#linear-factor-model-pca">Linear Factor Model (PCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/inf_vs_ed.html#pca-with-ard-prior-pca">PCA with ARD Prior (PCA)</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Package Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/inferpy.html">inferpy package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../modules/inferpy.criticism.html">inferpy.criticism package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.criticism.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.criticism.html#module-inferpy.criticism.evaluate">inferpy.criticism.evaluate module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../modules/inferpy.inferences.html">inferpy.inferences package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.inferences.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.inferences.html#module-inferpy.inferences.inference">inferpy.inferences.inference module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.inferences.html#module-inferpy.inferences.qmodel">inferpy.inferences.qmodel module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../modules/inferpy.models.html">inferpy.models package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.models.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.deterministic">inferpy.models.deterministic module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.factory">inferpy.models.factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.prob_model">inferpy.models.prob_model module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.random_variable">inferpy.models.random_variable module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.replicate">inferpy.models.replicate module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../modules/inferpy.util.html">inferpy.util package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.util.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.error">inferpy.util.error module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.format">inferpy.util.format module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.ops">inferpy.util.ops module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.runtime">inferpy.util.runtime module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.wrappers">inferpy.util.wrappers module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.html#module-inferpy.version">inferpy.version module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/inferpy.criticism.html">inferpy.criticism package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.criticism.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.criticism.html#module-inferpy.criticism.evaluate">inferpy.criticism.evaluate module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/inferpy.inferences.html">inferpy.inferences package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.inferences.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.inferences.html#module-inferpy.inferences.inference">inferpy.inferences.inference module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.inferences.html#module-inferpy.inferences.qmodel">inferpy.inferences.qmodel module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/inferpy.models.html">inferpy.models package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.models.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.deterministic">inferpy.models.deterministic module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.factory">inferpy.models.factory module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.prob_model">inferpy.models.prob_model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.random_variable">inferpy.models.random_variable module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.models.html#module-inferpy.models.replicate">inferpy.models.replicate module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/inferpy.util.html">inferpy.util package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.util.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.error">inferpy.util.error module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.format">inferpy.util.format module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.ops">inferpy.util.ops module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.runtime">inferpy.util.runtime module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/inferpy.util.html#module-inferpy.util.wrappers">inferpy.util.wrappers module</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Other</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/contact.html">Contact and Support</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">InferPy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>inferpy.models.factory</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for inferpy.models.factory</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1"># ==============================================================================</span>
+
+<span class="sd">&quot;&quot;&quot; This module implements all the methods for definition of each type of random variable.</span>
+<span class="sd"> For further details about all the supported distributions,</span>
+<span class="sd"> see `Guide to Building Probabilistic Models &lt;../notes/guidemodels.html#supported-probability-distributions&gt;`_ .</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">from</span> <span class="nn">inferpy.util</span> <span class="k">import</span> <span class="n">tf_run_wrapper</span>
+
+<span class="kn">from</span> <span class="nn">inferpy.models.params</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="kn">import</span> <span class="nn">six</span>
+
+<span class="kn">import</span> <span class="nn">inspect</span>
+
+<span class="kn">from</span> <span class="nn">inferpy.models</span> <span class="k">import</span> <span class="n">RandomVariable</span>
+
+
+
+
+
+<span class="c1">######</span>
+
+<span class="n">CLASS_NAME</span> <span class="o">=</span> <span class="s2">&quot;class_name&quot;</span>
+<span class="n">PARAMS</span> <span class="o">=</span> <span class="s2">&quot;params&quot;</span>
+<span class="n">BASE_CLASS_NAME</span> <span class="o">=</span> <span class="s2">&quot;base_class_name&quot;</span>
+<span class="n">NDIM</span> <span class="o">=</span> <span class="s2">&quot;ndim&quot;</span>
+<span class="n">IS_SIMPLE</span><span class="o">=</span><span class="s2">&quot;is_simple&quot;</span>
+<span class="n">PROPS</span><span class="o">=</span><span class="s2">&quot;properties&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">__add_property</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">call_name</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">from_dist</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+    <span class="n">call_name</span> <span class="o">=</span> <span class="n">name</span> <span class="k">if</span> <span class="n">call_name</span> <span class="o">==</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">call_name</span>
+    <span class="n">call_name</span> <span class="o">=</span> <span class="s2">&quot;__&quot;</span><span class="o">+</span><span class="n">call_name</span> <span class="k">if</span> <span class="n">private</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">from_dist</span> <span class="k">else</span> <span class="n">call_name</span>
+
+    <span class="k">if</span> <span class="n">from_dist</span><span class="p">:</span>
+        <span class="nd">@tf_run_wrapper</span>
+        <span class="k">def</span> <span class="nf">param</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Distribution parameter for the mean.&quot;&quot;&quot;</span>
+
+            <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dist</span>
+            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">call_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">):</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">out</span>
+
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">param</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Distribution parameter for the mean.&quot;&quot;&quot;</span>
+
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">call_name</span><span class="p">)</span>
+
+
+    <span class="bp">cls</span><span class="o">.</span><span class="n">__perinstance</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">param</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;property for &quot;</span> <span class="o">+</span> <span class="n">name</span>
+    <span class="n">param</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">name</span>
+
+    <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">property</span><span class="p">(</span><span class="n">param</span><span class="p">))</span>
+
+
+
+<span class="k">def</span> <span class="nf">__add_constructor</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">class_name</span><span class="p">,</span> <span class="n">base_class_name</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">is_simple</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">constructor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="n">param_dist</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">args_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">dist</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">observed</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;observed&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;observed&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">False</span>
+
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">param_list</span> <span class="o">=</span> <span class="n">ParamList</span><span class="p">(</span><span class="n">params</span><span class="p">,</span><span class="n">args_list</span><span class="p">,</span><span class="n">kwargs</span><span class="p">,</span><span class="n">is_simple</span><span class="p">,</span><span class="n">param_dim</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dim&quot;</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">param_list</span><span class="o">.</span><span class="n">is_empty</span><span class="p">():</span>
+
+
+
+                <span class="n">param_list</span><span class="o">.</span><span class="n">check_params</span><span class="p">()</span>
+                <span class="n">param_dist</span> <span class="o">=</span> <span class="n">param_list</span><span class="o">.</span><span class="n">get_reshaped_param_dict</span><span class="p">()</span>
+
+                <span class="c1">## Build the underliying tf object</span>
+
+                <span class="n">validate_args</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;validate_args&quot;</span><span class="p">)</span> <span class="k">if</span>  <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;validate_args&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">False</span>
+                <span class="n">allow_nan_stats</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;allow_nan_stats&quot;</span><span class="p">)</span> <span class="k">if</span>  <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;allow_nan_stats&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">True</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;inf/&quot;</span><span class="o">+</span><span class="n">class_name</span>
+
+
+                <span class="n">dist</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="p">,</span> <span class="n">class_name</span><span class="p">)(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">validate_args</span><span class="o">=</span> <span class="n">validate_args</span><span class="p">,</span> <span class="n">allow_nan_stats</span><span class="o">=</span><span class="n">allow_nan_stats</span><span class="p">,</span> <span class="o">**</span><span class="n">param_dist</span><span class="p">)</span>
+
+
+
+        <span class="nb">super</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="n">observed</span><span class="p">)</span>
+
+
+
+
+    <span class="n">constructor</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;constructor for &quot;</span><span class="o">+</span><span class="n">class_name</span>
+    <span class="n">constructor</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s2">&quot;__init__&quot;</span>
+    <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">constructor</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">constructor</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">__add_repr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">class_name</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_object</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">p</span><span class="o">+</span><span class="s2">&quot;=&quot;</span><span class="o">+</span><span class="n">inf</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">np_str</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">))</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="p">])</span>
+
+
+            <span class="k">return</span> <span class="s2">&quot;&lt;inferpy.models.&quot;</span><span class="o">+</span><span class="n">class_name</span><span class="o">+</span><span class="s2">&quot; &quot;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s2">&quot;, &quot;</span><span class="o">+</span><span class="n">s</span><span class="o">+</span><span class="s2">&quot;, shape=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot; &gt;&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+
+    <span class="nb">repr</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;__repr__ for &quot;</span><span class="o">+</span><span class="n">class_name</span>
+    <span class="nb">repr</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s2">&quot;__repr__&quot;</span>
+    <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="nb">repr</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">repr</span><span class="p">)</span>
+
+
+
+<div class="viewcode-block" id="def_random_variable"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.factory.def_random_variable">[docs]</a><span class="k">def</span> <span class="nf">def_random_variable</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
+
+
+
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="p">{</span><span class="n">CLASS_NAME</span><span class="p">:</span> <span class="n">var</span><span class="p">}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">var</span>
+
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">BASE_CLASS_NAME</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
+        <span class="n">v</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">BASE_CLASS_NAME</span> <span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">CLASS_NAME</span><span class="p">)})</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">PARAMS</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
+
+        <span class="n">lst</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">distributions</span><span class="o">.</span><span class="n">_allowed_symbols</span>
+
+        <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">BASE_CLASS_NAME</span><span class="p">)</span> <span class="ow">in</span> <span class="n">lst</span><span class="p">:</span>
+            <span class="n">init_f</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">distributions</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">BASE_CLASS_NAME</span><span class="p">)),</span> <span class="s2">&quot;__init__&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">init_f</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">BASE_CLASS_NAME</span><span class="p">)),</span> <span class="s2">&quot;__init__&quot;</span><span class="p">)</span>
+
+        <span class="n">sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getargspec</span><span class="p">(</span><span class="n">init_f</span><span class="p">)</span>
+        <span class="n">v</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">PARAMS</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">sig</span><span class="o">.</span><span class="n">args</span> <span class="p">]})</span>
+
+    <span class="n">v</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">PARAMS</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PARAMS</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;self&#39;</span><span class="p">,</span> <span class="s1">&#39;validate_args&#39;</span><span class="p">,</span> <span class="s1">&#39;allow_nan_stats&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;dtype&#39;</span><span class="p">]]})</span>
+
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">IS_SIMPLE</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
+        <span class="n">v</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">IS_SIMPLE</span> <span class="p">:</span> <span class="p">{}})</span>
+
+
+
+    <span class="n">newclass</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">CLASS_NAME</span><span class="p">),</span> <span class="p">(</span><span class="n">RandomVariable</span><span class="p">,),{})</span>
+
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">PROPS</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
+        <span class="n">props</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PARAMS</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">p</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;self&#39;</span><span class="p">,</span> <span class="s1">&#39;validate_args&#39;</span><span class="p">,</span> <span class="s1">&#39;allow_nan_stats&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;dtype&#39;</span><span class="p">]:</span>
+                <span class="n">props</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">p</span><span class="p">:</span><span class="n">p</span><span class="p">})</span>
+
+        <span class="n">v</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">PROPS</span><span class="p">:</span><span class="n">props</span><span class="p">})</span>
+
+
+
+
+    <span class="c1">#for p in v.get(PARAMS):</span>
+    <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">prop_call</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PROPS</span><span class="p">)):</span>
+        <span class="n">__add_property</span><span class="p">(</span><span class="n">newclass</span><span class="p">,</span><span class="n">p</span><span class="p">,</span> <span class="n">call_name</span><span class="o">=</span><span class="n">prop_call</span><span class="p">,</span> <span class="n">from_dist</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">__add_constructor</span><span class="p">(</span><span class="n">newclass</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">CLASS_NAME</span><span class="p">),</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">BASE_CLASS_NAME</span><span class="p">),</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PARAMS</span><span class="p">),</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">IS_SIMPLE</span><span class="p">))</span>
+    <span class="n">__add_repr</span><span class="p">(</span><span class="n">newclass</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">CLASS_NAME</span><span class="p">),</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PARAMS</span><span class="p">))</span>
+
+
+    <span class="n">newclass</span><span class="o">.</span><span class="n">PARAMS</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PARAMS</span><span class="p">)</span>
+
+    <span class="nb">globals</span><span class="p">()[</span><span class="n">newclass</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="n">newclass</span></div>
+
+
+
+<span class="c1">####</span>
+
+<div class="viewcode-block" id="Normal"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.factory.Normal">[docs]</a><span class="k">class</span> <span class="nc">Normal</span><span class="p">(</span><span class="n">RandomVariable</span><span class="p">):</span>
+<div class="viewcode-block" id="Normal.__init__"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.factory.Normal.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">validate_args</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">allow_nan_stats</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">dim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Normal&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loc</span> <span class="o">=</span> <span class="n">loc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">scale</span></div></div>
+
+
+<div class="viewcode-block" id="Beta"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.factory.Beta">[docs]</a><span class="k">class</span> <span class="nc">Beta</span><span class="p">(</span><span class="n">RandomVariable</span><span class="p">):</span>
+<div class="viewcode-block" id="Beta.__init__"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.factory.Beta.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">concentration1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">concentration0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">validate_args</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">allow_nan_stats</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">observed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">dim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Beta&#39;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">concentration1</span> <span class="o">=</span> <span class="n">concentration1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">concentration0</span> <span class="o">=</span> <span class="n">concentration0</span></div></div>
+
+
+
+<div class="viewcode-block" id="Exponential"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.factory.Exponential">[docs]</a><span class="k">class</span> <span class="nc">Exponential</span><span class="p">(</span><span class="n">RandomVariable</span><span class="p">):</span>
+<div class="viewcode-block" id="Exponential.__init__"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.factory.Exponential.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">rate</span><span class="p">,</span>
+            <span class="n">validate_args</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">allow_nan_stats</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">observed</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">dim</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Exponential&#39;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rate</span> <span class="o">=</span> <span class="n">rate</span></div></div>
+
+<div class="viewcode-block" id="Uniform"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.factory.Uniform">[docs]</a><span class="k">class</span> <span class="nc">Uniform</span><span class="p">(</span><span class="n">RandomVariable</span><span class="p">):</span>
+<div class="viewcode-block" id="Uniform.__init__"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.factory.Uniform.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">low</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">high</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">validate_args</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">allow_nan_stats</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Uniform&#39;</span><span class="p">,</span>
+            <span class="n">observed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">dim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="n">low</span></div></div>
+
+<div class="viewcode-block" id="Poisson"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.factory.Poisson">[docs]</a><span class="k">class</span> <span class="nc">Poisson</span><span class="p">(</span><span class="n">RandomVariable</span><span class="p">):</span>
+<div class="viewcode-block" id="Poisson.__init__"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.factory.Poisson.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">rate</span><span class="p">,</span>
+            <span class="n">validate_args</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">allow_nan_stats</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Poisson&#39;</span><span class="p">,</span>
+            <span class="n">observed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">dim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rate</span> <span class="o">=</span> <span class="n">rate</span></div></div>
+
+<div class="viewcode-block" id="Categorical"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.factory.Categorical">[docs]</a><span class="k">class</span> <span class="nc">Categorical</span><span class="p">(</span><span class="n">RandomVariable</span><span class="p">):</span>
+<div class="viewcode-block" id="Categorical.__init__"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.factory.Categorical.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">logits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">probs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">validate_args</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">allow_nan_stats</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Categorical&#39;</span><span class="p">,</span>
+            <span class="n">observed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">dim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_logits</span> <span class="o">=</span> <span class="n">logits</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_probs</span> <span class="o">=</span> <span class="n">probs</span></div></div>
+
+<div class="viewcode-block" id="Multinomial"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.factory.Multinomial">[docs]</a><span class="k">class</span> <span class="nc">Multinomial</span><span class="p">(</span><span class="n">RandomVariable</span><span class="p">):</span>
+<div class="viewcode-block" id="Multinomial.__init__"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.factory.Multinomial.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">total_count</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">logits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">probs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">validate_args</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">allow_nan_stats</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Categorical&#39;</span><span class="p">,</span>
+            <span class="n">observed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">dim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logits</span> <span class="o">=</span> <span class="n">logits</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">probs</span> <span class="o">=</span> <span class="n">probs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_count</span> <span class="o">=</span> <span class="kc">None</span></div></div>
+
+<div class="viewcode-block" id="Dirichlet"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.factory.Dirichlet">[docs]</a><span class="k">class</span> <span class="nc">Dirichlet</span><span class="p">(</span><span class="n">RandomVariable</span><span class="p">):</span>
+<div class="viewcode-block" id="Dirichlet.__init__"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.factory.Dirichlet.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+            <span class="n">concentration</span><span class="p">,</span>
+            <span class="n">validate_args</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">allow_nan_stats</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Dirichlet&#39;</span><span class="p">,</span>
+            <span class="n">observed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">dim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">concentration</span><span class="o">=</span><span class="n">concentration</span></div></div>
+
+<div class="viewcode-block" id="Gamma"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.factory.Gamma">[docs]</a><span class="k">class</span> <span class="nc">Gamma</span><span class="p">(</span><span class="n">RandomVariable</span><span class="p">):</span>
+<div class="viewcode-block" id="Gamma.__init__"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.factory.Gamma.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span>
+            <span class="n">validate_args</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">allow_nan_stats</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">observed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">dim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Gamma&#39;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">beta</span> <span class="o">=</span> <span class="n">beta</span></div></div>
+
+<div class="viewcode-block" id="InverseGamma"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.factory.InverseGamma">[docs]</a><span class="k">class</span> <span class="nc">InverseGamma</span><span class="p">(</span><span class="n">RandomVariable</span><span class="p">):</span>
+<div class="viewcode-block" id="InverseGamma.__init__"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.factory.InverseGamma.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span>
+            <span class="n">validate_args</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">allow_nan_stats</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">observed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">dim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;InverseGamma&#39;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">beta</span> <span class="o">=</span> <span class="n">beta</span></div></div>
+
+<div class="viewcode-block" id="Bernoulli"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.factory.Bernoulli">[docs]</a><span class="k">class</span> <span class="nc">Bernoulli</span><span class="p">(</span><span class="n">RandomVariable</span><span class="p">):</span>
+<div class="viewcode-block" id="Bernoulli.__init__"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.factory.Bernoulli.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">logits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">probs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">validate_args</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">allow_nan_stats</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Bernoulli&#39;</span><span class="p">,</span>
+            <span class="n">observed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">dim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_logits</span> <span class="o">=</span> <span class="n">logits</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_probs</span> <span class="o">=</span> <span class="n">probs</span></div></div>
+
+<div class="viewcode-block" id="Laplace"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.factory.Laplace">[docs]</a><span class="k">class</span> <span class="nc">Laplace</span><span class="p">(</span><span class="n">RandomVariable</span><span class="p">):</span>
+<div class="viewcode-block" id="Laplace.__init__"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.factory.Laplace.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span>
+                 <span class="n">validate_args</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">allow_nan_stats</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">dim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Laplace&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loc</span> <span class="o">=</span> <span class="n">loc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">scale</span></div></div>
+
+<div class="viewcode-block" id="MultivariateNormalDiag"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.factory.MultivariateNormalDiag">[docs]</a><span class="k">class</span> <span class="nc">MultivariateNormalDiag</span><span class="p">(</span><span class="n">RandomVariable</span><span class="p">):</span>
+<div class="viewcode-block" id="MultivariateNormalDiag.__init__"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.factory.MultivariateNormalDiag.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">loc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">scale_diag</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">validate_args</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">allow_nan_stats</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">name</span><span class="o">=</span><span class="s2">&quot;MultivariateNormalDiag&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loc</span> <span class="o">=</span> <span class="n">loc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale_diag</span> <span class="o">=</span> <span class="n">scale_diag</span></div></div>
+
+
+<span class="c1">####### run-time definition of random variables #########</span>
+
+<span class="n">SIMPLE_VARS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span><span class="s2">&quot;Beta&quot;</span><span class="p">,</span> <span class="s2">&quot;Exponential&quot;</span><span class="p">,</span><span class="s2">&quot;Uniform&quot;</span><span class="p">,</span><span class="s2">&quot;Poisson&quot;</span><span class="p">,</span> <span class="s2">&quot;Gamma&quot;</span><span class="p">,</span> <span class="s2">&quot;Laplace&quot;</span><span class="p">,</span>
+               <span class="p">{</span><span class="n">CLASS_NAME</span> <span class="p">:</span> <span class="s2">&quot;InverseGamma&quot;</span><span class="p">,</span> <span class="n">PARAMS</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;concentration&#39;</span><span class="p">,</span> <span class="s1">&#39;rate&#39;</span><span class="p">,</span> <span class="s1">&#39;self&#39;</span><span class="p">,</span> <span class="s1">&#39;validate_args&#39;</span><span class="p">,</span> <span class="s1">&#39;allow_nan_stats&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;dtype&#39;</span><span class="p">]}]</span>
+
+
+<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">SIMPLE_VARS</span><span class="p">:</span>
+    <span class="n">def_random_variable</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()</span>
+
+
+
+<span class="n">NON_SIMPLE_VARS</span> <span class="o">=</span> <span class="p">[{</span><span class="n">CLASS_NAME</span> <span class="p">:</span> <span class="s2">&quot;Categorical&quot;</span><span class="p">,</span> <span class="n">IS_SIMPLE</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;probs&quot;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;logits&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}},</span>
+                   <span class="p">{</span><span class="n">CLASS_NAME</span><span class="p">:</span> <span class="s2">&quot;Multinomial&quot;</span><span class="p">,</span> <span class="n">IS_SIMPLE</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;total_count&quot;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span><span class="s2">&quot;probs&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;logits&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}},</span>
+                   <span class="p">{</span><span class="n">CLASS_NAME</span><span class="p">:</span> <span class="s2">&quot;Dirichlet&quot;</span><span class="p">,</span> <span class="n">IS_SIMPLE</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;concentration&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}},</span>
+                   <span class="p">{</span><span class="n">CLASS_NAME</span> <span class="p">:</span> <span class="s2">&quot;Bernoulli&quot;</span><span class="p">,</span> <span class="n">IS_SIMPLE</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;probs&quot;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;logits&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}},</span>
+                   <span class="p">{</span><span class="n">CLASS_NAME</span><span class="p">:</span> <span class="s2">&quot;MultivariateNormalDiag&quot;</span><span class="p">,</span>
+                    <span class="n">IS_SIMPLE</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;loc&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;scale_diag&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+                    <span class="n">PARAMS</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;loc&#39;</span><span class="p">,</span> <span class="s1">&#39;scale_diag&#39;</span><span class="p">],</span>
+                    <span class="n">PROPS</span><span class="p">:{</span><span class="s1">&#39;loc&#39;</span><span class="p">:</span> <span class="s1">&#39;loc&#39;</span><span class="p">,</span> <span class="s1">&#39;scale_diag&#39;</span><span class="p">:</span> <span class="s1">&#39;scale.diag&#39;</span><span class="p">}</span>
+                    <span class="p">}</span>
+
+                   <span class="p">]</span>
+
+<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">NON_SIMPLE_VARS</span><span class="p">:</span>
+    <span class="n">def_random_variable</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+
+<span class="c1">#####</span>
+
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Andrés R. Masegosa, Rafael Cabañas.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

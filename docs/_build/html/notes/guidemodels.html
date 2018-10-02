@@ -1,0 +1,858 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Guide to Building Probabilistic Models &mdash; InferPy 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/inferpy_theme.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="InferPy 1.0 documentation" href="../index.html"/>
+        <link rel="next" title="Guide to Approximate Inference" href="guideinference.html"/>
+        <link rel="prev" title="Requirements" href="requirements.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/logo-doc.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Quick Start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting30s.html">Getting Started:</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting30s.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting30s.html#seconds-to-inferpy">30 seconds to InferPy</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gettingGuiding.html">Guiding Principles</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gettingGuiding.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gettingGuiding.html#architecture">Architecture</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="requirements.html">Requirements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="requirements.html#python">Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="requirements.html#edward">Edward</a></li>
+<li class="toctree-l2"><a class="reference internal" href="requirements.html#tensorflow">Tensorflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="requirements.html#numpy">Numpy</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Guides</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Guide to Building Probabilistic Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started-with-probabilistic-models">Getting Started with Probabilistic Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#random-variables">Random Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#probabilistic-models">Probabilistic Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#supported-probability-distributions">Supported Probability Distributions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bernoulli">Bernoulli</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#beta">Beta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#categorical">Categorical</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deterministic">Deterministic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dirichlet">Dirichlet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exponential">Exponential</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gamma">Gamma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#inverse-gamma">Inverse-gamma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#laplace">Laplace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multinomial">Multinomial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multivariate-normal">Multivariate-Normal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#normal">Normal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#poisson">Poisson</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uniform">Uniform</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guideinference.html">Guide to Approximate Inference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guideinference.html#getting-started-with-approximate-inference">Getting Started with Approximate Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guideinference.html#compositional-inference">Compositional Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guideinference.html#supported-inference-methods">Supported Inference Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guidevalidation.html">Guide to Model Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guidedata.html">Guide to Data Handling</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Model Zoo</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="probzoo.html">Probabilistic Model Zoo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="probzoo.html#bayesian-linear-regression">Bayesian Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="probzoo.html#bayesian-logistic-regression">Bayesian Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="probzoo.html#bayesian-multinomial-logistic-regression">Bayesian Multinomial Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="probzoo.html#mixture-of-gaussians">Mixture of Gaussians</a></li>
+<li class="toctree-l2"><a class="reference internal" href="probzoo.html#linear-factor-model-pca">Linear Factor Model (PCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="probzoo.html#pca-with-ard-prior-pca">PCA with ARD Prior (PCA)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="inf_vs_ed.html">Inferpy vs Edward</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="inf_vs_ed.html#bayesian-linear-regression">Bayesian Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inf_vs_ed.html#gaussian-mixture">Gaussian Mixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inf_vs_ed.html#logistic-regression">Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inf_vs_ed.html#multinomial-logistic-regression">Multinomial Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inf_vs_ed.html#linear-factor-model-pca">Linear Factor Model (PCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inf_vs_ed.html#pca-with-ard-prior-pca">PCA with ARD Prior (PCA)</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Package Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules/inferpy.html">inferpy package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../modules/inferpy.criticism.html">inferpy.criticism package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.criticism.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.criticism.html#module-inferpy.criticism.evaluate">inferpy.criticism.evaluate module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/inferpy.inferences.html">inferpy.inferences package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.inferences.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.inferences.html#module-inferpy.inferences.inference">inferpy.inferences.inference module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.inferences.html#module-inferpy.inferences.qmodel">inferpy.inferences.qmodel module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/inferpy.models.html">inferpy.models package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.models.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.deterministic">inferpy.models.deterministic module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.factory">inferpy.models.factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.prob_model">inferpy.models.prob_model module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.random_variable">inferpy.models.random_variable module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.replicate">inferpy.models.replicate module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/inferpy.util.html">inferpy.util package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.util.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.error">inferpy.util.error module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.format">inferpy.util.format module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.ops">inferpy.util.ops module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.runtime">inferpy.util.runtime module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.wrappers">inferpy.util.wrappers module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.html#module-inferpy.version">inferpy.version module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/inferpy.criticism.html">inferpy.criticism package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.criticism.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.criticism.html#module-inferpy.criticism.evaluate">inferpy.criticism.evaluate module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/inferpy.inferences.html">inferpy.inferences package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.inferences.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.inferences.html#module-inferpy.inferences.inference">inferpy.inferences.inference module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.inferences.html#module-inferpy.inferences.qmodel">inferpy.inferences.qmodel module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/inferpy.models.html">inferpy.models package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.models.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.deterministic">inferpy.models.deterministic module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.factory">inferpy.models.factory module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.prob_model">inferpy.models.prob_model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.random_variable">inferpy.models.random_variable module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.replicate">inferpy.models.replicate module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/inferpy.util.html">inferpy.util package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.util.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.error">inferpy.util.error module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.format">inferpy.util.format module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.ops">inferpy.util.ops module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.runtime">inferpy.util.runtime module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.wrappers">inferpy.util.wrappers module</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Other</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact and Support</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">InferPy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Guide to Building Probabilistic Models</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/notes/guidemodels.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="guide-to-building-probabilistic-models">
+<h1>Guide to Building Probabilistic Models<a class="headerlink" href="#guide-to-building-probabilistic-models" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="getting-started-with-probabilistic-models">
+<h2>Getting Started with Probabilistic Models<a class="headerlink" href="#getting-started-with-probabilistic-models" title="Permalink to this headline">¶</a></h2>
+<p>InferPy focuses on <em>hirearchical probabilistic models</em> structured
+in two different layers:</p>
+<ul class="simple">
+<li>A <strong>prior model</strong> defining a joint distribution <span class="math">\(p(\mathbf{w})\)</span>
+over the global parameters of the model. <span class="math">\(\mathbf{w}\)</span> can be a single random
+variable or a bunch of random variables with any given dependency structure.</li>
+<li>A <strong>data or observation model</strong> defining a joint conditional
+distribution <span class="math">\(p(\mathbf{x},\mathbf{z}|\mathbf{w})\)</span> over the observed quantities
+<span class="math">\(\mathbf{x}\)</span> and the the local hidden variables <span class="math">\(\mathbf{z}\)</span> governing the
+observation <span class="math">\(\mathbf{x}\)</span>. This data model is specified in a
+single-sample basis. There are many models of interest without local
+hidden variables, in that case, we simply specify the conditional
+<span class="math">\(p(\mathbf{x}|\mathbf{w})\)</span>. Similarly, either <span class="math">\(\mathbf{x}\)</span> or
+<span class="math">\(\mathbf{z}\)</span> can be a single random variable or a bunch of random variables
+with any given dependency structure.</li>
+</ul>
+<p>For example, a Bayesian PCA model has the following graphical structure,</p>
+<div class="figure align-center" id="id1">
+<a class="reference internal image-reference" href="../_images/LinearFactor.png"><img alt="Linear Factor Model" src="../_images/LinearFactor.png" style="width: 385.7px; height: 322.0px;" /></a>
+<p class="caption"><span class="caption-text">Bayesian PCA</span></p>
+<div class="legend">
+<blockquote>
+<div>The <strong>prior model</strong> are the variables <span class="math">\(w_k\)</span>. The <strong>data model</strong> is the part of the model surrounded by the box indexed by <strong>N</strong>.</div></blockquote>
+</div>
+</div>
+<p>And this is how this Bayesian PCA model is denfined in InferPy:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">edward</span> <span class="kn">as</span> <span class="nn">ed</span>
+<span class="kn">import</span> <span class="nn">inferpy</span> <span class="kn">as</span> <span class="nn">inf</span>
+<span class="kn">from</span> <span class="nn">inferpy.models</span> <span class="kn">import</span> <span class="n">Normal</span>
+
+<span class="n">K</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">200</span>
+
+<span class="c1"># model definition</span>
+<span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">ProbModel</span><span class="p">()</span> <span class="k">as</span> <span class="n">m</span><span class="p">:</span>
+    <span class="c1">#define the weights</span>
+    <span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">K</span><span class="p">):</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
+
+    <span class="c1"># define the generative model</span>
+    <span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">):</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="n">K</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="n">inf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="n">w</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
+
+<span class="n">m</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+
+
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">with</span> <span class="pre">inf.replicate(size</span> <span class="pre">=</span> <span class="pre">N)</span></code> sintaxis is used to replicate the
+random variables contained within this construct. It follows from the
+so-called <em>plateau notation</em> to define the data generation part of a
+probabilistic model. Every replicated variable is <strong>conditionally
+idependent</strong> given the previous random variables (if any) defined
+outside the <strong>with</strong> statement.</p>
+</div>
+<div class="section" id="random-variables">
+<h2>Random Variables<a class="headerlink" href="#random-variables" title="Permalink to this headline">¶</a></h2>
+<p>Following Edward’s approach, a random variable <span class="math">\(x\)</span> is an object
+parametrized by a tensor <span class="math">\(\theta\)</span> (i.e. a TensorFlow’s tensor or
+numpy’s ndarray). The number of random variables in one object is
+determined by the dimensions of its parameters (like in Edward) or by
+the ‘dim’ argument (inspired by PyMC3 and Keras):</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">inferpy</span> <span class="kn">as</span> <span class="nn">inf</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+
+<span class="c1"># different ways of declaring 1 batch of 5 Normal distributions</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>         <span class="c1"># x.shape = [5]</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># x.shape = [5]</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>      <span class="c1"># x.shape = [5]</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>       <span class="c1"># x.shape = [5]</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">with</span> <span class="pre">inf.replicate(size</span> <span class="pre">=</span> <span class="pre">N)</span></code> sintaxis can also be used to define
+multi-dimensional objects:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>       <span class="c1"># x.shape = [10,5]</span>
+</pre></div>
+</div>
+<p>Following Edward’s approach, the multivariate dimension is the innermost (right-most)
+dimension of the parameters.</p>
+<p>Note that indexing is supported:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>                                              <span class="c1"># y.shape = [1]</span>
+
+<span class="n">y2</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>                                               <span class="c1"># y2.shape = [5]</span>
+
+<span class="n">y3</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">7</span><span class="p">,:]</span>                                             <span class="c1"># y2.shape = [5]</span>
+
+<span class="n">y4</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span><span class="mi">4</span><span class="p">]</span>                                             <span class="c1"># y4.shape = [10]</span>
+</pre></div>
+</div>
+<p>Moreover, we may use indexation for defining new variables whose indexes may be other (discrete) variables:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">z</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">logits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">yz</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">z</span><span class="p">],</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>            <span class="c1"># yz.shape = [1]</span>
+</pre></div>
+</div>
+<p>Any random variable in InferPy contain the following (optional) input parameters
+in the constructor:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">validate_args</span></code> : Python boolean indicating that possibly expensive checks with the input parameters are enabled.
+By default, it is set to <code class="docutils literal"><span class="pre">False</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">allow_nan_stats</span></code> : When <code class="docutils literal"><span class="pre">True</span></code>, the value “NaN” is used to indicate the result is undefined. Otherwise an exception is raised.
+Its default value is <code class="docutils literal"><span class="pre">True</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">name</span></code>: Python string with the name of the underlying Tensor object.</li>
+<li><code class="docutils literal"><span class="pre">observed</span></code>: Python boolean which is used to indicate whether a variable is observable or not . The default value is <code class="docutils literal"><span class="pre">False</span></code></li>
+<li><code class="docutils literal"><span class="pre">dim</span></code>: dimension of the variable. The default value is <code class="docutils literal"><span class="pre">None</span></code></li>
+</ul>
+<p>Inferpy supports a wide range of probability distributions. Details of the specific arguments
+for each supported distributions are specified in the following sections.
+`</p>
+</div>
+<div class="section" id="probabilistic-models">
+<h2>Probabilistic Models<a class="headerlink" href="#probabilistic-models" title="Permalink to this headline">¶</a></h2>
+<p>A <strong>probabilistic model</strong> defines a joint distribution over observable
+and non-observable variables, <span class="math">\(p(\mathbf{w}, \mathbf{z}, \mathbf{x})\)</span> for the
+running example. The variables in the model are the ones defined using the
+<code class="docutils literal"><span class="pre">with</span> <span class="pre">inf.ProbModel()</span> <span class="pre">as</span> <span class="pre">pca:</span></code> construct. Alternatively, we can also use a builder,</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">m</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">ProbModel</span><span class="p">(</span><span class="n">varlist</span><span class="o">=</span><span class="p">[</span><span class="n">w</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">x</span><span class="p">])</span>
+<span class="n">m</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The model must be <strong>compiled</strong> before it can be used.</p>
+<p>Like any random variable object, a probabilistic model is equipped with
+methods such as  <code class="docutils literal"><span class="pre">sample()</span></code>, <code class="docutils literal"><span class="pre">log_prob()</span></code> and  <code class="docutils literal"><span class="pre">sum_log_prob()</span></code>. Then, we can sample data
+from the model and compute the log-likelihood of a data set:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">log_like</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">sum_log_like</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">sum_log_prob</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Random variables can be involved in expressive deterministic operations. Dependecies
+between variables are modelled by setting a given variable as a parameter of another variable. For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">ProbModel</span><span class="p">()</span> <span class="k">as</span> <span class="n">m</span><span class="p">:</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Beta</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span>  <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">probs</span><span class="o">=</span><span class="p">[</span><span class="n">theta</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">theta</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;z&quot;</span><span class="p">)</span>
+
+
+<span class="n">m</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Moreover, we might consider using the function <code class="docutils literal"><span class="pre">inferpy.case</span></code> as the parameter of other random variables:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Categorical variable depending on another categorical variable</span>
+
+<span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">ProbModel</span><span class="p">()</span> <span class="k">as</span> <span class="n">m2</span><span class="p">:</span>
+    <span class="n">y</span> <span class="o">=</span>  <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">probs</span><span class="o">=</span><span class="p">[</span><span class="mf">0.4</span><span class="p">,</span><span class="mf">0.6</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">probs</span><span class="o">=</span><span class="n">inf</span><span class="o">.</span><span class="n">case</span><span class="p">({</span><span class="n">y</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+                                               <span class="n">y</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span> <span class="p">}),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="n">m2</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+
+
+<span class="c1"># Categorical variable depending on a Normal distributed variable</span>
+
+<span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">ProbModel</span><span class="p">()</span> <span class="k">as</span> <span class="n">m3</span><span class="p">:</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">probs</span><span class="o">=</span><span class="n">inf</span><span class="o">.</span><span class="n">case</span><span class="p">({</span><span class="n">a</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+                                               <span class="n">a</span><span class="o">&lt;=</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]}),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
+<span class="n">m3</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+
+
+<span class="c1"># Normal distributed variable depending on a Categorical variable</span>
+
+<span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">ProbModel</span><span class="p">()</span> <span class="k">as</span> <span class="n">m4</span><span class="p">:</span>
+    <span class="n">d</span> <span class="o">=</span>  <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">probs</span><span class="o">=</span><span class="p">[</span><span class="mf">0.4</span><span class="p">,</span><span class="mf">0.6</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;d&quot;</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">inf</span><span class="o">.</span><span class="n">case</span><span class="p">({</span><span class="n">d</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span> <span class="mf">0.</span><span class="p">,</span>
+                                        <span class="n">d</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span> <span class="mf">100.</span><span class="p">}),</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;c&quot;</span><span class="p">)</span>
+<span class="n">m4</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Note that we might use the case function inside the replicate construct. The result will be
+a multi-batch random variable having the same distribution for each batch. When obtaining a sample from
+the model, each sample of a given batch in x is independent of the rest.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">ProbModel</span><span class="p">()</span> <span class="k">as</span> <span class="n">m</span><span class="p">:</span>
+    <span class="n">y</span> <span class="o">=</span>  <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">probs</span><span class="o">=</span><span class="p">[</span><span class="mf">0.4</span><span class="p">,</span><span class="mf">0.6</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">probs</span><span class="o">=</span><span class="n">inf</span><span class="o">.</span><span class="n">case</span><span class="p">({</span><span class="n">y</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
+                                                    <span class="n">y</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span> <span class="p">}),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We can also use the functions <code class="docutils literal"><span class="pre">inferpy.case_states</span></code> or <code class="docutils literal"><span class="pre">inferpy.gather</span></code> for defining
+the same model.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">ProbModel</span><span class="p">()</span> <span class="k">as</span> <span class="n">m</span><span class="p">:</span>
+    <span class="n">y</span> <span class="o">=</span>  <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">probs</span><span class="o">=</span><span class="p">[</span><span class="mf">0.4</span><span class="p">,</span><span class="mf">0.6</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">probs</span><span class="o">=</span><span class="n">inf</span><span class="o">.</span><span class="n">case_states</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+                                                         <span class="mi">1</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span> <span class="p">}),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+
+
+<span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">ProbModel</span><span class="p">()</span> <span class="k">as</span> <span class="n">m</span><span class="p">:</span>
+    <span class="n">y</span> <span class="o">=</span>  <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">probs</span><span class="o">=</span><span class="p">[</span><span class="mf">0.4</span><span class="p">,</span><span class="mf">0.6</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">probs</span><span class="o">=</span><span class="n">inf</span><span class="o">.</span><span class="n">gather</span><span class="p">([[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]],</span> <span class="n">y</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+
+<span class="n">m</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We can use the function <code class="docutils literal"><span class="pre">inferpy.case_states</span></code> with a list of variables (or multidimensional variables):</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>
+<span class="n">y</span> <span class="o">=</span>  <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">probs</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">case_states</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="p">{(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">):</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">):</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+                        <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">):</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]}</span> <span class="p">)</span>
+
+<span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">probs</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+
+<span class="c1">####</span>
+
+<span class="n">y</span> <span class="o">=</span>  <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">probs</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span>  <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">probs</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">case_states</span><span class="p">((</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">),</span> <span class="p">{(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">):</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">):</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+                            <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">):</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]}</span> <span class="p">)</span>
+
+<span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">probs</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+
+<span class="c1">####</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">case_states</span><span class="p">([</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">],</span> <span class="p">{(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">):</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">):</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+                            <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">):</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]}</span> <span class="p">)</span>
+
+<span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">probs</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="section" id="supported-probability-distributions">
+<h2>Supported Probability Distributions<a class="headerlink" href="#supported-probability-distributions" title="Permalink to this headline">¶</a></h2>
+<p>Supported probability distributions are located in the package <code class="docutils literal"><span class="pre">inferpy.models</span></code>. All of them
+have <code class="docutils literal"><span class="pre">inferpy.models.RandomVariable</span></code> as superclass. A list with all the supported distributions can be obtained as
+as follows.</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">ALLOWED_VARS</span>
+<span class="go">[&#39;Bernoulli&#39;, &#39;Beta&#39;, &#39;Categorical&#39;, &#39;Deterministic&#39;, &#39;Dirichlet&#39;, &#39;Exponential&#39;, &#39;Gamma&#39;, &#39;InverseGamma&#39;, &#39;Laplace&#39;, &#39;Multinomial&#39;, &#39;Normal&#39;, &#39;Poisson&#39;, &#39;Uniform&#39;]</span>
+</pre></div>
+</div>
+<div class="section" id="bernoulli">
+<h3>Bernoulli<a class="headerlink" href="#bernoulli" title="Permalink to this headline">¶</a></h3>
+<p>Binary distribution which takes the value 1 with probability <span class="math">\(p\)</span> and the value with <span class="math">\(1-p\)</span>. Its probability mass
+function is</p>
+<div class="math">
+\[\begin{split}p(x;p) =\left\{\begin{array}{cc} p &amp; \mathrm{if\ } x=1 \\
+ 1-p &amp; \mathrm{if\ } x=0 \\ \end{array} \right.\end{split}\]</div>
+<p>An example of definition in InferPy of a random variable following a Bernoulli distribution is shown below. Note that the
+input parameter <code class="docutils literal"><span class="pre">probs</span></code> corresponds to <span class="math">\(p\)</span> in the previous equation.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Bernoulli</span><span class="p">(</span><span class="n">probs</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="c1"># or</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Bernoulli</span><span class="p">(</span><span class="n">logits</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This distribution can be initialized by indicating the logit function of the probability, i.e., <span class="math">\(logit(p) = log(\frac{p}{1-p})\)</span>.</p>
+</div>
+<div class="section" id="beta">
+<h3>Beta<a class="headerlink" href="#beta" title="Permalink to this headline">¶</a></h3>
+<p>Continuous distribution defined in the interval <span class="math">\([0,1]\)</span> and parametrized by two positive shape parameters,
+denoted <span class="math">\(\alpha\)</span> and <span class="math">\(\beta\)</span>.</p>
+<div class="math">
+\[p(x;\alpha,\beta)=\frac{x^{\alpha-1}(1-x)^{\beta-1}}{B(\alpha,\beta)}\]</div>
+<p>where <cite>B</cite> is the beta function</p>
+<div class="math">
+\[B(\alpha,\beta)=\int_{0}^{1}t^{\alpha-1}(1-t)^{\beta-1}dt\]</div>
+<p>The definition of a random variable following a Beta distribution is done as follows.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Beta</span><span class="p">(</span><span class="n">concentration0</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">concentration1</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="c1"># or simply:</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Beta</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that the input parameters <code class="docutils literal"><span class="pre">concentration0</span></code> and <code class="docutils literal"><span class="pre">concentration1</span></code> correspond to the shape
+parameters <span class="math">\(\alpha\)</span> and <span class="math">\(\beta\)</span> respectively.</p>
+</div>
+<div class="section" id="categorical">
+<h3>Categorical<a class="headerlink" href="#categorical" title="Permalink to this headline">¶</a></h3>
+<p>Discrete probability distribution that can take <span class="math">\(k\)</span> possible states or categories. The probability
+of each state is separately defined:</p>
+<div class="math">
+\[p(x;\mathbf{p}) = p_i\]</div>
+<p>where <span class="math">\(\mathbf{p} = (p_1, p_2, \ldots, p_k)\)</span> is a k-dimensional vector with the probability associated to each possible state.</p>
+<p>The definition of a random variable following a Categorical distribution is done as follows.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">probs</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">])</span>
+
+<span class="c1"># or</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">logits</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="deterministic">
+<h3>Deterministic<a class="headerlink" href="#deterministic" title="Permalink to this headline">¶</a></h3>
+<p>The deterministic distribution is a probability distribution in a space (continuous or discrete) that always takes
+the same value <span class="math">\(k_0\)</span>. Its probability density (or mass) function can be defined as follows.</p>
+<div class="math">
+\[\begin{split}p(x;k_0) =\left\{\begin{array}{cc} 1 &amp; \mathrm{if\ } x=k_0 \\
+ 0 &amp; \mathrm{if\ } x \neq k_0 \\ \end{array} \right.\end{split}\]</div>
+<p>The definition of a random variable following a Beta distribution is done as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where the input parameter <code class="docutils literal"><span class="pre">loc</span></code> corresponds to the value <span class="math">\(k_0\)</span>.</p>
+</div>
+<div class="section" id="dirichlet">
+<h3>Dirichlet<a class="headerlink" href="#dirichlet" title="Permalink to this headline">¶</a></h3>
+<p>Dirichlet distribution is a continuous multivariate probability distribution parmeterized by a vector of positive reals
+<span class="math">\((\alpha_1,\alpha_2,\ldots,\alpha_k)\)</span>.
+It is a multivariate generalization of the beta distribution. Dirichlet distributions are commonly used as prior
+distributions in Bayesian statistics. The Dirichlet distribution of order <span class="math">\(k \geq 2\)</span> has the following density function.</p>
+<div class="math">
+\[p(x_1,x_2,\ldots x_k; \alpha_1,\alpha_2,\ldots,\alpha_k) = {\frac{\Gamma\left(\sum_i \alpha_i\right)}
+{\prod_i \Gamma(\alpha_i)} \prod_{i=1}^k x_i^{\alpha_i-1}}{}\]</div>
+<p>The definition of a random variable following a Beta distribution is done as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Dirichlet</span><span class="p">(</span><span class="n">concentration</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="c1"># or simply:</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Dirichlet</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>where the input parameter <code class="docutils literal"><span class="pre">concentration</span></code> is the vector  <span class="math">\((\alpha_1,\alpha_2,\ldots,\alpha_k)\)</span>.</p>
+</div>
+<div class="section" id="exponential">
+<h3>Exponential<a class="headerlink" href="#exponential" title="Permalink to this headline">¶</a></h3>
+<p>The exponential distribution (also known as negative exponential distribution) is defined over a continuous domain and
+describes the time between events in a Poisson point process, i.e., a process in which events occur continuously
+and independently at a constant average rate. Its probability density function is</p>
+<div class="math">
+\[\begin{split}p(x;\lambda) =\left\{\begin{array}{cc} \lambda e^{-\lambda x} &amp; \mathrm{if\ } x\geq 0 \\
+ 0 &amp; \mathrm{if\ } x &lt; k_0 \\ \end{array} \right.\end{split}\]</div>
+<p>where <span class="math">\(\lambda&gt;0\)</span> is the rate or inverse scale.</p>
+<p>The definition of a random variable following a exponential distribution is done as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Exponential</span><span class="p">(</span><span class="n">rate</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># or simply</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Exponential</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where the input parameter <code class="docutils literal"><span class="pre">rate</span></code> corresponds to the value <span class="math">\(\lambda\)</span>.</p>
+</div>
+<div class="section" id="gamma">
+<h3>Gamma<a class="headerlink" href="#gamma" title="Permalink to this headline">¶</a></h3>
+<p>The Gamma distribution is a continuous probability distribution parametrized by a concentration (or shape)
+parameter <span class="math">\(\alpha&gt;0\)</span>, and an inverse scale parameter <span class="math">\(\lambda&gt;0\)</span> called rate. Its density function is
+defined as follows.</p>
+<div class="math">
+\[p(x;\alpha, \beta) = \frac{\beta^\alpha x^{\alpha - 1} e^{\beta x}}{\Gamma(\alpha)}\]</div>
+<p>for <span class="math">\(x &gt; 0\)</span> and where <span class="math">\(\Gamma(\alpha)\)</span> is the gamma function.</p>
+<p>The definition of a random variable following a gamma distribution is done as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Gamma</span><span class="p">(</span><span class="n">concentration</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where the input parameters <code class="docutils literal"><span class="pre">concentration</span></code> and <code class="docutils literal"><span class="pre">rate</span></code> corespond to  <span class="math">\(\alpha\)</span> and <span class="math">\(\beta\)</span> respectively.</p>
+</div>
+<div class="section" id="inverse-gamma">
+<h3>Inverse-gamma<a class="headerlink" href="#inverse-gamma" title="Permalink to this headline">¶</a></h3>
+<p>The Inverse-gamma distribution is a continuous probability distribution which is the distribution of the reciprocal
+of a variable distributed according to the gamma distribution. It is also parametrized by a concentration (or shape)
+parameter <span class="math">\(\alpha&gt;0\)</span>, and an inverse scale parameter <span class="math">\(\lambda&gt;0\)</span> called rate. Its density function is
+defined as follows.</p>
+<div class="math">
+\[p(x;\alpha, \beta) = \frac{\beta^\alpha x^{-\alpha - 1} e^{-\frac{\beta}{x}}}{\Gamma(\alpha)}\]</div>
+<p>for <span class="math">\(x &gt; 0\)</span> and where <span class="math">\(\Gamma(\alpha)\)</span> is the gamma function.</p>
+<p>The definition of a random variable following a inverse-gamma distribution is done as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">InverseGamma</span><span class="p">(</span><span class="n">concentration</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where the input parameters <code class="docutils literal"><span class="pre">concentration</span></code> and <code class="docutils literal"><span class="pre">rate</span></code> corespond to  <span class="math">\(\alpha\)</span> and <span class="math">\(\beta\)</span> respectively.</p>
+</div>
+<div class="section" id="laplace">
+<h3>Laplace<a class="headerlink" href="#laplace" title="Permalink to this headline">¶</a></h3>
+<p>The Laplace distribution is a continuous probability distribution with the following density function</p>
+<div class="math">
+\[p(x;\mu,\sigma) = \frac{1}{2\sigma} exp \left( - \frac{|x - \mu |}{\sigma}\right)\]</div>
+<p>The definition of a random variable following a Beta distribution is done as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Laplace</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># or simply</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Laplace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where the input parameter <code class="docutils literal"><span class="pre">loc</span></code> and <code class="docutils literal"><span class="pre">scale</span></code> correspond to <span class="math">\(\mu\)</span> and <span class="math">\(\sigma\)</span> respectively.</p>
+</div>
+<div class="section" id="multinomial">
+<h3>Multinomial<a class="headerlink" href="#multinomial" title="Permalink to this headline">¶</a></h3>
+<p>The multinomial is a discrete distribution which models the probability of counts resulting from repeating <span class="math">\(n\)</span>
+times an experiment with <span class="math">\(k\)</span> possible outcomes. Its probability mass function is defined below.</p>
+<div class="math">
+\[p(x_1,x_2,\ldots x_k; \mathbf{p}) =  \frac{n!}{\prod_{i=1}^k x_i}\prod_{i=1}^k p_i^{x^i}\]</div>
+<p>where <span class="math">\(\mathbf{p}\)</span> is a k-dimensional vector defined as <span class="math">\(\mathbf{p} = (p_1, p_2, \ldots, p_k)\)</span> with the probability
+associated to each possible outcome.</p>
+<p>The definition of a random variable following a multinomial distribution is done as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Multinomial</span><span class="p">(</span><span class="n">total_count</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">probs</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">])</span>
+
+<span class="c1"># or</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Multinomial</span><span class="p">(</span><span class="n">total_count</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">logits</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="multivariate-normal">
+<h3>Multivariate-Normal<a class="headerlink" href="#multivariate-normal" title="Permalink to this headline">¶</a></h3>
+<p>A multivariate-normal (or Gaussian) defines a set of  normal-distributed variables which are assumed
+to be idependent. In other words, the covariance matrix is diagonal.</p>
+<p>A single multivariate-normal distribution defined on <span class="math">\(\mathbb{R}^2\)</span> can be defined as follows.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">MultivariateNormalDiag</span><span class="p">(</span>
+    <span class="n">loc</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">scale_diag</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">2.</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="normal">
+<h3>Normal<a class="headerlink" href="#normal" title="Permalink to this headline">¶</a></h3>
+<p>The normal (or Gaussian) distribution is a continuous probability distribution with the following density function</p>
+<div class="math">
+\[p(x;\mu,\sigma) = \frac{1}{2\sigma} exp \left( - \frac{|x - \mu |}{\sigma}\right)\]</div>
+<p>where <span class="math">\(\mu\)</span>  is the mean or expectation of the distribution, <span class="math">\(\sigma\)</span>  is the standard deviation, and <span class="math">\(\sigma^{2}\)</span> is the variance.</p>
+<p>A normal distribution can be defined as follows.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># or</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where the input parameter <code class="docutils literal"><span class="pre">loc</span></code> and <code class="docutils literal"><span class="pre">scale</span></code> correspond to <span class="math">\(\mu\)</span> and <span class="math">\(\sigma\)</span> respectively.</p>
+</div>
+<div class="section" id="poisson">
+<h3>Poisson<a class="headerlink" href="#poisson" title="Permalink to this headline">¶</a></h3>
+<p>The Poisson distribution is a discrete probability distribution for modeling the number of times an event occurs
+in an interval of time or space. Its probability mass function is</p>
+<div class="math">
+\[p(x;\lambda) = e^{- \lambda} \frac{\lambda^x}{x!}\]</div>
+<p>where <span class="math">\(\lambda\)</span> is the rate or number of events per interval.</p>
+<p>A Poisson distribution can be defined as follows.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Poisson</span><span class="p">(</span><span class="n">rate</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="c1"># or</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Poisson</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="uniform">
+<h3>Uniform<a class="headerlink" href="#uniform" title="Permalink to this headline">¶</a></h3>
+<p>The continuous uniform distribution or rectangular distribution assings the same probability to any <span class="math">\(x\)</span>  in
+the interval <span class="math">\([a,b]\)</span>.</p>
+<div class="math">
+\[\begin{split}p(x;a,b) =\left\{\begin{array}{cc} \frac{1}{b-a} &amp; \mathrm{if\ } x\in [a,b]\\
+ 0 &amp; \mathrm{if\ } x\not\in [a,b] \\ \end{array} \right.\end{split}\]</div>
+<p>A uniform distribution can be defined as follows.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># or</span>
+
+<span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where the input parameters <code class="docutils literal"><span class="pre">low</span></code> and <code class="docutils literal"><span class="pre">high</span></code> correspond to the lower and upper bounds of the interval <span class="math">\([a,b]\)</span>.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="guideinference.html" class="btn btn-neutral float-right" title="Guide to Approximate Inference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="requirements.html" class="btn btn-neutral" title="Requirements" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Andrés R. Masegosa, Rafael Cabañas.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

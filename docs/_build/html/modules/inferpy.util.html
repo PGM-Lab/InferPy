@@ -1,0 +1,630 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>inferpy.util package &mdash; InferPy 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/inferpy_theme.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="InferPy 1.0 documentation" href="../index.html"/>
+        <link rel="up" title="inferpy package" href="inferpy.html"/>
+        <link rel="next" title="Contact and Support" href="../notes/contact.html"/>
+        <link rel="prev" title="inferpy.models package" href="inferpy.models.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/logo-doc.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Quick Start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notes/getting30s.html">Getting Started:</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notes/getting30s.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/getting30s.html#seconds-to-inferpy">30 seconds to InferPy</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/gettingGuiding.html">Guiding Principles</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notes/gettingGuiding.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/gettingGuiding.html#architecture">Architecture</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/requirements.html">Requirements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notes/requirements.html#python">Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/requirements.html#edward">Edward</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/requirements.html#tensorflow">Tensorflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/requirements.html#numpy">Numpy</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notes/guidemodels.html">Guide to Building Probabilistic Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notes/guidemodels.html#getting-started-with-probabilistic-models">Getting Started with Probabilistic Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/guidemodels.html#random-variables">Random Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/guidemodels.html#probabilistic-models">Probabilistic Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/guidemodels.html#supported-probability-distributions">Supported Probability Distributions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#bernoulli">Bernoulli</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#beta">Beta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#categorical">Categorical</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#deterministic">Deterministic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#dirichlet">Dirichlet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#exponential">Exponential</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#gamma">Gamma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#inverse-gamma">Inverse-gamma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#laplace">Laplace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#multinomial">Multinomial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#multivariate-normal">Multivariate-Normal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#normal">Normal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#poisson">Poisson</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#uniform">Uniform</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/guideinference.html">Guide to Approximate Inference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notes/guideinference.html#getting-started-with-approximate-inference">Getting Started with Approximate Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/guideinference.html#compositional-inference">Compositional Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/guideinference.html#supported-inference-methods">Supported Inference Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/guidevalidation.html">Guide to Model Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/guidedata.html">Guide to Data Handling</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Model Zoo</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notes/probzoo.html">Probabilistic Model Zoo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notes/probzoo.html#bayesian-linear-regression">Bayesian Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/probzoo.html#bayesian-logistic-regression">Bayesian Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/probzoo.html#bayesian-multinomial-logistic-regression">Bayesian Multinomial Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/probzoo.html#mixture-of-gaussians">Mixture of Gaussians</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/probzoo.html#linear-factor-model-pca">Linear Factor Model (PCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/probzoo.html#pca-with-ard-prior-pca">PCA with ARD Prior (PCA)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/inf_vs_ed.html">Inferpy vs Edward</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notes/inf_vs_ed.html#bayesian-linear-regression">Bayesian Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/inf_vs_ed.html#gaussian-mixture">Gaussian Mixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/inf_vs_ed.html#logistic-regression">Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/inf_vs_ed.html#multinomial-logistic-regression">Multinomial Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/inf_vs_ed.html#linear-factor-model-pca">Linear Factor Model (PCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/inf_vs_ed.html#pca-with-ard-prior-pca">PCA with ARD Prior (PCA)</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Package Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="inferpy.html">inferpy package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="inferpy.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="inferpy.criticism.html">inferpy.criticism package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.criticism.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.criticism.html#module-inferpy.criticism.evaluate">inferpy.criticism.evaluate module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="inferpy.inferences.html">inferpy.inferences package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.inferences.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.inferences.html#module-inferpy.inferences.inference">inferpy.inferences.inference module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.inferences.html#module-inferpy.inferences.qmodel">inferpy.inferences.qmodel module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="inferpy.models.html">inferpy.models package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.models.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.models.html#module-inferpy.models.deterministic">inferpy.models.deterministic module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.models.html#module-inferpy.models.factory">inferpy.models.factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.models.html#module-inferpy.models.prob_model">inferpy.models.prob_model module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.models.html#module-inferpy.models.random_variable">inferpy.models.random_variable module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.models.html#module-inferpy.models.replicate">inferpy.models.replicate module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">inferpy.util package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-inferpy.util.error">inferpy.util.error module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-inferpy.util.format">inferpy.util.format module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-inferpy.util.ops">inferpy.util.ops module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-inferpy.util.runtime">inferpy.util.runtime module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-inferpy.util.wrappers">inferpy.util.wrappers module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.html#module-inferpy.version">inferpy.version module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="inferpy.criticism.html">inferpy.criticism package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.criticism.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.criticism.html#module-inferpy.criticism.evaluate">inferpy.criticism.evaluate module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="inferpy.inferences.html">inferpy.inferences package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.inferences.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.inferences.html#module-inferpy.inferences.inference">inferpy.inferences.inference module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.inferences.html#module-inferpy.inferences.qmodel">inferpy.inferences.qmodel module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="inferpy.models.html">inferpy.models package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.models.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.models.html#module-inferpy.models.deterministic">inferpy.models.deterministic module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.models.html#module-inferpy.models.factory">inferpy.models.factory module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.models.html#module-inferpy.models.prob_model">inferpy.models.prob_model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.models.html#module-inferpy.models.random_variable">inferpy.models.random_variable module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.models.html#module-inferpy.models.replicate">inferpy.models.replicate module</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">inferpy.util package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-inferpy.util.error">inferpy.util.error module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-inferpy.util.format">inferpy.util.format module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-inferpy.util.ops">inferpy.util.ops module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-inferpy.util.runtime">inferpy.util.runtime module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-inferpy.util.wrappers">inferpy.util.wrappers module</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Other</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notes/contact.html">Contact and Support</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">InferPy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="inferpy.html">inferpy package</a> &raquo;</li>
+        
+      <li>inferpy.util package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/modules/inferpy.util.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="inferpy-util-package">
+<h1>inferpy.util package<a class="headerlink" href="#inferpy-util-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-inferpy.util.error">
+<span id="inferpy-util-error-module"></span><h2>inferpy.util.error module<a class="headerlink" href="#module-inferpy.util.error" title="Permalink to this headline">¶</a></h2>
+<p>Module implementing custom exceptions and errors</p>
+<dl class="exception">
+<dt id="inferpy.util.error.ScopeException">
+<em class="property">exception </em><code class="descclassname">inferpy.util.error.</code><code class="descname">ScopeException</code><a class="reference internal" href="../_modules/inferpy/util/error.html#ScopeException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.util.error.ScopeException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>This exception is raised when an InferPy object is declared in a non-valid scope</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-inferpy.util.format">
+<span id="inferpy-util-format-module"></span><h2>inferpy.util.format module<a class="headerlink" href="#module-inferpy.util.format" title="Permalink to this headline">¶</a></h2>
+<p>Module implementing text formatting operaionts</p>
+<dl class="function">
+<dt id="inferpy.util.format.np_str">
+<code class="descclassname">inferpy.util.format.</code><code class="descname">np_str</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/util/format.html#np_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.util.format.np_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shorten string representation of a numpy object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> – numpy object.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-inferpy.util.ops">
+<span id="inferpy-util-ops-module"></span><h2>inferpy.util.ops module<a class="headerlink" href="#module-inferpy.util.ops" title="Permalink to this headline">¶</a></h2>
+<p>Module implementing some useful operations over tensors and random variables</p>
+<dl class="function">
+<dt id="inferpy.util.ops.case">
+<code class="descclassname">inferpy.util.ops.</code><code class="descname">case</code><span class="sig-paren">(</span><em>d</em>, <em>default=None</em>, <em>exclusive=True</em>, <em>strict=False</em>, <em>name='case'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/util/ops.html#case"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.util.ops.case" title="Permalink to this definition">¶</a></dt>
+<dd><p>Control flow operation depending of the outcome of a tensor. Any expression
+in tensorflow giving as a result a boolean is allowed as condition.</p>
+<p>Internally, the operation tensorflow.case is invoked. Unlike the tensorflow operation, this one
+accepts InferPy variables as input parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>d</strong> – dictionary where the keys are the conditions (i.e. boolean tensor).</li>
+<li><strong>exclusive</strong> – True iff at most one case is allowed to evaluate to True.</li>
+<li><strong>name</strong> – name of the resulting tensor.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Tensor implementing the case operation. This is the output of the operation
+tensorflow.case internally invoked.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="inferpy.util.ops.case_states">
+<code class="descclassname">inferpy.util.ops.</code><code class="descname">case_states</code><span class="sig-paren">(</span><em>var</em>, <em>d</em>, <em>default=None</em>, <em>exclusive=True</em>, <em>strict=False</em>, <em>name='case'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/util/ops.html#case_states"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.util.ops.case_states" title="Permalink to this definition">¶</a></dt>
+<dd><p>Control flow operation depending of the outcome of a discrete variable.</p>
+<p>Internally, the operation tensorflow.case is invoked. Unlike the tensorflow operation, this one
+accepts InferPy variables as input parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>var</strong> – Control InferPy discrete random variable.</li>
+<li><strong>d</strong> – dictionary where the keys are each of the possible values of control variable</li>
+<li><strong>the values are returning tensors for each case.</strong> (<em>and</em>) – </li>
+<li><strong>exclusive</strong> – True iff at most one case is allowed to evaluate to True.</li>
+<li><strong>name</strong> – name of the resulting tensor.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Tensor implementing the case operation. This is the output of the operation
+tensorflow.case internally invoked.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="inferpy.util.ops.dot">
+<code class="descclassname">inferpy.util.ops.</code><code class="descname">dot</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/util/ops.html#dot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.util.ops.dot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute dot product between an InferPy or Tensor object. The number of batches N equal to 1
+for one of them, and higher for the other one.</p>
+<blockquote>
+<div><p>If necessarily, the order of the operands may be changed.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>x: first operand. This could be an InferPy variable, a Tensor, a numpy object or a numeric Python list.
+x: second operand. This could be an InferPy variable, a Tensor, a numpy object or a numeric Python list.</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>Retruns:</dt>
+<dd>An InferPy variable of type Deterministic encapsulating the resulting tensor
+of the multiplications.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="inferpy.util.ops.fix_shape">
+<code class="descclassname">inferpy.util.ops.</code><code class="descname">fix_shape</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/util/ops.html#fix_shape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.util.ops.fix_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transforms a shape list into a standard InferPy shape format.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="inferpy.util.ops.gather">
+<code class="descclassname">inferpy.util.ops.</code><code class="descname">gather</code><span class="sig-paren">(</span><em>params</em>, <em>indices</em>, <em>validate_indices=None</em>, <em>name=None</em>, <em>axis=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/util/ops.html#gather"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.util.ops.gather" title="Permalink to this definition">¶</a></dt>
+<dd><p>Operation for selecting some of the items in a tensor.</p>
+<p>Internally, the operation tensorflow.gather is invoked. Unlike the tensorflow operation, this one
+accepts InferPy variables as input parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>params</strong> – A Tensor. The tensor from which to gather values. Must be at least rank axis + 1.</li>
+<li><strong>indices</strong> – A Tensor. Must be one of the following types: int32, int64. Index tensor. Must be in range</li>
+<li><strong>params.shape</strong><strong>[</strong><strong>axis</strong><strong>]</strong><strong>)</strong><strong></strong> (<em>[</em><em>0</em><em>,</em>) – </li>
+<li><strong>axis</strong> – A Tensor. Must be one of the following types: int32, int64. The axis in params to gather indices</li>
+<li><strong>Defaults to the first dimension. Supports negative indexes.</strong> (<em>from.</em>) – </li>
+<li><strong>name</strong> – A name for the operation (optional).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A Tensor. Has the same type as params.. This is the output of the operation
+tensorflow.gather internally invoked.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="inferpy.util.ops.matmul">
+<code class="descclassname">inferpy.util.ops.</code><code class="descname">matmul</code><span class="sig-paren">(</span><em>a</em>, <em>b</em>, <em>transpose_a=False</em>, <em>transpose_b=False</em>, <em>adjoint_a=False</em>, <em>adjoint_b=False</em>, <em>a_is_sparse=False</em>, <em>b_is_sparse=False</em>, <em>name=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/util/ops.html#matmul"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.util.ops.matmul" title="Permalink to this definition">¶</a></dt>
+<dd><p>Matrix multiplication.</p>
+<p>Input objects may be tensors but also InferPy variables.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>a</strong> – Tensor of type float16, float32, float64, int32, complex64, complex128 and rank &gt; 1.</li>
+<li><strong>b</strong> – Tensor with same type and rank as a.</li>
+<li><strong>transpose_a</strong> – If True, a is transposed before multiplication.</li>
+<li><strong>transpose_b</strong> – If True, b is transposed before multiplication.</li>
+<li><strong>adjoint_a</strong> – If True, a is conjugated and transposed before multiplication.</li>
+<li><strong>adjoint_b</strong> – If True, b is conjugated and transposed before multiplication.</li>
+<li><strong>a_is_sparse</strong> – If True, a is treated as a sparse matrix.</li>
+<li><strong>b_is_sparse</strong> – If True, b is treated as a sparse matrix.</li>
+<li><strong>name</strong> – Name for the operation (optional).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>Retruns:</dt>
+<dd>An InferPy variable of type Deterministic encapsulating the resulting tensor
+of the multiplications.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="inferpy.util.ops.param_to_tf">
+<code class="descclassname">inferpy.util.ops.</code><code class="descname">param_to_tf</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/util/ops.html#param_to_tf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.util.ops.param_to_tf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transforms either a scalar or a random variable into a Tensor</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="inferpy.util.ops.shape_to_list">
+<code class="descclassname">inferpy.util.ops.</code><code class="descname">shape_to_list</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/util/ops.html#shape_to_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.util.ops.shape_to_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transforms the shape of an object into a list</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>a</strong> – object whose shape will be transformed. This could be an InferPy variable, a Tensor, a numpy object or a numeric Python list.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-inferpy.util.runtime">
+<span id="inferpy-util-runtime-module"></span><h2>inferpy.util.runtime module<a class="headerlink" href="#module-inferpy.util.runtime" title="Permalink to this headline">¶</a></h2>
+<p>Module with useful definitions to be used in runtime</p>
+<dl class="function">
+<dt id="inferpy.util.runtime.get_session">
+<code class="descclassname">inferpy.util.runtime.</code><code class="descname">get_session</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/util/runtime.html#get_session"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.util.runtime.get_session" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the default tensorflow session</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-inferpy.util.wrappers">
+<span id="inferpy-util-wrappers-module"></span><h2>inferpy.util.wrappers module<a class="headerlink" href="#module-inferpy.util.wrappers" title="Permalink to this headline">¶</a></h2>
+<p>Module with useful wrappers used for the development of InferPy.</p>
+<dl class="function">
+<dt id="inferpy.util.wrappers.input_model_data">
+<code class="descclassname">inferpy.util.wrappers.</code><code class="descname">input_model_data</code><span class="sig-paren">(</span><em>f</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/util/wrappers.html#input_model_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.util.wrappers.input_model_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>wrapper that transforms, if required, a dataset object, making it suitable for InferPy inference
+process.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="inferpy.util.wrappers.multishape">
+<code class="descclassname">inferpy.util.wrappers.</code><code class="descname">multishape</code><span class="sig-paren">(</span><em>f</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/util/wrappers.html#multishape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.util.wrappers.multishape" title="Permalink to this definition">¶</a></dt>
+<dd><p>This wrapper allows to apply a function with simple parameters, over multidimensional ones.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="inferpy.util.wrappers.singleton">
+<code class="descclassname">inferpy.util.wrappers.</code><code class="descname">singleton</code><span class="sig-paren">(</span><em>class_</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/util/wrappers.html#singleton"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.util.wrappers.singleton" title="Permalink to this definition">¶</a></dt>
+<dd><p>wrapper that allows to define a singleton class</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="inferpy.util.wrappers.static_multishape">
+<code class="descclassname">inferpy.util.wrappers.</code><code class="descname">static_multishape</code><span class="sig-paren">(</span><em>f</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/util/wrappers.html#static_multishape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.util.wrappers.static_multishape" title="Permalink to this definition">¶</a></dt>
+<dd><p>This wrapper allows to apply a function with simple parameters, over multidimensional ones.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="inferpy.util.wrappers.tf_run_wrapper">
+<code class="descclassname">inferpy.util.wrappers.</code><code class="descname">tf_run_wrapper</code><span class="sig-paren">(</span><em>f</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/util/wrappers.html#tf_run_wrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.util.wrappers.tf_run_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>When setted to a function f, this wrappers replaces the output tensor of f by its evaluation
+in the default tensorflow session. In doing so, the API user will only work with standard Python
+types.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../notes/contact.html" class="btn btn-neutral float-right" title="Contact and Support" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="inferpy.models.html" class="btn btn-neutral" title="inferpy.models package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Andrés R. Masegosa, Rafael Cabañas.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

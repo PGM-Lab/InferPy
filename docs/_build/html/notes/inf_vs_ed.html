@@ -1,0 +1,572 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Inferpy vs Edward &mdash; InferPy 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/inferpy_theme.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="InferPy 1.0 documentation" href="../index.html"/>
+        <link rel="next" title="inferpy package" href="../modules/inferpy.html"/>
+        <link rel="prev" title="Probabilistic Model Zoo" href="probzoo.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/logo-doc.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Quick Start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting30s.html">Getting Started:</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting30s.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting30s.html#seconds-to-inferpy">30 seconds to InferPy</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gettingGuiding.html">Guiding Principles</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gettingGuiding.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gettingGuiding.html#architecture">Architecture</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="requirements.html">Requirements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="requirements.html#python">Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="requirements.html#edward">Edward</a></li>
+<li class="toctree-l2"><a class="reference internal" href="requirements.html#tensorflow">Tensorflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="requirements.html#numpy">Numpy</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="guidemodels.html">Guide to Building Probabilistic Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guidemodels.html#getting-started-with-probabilistic-models">Getting Started with Probabilistic Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guidemodels.html#random-variables">Random Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guidemodels.html#probabilistic-models">Probabilistic Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guidemodels.html#supported-probability-distributions">Supported Probability Distributions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="guidemodels.html#bernoulli">Bernoulli</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guidemodels.html#beta">Beta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guidemodels.html#categorical">Categorical</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guidemodels.html#deterministic">Deterministic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guidemodels.html#dirichlet">Dirichlet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guidemodels.html#exponential">Exponential</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guidemodels.html#gamma">Gamma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guidemodels.html#inverse-gamma">Inverse-gamma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guidemodels.html#laplace">Laplace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guidemodels.html#multinomial">Multinomial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guidemodels.html#multivariate-normal">Multivariate-Normal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guidemodels.html#normal">Normal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guidemodels.html#poisson">Poisson</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guidemodels.html#uniform">Uniform</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guideinference.html">Guide to Approximate Inference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guideinference.html#getting-started-with-approximate-inference">Getting Started with Approximate Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guideinference.html#compositional-inference">Compositional Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guideinference.html#supported-inference-methods">Supported Inference Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guidevalidation.html">Guide to Model Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guidedata.html">Guide to Data Handling</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Model Zoo</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="probzoo.html">Probabilistic Model Zoo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="probzoo.html#bayesian-linear-regression">Bayesian Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="probzoo.html#bayesian-logistic-regression">Bayesian Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="probzoo.html#bayesian-multinomial-logistic-regression">Bayesian Multinomial Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="probzoo.html#mixture-of-gaussians">Mixture of Gaussians</a></li>
+<li class="toctree-l2"><a class="reference internal" href="probzoo.html#linear-factor-model-pca">Linear Factor Model (PCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="probzoo.html#pca-with-ard-prior-pca">PCA with ARD Prior (PCA)</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Inferpy vs Edward</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#bayesian-linear-regression">Bayesian Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gaussian-mixture">Gaussian Mixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#logistic-regression">Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#multinomial-logistic-regression">Multinomial Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#linear-factor-model-pca">Linear Factor Model (PCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pca-with-ard-prior-pca">PCA with ARD Prior (PCA)</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Package Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules/inferpy.html">inferpy package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../modules/inferpy.criticism.html">inferpy.criticism package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.criticism.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.criticism.html#module-inferpy.criticism.evaluate">inferpy.criticism.evaluate module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/inferpy.inferences.html">inferpy.inferences package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.inferences.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.inferences.html#module-inferpy.inferences.inference">inferpy.inferences.inference module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.inferences.html#module-inferpy.inferences.qmodel">inferpy.inferences.qmodel module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/inferpy.models.html">inferpy.models package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.models.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.deterministic">inferpy.models.deterministic module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.factory">inferpy.models.factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.prob_model">inferpy.models.prob_model module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.random_variable">inferpy.models.random_variable module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.replicate">inferpy.models.replicate module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/inferpy.util.html">inferpy.util package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.util.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.error">inferpy.util.error module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.format">inferpy.util.format module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.ops">inferpy.util.ops module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.runtime">inferpy.util.runtime module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.wrappers">inferpy.util.wrappers module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.html#module-inferpy.version">inferpy.version module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/inferpy.criticism.html">inferpy.criticism package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.criticism.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.criticism.html#module-inferpy.criticism.evaluate">inferpy.criticism.evaluate module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/inferpy.inferences.html">inferpy.inferences package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.inferences.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.inferences.html#module-inferpy.inferences.inference">inferpy.inferences.inference module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.inferences.html#module-inferpy.inferences.qmodel">inferpy.inferences.qmodel module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/inferpy.models.html">inferpy.models package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.models.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.deterministic">inferpy.models.deterministic module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.factory">inferpy.models.factory module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.prob_model">inferpy.models.prob_model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.random_variable">inferpy.models.random_variable module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.models.html#module-inferpy.models.replicate">inferpy.models.replicate module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/inferpy.util.html">inferpy.util package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.util.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.error">inferpy.util.error module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.format">inferpy.util.format module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.ops">inferpy.util.ops module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.runtime">inferpy.util.runtime module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/inferpy.util.html#module-inferpy.util.wrappers">inferpy.util.wrappers module</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Other</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact and Support</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">InferPy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Inferpy vs Edward</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/notes/inf_vs_ed.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="inferpy-vs-edward">
+<span id="inf-vs-ed"></span><h1>Inferpy vs Edward<a class="headerlink" href="#inferpy-vs-edward" title="Permalink to this headline">¶</a></h1>
+<p>This section shows the equivalent Edward code for those models in <a class="reference external" href="probzoo.html">Probabilistic Model Zoo</a> section.</p>
+<div class="section" id="bayesian-linear-regression">
+<h2>Bayesian Linear Regression<a class="headerlink" href="#bayesian-linear-regression" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># model definition</span>
+<span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">ProbModel</span><span class="p">()</span> <span class="k">as</span> <span class="n">model</span><span class="p">:</span>
+
+    <span class="c1"># define the weights</span>
+    <span class="n">w0</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
+
+    <span class="c1"># define the generative model</span>
+    <span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">w0</span> <span class="o">+</span> <span class="n">inf</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">w</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+
+<span class="c1"># compile and fit the model with training data</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="n">x_train</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">y_train</span><span class="p">}</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># print the posterior distributions</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gaussian-mixture">
+<h2>Gaussian Mixture<a class="headerlink" href="#gaussian-mixture" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span></span>
+    <span class="c1"># define the generative model</span>
+    <span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">):</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">probs</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">mu</span><span class="p">[</span><span class="n">z</span><span class="p">],</span> <span class="n">sigma</span><span class="p">[</span><span class="n">z</span><span class="p">],</span> <span class="n">observed</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
+
+<span class="c1"># compile and fit the model with training data</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="n">x_train</span><span class="p">}</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">infMethod</span><span class="o">=</span><span class="s2">&quot;MCMC&quot;</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># print the posterior</span>
+<span class="k">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">posterior</span><span class="p">(</span><span class="n">mu</span><span class="p">))</span>
+
+<span class="c1">############################## Edward ##################################################</span>
+
+
+
+<span class="c1"># model definition</span>
+
+<span class="c1"># prior distributions</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Dirichlet</span><span class="p">(</span><span class="n">concentration</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">K</span><span class="p">)</span> <span class="o">/</span> <span class="n">K</span><span class="p">)</span>
+<span class="n">mu</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">sample_shape</span><span class="o">=</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">d</span><span class="p">])</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">InverseGamma</span><span class="p">(</span><span class="n">concentration</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">sample_shape</span><span class="o">=</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">d</span><span class="p">])</span>
+<span class="c1"># define the generative model</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">logits</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">-</span> <span class="n">tf</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">p</span><span class="p">),</span> <span class="n">sample_shape</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">z</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span>
+
+<span class="c1"># compile and fit the model with training data</span>
+<span class="n">qp</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Empirical</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="s2">&quot;qp/params&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">K</span><span class="p">],</span>
+                                                <span class="n">initializer</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">constant_initializer</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">K</span><span class="p">)))</span>
+<span class="n">qmu</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Empirical</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="s2">&quot;qmu/params&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">d</span><span class="p">],</span>
+                                                 <span class="n">initializer</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros_initializer</span><span class="p">()))</span>
+<span class="n">qsigma</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Empirical</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="s2">&quot;qsigma/params&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">d</span><span class="p">],</span>
+                                                    <span class="n">initializer</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones_initializer</span><span class="p">()))</span>
+<span class="n">qz</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Empirical</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="s2">&quot;qz/params&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">N</span><span class="p">],</span>
+                                                <span class="n">initializer</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros_initializer</span><span class="p">(),</span>
+                                                <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">))</span>
+
+<span class="n">gp</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Dirichlet</span><span class="p">(</span><span class="n">concentration</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">K</span><span class="p">))</span>
+<span class="n">gmu</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">K</span><span class="p">,</span> <span class="n">d</span><span class="p">]),</span> <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">K</span><span class="p">,</span> <span class="n">d</span><span class="p">]))</span>
+<span class="n">gsigma</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">InverseGamma</span><span class="p">(</span><span class="n">concentration</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">K</span><span class="p">,</span> <span class="n">d</span><span class="p">]),</span> <span class="n">rate</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">K</span><span class="p">,</span> <span class="n">d</span><span class="p">]))</span>
+<span class="n">gz</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">logits</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">N</span><span class="p">,</span> <span class="n">K</span><span class="p">]))</span>
+
+<span class="n">inference</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">MetropolisHastings</span><span class="p">(</span>
+    <span class="n">latent_vars</span><span class="o">=</span><span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="n">qp</span><span class="p">,</span> <span class="n">mu</span><span class="p">:</span> <span class="n">qmu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">:</span> <span class="n">qsigma</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="n">qz</span><span class="p">},</span>
+    <span class="n">proposal_vars</span><span class="o">=</span><span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="n">gp</span><span class="p">,</span> <span class="n">mu</span><span class="p">:</span> <span class="n">gmu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">:</span> <span class="n">gsigma</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="n">gz</span><span class="p">},</span>
+    <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="n">x_train</span><span class="p">})</span>
+
+<span class="n">inference</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+<span class="c1"># print the posterior</span>
+<span class="k">print</span><span class="p">(</span><span class="n">qmu</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">eval</span><span class="p">())</span>
+
+</pre></div>
+</div>
+</div>
+<div class="section" id="logistic-regression">
+<h2>Logistic Regression<a class="headerlink" href="#logistic-regression" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span></span>
+<span class="c1"># define the weights</span>
+<span class="n">w0</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+
+<span class="c1"># define the generative model</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">N</span><span class="p">,</span><span class="n">d</span><span class="p">]),</span> <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">N</span><span class="p">,</span><span class="n">d</span><span class="p">]))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Bernoulli</span><span class="p">(</span><span class="n">logits</span><span class="o">=</span><span class="n">ed</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span> <span class="o">+</span> <span class="n">w0</span><span class="p">)</span>
+
+<span class="c1"># compile and fit the model with training data</span>
+<span class="n">qw</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="n">d</span><span class="p">])),</span>
+                      <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softplus</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="n">d</span><span class="p">]))))</span>
+<span class="n">qw0</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="mi">1</span><span class="p">])),</span>
+                       <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softplus</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="mi">1</span><span class="p">]))))</span>
+
+<span class="n">inference</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">KLqp</span><span class="p">({</span><span class="n">w</span><span class="p">:</span> <span class="n">qw</span><span class="p">,</span> <span class="n">w0</span><span class="p">:</span> <span class="n">qw0</span><span class="p">},</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="n">x_train</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">y_train</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">N</span><span class="p">)})</span>
+<span class="n">inference</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+<span class="c1"># print the posterior distributions</span>
+<span class="k">print</span><span class="p">([</span><span class="n">qw</span><span class="o">.</span><span class="n">loc</span><span class="o">.</span><span class="n">eval</span><span class="p">(),</span> <span class="n">qw0</span><span class="o">.</span><span class="n">loc</span><span class="o">.</span><span class="n">eval</span><span class="p">()])</span>
+
+</pre></div>
+</div>
+</div>
+<div class="section" id="multinomial-logistic-regression">
+<h2>Multinomial Logistic Regression<a class="headerlink" href="#multinomial-logistic-regression" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span></span>
+<span class="c1"># define the weights</span>
+<span class="n">w0</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">K</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">K</span><span class="p">))</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">K</span><span class="p">,</span><span class="n">d</span><span class="p">]),</span> <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">K</span><span class="p">,</span><span class="n">d</span><span class="p">]))</span>
+
+<span class="c1"># define the generative model</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">N</span><span class="p">,</span><span class="n">d</span><span class="p">]),</span> <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">N</span><span class="p">,</span><span class="n">d</span><span class="p">]))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">w0</span> <span class="o">+</span> <span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">transpose_b</span><span class="o">=</span><span class="bp">True</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">N</span><span class="p">,</span><span class="n">K</span><span class="p">]))</span>
+
+<span class="c1"># compile and fit the model with training data</span>
+<span class="n">qw</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="n">K</span><span class="p">,</span><span class="n">d</span><span class="p">])),</span>
+                      <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softplus</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="n">K</span><span class="p">,</span><span class="n">d</span><span class="p">]))))</span>
+<span class="n">qw0</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="n">K</span><span class="p">])),</span>
+                       <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softplus</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="n">K</span><span class="p">]))))</span>
+
+<span class="n">inference</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">KLqp</span><span class="p">({</span><span class="n">w</span><span class="p">:</span> <span class="n">qw</span><span class="p">,</span> <span class="n">w0</span><span class="p">:</span> <span class="n">qw0</span><span class="p">},</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="n">x_train</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">y_train</span><span class="p">})</span>
+<span class="n">inference</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+<span class="c1"># print the posterior distributions</span>
+<span class="k">print</span><span class="p">([</span><span class="n">qw</span><span class="o">.</span><span class="n">loc</span><span class="o">.</span><span class="n">eval</span><span class="p">(),</span> <span class="n">qw0</span><span class="o">.</span><span class="n">loc</span><span class="o">.</span><span class="n">eval</span><span class="p">()])</span>
+
+</pre></div>
+</div>
+</div>
+<div class="section" id="linear-factor-model-pca">
+<h2>Linear Factor Model (PCA)<a class="headerlink" href="#linear-factor-model-pca" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span></span>
+<span class="c1"># define the weights</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">K</span><span class="p">,</span><span class="n">d</span><span class="p">]),</span> <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">K</span><span class="p">,</span><span class="n">d</span><span class="p">]))</span>
+
+<span class="c1"># define the generative model</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">N</span><span class="p">,</span><span class="n">K</span><span class="p">]),</span> <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">N</span><span class="p">,</span><span class="n">K</span><span class="p">]))</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="n">w</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">N</span><span class="p">,</span><span class="n">d</span><span class="p">]))</span>
+
+<span class="c1"># compile and fit the model with training data</span>
+<span class="n">qw</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="n">K</span><span class="p">,</span><span class="n">d</span><span class="p">])),</span>
+                      <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softplus</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="n">K</span><span class="p">,</span><span class="n">d</span><span class="p">]))))</span>
+
+
+<span class="n">inference</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">KLqp</span><span class="p">({</span><span class="n">w</span><span class="p">:</span> <span class="n">qw</span><span class="p">},</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="n">x_train</span><span class="p">})</span>
+<span class="n">inference</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+<span class="c1"># print the posterior distributions</span>
+<span class="k">print</span><span class="p">([</span><span class="n">qw</span><span class="o">.</span><span class="n">loc</span><span class="o">.</span><span class="n">eval</span><span class="p">()])</span>
+
+</pre></div>
+</div>
+</div>
+<div class="section" id="pca-with-ard-prior-pca">
+<h2>PCA with ARD Prior (PCA)<a class="headerlink" href="#pca-with-ard-prior-pca" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span></span>
+<span class="c1"># define the weights</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">K</span><span class="p">,</span><span class="n">d</span><span class="p">]),</span> <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">K</span><span class="p">,</span><span class="n">d</span><span class="p">]))</span>
+
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">InverseGamma</span><span class="p">(</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
+
+<span class="c1"># define the generative model</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">N</span><span class="p">,</span><span class="n">K</span><span class="p">]),</span> <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">N</span><span class="p">,</span><span class="n">K</span><span class="p">]))</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="n">w</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span>
+
+<span class="c1"># compile and fit the model with training data</span>
+<span class="n">qw</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="n">K</span><span class="p">,</span><span class="n">d</span><span class="p">])),</span>
+                      <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softplus</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="n">K</span><span class="p">,</span><span class="n">d</span><span class="p">]))))</span>
+
+
+<span class="n">inference</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">KLqp</span><span class="p">({</span><span class="n">w</span><span class="p">:</span> <span class="n">qw</span><span class="p">},</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="n">x_train</span><span class="p">})</span>
+<span class="n">inference</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+<span class="c1"># print the posterior distributions</span>
+<span class="k">print</span><span class="p">([</span><span class="n">qw</span><span class="o">.</span><span class="n">loc</span><span class="o">.</span><span class="n">eval</span><span class="p">()])</span>
+
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../modules/inferpy.html" class="btn btn-neutral float-right" title="inferpy package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="probzoo.html" class="btn btn-neutral" title="Probabilistic Model Zoo" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Andrés R. Masegosa, Rafael Cabañas.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

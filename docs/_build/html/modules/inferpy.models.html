@@ -1,0 +1,1417 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>inferpy.models package &mdash; InferPy 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/inferpy_theme.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="InferPy 1.0 documentation" href="../index.html"/>
+        <link rel="up" title="inferpy package" href="inferpy.html"/>
+        <link rel="next" title="inferpy.util package" href="inferpy.util.html"/>
+        <link rel="prev" title="inferpy.inferences package" href="inferpy.inferences.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/logo-doc.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Quick Start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notes/getting30s.html">Getting Started:</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notes/getting30s.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/getting30s.html#seconds-to-inferpy">30 seconds to InferPy</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/gettingGuiding.html">Guiding Principles</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notes/gettingGuiding.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/gettingGuiding.html#architecture">Architecture</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/requirements.html">Requirements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notes/requirements.html#python">Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/requirements.html#edward">Edward</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/requirements.html#tensorflow">Tensorflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/requirements.html#numpy">Numpy</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notes/guidemodels.html">Guide to Building Probabilistic Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notes/guidemodels.html#getting-started-with-probabilistic-models">Getting Started with Probabilistic Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/guidemodels.html#random-variables">Random Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/guidemodels.html#probabilistic-models">Probabilistic Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/guidemodels.html#supported-probability-distributions">Supported Probability Distributions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#bernoulli">Bernoulli</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#beta">Beta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#categorical">Categorical</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#deterministic">Deterministic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#dirichlet">Dirichlet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#exponential">Exponential</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#gamma">Gamma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#inverse-gamma">Inverse-gamma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#laplace">Laplace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#multinomial">Multinomial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#multivariate-normal">Multivariate-Normal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#normal">Normal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#poisson">Poisson</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#uniform">Uniform</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/guideinference.html">Guide to Approximate Inference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notes/guideinference.html#getting-started-with-approximate-inference">Getting Started with Approximate Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/guideinference.html#compositional-inference">Compositional Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/guideinference.html#supported-inference-methods">Supported Inference Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/guidevalidation.html">Guide to Model Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/guidedata.html">Guide to Data Handling</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Model Zoo</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notes/probzoo.html">Probabilistic Model Zoo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notes/probzoo.html#bayesian-linear-regression">Bayesian Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/probzoo.html#bayesian-logistic-regression">Bayesian Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/probzoo.html#bayesian-multinomial-logistic-regression">Bayesian Multinomial Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/probzoo.html#mixture-of-gaussians">Mixture of Gaussians</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/probzoo.html#linear-factor-model-pca">Linear Factor Model (PCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/probzoo.html#pca-with-ard-prior-pca">PCA with ARD Prior (PCA)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/inf_vs_ed.html">Inferpy vs Edward</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notes/inf_vs_ed.html#bayesian-linear-regression">Bayesian Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/inf_vs_ed.html#gaussian-mixture">Gaussian Mixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/inf_vs_ed.html#logistic-regression">Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/inf_vs_ed.html#multinomial-logistic-regression">Multinomial Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/inf_vs_ed.html#linear-factor-model-pca">Linear Factor Model (PCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/inf_vs_ed.html#pca-with-ard-prior-pca">PCA with ARD Prior (PCA)</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Package Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="inferpy.html">inferpy package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="inferpy.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="inferpy.criticism.html">inferpy.criticism package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.criticism.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.criticism.html#module-inferpy.criticism.evaluate">inferpy.criticism.evaluate module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="inferpy.inferences.html">inferpy.inferences package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.inferences.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.inferences.html#module-inferpy.inferences.inference">inferpy.inferences.inference module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.inferences.html#module-inferpy.inferences.qmodel">inferpy.inferences.qmodel module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">inferpy.models package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-inferpy.models.deterministic">inferpy.models.deterministic module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-inferpy.models.factory">inferpy.models.factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-inferpy.models.prob_model">inferpy.models.prob_model module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-inferpy.models.random_variable">inferpy.models.random_variable module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-inferpy.models.replicate">inferpy.models.replicate module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="inferpy.util.html">inferpy.util package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.util.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.util.html#module-inferpy.util.error">inferpy.util.error module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.util.html#module-inferpy.util.format">inferpy.util.format module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.util.html#module-inferpy.util.ops">inferpy.util.ops module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.util.html#module-inferpy.util.runtime">inferpy.util.runtime module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.util.html#module-inferpy.util.wrappers">inferpy.util.wrappers module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.html#module-inferpy.version">inferpy.version module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="inferpy.criticism.html">inferpy.criticism package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.criticism.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.criticism.html#module-inferpy.criticism.evaluate">inferpy.criticism.evaluate module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="inferpy.inferences.html">inferpy.inferences package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.inferences.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.inferences.html#module-inferpy.inferences.inference">inferpy.inferences.inference module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.inferences.html#module-inferpy.inferences.qmodel">inferpy.inferences.qmodel module</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">inferpy.models package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-inferpy.models.deterministic">inferpy.models.deterministic module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-inferpy.models.factory">inferpy.models.factory module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-inferpy.models.prob_model">inferpy.models.prob_model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-inferpy.models.random_variable">inferpy.models.random_variable module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-inferpy.models.replicate">inferpy.models.replicate module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="inferpy.util.html">inferpy.util package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.util.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.util.html#module-inferpy.util.error">inferpy.util.error module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.util.html#module-inferpy.util.format">inferpy.util.format module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.util.html#module-inferpy.util.ops">inferpy.util.ops module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.util.html#module-inferpy.util.runtime">inferpy.util.runtime module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.util.html#module-inferpy.util.wrappers">inferpy.util.wrappers module</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Other</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notes/contact.html">Contact and Support</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">InferPy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="inferpy.html">inferpy package</a> &raquo;</li>
+        
+      <li>inferpy.models package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/modules/inferpy.models.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="inferpy-models-package">
+<h1>inferpy.models package<a class="headerlink" href="#inferpy-models-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-inferpy.models.deterministic">
+<span id="inferpy-models-deterministic-module"></span><h2>inferpy.models.deterministic module<a class="headerlink" href="#module-inferpy.models.deterministic" title="Permalink to this headline">¶</a></h2>
+<p>The Deterministic distribution</p>
+<dl class="class">
+<dt id="inferpy.models.deterministic.Deterministic">
+<em class="property">class </em><code class="descclassname">inferpy.models.deterministic.</code><code class="descname">Deterministic</code><span class="sig-paren">(</span><em>loc=None</em>, <em>dim=None</em>, <em>observed=False</em>, <em>name='Determ'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/deterministic.html#Deterministic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.deterministic.Deterministic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#inferpy.models.random_variable.RandomVariable" title="inferpy.models.random_variable.RandomVariable"><code class="xref py py-class docutils literal"><span class="pre">inferpy.models.random_variable.RandomVariable</span></code></a></p>
+<p>Class implementing a Deterministic variable.</p>
+<p>This allows to encapsulate any Tensor object of Edward variable. Moreover, variables
+of this type can be intilially empty and later initialized. When operating with InferPy
+random variables, the result is always a deterministic variable.</p>
+<p>An example of use:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">inferpy</span> <span class="k">as</span> <span class="nn">inf</span>
+<span class="kn">import</span> <span class="nn">edward</span> <span class="k">as</span> <span class="nn">ed</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+
+<span class="c1"># empty initialized variable</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">()</span>
+<span class="n">x</span><span class="o">.</span><span class="n">dist</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
+
+
+<span class="c1"># deterministic variable with returning a tensor</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">()</span>
+<span class="n">x</span><span class="o">.</span><span class="n">base_object</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mf">1.</span><span class="p">)</span>
+
+
+<span class="c1"># deterministic variable returning an InferPy variable</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+
+<span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># &lt;class &#39;inferpy.models.deterministic.Deterministic&#39;&gt;</span>
+
+</pre></div>
+</div>
+<dl class="method">
+<dt id="inferpy.models.deterministic.Deterministic.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>loc=None</em>, <em>dim=None</em>, <em>observed=False</em>, <em>name='Determ'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/deterministic.html#Deterministic.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.deterministic.Deterministic.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor for the Deterministic distribution</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.deterministic.Deterministic.loc">
+<code class="descname">loc</code><a class="headerlink" href="#inferpy.models.deterministic.Deterministic.loc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Distribution parameter for the mean.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-inferpy.models.factory">
+<span id="inferpy-models-factory-module"></span><h2>inferpy.models.factory module<a class="headerlink" href="#module-inferpy.models.factory" title="Permalink to this headline">¶</a></h2>
+<p>This module implements all the methods for definition of each type of random variable.
+For further details about all the supported distributions,
+see <a class="reference external" href="../notes/guidemodels.html#supported-probability-distributions">Guide to Building Probabilistic Models</a> .</p>
+<dl class="class">
+<dt id="inferpy.models.factory.Bernoulli">
+<em class="property">class </em><code class="descclassname">inferpy.models.factory.</code><code class="descname">Bernoulli</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/factory.html#Bernoulli"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.factory.Bernoulli" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#inferpy.models.random_variable.RandomVariable" title="inferpy.models.random_variable.RandomVariable"><code class="xref py py-class docutils literal"><span class="pre">inferpy.models.random_variable.RandomVariable</span></code></a></p>
+<dl class="attribute">
+<dt id="inferpy.models.factory.Bernoulli.PARAMS">
+<code class="descname">PARAMS</code><em class="property"> = ['logits', 'probs']</em><a class="headerlink" href="#inferpy.models.factory.Bernoulli.PARAMS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.factory.Bernoulli.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/factory.html#Bernoulli.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.factory.Bernoulli.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>constructor for Bernoulli</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.factory.Bernoulli.logits">
+<code class="descname">logits</code><a class="headerlink" href="#inferpy.models.factory.Bernoulli.logits" title="Permalink to this definition">¶</a></dt>
+<dd><p>property for logits</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.factory.Bernoulli.probs">
+<code class="descname">probs</code><a class="headerlink" href="#inferpy.models.factory.Bernoulli.probs" title="Permalink to this definition">¶</a></dt>
+<dd><p>property for probs</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="inferpy.models.factory.Beta">
+<em class="property">class </em><code class="descclassname">inferpy.models.factory.</code><code class="descname">Beta</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/factory.html#Beta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.factory.Beta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#inferpy.models.random_variable.RandomVariable" title="inferpy.models.random_variable.RandomVariable"><code class="xref py py-class docutils literal"><span class="pre">inferpy.models.random_variable.RandomVariable</span></code></a></p>
+<dl class="attribute">
+<dt id="inferpy.models.factory.Beta.PARAMS">
+<code class="descname">PARAMS</code><em class="property"> = ['concentration1', 'concentration0']</em><a class="headerlink" href="#inferpy.models.factory.Beta.PARAMS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.factory.Beta.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/factory.html#Beta.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.factory.Beta.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>constructor for Beta</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.factory.Beta.concentration0">
+<code class="descname">concentration0</code><a class="headerlink" href="#inferpy.models.factory.Beta.concentration0" title="Permalink to this definition">¶</a></dt>
+<dd><p>property for concentration0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.factory.Beta.concentration1">
+<code class="descname">concentration1</code><a class="headerlink" href="#inferpy.models.factory.Beta.concentration1" title="Permalink to this definition">¶</a></dt>
+<dd><p>property for concentration1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="inferpy.models.factory.Categorical">
+<em class="property">class </em><code class="descclassname">inferpy.models.factory.</code><code class="descname">Categorical</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/factory.html#Categorical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.factory.Categorical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#inferpy.models.random_variable.RandomVariable" title="inferpy.models.random_variable.RandomVariable"><code class="xref py py-class docutils literal"><span class="pre">inferpy.models.random_variable.RandomVariable</span></code></a></p>
+<dl class="attribute">
+<dt id="inferpy.models.factory.Categorical.PARAMS">
+<code class="descname">PARAMS</code><em class="property"> = ['logits', 'probs']</em><a class="headerlink" href="#inferpy.models.factory.Categorical.PARAMS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.factory.Categorical.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/factory.html#Categorical.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.factory.Categorical.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>constructor for Categorical</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.factory.Categorical.logits">
+<code class="descname">logits</code><a class="headerlink" href="#inferpy.models.factory.Categorical.logits" title="Permalink to this definition">¶</a></dt>
+<dd><p>property for logits</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.factory.Categorical.probs">
+<code class="descname">probs</code><a class="headerlink" href="#inferpy.models.factory.Categorical.probs" title="Permalink to this definition">¶</a></dt>
+<dd><p>property for probs</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="inferpy.models.factory.Dirichlet">
+<em class="property">class </em><code class="descclassname">inferpy.models.factory.</code><code class="descname">Dirichlet</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/factory.html#Dirichlet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.factory.Dirichlet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#inferpy.models.random_variable.RandomVariable" title="inferpy.models.random_variable.RandomVariable"><code class="xref py py-class docutils literal"><span class="pre">inferpy.models.random_variable.RandomVariable</span></code></a></p>
+<dl class="attribute">
+<dt id="inferpy.models.factory.Dirichlet.PARAMS">
+<code class="descname">PARAMS</code><em class="property"> = ['concentration']</em><a class="headerlink" href="#inferpy.models.factory.Dirichlet.PARAMS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.factory.Dirichlet.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/factory.html#Dirichlet.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.factory.Dirichlet.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>constructor for Dirichlet</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.factory.Dirichlet.concentration">
+<code class="descname">concentration</code><a class="headerlink" href="#inferpy.models.factory.Dirichlet.concentration" title="Permalink to this definition">¶</a></dt>
+<dd><p>property for concentration</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="inferpy.models.factory.Exponential">
+<em class="property">class </em><code class="descclassname">inferpy.models.factory.</code><code class="descname">Exponential</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/factory.html#Exponential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.factory.Exponential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#inferpy.models.random_variable.RandomVariable" title="inferpy.models.random_variable.RandomVariable"><code class="xref py py-class docutils literal"><span class="pre">inferpy.models.random_variable.RandomVariable</span></code></a></p>
+<dl class="attribute">
+<dt id="inferpy.models.factory.Exponential.PARAMS">
+<code class="descname">PARAMS</code><em class="property"> = ['rate']</em><a class="headerlink" href="#inferpy.models.factory.Exponential.PARAMS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.factory.Exponential.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/factory.html#Exponential.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.factory.Exponential.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>constructor for Exponential</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.factory.Exponential.rate">
+<code class="descname">rate</code><a class="headerlink" href="#inferpy.models.factory.Exponential.rate" title="Permalink to this definition">¶</a></dt>
+<dd><p>property for rate</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="inferpy.models.factory.Gamma">
+<em class="property">class </em><code class="descclassname">inferpy.models.factory.</code><code class="descname">Gamma</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/factory.html#Gamma"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.factory.Gamma" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#inferpy.models.random_variable.RandomVariable" title="inferpy.models.random_variable.RandomVariable"><code class="xref py py-class docutils literal"><span class="pre">inferpy.models.random_variable.RandomVariable</span></code></a></p>
+<dl class="attribute">
+<dt id="inferpy.models.factory.Gamma.PARAMS">
+<code class="descname">PARAMS</code><em class="property"> = ['concentration', 'rate']</em><a class="headerlink" href="#inferpy.models.factory.Gamma.PARAMS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.factory.Gamma.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/factory.html#Gamma.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.factory.Gamma.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>constructor for Gamma</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.factory.Gamma.concentration">
+<code class="descname">concentration</code><a class="headerlink" href="#inferpy.models.factory.Gamma.concentration" title="Permalink to this definition">¶</a></dt>
+<dd><p>property for concentration</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.factory.Gamma.rate">
+<code class="descname">rate</code><a class="headerlink" href="#inferpy.models.factory.Gamma.rate" title="Permalink to this definition">¶</a></dt>
+<dd><p>property for rate</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="inferpy.models.factory.InverseGamma">
+<em class="property">class </em><code class="descclassname">inferpy.models.factory.</code><code class="descname">InverseGamma</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/factory.html#InverseGamma"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.factory.InverseGamma" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#inferpy.models.random_variable.RandomVariable" title="inferpy.models.random_variable.RandomVariable"><code class="xref py py-class docutils literal"><span class="pre">inferpy.models.random_variable.RandomVariable</span></code></a></p>
+<dl class="attribute">
+<dt id="inferpy.models.factory.InverseGamma.PARAMS">
+<code class="descname">PARAMS</code><em class="property"> = ['concentration', 'rate']</em><a class="headerlink" href="#inferpy.models.factory.InverseGamma.PARAMS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.factory.InverseGamma.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/factory.html#InverseGamma.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.factory.InverseGamma.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>constructor for InverseGamma</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.factory.InverseGamma.concentration">
+<code class="descname">concentration</code><a class="headerlink" href="#inferpy.models.factory.InverseGamma.concentration" title="Permalink to this definition">¶</a></dt>
+<dd><p>property for concentration</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.factory.InverseGamma.rate">
+<code class="descname">rate</code><a class="headerlink" href="#inferpy.models.factory.InverseGamma.rate" title="Permalink to this definition">¶</a></dt>
+<dd><p>property for rate</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="inferpy.models.factory.Laplace">
+<em class="property">class </em><code class="descclassname">inferpy.models.factory.</code><code class="descname">Laplace</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/factory.html#Laplace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.factory.Laplace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#inferpy.models.random_variable.RandomVariable" title="inferpy.models.random_variable.RandomVariable"><code class="xref py py-class docutils literal"><span class="pre">inferpy.models.random_variable.RandomVariable</span></code></a></p>
+<dl class="attribute">
+<dt id="inferpy.models.factory.Laplace.PARAMS">
+<code class="descname">PARAMS</code><em class="property"> = ['loc', 'scale']</em><a class="headerlink" href="#inferpy.models.factory.Laplace.PARAMS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.factory.Laplace.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/factory.html#Laplace.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.factory.Laplace.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>constructor for Laplace</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.factory.Laplace.loc">
+<code class="descname">loc</code><a class="headerlink" href="#inferpy.models.factory.Laplace.loc" title="Permalink to this definition">¶</a></dt>
+<dd><p>property for loc</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.factory.Laplace.scale">
+<code class="descname">scale</code><a class="headerlink" href="#inferpy.models.factory.Laplace.scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>property for scale</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="inferpy.models.factory.Multinomial">
+<em class="property">class </em><code class="descclassname">inferpy.models.factory.</code><code class="descname">Multinomial</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/factory.html#Multinomial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.factory.Multinomial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#inferpy.models.random_variable.RandomVariable" title="inferpy.models.random_variable.RandomVariable"><code class="xref py py-class docutils literal"><span class="pre">inferpy.models.random_variable.RandomVariable</span></code></a></p>
+<dl class="attribute">
+<dt id="inferpy.models.factory.Multinomial.PARAMS">
+<code class="descname">PARAMS</code><em class="property"> = ['total_count', 'logits', 'probs']</em><a class="headerlink" href="#inferpy.models.factory.Multinomial.PARAMS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.factory.Multinomial.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/factory.html#Multinomial.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.factory.Multinomial.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>constructor for Multinomial</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.factory.Multinomial.logits">
+<code class="descname">logits</code><a class="headerlink" href="#inferpy.models.factory.Multinomial.logits" title="Permalink to this definition">¶</a></dt>
+<dd><p>property for logits</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.factory.Multinomial.probs">
+<code class="descname">probs</code><a class="headerlink" href="#inferpy.models.factory.Multinomial.probs" title="Permalink to this definition">¶</a></dt>
+<dd><p>property for probs</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.factory.Multinomial.total_count">
+<code class="descname">total_count</code><a class="headerlink" href="#inferpy.models.factory.Multinomial.total_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>property for total_count</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="inferpy.models.factory.MultivariateNormalDiag">
+<em class="property">class </em><code class="descclassname">inferpy.models.factory.</code><code class="descname">MultivariateNormalDiag</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/factory.html#MultivariateNormalDiag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.factory.MultivariateNormalDiag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#inferpy.models.random_variable.RandomVariable" title="inferpy.models.random_variable.RandomVariable"><code class="xref py py-class docutils literal"><span class="pre">inferpy.models.random_variable.RandomVariable</span></code></a></p>
+<dl class="attribute">
+<dt id="inferpy.models.factory.MultivariateNormalDiag.PARAMS">
+<code class="descname">PARAMS</code><em class="property"> = ['loc', 'scale_diag']</em><a class="headerlink" href="#inferpy.models.factory.MultivariateNormalDiag.PARAMS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.factory.MultivariateNormalDiag.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/factory.html#MultivariateNormalDiag.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.factory.MultivariateNormalDiag.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>constructor for MultivariateNormalDiag</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.factory.MultivariateNormalDiag.loc">
+<code class="descname">loc</code><a class="headerlink" href="#inferpy.models.factory.MultivariateNormalDiag.loc" title="Permalink to this definition">¶</a></dt>
+<dd><p>property for loc</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.factory.MultivariateNormalDiag.scale_diag">
+<code class="descname">scale_diag</code><a class="headerlink" href="#inferpy.models.factory.MultivariateNormalDiag.scale_diag" title="Permalink to this definition">¶</a></dt>
+<dd><p>property for scale_diag</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="inferpy.models.factory.Normal">
+<em class="property">class </em><code class="descclassname">inferpy.models.factory.</code><code class="descname">Normal</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/factory.html#Normal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.factory.Normal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#inferpy.models.random_variable.RandomVariable" title="inferpy.models.random_variable.RandomVariable"><code class="xref py py-class docutils literal"><span class="pre">inferpy.models.random_variable.RandomVariable</span></code></a></p>
+<dl class="attribute">
+<dt id="inferpy.models.factory.Normal.PARAMS">
+<code class="descname">PARAMS</code><em class="property"> = ['loc', 'scale']</em><a class="headerlink" href="#inferpy.models.factory.Normal.PARAMS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.factory.Normal.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/factory.html#Normal.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.factory.Normal.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>constructor for Normal</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.factory.Normal.loc">
+<code class="descname">loc</code><a class="headerlink" href="#inferpy.models.factory.Normal.loc" title="Permalink to this definition">¶</a></dt>
+<dd><p>property for loc</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.factory.Normal.scale">
+<code class="descname">scale</code><a class="headerlink" href="#inferpy.models.factory.Normal.scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>property for scale</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="inferpy.models.factory.Poisson">
+<em class="property">class </em><code class="descclassname">inferpy.models.factory.</code><code class="descname">Poisson</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/factory.html#Poisson"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.factory.Poisson" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#inferpy.models.random_variable.RandomVariable" title="inferpy.models.random_variable.RandomVariable"><code class="xref py py-class docutils literal"><span class="pre">inferpy.models.random_variable.RandomVariable</span></code></a></p>
+<dl class="attribute">
+<dt id="inferpy.models.factory.Poisson.PARAMS">
+<code class="descname">PARAMS</code><em class="property"> = []</em><a class="headerlink" href="#inferpy.models.factory.Poisson.PARAMS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.factory.Poisson.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/factory.html#Poisson.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.factory.Poisson.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>constructor for Poisson</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="inferpy.models.factory.Uniform">
+<em class="property">class </em><code class="descclassname">inferpy.models.factory.</code><code class="descname">Uniform</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/factory.html#Uniform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.factory.Uniform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#inferpy.models.random_variable.RandomVariable" title="inferpy.models.random_variable.RandomVariable"><code class="xref py py-class docutils literal"><span class="pre">inferpy.models.random_variable.RandomVariable</span></code></a></p>
+<dl class="attribute">
+<dt id="inferpy.models.factory.Uniform.PARAMS">
+<code class="descname">PARAMS</code><em class="property"> = ['low', 'high']</em><a class="headerlink" href="#inferpy.models.factory.Uniform.PARAMS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.factory.Uniform.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/factory.html#Uniform.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.factory.Uniform.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>constructor for Uniform</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.factory.Uniform.high">
+<code class="descname">high</code><a class="headerlink" href="#inferpy.models.factory.Uniform.high" title="Permalink to this definition">¶</a></dt>
+<dd><p>property for high</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.factory.Uniform.low">
+<code class="descname">low</code><a class="headerlink" href="#inferpy.models.factory.Uniform.low" title="Permalink to this definition">¶</a></dt>
+<dd><p>property for low</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="inferpy.models.factory.def_random_variable">
+<code class="descclassname">inferpy.models.factory.</code><code class="descname">def_random_variable</code><span class="sig-paren">(</span><em>var</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/factory.html#def_random_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.factory.def_random_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-inferpy.models.prob_model">
+<span id="inferpy-models-prob-model-module"></span><h2>inferpy.models.prob_model module<a class="headerlink" href="#module-inferpy.models.prob_model" title="Permalink to this headline">¶</a></h2>
+<p>Module with the probabilistic model functionality.</p>
+<dl class="class">
+<dt id="inferpy.models.prob_model.ProbModel">
+<em class="property">class </em><code class="descclassname">inferpy.models.prob_model.</code><code class="descname">ProbModel</code><span class="sig-paren">(</span><em>varlist=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/prob_model.html#ProbModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.prob_model.ProbModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Class implementing a probabilistic model</p>
+<p>A probabilistic model defines a joint distribution over observed and latent variables. This
+class encapsulates all the functionality for making inference (and learning) in these models.</p>
+<p>An example of use:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">inferpy</span> <span class="k">as</span> <span class="nn">inf</span>
+<span class="kn">from</span> <span class="nn">inferpy.models</span> <span class="k">import</span> <span class="n">Normal</span>
+
+
+
+<span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">ProbModel</span><span class="p">()</span> <span class="k">as</span> <span class="n">m</span><span class="p">:</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+
+
+<span class="c1"># print the list of variables</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">varlist</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">latent_vars</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">observed_vars</span><span class="p">)</span>
+
+<span class="c1"># get a sample</span>
+
+<span class="n">m_sample</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+
+
+
+<span class="c1"># compute the log_prob for each element in the sample</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">m_sample</span><span class="p">))</span>
+
+<span class="c1"># compute the sum of the log_prob</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">sum_log_prob</span><span class="p">(</span><span class="n">m_sample</span><span class="p">))</span>
+
+
+
+
+<span class="c1">### alternative definition</span>
+
+<span class="n">x2</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;x2&quot;</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">y2</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;y2&quot;</span><span class="p">)</span>
+
+<span class="n">m2</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">ProbModel</span><span class="p">(</span><span class="n">varlist</span><span class="o">=</span><span class="p">[</span><span class="n">x2</span><span class="p">,</span><span class="n">y2</span><span class="p">])</span>
+
+</pre></div>
+</div>
+<p>This class can be used, for instance, for infering the parameters of some observed data:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">edward</span> <span class="k">as</span> <span class="nn">ed</span>
+<span class="kn">import</span> <span class="nn">inferpy</span> <span class="k">as</span> <span class="nn">inf</span>
+
+
+<span class="c1">#### learning a 1-dim parameter from 1-dim data</span>
+
+
+<span class="n">N</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">sampling_mean</span> <span class="o">=</span> <span class="p">[</span><span class="mf">30.</span><span class="p">]</span>
+<span class="n">sess</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">get_session</span><span class="p">()</span>
+
+
+<span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">ProbModel</span><span class="p">()</span> <span class="k">as</span> <span class="n">m</span><span class="p">:</span>
+
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">m</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+
+<span class="n">x_train</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">sampling_mean</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="p">:</span> <span class="n">x_train</span><span class="p">}</span>
+
+
+<span class="n">m</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">m</span><span class="o">.</span><span class="n">posterior</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1">#29.017122</span>
+
+
+<span class="c1">#### learning a 2 parameters of 1-dim from 2-dim data</span>
+
+<span class="n">N</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">sampling_mean</span> <span class="o">=</span> <span class="p">[</span><span class="mf">30.</span><span class="p">,</span> <span class="mf">10.</span><span class="p">]</span>
+<span class="n">sess</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">get_session</span><span class="p">()</span>
+
+
+<span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">ProbModel</span><span class="p">()</span> <span class="k">as</span> <span class="n">m</span><span class="p">:</span>
+
+    <span class="n">theta1</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">theta2</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+    <span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="p">[</span><span class="n">theta1</span><span class="p">,</span> <span class="n">theta2</span><span class="p">],</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+
+
+<span class="n">m</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+
+
+<span class="n">x_train</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">sampling_mean</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="p">:</span> <span class="n">x_train</span><span class="p">}</span>
+
+
+<span class="n">m</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">m</span><span class="o">.</span><span class="n">posterior</span><span class="p">(</span><span class="n">theta1</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span>
+<span class="n">m</span><span class="o">.</span><span class="n">posterior</span><span class="p">(</span><span class="n">theta2</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span>
+
+</pre></div>
+</div>
+<dl class="method">
+<dt id="inferpy.models.prob_model.ProbModel.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>varlist=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/prob_model.html#ProbModel.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.prob_model.ProbModel.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes a probabilistic model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>varlist</strong> – optional list with the variables in the model</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.prob_model.ProbModel.add_var">
+<code class="descname">add_var</code><span class="sig-paren">(</span><em>v</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/prob_model.html#ProbModel.add_var"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.prob_model.ProbModel.add_var" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method for adding a new random variable. After use, the model should be re-compiled</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="inferpy.models.prob_model.ProbModel.compatible_var">
+<em class="property">static </em><code class="descname">compatible_var</code><span class="sig-paren">(</span><em>v</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/prob_model.html#ProbModel.compatible_var"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.prob_model.ProbModel.compatible_var" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.prob_model.ProbModel.compile">
+<code class="descname">compile</code><span class="sig-paren">(</span><em>infMethod='KLqp'</em>, <em>Q=None</em>, <em>proposal_vars=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/prob_model.html#ProbModel.compile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.prob_model.ProbModel.compile" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method initializes the structures for making inference in the model.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.prob_model.ProbModel.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><em>swap_dict=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/prob_model.html#ProbModel.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.prob_model.ProbModel.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.prob_model.ProbModel.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/prob_model.html#ProbModel.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.prob_model.ProbModel.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assings data to the observed variables</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="inferpy.models.prob_model.ProbModel.get_active_model">
+<em class="property">static </em><code class="descname">get_active_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/prob_model.html#ProbModel.get_active_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.prob_model.ProbModel.get_active_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the active model defined with the construct ‘with’</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.prob_model.ProbModel.get_config">
+<code class="descname">get_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/prob_model.html#ProbModel.get_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.prob_model.ProbModel.get_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.prob_model.ProbModel.get_copy_from">
+<code class="descname">get_copy_from</code><span class="sig-paren">(</span><em>original_var</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/prob_model.html#ProbModel.get_copy_from"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.prob_model.ProbModel.get_copy_from" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.prob_model.ProbModel.get_parents">
+<code class="descname">get_parents</code><span class="sig-paren">(</span><em>v</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/prob_model.html#ProbModel.get_parents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.prob_model.ProbModel.get_parents" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.prob_model.ProbModel.get_var">
+<code class="descname">get_var</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/prob_model.html#ProbModel.get_var"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.prob_model.ProbModel.get_var" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a varible in the model with a given name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.prob_model.ProbModel.get_vardict">
+<code class="descname">get_vardict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/prob_model.html#ProbModel.get_vardict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.prob_model.ProbModel.get_vardict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.prob_model.ProbModel.get_vardict_rev">
+<code class="descname">get_vardict_rev</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/prob_model.html#ProbModel.get_vardict_rev"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.prob_model.ProbModel.get_vardict_rev" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="inferpy.models.prob_model.ProbModel.is_active">
+<em class="property">static </em><code class="descname">is_active</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/prob_model.html#ProbModel.is_active"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.prob_model.ProbModel.is_active" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if a replicate construct has been initialized</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the method is inside a construct ProbModel (of size different to 1).
+Otherwise False is return</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.prob_model.ProbModel.is_compiled">
+<code class="descname">is_compiled</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/prob_model.html#ProbModel.is_compiled"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.prob_model.ProbModel.is_compiled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines if the model has been compiled</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.prob_model.ProbModel.latent_vars">
+<code class="descname">latent_vars</code><a class="headerlink" href="#inferpy.models.prob_model.ProbModel.latent_vars" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of latent (i.e., non-observed) variables in the model</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.prob_model.ProbModel.log_prob">
+<code class="descname">log_prob</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/prob_model.html#ProbModel.log_prob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.prob_model.ProbModel.log_prob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the log probabilities of a (set of) sample(s)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.prob_model.ProbModel.no_parents">
+<code class="descname">no_parents</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/prob_model.html#ProbModel.no_parents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.prob_model.ProbModel.no_parents" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.prob_model.ProbModel.observed_vars">
+<code class="descname">observed_vars</code><a class="headerlink" href="#inferpy.models.prob_model.ProbModel.observed_vars" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of observed variabels in the model</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.prob_model.ProbModel.posterior">
+<code class="descname">posterior</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/prob_model.html#ProbModel.posterior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.prob_model.ProbModel.posterior" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the posterior distribution of some latent variables</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>latent_var</strong> – a single or a set of latent variables in the model</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Random variable(s) of the same type than the prior distributions</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.prob_model.ProbModel.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>target</em>, <em>data</em>, <em>reset_tf_vars=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/prob_model.html#ProbModel.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.prob_model.ProbModel.predict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.prob_model.ProbModel.predict_old">
+<code class="descname">predict_old</code><span class="sig-paren">(</span><em>target_var</em>, <em>observations</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/prob_model.html#ProbModel.predict_old"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.prob_model.ProbModel.predict_old" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.prob_model.ProbModel.reset_compilation">
+<code class="descname">reset_compilation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/prob_model.html#ProbModel.reset_compilation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.prob_model.ProbModel.reset_compilation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear the structues created during the compilation of the model</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.prob_model.ProbModel.sample">
+<code class="descname">sample</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/prob_model.html#ProbModel.sample"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.prob_model.ProbModel.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a sample for eache variable in the model</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.prob_model.ProbModel.sum_log_prob">
+<code class="descname">sum_log_prob</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/prob_model.html#ProbModel.sum_log_prob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.prob_model.ProbModel.sum_log_prob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the sum of the log probabilities of a (set of) sample(s)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.prob_model.ProbModel.summary">
+<code class="descname">summary</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/prob_model.html#ProbModel.summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.prob_model.ProbModel.summary" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.prob_model.ProbModel.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/prob_model.html#ProbModel.to_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.prob_model.ProbModel.to_json" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.prob_model.ProbModel.varlist">
+<code class="descname">varlist</code><a class="headerlink" href="#inferpy.models.prob_model.ProbModel.varlist" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of variables (observed and latent)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-inferpy.models.random_variable">
+<span id="inferpy-models-random-variable-module"></span><h2>inferpy.models.random_variable module<a class="headerlink" href="#module-inferpy.models.random_variable" title="Permalink to this headline">¶</a></h2>
+<p>Module implementing the shared functionality across all the variable types</p>
+<dl class="class">
+<dt id="inferpy.models.random_variable.RandomVariable">
+<em class="property">class </em><code class="descclassname">inferpy.models.random_variable.</code><code class="descname">RandomVariable</code><span class="sig-paren">(</span><em>base_object=None</em>, <em>observed=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/random_variable.html#RandomVariable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.random_variable.RandomVariable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Base class for random variables.</p>
+<dl class="method">
+<dt id="inferpy.models.random_variable.RandomVariable.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>base_object=None</em>, <em>observed=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/random_variable.html#RandomVariable.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.random_variable.RandomVariable.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor for the RandomVariable class</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>base_object</strong> – encapsulated Edward object (optional).</li>
+<li><strong>observed</strong> (<em>bool</em>) – specifies if the random variable is observed (True) or observed (False).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.random_variable.RandomVariable.base_object">
+<code class="descname">base_object</code><a class="headerlink" href="#inferpy.models.random_variable.RandomVariable.base_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Underlying Tensorflow object</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.random_variable.RandomVariable.batches">
+<code class="descname">batches</code><a class="headerlink" href="#inferpy.models.random_variable.RandomVariable.batches" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of batches of the variable</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.random_variable.RandomVariable.bind">
+<code class="descname">bind</code><a class="headerlink" href="#inferpy.models.random_variable.RandomVariable.bind" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.random_variable.RandomVariable.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><em>swap_dict=None</em>, <em>observed=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/random_variable.html#RandomVariable.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.random_variable.RandomVariable.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build a new random variable with the same values.
+The underlying tensors or edward objects are copied as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>swap_dict</strong> – random variables, variables, tensors, or operations to swap with.</li>
+<li><strong>observed</strong> – determines if the new variable is observed or not.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.random_variable.RandomVariable.dim">
+<code class="descname">dim</code><a class="headerlink" href="#inferpy.models.random_variable.RandomVariable.dim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dimensionality of variable</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.random_variable.RandomVariable.dist">
+<code class="descname">dist</code><a class="headerlink" href="#inferpy.models.random_variable.RandomVariable.dist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Underlying Edward object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.random_variable.RandomVariable.equal">
+<code class="descname">equal</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#inferpy.models.random_variable.RandomVariable.equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>documentation for equal</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.random_variable.RandomVariable.event_shape">
+<code class="descname">event_shape</code><a class="headerlink" href="#inferpy.models.random_variable.RandomVariable.event_shape" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="inferpy.models.random_variable.RandomVariable.get_key_from_var">
+<em class="property">static </em><code class="descname">get_key_from_var</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/random_variable.html#RandomVariable.get_key_from_var"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.random_variable.RandomVariable.get_key_from_var" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.random_variable.RandomVariable.get_local_hidden">
+<code class="descname">get_local_hidden</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/random_variable.html#RandomVariable.get_local_hidden"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.random_variable.RandomVariable.get_local_hidden" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list with all the local hidden variables w.r.t. this one. Local hidden variables
+are those latent variables which are in the same replicate construct.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.random_variable.RandomVariable.get_replicate_list">
+<code class="descname">get_replicate_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/random_variable.html#RandomVariable.get_replicate_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.random_variable.RandomVariable.get_replicate_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list with all the replicate constructs that this variable belongs to.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="inferpy.models.random_variable.RandomVariable.get_var_with_key">
+<em class="property">static </em><code class="descname">get_var_with_key</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/random_variable.html#RandomVariable.get_var_with_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.random_variable.RandomVariable.get_var_with_key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.random_variable.RandomVariable.is_generic_variable">
+<code class="descname">is_generic_variable</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/random_variable.html#RandomVariable.is_generic_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.random_variable.RandomVariable.is_generic_variable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines if this is a generic variable, i.e., an Edward variable
+is not encapsulated.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.random_variable.RandomVariable.log_prob">
+<code class="descname">log_prob</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/random_variable.html#RandomVariable.log_prob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.random_variable.RandomVariable.log_prob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method for computing the log probability of a sample v (or a set of samples)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.random_variable.RandomVariable.mean">
+<code class="descname">mean</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/random_variable.html#RandomVariable.mean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.random_variable.RandomVariable.mean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method for obaining the mean of this random variable</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.random_variable.RandomVariable.name">
+<code class="descname">name</code><a class="headerlink" href="#inferpy.models.random_variable.RandomVariable.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>name of the variable</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.random_variable.RandomVariable.observed">
+<code class="descname">observed</code><a class="headerlink" href="#inferpy.models.random_variable.RandomVariable.observed" title="Permalink to this definition">¶</a></dt>
+<dd><p>boolean property that determines if a variable is observed or not</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.random_variable.RandomVariable.prob">
+<code class="descname">prob</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/random_variable.html#RandomVariable.prob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.random_variable.RandomVariable.prob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method for computing the probability of a sample v (or a set of samples)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.random_variable.RandomVariable.prod_prob">
+<code class="descname">prod_prob</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/random_variable.html#RandomVariable.prod_prob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.random_variable.RandomVariable.prod_prob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method for computing the joint probability of a sample v (or a set of samples)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.random_variable.RandomVariable.sample">
+<code class="descname">sample</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/random_variable.html#RandomVariable.sample"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.random_variable.RandomVariable.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method for obaining a samples</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>size</strong> – scalar or matrix of integers indicating the shape of the matrix of samples.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Matrix of samples. Each element in the output matrix has the same shape than the variable.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.random_variable.RandomVariable.shape">
+<code class="descname">shape</code><a class="headerlink" href="#inferpy.models.random_variable.RandomVariable.shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>shape of the variable, i.e. (batches, dim)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.random_variable.RandomVariable.stddev">
+<code class="descname">stddev</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/random_variable.html#RandomVariable.stddev"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.random_variable.RandomVariable.stddev" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method for obataining the standard deviation of this random variable</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.random_variable.RandomVariable.sum_log_prob">
+<code class="descname">sum_log_prob</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/random_variable.html#RandomVariable.sum_log_prob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.random_variable.RandomVariable.sum_log_prob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method for computing the sum of the log probability of a sample v (or a set of samples)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.random_variable.RandomVariable.variance">
+<code class="descname">variance</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/random_variable.html#RandomVariable.variance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.random_variable.RandomVariable.variance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method for obataining the variance of this random variable</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-inferpy.models.replicate">
+<span id="inferpy-models-replicate-module"></span><h2>inferpy.models.replicate module<a class="headerlink" href="#module-inferpy.models.replicate" title="Permalink to this headline">¶</a></h2>
+<p>Module with the replication functionality.</p>
+<dl class="class">
+<dt id="inferpy.models.replicate.replicate">
+<em class="property">class </em><code class="descclassname">inferpy.models.replicate.</code><code class="descname">replicate</code><span class="sig-paren">(</span><em>size</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/replicate.html#replicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.replicate.replicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class implementing the Plateau notation</p>
+<p>The plateau notation is used to replicate the random variables contained
+within this construct. Every replicated variable is conditionally idependent
+given the previous random variables (if any) defined outside the with statement.
+The <code class="docutils literal"><span class="pre">with</span> <span class="pre">inf.replicate(size</span> <span class="pre">=</span> <span class="pre">N)</span></code> sintaxis is used to replicate N times the
+contained definitions. For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">inferpy</span> <span class="k">as</span> <span class="nn">inf</span>
+
+
+<span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+    <span class="c1"># Define some random variables here</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Variable replicated &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="o">.</span><span class="n">get_total_size</span><span class="p">())</span> <span class="o">+</span> <span class="s2">&quot; times&quot;</span><span class="p">)</span>
+
+
+<span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="c1"># Define some random variables here</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Variable replicated &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="o">.</span><span class="n">get_total_size</span><span class="p">())</span> <span class="o">+</span> <span class="s2">&quot; times&quot;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+        <span class="c1"># Define some random variables here</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Variable replicated &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="o">.</span><span class="n">get_total_size</span><span class="p">())</span> <span class="o">+</span> <span class="s2">&quot; times&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="o">.</span><span class="n">in_replicate</span><span class="p">())</span>
+
+<span class="c1"># Define some random variables here</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Variable replicated &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="o">.</span><span class="n">get_total_size</span><span class="p">())</span> <span class="o">+</span> <span class="s2">&quot; times&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The number of times that indicated with input argument <code class="docutils literal"><span class="pre">size</span></code>.
+Note that nested replicate constructs can be defined as well. At any moment,
+the product of all the nested replicate constructs can be obtained by
+invoking the static method <code class="docutils literal"><span class="pre">get_total_size()</span></code>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Defining a variable inside the construct replicate with size equal to 1, that is,
+<code class="docutils literal"><span class="pre">inf.replicate(size=1)</span></code> is equivalent to defining outside any replicate
+construct.</p>
+</div>
+<dl class="method">
+<dt id="inferpy.models.replicate.replicate.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>size</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/replicate.html#replicate.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.replicate.replicate.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes the replicate construct</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>size</strong> (<em>int</em>) – number of times that the variables contained are replicated.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="inferpy.models.replicate.replicate.get_active_replicate">
+<em class="property">static </em><code class="descname">get_active_replicate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/replicate.html#replicate.get_active_replicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.replicate.replicate.get_active_replicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the active replicate defined with the construct ‘with’</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="inferpy.models.replicate.replicate.get_all_replicate">
+<em class="property">static </em><code class="descname">get_all_replicate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/replicate.html#replicate.get_all_replicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.replicate.replicate.get_all_replicate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="inferpy.models.replicate.replicate.get_total_size">
+<em class="property">static </em><code class="descname">get_total_size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/replicate.html#replicate.get_total_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.replicate.replicate.get_total_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Static method that returns the product of the sizes of all the nested replicate constructs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Integer with the product of sizes</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="inferpy.models.replicate.replicate.in_replicate">
+<em class="property">static </em><code class="descname">in_replicate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/replicate.html#replicate.in_replicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.replicate.replicate.in_replicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if a replicate construct has been initialized</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the method is inside a construct replicate (of size different to 1).
+Otherwise False is return</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="inferpy.models.replicate.replicate.print_total_size">
+<em class="property">static </em><code class="descname">print_total_size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/replicate.html#replicate.print_total_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.replicate.replicate.print_total_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Static that prints the total size</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="inferpy.util.html" class="btn btn-neutral float-right" title="inferpy.util package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="inferpy.inferences.html" class="btn btn-neutral" title="inferpy.inferences package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Andrés R. Masegosa, Rafael Cabañas.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

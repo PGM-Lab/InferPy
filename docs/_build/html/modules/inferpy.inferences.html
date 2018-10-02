@@ -1,0 +1,828 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>inferpy.inferences package &mdash; InferPy 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/inferpy_theme.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="InferPy 1.0 documentation" href="../index.html"/>
+        <link rel="up" title="inferpy package" href="inferpy.html"/>
+        <link rel="next" title="inferpy.models package" href="inferpy.models.html"/>
+        <link rel="prev" title="inferpy.criticism package" href="inferpy.criticism.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/logo-doc.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Quick Start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notes/getting30s.html">Getting Started:</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notes/getting30s.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/getting30s.html#seconds-to-inferpy">30 seconds to InferPy</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/gettingGuiding.html">Guiding Principles</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notes/gettingGuiding.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/gettingGuiding.html#architecture">Architecture</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/requirements.html">Requirements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notes/requirements.html#python">Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/requirements.html#edward">Edward</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/requirements.html#tensorflow">Tensorflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/requirements.html#numpy">Numpy</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notes/guidemodels.html">Guide to Building Probabilistic Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notes/guidemodels.html#getting-started-with-probabilistic-models">Getting Started with Probabilistic Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/guidemodels.html#random-variables">Random Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/guidemodels.html#probabilistic-models">Probabilistic Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/guidemodels.html#supported-probability-distributions">Supported Probability Distributions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#bernoulli">Bernoulli</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#beta">Beta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#categorical">Categorical</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#deterministic">Deterministic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#dirichlet">Dirichlet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#exponential">Exponential</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#gamma">Gamma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#inverse-gamma">Inverse-gamma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#laplace">Laplace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#multinomial">Multinomial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#multivariate-normal">Multivariate-Normal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#normal">Normal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#poisson">Poisson</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/guidemodels.html#uniform">Uniform</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/guideinference.html">Guide to Approximate Inference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notes/guideinference.html#getting-started-with-approximate-inference">Getting Started with Approximate Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/guideinference.html#compositional-inference">Compositional Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/guideinference.html#supported-inference-methods">Supported Inference Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/guidevalidation.html">Guide to Model Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/guidedata.html">Guide to Data Handling</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Model Zoo</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notes/probzoo.html">Probabilistic Model Zoo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notes/probzoo.html#bayesian-linear-regression">Bayesian Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/probzoo.html#bayesian-logistic-regression">Bayesian Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/probzoo.html#bayesian-multinomial-logistic-regression">Bayesian Multinomial Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/probzoo.html#mixture-of-gaussians">Mixture of Gaussians</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/probzoo.html#linear-factor-model-pca">Linear Factor Model (PCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/probzoo.html#pca-with-ard-prior-pca">PCA with ARD Prior (PCA)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/inf_vs_ed.html">Inferpy vs Edward</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notes/inf_vs_ed.html#bayesian-linear-regression">Bayesian Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/inf_vs_ed.html#gaussian-mixture">Gaussian Mixture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/inf_vs_ed.html#logistic-regression">Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/inf_vs_ed.html#multinomial-logistic-regression">Multinomial Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/inf_vs_ed.html#linear-factor-model-pca">Linear Factor Model (PCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/inf_vs_ed.html#pca-with-ard-prior-pca">PCA with ARD Prior (PCA)</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Package Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="inferpy.html">inferpy package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="inferpy.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="inferpy.criticism.html">inferpy.criticism package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.criticism.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.criticism.html#module-inferpy.criticism.evaluate">inferpy.criticism.evaluate module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">inferpy.inferences package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-inferpy.inferences.inference">inferpy.inferences.inference module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-inferpy.inferences.qmodel">inferpy.inferences.qmodel module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="inferpy.models.html">inferpy.models package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.models.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.models.html#module-inferpy.models.deterministic">inferpy.models.deterministic module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.models.html#module-inferpy.models.factory">inferpy.models.factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.models.html#module-inferpy.models.prob_model">inferpy.models.prob_model module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.models.html#module-inferpy.models.random_variable">inferpy.models.random_variable module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.models.html#module-inferpy.models.replicate">inferpy.models.replicate module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="inferpy.util.html">inferpy.util package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.util.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.util.html#module-inferpy.util.error">inferpy.util.error module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.util.html#module-inferpy.util.format">inferpy.util.format module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.util.html#module-inferpy.util.ops">inferpy.util.ops module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.util.html#module-inferpy.util.runtime">inferpy.util.runtime module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inferpy.util.html#module-inferpy.util.wrappers">inferpy.util.wrappers module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.html#module-inferpy.version">inferpy.version module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="inferpy.criticism.html">inferpy.criticism package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.criticism.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.criticism.html#module-inferpy.criticism.evaluate">inferpy.criticism.evaluate module</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">inferpy.inferences package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-inferpy.inferences.inference">inferpy.inferences.inference module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-inferpy.inferences.qmodel">inferpy.inferences.qmodel module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="inferpy.models.html">inferpy.models package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.models.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.models.html#module-inferpy.models.deterministic">inferpy.models.deterministic module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.models.html#module-inferpy.models.factory">inferpy.models.factory module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.models.html#module-inferpy.models.prob_model">inferpy.models.prob_model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.models.html#module-inferpy.models.random_variable">inferpy.models.random_variable module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.models.html#module-inferpy.models.replicate">inferpy.models.replicate module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="inferpy.util.html">inferpy.util package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.util.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.util.html#module-inferpy.util.error">inferpy.util.error module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.util.html#module-inferpy.util.format">inferpy.util.format module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.util.html#module-inferpy.util.ops">inferpy.util.ops module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.util.html#module-inferpy.util.runtime">inferpy.util.runtime module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inferpy.util.html#module-inferpy.util.wrappers">inferpy.util.wrappers module</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Other</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notes/contact.html">Contact and Support</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">InferPy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="inferpy.html">inferpy package</a> &raquo;</li>
+        
+      <li>inferpy.inferences package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/modules/inferpy.inferences.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="inferpy-inferences-package">
+<h1>inferpy.inferences package<a class="headerlink" href="#inferpy-inferences-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-inferpy.inferences.inference">
+<span id="inferpy-inferences-inference-module"></span><h2>inferpy.inferences.inference module<a class="headerlink" href="#module-inferpy.inferences.inference" title="Permalink to this headline">¶</a></h2>
+<p>Module with the functionality related to inference methods.</p>
+<dl class="data">
+<dt id="inferpy.inferences.inference.INF_METHODS">
+<code class="descclassname">inferpy.inferences.inference.</code><code class="descname">INF_METHODS</code><em class="property"> = ['KLpq', 'KLqp', 'Laplace', 'ReparameterizationEntropyKLqp', 'ReparameterizationKLKLqp', 'ReparameterizationKLqp', 'ScoreEntropyKLqp', 'ScoreKLKLqp', 'ScoreKLqp', 'ScoreRBKLqp', 'WakeSleep', 'MetropolisHastings']</em><a class="headerlink" href="#inferpy.inferences.inference.INF_METHODS" title="Permalink to this definition">¶</a></dt>
+<dd><p>List with all the alowed implemented inference methods</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="inferpy.inferences.inference.INF_METHODS_ALIAS">
+<code class="descclassname">inferpy.inferences.inference.</code><code class="descname">INF_METHODS_ALIAS</code><em class="property"> = {'Variational': 'KLqp', 'MCMC': 'MetropolisHastings'}</em><a class="headerlink" href="#inferpy.inferences.inference.INF_METHODS_ALIAS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aliases for some of the inference methods</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-inferpy.inferences.qmodel">
+<span id="inferpy-inferences-qmodel-module"></span><h2>inferpy.inferences.qmodel module<a class="headerlink" href="#module-inferpy.inferences.qmodel" title="Permalink to this headline">¶</a></h2>
+<p>Module with the required functionality for implementing the Q-models and Q-distributions used by
+some inference algorithms.</p>
+<dl class="class">
+<dt id="inferpy.inferences.qmodel.Qmodel">
+<em class="property">class </em><code class="descclassname">inferpy.inferences.qmodel.</code><code class="descname">Qmodel</code><span class="sig-paren">(</span><em>varlist</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/inferences/qmodel.html#Qmodel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.inferences.qmodel.Qmodel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Class implementing a Q model</p>
+<p>A Q model approximates the posterior distribution of a probabilistic model P .
+In the ‘Q’ model we should include a q distribution for every non observed variable in the ‘P’ model.
+Otherwise, an error will be raised during model compilation.</p>
+<p>An example of use:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">edward</span> <span class="k">as</span> <span class="nn">ed</span>
+<span class="kn">import</span> <span class="nn">inferpy</span> <span class="k">as</span> <span class="nn">inf</span>
+
+
+<span class="c1">#### learning a 2 parameters of 1-dim from 2-dim data</span>
+
+<span class="n">N</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">sampling_mean</span> <span class="o">=</span> <span class="p">[</span><span class="mf">30.</span><span class="p">,</span> <span class="mf">10.</span><span class="p">]</span>
+<span class="n">sess</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">get_session</span><span class="p">()</span>
+
+
+<span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">ProbModel</span><span class="p">()</span> <span class="k">as</span> <span class="n">m</span><span class="p">:</span>
+
+    <span class="n">theta1</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">theta2</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+    <span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="p">[</span><span class="n">theta1</span><span class="p">,</span> <span class="n">theta2</span><span class="p">],</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<span class="c1"># define the Qmodel</span>
+
+
+
+<span class="c1"># define with any type</span>
+<span class="n">q_theta1</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">Qmodel</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="n">theta1</span><span class="p">)</span>
+<span class="n">q_theta2</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">Qmodel</span><span class="o">.</span><span class="n">new_qvar</span><span class="p">(</span><span class="n">theta2</span><span class="p">)</span>
+
+
+<span class="n">qmodel</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">Qmodel</span><span class="p">([</span><span class="n">q_theta1</span><span class="p">,</span> <span class="n">q_theta2</span><span class="p">])</span>
+
+<span class="n">inf</span><span class="o">.</span><span class="n">Qmodel</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">theta1</span><span class="p">)</span>
+
+<span class="n">m</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">Q</span><span class="o">=</span><span class="n">qmodel</span><span class="p">)</span>
+
+
+<span class="n">x_train</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">sampling_mean</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="p">:</span> <span class="n">x_train</span><span class="p">}</span>
+
+
+<span class="n">m</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">m</span><span class="o">.</span><span class="n">posterior</span><span class="p">(</span><span class="n">theta1</span><span class="p">)</span><span class="o">.</span><span class="n">base_object</span>
+
+<span class="n">m</span><span class="o">.</span><span class="n">posterior</span><span class="p">(</span><span class="n">theta2</span><span class="p">)</span>
+
+
+
+
+</pre></div>
+</div>
+<dl class="classmethod">
+<dt id="inferpy.inferences.qmodel.Qmodel.Bernoulli">
+<em class="property">classmethod </em><code class="descname">Bernoulli</code><span class="sig-paren">(</span><em>v</em>, <em>initializer='ones'</em><span class="sig-paren">)</span><a class="headerlink" href="#inferpy.inferences.qmodel.Qmodel.Bernoulli" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new q-variable of type Bernoulli</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>v</strong> – Inferpy p-variable</li>
+<li><strong>initializer</strong> (<em>str</em>) – indicates how the new variable should be initialized. Possible values: ‘ones’ , ‘zeroes’.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="inferpy.inferences.qmodel.Qmodel.Beta">
+<em class="property">classmethod </em><code class="descname">Beta</code><span class="sig-paren">(</span><em>v</em>, <em>initializer='ones'</em><span class="sig-paren">)</span><a class="headerlink" href="#inferpy.inferences.qmodel.Qmodel.Beta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new q-variable of type Beta</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>v</strong> – Inferpy p-variable</li>
+<li><strong>initializer</strong> (<em>str</em>) – indicates how the new variable should be initialized. Possible values: ‘ones’ , ‘zeroes’.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="inferpy.inferences.qmodel.Qmodel.Categorical">
+<em class="property">classmethod </em><code class="descname">Categorical</code><span class="sig-paren">(</span><em>v</em>, <em>initializer='ones'</em><span class="sig-paren">)</span><a class="headerlink" href="#inferpy.inferences.qmodel.Qmodel.Categorical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new q-variable of type Categorical</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>v</strong> – Inferpy p-variable</li>
+<li><strong>initializer</strong> (<em>str</em>) – indicates how the new variable should be initialized. Possible values: ‘ones’ , ‘zeroes’.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="inferpy.inferences.qmodel.Qmodel.Deterministic">
+<em class="property">classmethod </em><code class="descname">Deterministic</code><span class="sig-paren">(</span><em>v</em>, <em>initializer='ones'</em><span class="sig-paren">)</span><a class="headerlink" href="#inferpy.inferences.qmodel.Qmodel.Deterministic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new q-variable of type Deterministic</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>v</strong> – Inferpy p-variable</li>
+<li><strong>initializer</strong> (<em>str</em>) – indicates how the new variable should be initialized. Possible values: ‘ones’ , ‘zeroes’.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="inferpy.inferences.qmodel.Qmodel.Dirichlet">
+<em class="property">classmethod </em><code class="descname">Dirichlet</code><span class="sig-paren">(</span><em>v</em>, <em>initializer='ones'</em><span class="sig-paren">)</span><a class="headerlink" href="#inferpy.inferences.qmodel.Qmodel.Dirichlet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new q-variable of type Dirichlet</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>v</strong> – Inferpy p-variable</li>
+<li><strong>initializer</strong> (<em>str</em>) – indicates how the new variable should be initialized. Possible values: ‘ones’ , ‘zeroes’.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="inferpy.inferences.qmodel.Qmodel.Empirical">
+<em class="property">static </em><code class="descname">Empirical</code><span class="sig-paren">(</span><em>v</em>, <em>n_post_samples=500</em>, <em>initializer='ones'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/inferences/qmodel.html#Qmodel.Empirical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.inferences.qmodel.Qmodel.Empirical" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="inferpy.inferences.qmodel.Qmodel.Exponential">
+<em class="property">classmethod </em><code class="descname">Exponential</code><span class="sig-paren">(</span><em>v</em>, <em>initializer='ones'</em><span class="sig-paren">)</span><a class="headerlink" href="#inferpy.inferences.qmodel.Qmodel.Exponential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new q-variable of type Exponential</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>v</strong> – Inferpy p-variable</li>
+<li><strong>initializer</strong> (<em>str</em>) – indicates how the new variable should be initialized. Possible values: ‘ones’ , ‘zeroes’.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="inferpy.inferences.qmodel.Qmodel.Gamma">
+<em class="property">classmethod </em><code class="descname">Gamma</code><span class="sig-paren">(</span><em>v</em>, <em>initializer='ones'</em><span class="sig-paren">)</span><a class="headerlink" href="#inferpy.inferences.qmodel.Qmodel.Gamma" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new q-variable of type Gamma</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>v</strong> – Inferpy p-variable</li>
+<li><strong>initializer</strong> (<em>str</em>) – indicates how the new variable should be initialized. Possible values: ‘ones’ , ‘zeroes’.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="inferpy.inferences.qmodel.Qmodel.InverseGamma">
+<em class="property">classmethod </em><code class="descname">InverseGamma</code><span class="sig-paren">(</span><em>v</em>, <em>initializer='ones'</em><span class="sig-paren">)</span><a class="headerlink" href="#inferpy.inferences.qmodel.Qmodel.InverseGamma" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new q-variable of type InverseGamma</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>v</strong> – Inferpy p-variable</li>
+<li><strong>initializer</strong> (<em>str</em>) – indicates how the new variable should be initialized. Possible values: ‘ones’ , ‘zeroes’.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="inferpy.inferences.qmodel.Qmodel.Laplace">
+<em class="property">classmethod </em><code class="descname">Laplace</code><span class="sig-paren">(</span><em>v</em>, <em>initializer='ones'</em><span class="sig-paren">)</span><a class="headerlink" href="#inferpy.inferences.qmodel.Qmodel.Laplace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new q-variable of type Laplace</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>v</strong> – Inferpy p-variable</li>
+<li><strong>initializer</strong> (<em>str</em>) – indicates how the new variable should be initialized. Possible values: ‘ones’ , ‘zeroes’.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="inferpy.inferences.qmodel.Qmodel.Multinomial">
+<em class="property">classmethod </em><code class="descname">Multinomial</code><span class="sig-paren">(</span><em>v</em>, <em>initializer='ones'</em><span class="sig-paren">)</span><a class="headerlink" href="#inferpy.inferences.qmodel.Qmodel.Multinomial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new q-variable of type Multinomial</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>v</strong> – Inferpy p-variable</li>
+<li><strong>initializer</strong> (<em>str</em>) – indicates how the new variable should be initialized. Possible values: ‘ones’ , ‘zeroes’.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="inferpy.inferences.qmodel.Qmodel.MultivariateNormalDiag">
+<em class="property">classmethod </em><code class="descname">MultivariateNormalDiag</code><span class="sig-paren">(</span><em>v</em>, <em>initializer='ones'</em><span class="sig-paren">)</span><a class="headerlink" href="#inferpy.inferences.qmodel.Qmodel.MultivariateNormalDiag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new q-variable of type MultivariateNormalDiag</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>v</strong> – Inferpy p-variable</li>
+<li><strong>initializer</strong> (<em>str</em>) – indicates how the new variable should be initialized. Possible values: ‘ones’ , ‘zeroes’.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="inferpy.inferences.qmodel.Qmodel.Normal">
+<em class="property">classmethod </em><code class="descname">Normal</code><span class="sig-paren">(</span><em>v</em>, <em>initializer='ones'</em><span class="sig-paren">)</span><a class="headerlink" href="#inferpy.inferences.qmodel.Qmodel.Normal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new q-variable of type Normal</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>v</strong> – Inferpy p-variable</li>
+<li><strong>initializer</strong> (<em>str</em>) – indicates how the new variable should be initialized. Possible values: ‘ones’ , ‘zeroes’.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="inferpy.inferences.qmodel.Qmodel.Poisson">
+<em class="property">classmethod </em><code class="descname">Poisson</code><span class="sig-paren">(</span><em>v</em>, <em>initializer='ones'</em><span class="sig-paren">)</span><a class="headerlink" href="#inferpy.inferences.qmodel.Qmodel.Poisson" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new q-variable of type Poisson</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>v</strong> – Inferpy p-variable</li>
+<li><strong>initializer</strong> (<em>str</em>) – indicates how the new variable should be initialized. Possible values: ‘ones’ , ‘zeroes’.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="inferpy.inferences.qmodel.Qmodel.Uniform">
+<em class="property">classmethod </em><code class="descname">Uniform</code><span class="sig-paren">(</span><em>v</em>, <em>initializer='ones'</em><span class="sig-paren">)</span><a class="headerlink" href="#inferpy.inferences.qmodel.Qmodel.Uniform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new q-variable of type Uniform</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>v</strong> – Inferpy p-variable</li>
+<li><strong>initializer</strong> (<em>str</em>) – indicates how the new variable should be initialized. Possible values: ‘ones’ , ‘zeroes’.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="inferpy.inferences.qmodel.Qmodel.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>varlist</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/inferences/qmodel.html#Qmodel.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.inferences.qmodel.Qmodel.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="inferpy.inferences.qmodel.Qmodel.add_var">
+<code class="descname">add_var</code><span class="sig-paren">(</span><em>v</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/inferences/qmodel.html#Qmodel.add_var"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.inferences.qmodel.Qmodel.add_var" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method for adding a new q variable</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="inferpy.inferences.qmodel.Qmodel.build_from_pmodel">
+<em class="property">static </em><code class="descname">build_from_pmodel</code><span class="sig-paren">(</span><em>p</em>, <em>empirical=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/inferences/qmodel.html#Qmodel.build_from_pmodel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.inferences.qmodel.Qmodel.build_from_pmodel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes a Q model from a P model.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>p</strong> – P model of type inferpy.ProbModel.</li>
+<li><strong>empirical</strong> – determines if q distributions will be empirical or of the same type than each p distribution.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="inferpy.inferences.qmodel.Qmodel.compatible_var">
+<em class="property">static </em><code class="descname">compatible_var</code><span class="sig-paren">(</span><em>v</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/inferences/qmodel.html#Qmodel.compatible_var"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.inferences.qmodel.Qmodel.compatible_var" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.inferences.qmodel.Qmodel.dict">
+<code class="descname">dict</code><a class="headerlink" href="#inferpy.inferences.qmodel.Qmodel.dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary where the keys and values are the p and q distributions respectively.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="inferpy.inferences.qmodel.Qmodel.new_qvar">
+<em class="property">static </em><code class="descname">new_qvar</code><span class="sig-paren">(</span><em>v</em>, <em>initializer='ones'</em>, <em>qvar_inf_module=None</em>, <em>qvar_inf_type=None</em>, <em>qvar_ed_type=None</em>, <em>check_observed=True</em>, <em>name='qvar'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/inferences/qmodel.html#Qmodel.new_qvar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.inferences.qmodel.Qmodel.new_qvar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds an Inferpy q-variable for a p-variable.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>v</strong> – Inferpy variable to be approximated.</li>
+<li><strong>initializer</strong> (<em>str</em>) – indicates how the new variable should be initialized. Possible values: “ones” , “zeroes”.</li>
+<li><strong>qvar_inf_module</strong> (<em>str</em>) – module of the new Inferpy variable.</li>
+<li><strong>qvar_inf_type</strong> (<em>str</em>) – name of the new Inferpy variable.</li>
+<li><strong>qvar_ed_type</strong> (<em>str</em>) – full name of the encapsulated Edward variable type.</li>
+<li><strong>check_observed</strong> (<em>bool</em>) – To check if p-variable is observed.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Inferpy variable approximating in input variable.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="inferpy.inferences.qmodel.Qmodel.new_qvar_empirical">
+<em class="property">static </em><code class="descname">new_qvar_empirical</code><span class="sig-paren">(</span><em>v</em>, <em>n_post_samples</em>, <em>initializer='ones'</em>, <em>check_observed=True</em>, <em>name='qvar'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/inferences/qmodel.html#Qmodel.new_qvar_empirical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.inferences.qmodel.Qmodel.new_qvar_empirical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds an empirical Inferpy q-variable for a p-variable.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>v</strong> – Inferpy variable to be approximated.</li>
+<li><strong>n_post_samples</strong> – number of posterior samples.</li>
+<li><strong>initializer</strong> (<em>str</em>) – indicates how the new variable should be initialized. Possible values: “ones” , “zeroes”.</li>
+<li><strong>check_observed</strong> (<em>bool</em>) – To check if p-variable is observed.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Inferpy variable approximating in input variable. The InferPy type will be Deterministic while
+the encapsulated Edward variable will be of type Empirical.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.inferences.qmodel.Qmodel.varlist">
+<code class="descname">varlist</code><a class="headerlink" href="#inferpy.inferences.qmodel.Qmodel.varlist" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of q variables of Inferpy type</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="inferpy.models.html" class="btn btn-neutral float-right" title="inferpy.models package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="inferpy.criticism.html" class="btn btn-neutral" title="inferpy.criticism package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Andrés R. Masegosa, Rafael Cabañas.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
