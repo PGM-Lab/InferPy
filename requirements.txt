@@ -13,7 +13,7 @@ Markdown==2.6.11
 matplotlib==2.2.0
 mock==2.0.0
 numpy==1.14
-pandas==0.5.0
+pandas==0.22.0
 pbr==3.1.1
 pockets==0.6.2
 protobuf==3.5.1

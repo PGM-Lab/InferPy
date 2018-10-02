@@ -32,7 +32,7 @@ package version as follows.
 Tensorflow
 -----------------
 
-`Tensorflow <http://www.tensorflow.org/>`_: from version 1.5 up to 1.7 (both included). For checking the installed tensorflow version, type:
+`Tensorflow <http://www.tensorflow.org/>`_: from version 1.5 up to 1.7 (both included). To check the installed tensorflow version, type:
 
 .. code:: bash
 
@@ -41,10 +41,20 @@ Tensorflow
 Numpy
 ----------------
 
-`Numpy <http://www.numpy.org/>`_ 1.14 or higher is required. For checking the version of this package, type:
+`Numpy <http://www.numpy.org/>`_ 1.14 or higher is required. To check the version of this package, type:
 
 
 .. code:: bash
 
     $ pip freeze | grep numpy
 
+
+Pandas
+----------------
+
+`Pandas <https://pandas.pydata.org>`_ 0.15.0 or higher is required. The installed version of this package can be checked as follows:
+
+
+.. code:: bash
+
+    $ pip freeze | grep pandas
