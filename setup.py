@@ -4,13 +4,11 @@
 
 from setuptools import setup, find_packages
 
-exec(open('inferpy/version.py').read())
-
-
+__version__  = '0.2.0'
 
 setup(
     name='inferpy',
-    version='0.1.3',
+    version=__version__,
     description='Probabilistic modeling with Tensorflow made easy',
     author='Andrés R. Masegosa, Rafael Cabañas',
     author_email="andresma@ual.es, rcabanas@ual.es",
