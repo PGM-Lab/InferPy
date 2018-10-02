@@ -2,20 +2,19 @@
 #
 
 
-from setuptools import setup
-from inferpy.version import __version__
+from setuptools import setup, find_packages
 
 exec(open('inferpy/version.py').read())
 
+
+
 setup(
     name='inferpy',
-    version=__version__,
+    version='0.1.3',
     description='Probabilistic modeling with Tensorflow made easy',
     author='Andrés R. Masegosa, Rafael Cabañas',
     author_email="andresma@ual.es, rcabanas@ual.es",
-    packages=['inferpy',
-              'inferpy.models', 'inferpy.util', 'inferpy.criticism', 'inferpy.inferences' ],
-    install_requires=['numpy>=1.7', 'edward==1.3.5', 'tensorflow >= 1.5, <1.8', 'numpy>=1.14'],
+    install_requires=['tensorflow >= 1.5, <1.8', 'numpy>=1.14', 'edward==1.3.5'],
     extras_require={
         'tensorflow with gpu': ['tensorflow-gpu  >= 1.5, <1.8'],
         'visualization': ['matplotlib>=1.3',
@@ -35,6 +34,7 @@ setup(
                  'Operating System :: Microsoft :: Windows',
                  'Programming Language :: Python :: 2.7',
                  'Programming Language :: Python :: 3.4'],
+    packages=find_packages(),
 )
 
 
