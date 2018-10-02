@@ -7,7 +7,7 @@ data processing, easy-to-code probablistic modeling, scalable inference and robu
 
 Changes:
 - Fixed some bugs.
-- matmul and dot operations support new input types (numpy, tensorfs, lists and InferPy variables).
+- matmul and dot operations support new input types (numpy, tensors, lists and InferPy variables).
 - Extended documentation.
 - Moved Qmodel module to inferences package.
 - Multidimensional InferPy variables are now indexed in the same way than
