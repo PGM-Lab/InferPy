@@ -7,8 +7,10 @@ from os.path import isfile, join
 class Test_examples(unittest.TestCase):
     def test(self):
 
+        black_list = ["defmodels.py"]
+
         old_cwd = os.getcwd()
-        #os.chdir("../")   #uncomment in local
+        ##os.chdir("../")   #uncomment in local
 
         #print(old_cwd+" changing to "+os.getcwd())
 
@@ -19,12 +21,18 @@ class Test_examples(unittest.TestCase):
         failed = []
 
         for f in inf_examples:
-            filename = join(pth, f)
-            print("testing " + filename)
-            try:
-                exec (compile(open(filename, "rb").read(), filename, 'exec'))
-            except Exception:
-                failed.append(f)
+
+            if f not in black_list:
+
+                filename = join(pth, f)
+                print("testing " + filename)
+                try:
+                    exec (compile(open(filename, "rb").read(), filename, 'exec'))
+                except Exception as e:
+                    failed.append(f)
+                    print("ERROR:")
+                    print(e)
+
 
         #os.chdir(old_cwd)
         #print(old_cwd + " changing to " + os.getcwd())
