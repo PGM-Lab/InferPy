@@ -191,3 +191,22 @@ def input_model_data(f):
         return f(self,newdata)
 
     return wrapper
+
+
+
+
+def def_ProbModel(f):
+
+    """ wrapper for defining custom parametrizable models in functions
+    """
+
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+
+        with inf.ProbModel() as m:
+            f(*args, **kwargs)
+        return m
+
+    return wrapper
+
+
