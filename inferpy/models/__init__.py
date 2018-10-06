@@ -7,7 +7,7 @@ from inferpy.models.deterministic import *
 from inferpy.models.factory import *
 
 
-import inferpy.models.predefined
+from inferpy.models import predefined
 
 
 # IMPLEMENTED RANDOM VARIABLES
