@@ -48,17 +48,50 @@ class replicate():
 
     __active_rep = []
     __all_rep = []
+    __refrep = None
 
-    def __init__(self,size):
+
+
+    def __init__(self,size=None,name="rep"):
         """Initializes the replicate construct
 
         Args:
             size (int): number of times that the variables contained are replicated.
 
         """
-        self.size = size
 
-        self.varlist=[]
+        ### creating a new replicate
+        if(size != None):
+            self.size = size
+            self.varlist=[]
+
+            if(replicate.exists(name)):
+                if(name != "rep"):
+                    raise ValueError("ERROR: existing replicate construct named "+name)
+                else:
+                    i = len(replicate.get_all_replicate())+1
+                    if(i>1):
+                        name = name+str(i)
+
+
+            else:
+                if(name.startswith("rep_")):
+                    raise ValueError("ERROR: invalid replicate name "+name)
+
+
+            self.__name = name
+        else:
+            ## check that this is not active
+            if(replicate.is_active(name)):
+                raise ValueError("A replicate construct cannot be compounded with itself")
+
+            # when this value is set, in the enter method, current object will be discarded
+            # and the existing construct will be activated
+            self.__refrep=name
+
+
+
+
 
     @staticmethod
     def __get_all_sizes():
@@ -66,11 +99,21 @@ class replicate():
 
 
     def __enter__(self):
+
+
+        # refering to an existing replicate
+        if (self.__refrep != None):
+            r = replicate.get(self.__refrep)
+            replicate.__active_rep.append(r)
+            return r
+
+        # normal behaivour
+
         replicate.__active_rep.append(self)
         replicate.__all_rep.append(self)
-
-
         return self
+
+
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         replicate.__active_rep.pop()
@@ -120,4 +163,24 @@ class replicate():
     @staticmethod
     def get_all_replicate():
         return replicate.__all_rep
+
+    @staticmethod
+    def exists(name):
+        return name in [r.name for r in replicate.get_all_replicate()]
+
+    @staticmethod
+    def is_active(name):
+        return name in [r.name for r in replicate.get_active_replicate()]
+
+    @staticmethod
+    def get(name):
+        return [r for r in replicate.get_all_replicate() if r.name==name][0]
+
+
+
+    ##### properties and setters ########
+
+    @property
+    def name(self):
+        return self.__name
 
