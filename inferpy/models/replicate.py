@@ -116,6 +116,10 @@ class replicate():
 
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+
+        self.exit()
+
+    def exit(self):
         replicate.__active_rep.pop()
 
 

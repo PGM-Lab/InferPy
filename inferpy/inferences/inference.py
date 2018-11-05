@@ -17,7 +17,7 @@
 """Module with the functionality related to inference methods.
 """
 
-
+import inferpy as inf
 
 
 INF_METHODS = ["KLpq", "KLqp", "Laplace", "ReparameterizationEntropyKLqp", "ReparameterizationKLKLqp", "ReparameterizationKLqp", "ScoreEntropyKLqp", "ScoreKLKLqp", "ScoreKLqp", "ScoreRBKLqp", "WakeSleep", "MetropolisHastings"]
@@ -26,4 +26,50 @@ INF_METHODS = ["KLpq", "KLqp", "Laplace", "ReparameterizationEntropyKLqp", "Repa
 
 INF_METHODS_ALIAS = {"Variational" : "KLqp", "MCMC":"MetropolisHastings"}
 """ Aliases for some of the inference methods """
+
+
+
+class Inference(object):
+    def run(self):
+        pass   #make obstract
+
+
+
+class Variational(Inference):
+    pass
+
+
+class MCMC(Inference):
+    pass
+
+
+
+
+### later on, remove this class and make dynamic the definition
+class KLqp(Variational):
+    def __init__(self, P=None, Q=None):
+
+        if Q == None and P != None:
+            self.Q = inf.Qmodel.build_from_pmodel(P)
+        elif Q != None and P == None:
+            self.Q = Q
+        else:
+            raise ValueError("P or Q must be defined, but not both")
+
+        self.Q = Q
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

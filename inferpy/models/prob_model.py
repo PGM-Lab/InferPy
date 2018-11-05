@@ -154,7 +154,7 @@ class ProbModel(object):
         self.propagated = False
 
     @input_model_data
-    def fit(self, data, reset_tf_vars=True):
+    def fit(self, data):
 
         """ Assings data to the observed variables"""
 
@@ -180,28 +180,8 @@ class ProbModel(object):
         # inference
         self.inference = getattr(ed.inferences, self.infMethod)(**inf_args)
 
-        self.inference.initialize()
 
-        sess = inf.util.Runtime.tf_sess
-
-
-
-        if reset_tf_vars:
-            tf.global_variables_initializer().run()
-
-        else:
-
-            for t in tf.global_variables():
-                if not sess.run(tf.is_variable_initialized(t)):
-                    sess.run(tf.variables_initializer([t]))
-
-
-        for _ in range(self.inference.n_iter):
-            info_dict = self.inference.update()
-            self.inference.print_progress(info_dict)
-
-        self.inference.finalize()
-
+        self.inference.run()
 
 
         self.propagated = True

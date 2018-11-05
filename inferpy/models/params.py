@@ -469,6 +469,31 @@ class ParamList(object):
         if self.param_dim != None:
             D = np.max([D, self.param_dim])
 
+
+
+
+        return [N,D]
+
+
+    @property
+    def final_shape2(self):
+        N = inf.replicate.get_total_size()
+        D = np.max([v.dim for v in self.plist])
+
+        if self.param_dim != None:
+
+            nd = np.ndim(self.param_dim)
+
+            if nd == 0:
+                D = np.max([D, self.param_dim])
+            elif nd == 1 and len(self.param_dim)==1:
+                D = np.max([D, self.param_dim[0]])
+            elif nd == 1 and len(self.param_dim)==2 and N ==1:
+                N = self.param_dim[0]
+                D = np.max([D, self.param_dim[1]])
+            else:
+                raise ValueError("ERROR: wrong shape of dim parameter")
+
         return [N,D]
 
 

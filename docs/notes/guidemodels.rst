@@ -78,7 +78,15 @@ multi-dimensional objects:
 
 
 Following Edward's approach, the multivariate dimension is the innermost (right-most)
-dimension of the parameters.
+dimension of the parameters. By contrast, with this replicate construct, we define the number
+of batches. In case of 'dim' being a list of 2 elements, the number of batches is specified as well.
+For example, the following code is equivalent to the previous one.
+
+
+
+.. literalinclude:: ../../examples/docs/guidemodels/2.py
+   :language: python
+   :lines: 22
 
 
 Note that indexing is supported:

@@ -87,11 +87,28 @@ def __add_constructor(cls, class_name, base_class_name, params, is_simple):
 
 
         if len(args)+len(kwargs)>0:
-            param_list = ParamList(params,args_list,kwargs,is_simple,param_dim=kwargs.get("dim"))
+
+
+            param_dim = kwargs.get("dim")
+
+            rep = None
+
+            if np.alen(param_dim) == 2:
+                rep = inf.replicate(size=param_dim[0])
+                param_dim = param_dim[1]
+                rep.__enter__()
+
+            elif np.alen(param_dim)>2:
+                raise ValueError("ERROR: wrong shape of dim parameter")
+
+
+
+
+
+
+            param_list = ParamList(params,args_list,kwargs,is_simple,param_dim=param_dim)
 
             if not param_list.is_empty():
-
-
 
                 param_list.check_params()
                 param_dist = param_list.get_reshaped_param_dict()
@@ -105,6 +122,9 @@ def __add_constructor(cls, class_name, base_class_name, params, is_simple):
 
                 dist = getattr(ed.models, class_name)(name=name, validate_args= validate_args, allow_nan_stats=allow_nan_stats, **param_dist)
 
+
+            if rep != None:
+                rep.exit()
 
 
         super(self.__class__, self).__init__(dist, observed=observed)
@@ -134,21 +154,22 @@ def __add_repr(cls, class_name, params):
     setattr(cls, repr.__name__, repr)
 
 
-
+### general method for defining a random variable class ###
 def def_random_variable(var):
 
-
-
-
+    # only the class_name is indicated
     if isinstance(var, six.string_types):
         v = {CLASS_NAME: var}
     else:
         v = var
 
 
+    # check the name of the encapsulated Edward class
     if not BASE_CLASS_NAME in v:
         v.update({BASE_CLASS_NAME : v.get(CLASS_NAME)})
 
+    # if the parameters (e.g., loc, scale, rate, etc.) are not indicated
+    # these are obtained from tf.contrib.distributions
     if not PARAMS in v:
 
         lst = tf.distributions._allowed_symbols
@@ -161,6 +182,8 @@ def def_random_variable(var):
         sig = inspect.getargspec(init_f)
         v.update({PARAMS: [x for x in sig.args ]})
 
+
+    # remove non-specific parameters of the random variable
     v.update({PARAMS: [x for x in v.get(PARAMS) if x not in ['self', 'validate_args', 'allow_nan_stats', 'name', 'dtype']]})
 
 
@@ -168,10 +191,11 @@ def def_random_variable(var):
         v.update({IS_SIMPLE : {}})
 
 
-
+    # starts the definition of the new class
     newclass = type(v.get(CLASS_NAME), (RandomVariable,),{})
 
 
+    # Add the properties
     if not PROPS in v:
         props = {}
         for p in v.get(PARAMS):
@@ -179,19 +203,17 @@ def def_random_variable(var):
                 props.update({p:p})
 
         v.update({PROPS:props})
-
-
-
-
-    #for p in v.get(PARAMS):
     for p, prop_call in six.iteritems(v.get(PROPS)):
         __add_property(newclass,p, call_name=prop_call, from_dist=True)
 
+
+    # Add the constructor
     __add_constructor(newclass, v.get(CLASS_NAME), v.get(BASE_CLASS_NAME), v.get(PARAMS), v.get(IS_SIMPLE))
     __add_repr(newclass, v.get(CLASS_NAME), v.get(PARAMS))
 
-
+    # set a static list with the name of its parameters
     newclass.PARAMS = v.get(PARAMS)
+
 
     globals()[newclass.__name__] = newclass
 
