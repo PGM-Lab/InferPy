@@ -29,38 +29,6 @@ INF_METHODS_ALIAS = {"Variational" : "KLqp", "MCMC":"MetropolisHastings"}
 
 
 
-class Inference(object):
-    def run(self):
-        pass   #make obstract
-
-
-
-class Variational(Inference):
-    pass
-
-
-class MCMC(Inference):
-    pass
-
-
-
-
-### later on, remove this class and make dynamic the definition
-class KLqp(Variational):
-    def __init__(self, P=None, Q=None):
-
-        if Q == None and P != None:
-            self.Q = inf.Qmodel.build_from_pmodel(P)
-        elif Q != None and P == None:
-            self.Q = Q
-        else:
-            raise ValueError("P or Q must be defined, but not both")
-
-        self.Q = Q
-
-
-
-
 
 
 
