@@ -107,10 +107,14 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="notes/requirements.html">Requirements</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="notes/requirements.html#python">Python</a></li>
-<li class="toctree-l2"><a class="reference internal" href="notes/requirements.html#edward">Edward</a></li>
-<li class="toctree-l2"><a class="reference internal" href="notes/requirements.html#tensorflow">Tensorflow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="notes/requirements.html#numpy">Numpy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/requirements.html#system">System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notes/requirements.html#package-dependencies">Package Dependencies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="notes/requirements.html#edward">Edward</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notes/requirements.html#tensorflow">Tensorflow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notes/requirements.html#numpy">Numpy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notes/requirements.html#pandas">Pandas</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -316,6 +320,7 @@
  | <a href="#G"><strong>G</strong></a>
  | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
+ | <a href="#K"><strong>K</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
@@ -332,9 +337,11 @@
 <h2 id="_">_</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.__init__">__init__() (inferpy.inferences.qmodel.Qmodel method)</a>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.inference.KLqp.__init__">__init__() (inferpy.inferences.inference.KLqp method)</a>
 
       <ul>
+        <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.__init__">(inferpy.inferences.qmodel.Qmodel method)</a>
+</li>
         <li><a href="modules/inferpy.models.html#inferpy.models.deterministic.Deterministic.__init__">(inferpy.models.deterministic.Deterministic method)</a>
 </li>
         <li><a href="modules/inferpy.models.html#inferpy.models.factory.Bernoulli.__init__">(inferpy.models.factory.Bernoulli method)</a>
@@ -458,6 +465,8 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.util.html#inferpy.util.wrappers.def_ProbModel">def_ProbModel() (in module inferpy.util.wrappers)</a>
+</li>
       <li><a href="modules/inferpy.models.html#inferpy.models.factory.def_random_variable">def_random_variable() (in module inferpy.models.factory)</a>
 </li>
       <li><a href="modules/inferpy.models.html#inferpy.models.deterministic.Deterministic">Deterministic (class in inferpy.models.deterministic)</a>
@@ -490,9 +499,13 @@
 </li>
       <li><a href="modules/inferpy.criticism.html#inferpy.criticism.evaluate.evaluate">evaluate() (in module inferpy.criticism.evaluate)</a>
 </li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.event_shape">event_shape (inferpy.models.random_variable.RandomVariable attribute)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.event_shape">event_shape (inferpy.models.random_variable.RandomVariable attribute)</a>
+      <li><a href="modules/inferpy.models.html#inferpy.models.replicate.replicate.exists">exists() (inferpy.models.replicate.replicate static method)</a>
+</li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.replicate.replicate.exit">exit() (inferpy.models.replicate.replicate method)</a>
 </li>
       <li><a href="modules/inferpy.models.html#inferpy.models.factory.Exponential">Exponential (class in inferpy.models.factory)</a>
 </li>
@@ -522,6 +535,8 @@
 </li>
       <li><a href="modules/inferpy.util.html#inferpy.util.ops.gather">gather() (in module inferpy.util.ops)</a>
 </li>
+      <li><a href="modules/inferpy.models.html#inferpy.models.replicate.replicate.get">get() (inferpy.models.replicate.replicate static method)</a>
+</li>
       <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.get_active_model">get_active_model() (inferpy.models.prob_model.ProbModel static method)</a>
 </li>
       <li><a href="modules/inferpy.models.html#inferpy.models.replicate.replicate.get_active_replicate">get_active_replicate() (inferpy.models.replicate.replicate static method)</a>
@@ -532,10 +547,10 @@
 </li>
       <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.get_copy_from">get_copy_from() (inferpy.models.prob_model.ProbModel method)</a>
 </li>
-      <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.get_key_from_var">get_key_from_var() (inferpy.models.random_variable.RandomVariable static method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.get_key_from_var">get_key_from_var() (inferpy.models.random_variable.RandomVariable static method)</a>
+</li>
       <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.get_local_hidden">get_local_hidden() (inferpy.models.random_variable.RandomVariable method)</a>
 </li>
       <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.get_parents">get_parents() (inferpy.models.prob_model.ProbModel method)</a>
@@ -574,6 +589,8 @@
 </li>
       <li><a href="modules/inferpy.inferences.html#inferpy.inferences.inference.INF_METHODS_ALIAS">INF_METHODS_ALIAS (in module inferpy.inferences.inference)</a>
 </li>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.inference.Inference">Inference (class in inferpy.inferences.inference)</a>
+</li>
       <li><a href="modules/inferpy.criticism.html#module-inferpy.criticism.evaluate">inferpy.criticism.evaluate (module)</a>
 </li>
       <li><a href="modules/inferpy.inferences.html#module-inferpy.inferences.inference">inferpy.inferences.inference (module)</a>
@@ -611,10 +628,22 @@
       <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.InverseGamma">InverseGamma() (inferpy.inferences.qmodel.Qmodel class method)</a>
 </li>
       <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.is_active">is_active() (inferpy.models.prob_model.ProbModel static method)</a>
+
+      <ul>
+        <li><a href="modules/inferpy.models.html#inferpy.models.replicate.replicate.is_active">(inferpy.models.replicate.replicate static method)</a>
 </li>
+      </ul></li>
       <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.is_compiled">is_compiled() (inferpy.models.prob_model.ProbModel method)</a>
 </li>
       <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.is_generic_variable">is_generic_variable() (inferpy.models.random_variable.RandomVariable method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="K">K</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.inference.KLqp">KLqp (class in inferpy.inferences.inference)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -664,6 +693,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/inferpy.util.html#inferpy.util.ops.matmul">matmul() (in module inferpy.util.ops)</a>
 </li>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.inference.MCMC">MCMC (class in inferpy.inferences.inference)</a>
+</li>
       <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.mean">mean() (inferpy.models.random_variable.RandomVariable method)</a>
 </li>
       <li><a href="modules/inferpy.models.html#inferpy.models.factory.Multinomial">Multinomial (class in inferpy.models.factory)</a>
@@ -685,7 +716,11 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.name">name (inferpy.models.random_variable.RandomVariable attribute)</a>
+
+      <ul>
+        <li><a href="modules/inferpy.models.html#inferpy.models.replicate.replicate.name">(inferpy.models.replicate.replicate attribute)</a>
 </li>
+      </ul></li>
       <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.new_qvar">new_qvar() (inferpy.inferences.qmodel.Qmodel static method)</a>
 </li>
       <li><a href="modules/inferpy.inferences.html#inferpy.inferences.qmodel.Qmodel.new_qvar_empirical">new_qvar_empirical() (inferpy.inferences.qmodel.Qmodel static method)</a>
@@ -806,6 +841,8 @@
 </li>
       <li><a href="modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.reset_compilation">reset_compilation() (inferpy.models.prob_model.ProbModel method)</a>
 </li>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.inference.Inference.run">run() (inferpy.inferences.inference.Inference method)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -881,6 +918,8 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/inferpy.models.html#inferpy.models.random_variable.RandomVariable.variance">variance() (inferpy.models.random_variable.RandomVariable method)</a>
+</li>
+      <li><a href="modules/inferpy.inferences.html#inferpy.inferences.inference.Variational">Variational (class in inferpy.inferences.inference)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>

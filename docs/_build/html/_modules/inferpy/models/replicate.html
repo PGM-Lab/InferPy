@@ -107,10 +107,14 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../notes/requirements.html">Requirements</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#python">Python</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#edward">Edward</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#tensorflow">Tensorflow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#numpy">Numpy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#system">System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#package-dependencies">Package Dependencies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/requirements.html#edward">Edward</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/requirements.html#tensorflow">Tensorflow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/requirements.html#numpy">Numpy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/requirements.html#pandas">Pandas</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -353,17 +357,50 @@
 
     <span class="n">__active_rep</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">__all_rep</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">__refrep</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="replicate.__init__"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.replicate.replicate.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span><span class="p">):</span>
+
+
+<div class="viewcode-block" id="replicate.__init__"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.replicate.replicate.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;rep&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initializes the replicate construct</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            size (int): number of times that the variables contained are replicated.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">varlist</span><span class="o">=</span><span class="p">[]</span></div>
+        <span class="c1">### creating a new replicate</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">size</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">varlist</span><span class="o">=</span><span class="p">[]</span>
+
+            <span class="k">if</span><span class="p">(</span><span class="n">replicate</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">name</span><span class="p">)):</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">name</span> <span class="o">!=</span> <span class="s2">&quot;rep&quot;</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;ERROR: existing replicate construct named &quot;</span><span class="o">+</span><span class="n">name</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">i</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">replicate</span><span class="o">.</span><span class="n">get_all_replicate</span><span class="p">())</span><span class="o">+</span><span class="mi">1</span>
+                    <span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">):</span>
+                        <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;rep_&quot;</span><span class="p">)):</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;ERROR: invalid replicate name &quot;</span><span class="o">+</span><span class="n">name</span><span class="p">)</span>
+
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">__name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1">## check that this is not active</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">replicate</span><span class="o">.</span><span class="n">is_active</span><span class="p">(</span><span class="n">name</span><span class="p">)):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;A replicate construct cannot be compounded with itself&quot;</span><span class="p">)</span>
+
+            <span class="c1"># when this value is set, in the enter method, current object will be discarded</span>
+            <span class="c1"># and the existing construct will be activated</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__refrep</span><span class="o">=</span><span class="n">name</span></div>
+
+
+
+
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">__get_all_sizes</span><span class="p">():</span>
@@ -371,14 +408,28 @@
 
 
     <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+
+        <span class="c1"># refering to an existing replicate</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__refrep</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">replicate</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__refrep</span><span class="p">)</span>
+            <span class="n">replicate</span><span class="o">.</span><span class="n">__active_rep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">r</span>
+
+        <span class="c1"># normal behaivour</span>
+
         <span class="n">replicate</span><span class="o">.</span><span class="n">__active_rep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">replicate</span><span class="o">.</span><span class="n">__all_rep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-
-
         <span class="k">return</span> <span class="bp">self</span>
 
+
+
     <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
-        <span class="n">replicate</span><span class="o">.</span><span class="n">__active_rep</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+<div class="viewcode-block" id="replicate.exit"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.replicate.replicate.exit">[docs]</a>    <span class="k">def</span> <span class="nf">exit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">replicate</span><span class="o">.</span><span class="n">__active_rep</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span></div>
 
 
 
@@ -424,7 +475,27 @@
 
 <div class="viewcode-block" id="replicate.get_all_replicate"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.replicate.replicate.get_all_replicate">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_all_replicate</span><span class="p">():</span>
-        <span class="k">return</span> <span class="n">replicate</span><span class="o">.</span><span class="n">__all_rep</span></div></div>
+        <span class="k">return</span> <span class="n">replicate</span><span class="o">.</span><span class="n">__all_rep</span></div>
+
+<div class="viewcode-block" id="replicate.exists"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.replicate.replicate.exists">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">exists</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">replicate</span><span class="o">.</span><span class="n">get_all_replicate</span><span class="p">()]</span></div>
+
+<div class="viewcode-block" id="replicate.is_active"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.replicate.replicate.is_active">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_active</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">replicate</span><span class="o">.</span><span class="n">get_active_replicate</span><span class="p">()]</span></div>
+
+<div class="viewcode-block" id="replicate.get"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.replicate.replicate.get">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">replicate</span><span class="o">.</span><span class="n">get_all_replicate</span><span class="p">()</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">name</span><span class="o">==</span><span class="n">name</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+
+    <span class="c1">##### properties and setters ########</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__name</span></div>
 
 </pre></div>
 

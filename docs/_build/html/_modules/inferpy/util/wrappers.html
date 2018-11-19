@@ -107,10 +107,14 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../notes/requirements.html">Requirements</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#python">Python</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#edward">Edward</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#tensorflow">Tensorflow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#numpy">Numpy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#system">System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#package-dependencies">Package Dependencies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/requirements.html#edward">Edward</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/requirements.html#tensorflow">Tensorflow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/requirements.html#numpy">Numpy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/requirements.html#pandas">Pandas</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -496,6 +500,25 @@
         <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">newdata</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">wrapper</span></div>
+
+
+
+
+<div class="viewcode-block" id="def_ProbModel"><a class="viewcode-back" href="../../../modules/inferpy.util.html#inferpy.util.wrappers.def_ProbModel">[docs]</a><span class="k">def</span> <span class="nf">def_ProbModel</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot; wrapper for defining custom parametrizable models in functions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">ProbModel</span><span class="p">()</span> <span class="k">as</span> <span class="n">m</span><span class="p">:</span>
+            <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m</span>
+
+    <span class="k">return</span> <span class="n">wrapper</span></div>
+
+
 </pre></div>
 
            </div>

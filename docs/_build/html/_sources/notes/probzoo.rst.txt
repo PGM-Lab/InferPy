@@ -15,7 +15,7 @@ Graphically, a (Bayesian) linear regression can be defined as follows,
 
 .. figure:: ../_static/img/linear_regression.png
    :alt: Bayesian Linear Regression
-   :scale: 100 %
+   :scale: 60 %
    :align: center
 
    Bayesian Linear Regression
@@ -36,7 +36,7 @@ Graphically, a (Bayesian) logistic regression can be defined as follows,
 
 .. figure:: ../_static/img/logistic_regression.png
    :alt: Bayesian Logistic Regression
-   :scale: 100 %
+   :scale: 60 %
    :align: center
 
    Bayesian Linear Regression
@@ -59,7 +59,7 @@ Graphically, a (Bayesian) multinomial logistic regression can be defined as foll
 
 .. figure:: ../_static/img/multinomial_logistic_regression.png
    :alt: Bayesian Multinomial Logistic Regression
-   :scale: 100 %
+   :scale: 60 %
    :align: center
 
    Bayesian Linear Regression

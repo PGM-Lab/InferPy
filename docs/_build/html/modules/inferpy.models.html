@@ -109,10 +109,14 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../notes/requirements.html">Requirements</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../notes/requirements.html#python">Python</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notes/requirements.html#edward">Edward</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notes/requirements.html#tensorflow">Tensorflow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notes/requirements.html#numpy">Numpy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/requirements.html#system">System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/requirements.html#package-dependencies">Package Dependencies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../notes/requirements.html#edward">Edward</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/requirements.html#tensorflow">Tensorflow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/requirements.html#numpy">Numpy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/requirements.html#pandas">Pandas</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1237,7 +1241,7 @@ is not encapsulated.</p>
 <p>Module with the replication functionality.</p>
 <dl class="class">
 <dt id="inferpy.models.replicate.replicate">
-<em class="property">class </em><code class="descclassname">inferpy.models.replicate.</code><code class="descname">replicate</code><span class="sig-paren">(</span><em>size</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/replicate.html#replicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.replicate.replicate" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">inferpy.models.replicate.</code><code class="descname">replicate</code><span class="sig-paren">(</span><em>size=None</em>, <em>name='rep'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/replicate.html#replicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.replicate.replicate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class implementing the Plateau notation</p>
 <p>The plateau notation is used to replicate the random variables contained
 within this construct. Every replicated variable is conditionally idependent
@@ -1247,7 +1251,7 @@ contained definitions. For example:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">inferpy</span> <span class="k">as</span> <span class="nn">inf</span>
 
 
-<span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+<span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">):</span>
     <span class="c1"># Define some random variables here</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Variable replicated &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="o">.</span><span class="n">get_total_size</span><span class="p">())</span> <span class="o">+</span> <span class="s2">&quot; times&quot;</span><span class="p">)</span>
 
@@ -1256,13 +1260,28 @@ contained definitions. For example:</p>
     <span class="c1"># Define some random variables here</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Variable replicated &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="o">.</span><span class="n">get_total_size</span><span class="p">())</span> <span class="o">+</span> <span class="s2">&quot; times&quot;</span><span class="p">)</span>
 
-    <span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;C&quot;</span><span class="p">):</span>
         <span class="c1"># Define some random variables here</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Variable replicated &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="o">.</span><span class="n">get_total_size</span><span class="p">())</span> <span class="o">+</span> <span class="s2">&quot; times&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="o">.</span><span class="n">in_replicate</span><span class="p">())</span>
 
 <span class="c1"># Define some random variables here</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Variable replicated &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="o">.</span><span class="n">get_total_size</span><span class="p">())</span> <span class="o">+</span> <span class="s2">&quot; times&quot;</span><span class="p">)</span>
+
+
+<span class="c1">### existing replicate construct can be reused.</span>
+<span class="c1">### This is done by ommiting the size argument and only setting the name with the name of</span>
+<span class="c1">### an existing one.</span>
+
+
+<span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;C&quot;</span><span class="p">):</span>
+        <span class="c1"># Define some random variables here</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Variable replicated &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="o">.</span><span class="n">get_total_size</span><span class="p">())</span> <span class="o">+</span> <span class="s2">&quot; times&quot;</span><span class="p">)</span>
+
+
+
+<span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="o">.</span><span class="n">get_active_replicate</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>The number of times that indicated with input argument <code class="docutils literal"><span class="pre">size</span></code>.
@@ -1277,7 +1296,7 @@ construct.</p>
 </div>
 <dl class="method">
 <dt id="inferpy.models.replicate.replicate.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>size</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/replicate.html#replicate.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.replicate.replicate.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>size=None</em>, <em>name='rep'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/replicate.html#replicate.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.replicate.replicate.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initializes the replicate construct</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1288,6 +1307,21 @@ construct.</p>
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="staticmethod">
+<dt id="inferpy.models.replicate.replicate.exists">
+<em class="property">static </em><code class="descname">exists</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/replicate.html#replicate.exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.replicate.replicate.exists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="inferpy.models.replicate.replicate.exit">
+<code class="descname">exit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/replicate.html#replicate.exit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.replicate.replicate.exit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="inferpy.models.replicate.replicate.get">
+<em class="property">static </em><code class="descname">get</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/replicate.html#replicate.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.replicate.replicate.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="staticmethod">
 <dt id="inferpy.models.replicate.replicate.get_active_replicate">
@@ -1328,6 +1362,16 @@ Otherwise False is return</td>
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="staticmethod">
+<dt id="inferpy.models.replicate.replicate.is_active">
+<em class="property">static </em><code class="descname">is_active</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/models/replicate.html#replicate.is_active"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.models.replicate.replicate.is_active" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="inferpy.models.replicate.replicate.name">
+<code class="descname">name</code><a class="headerlink" href="#inferpy.models.replicate.replicate.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="staticmethod">
 <dt id="inferpy.models.replicate.replicate.print_total_size">

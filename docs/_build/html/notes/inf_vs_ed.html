@@ -108,10 +108,14 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="requirements.html">Requirements</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="requirements.html#python">Python</a></li>
-<li class="toctree-l2"><a class="reference internal" href="requirements.html#edward">Edward</a></li>
-<li class="toctree-l2"><a class="reference internal" href="requirements.html#tensorflow">Tensorflow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="requirements.html#numpy">Numpy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="requirements.html#system">System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="requirements.html#package-dependencies">Package Dependencies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="requirements.html#edward">Edward</a></li>
+<li class="toctree-l3"><a class="reference internal" href="requirements.html#tensorflow">Tensorflow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="requirements.html#numpy">Numpy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="requirements.html#pandas">Pandas</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -310,51 +314,31 @@
 <p>This section shows the equivalent Edward code for those models in <a class="reference external" href="probzoo.html">Probabilistic Model Zoo</a> section.</p>
 <div class="section" id="bayesian-linear-regression">
 <h2>Bayesian Linear Regression<a class="headerlink" href="#bayesian-linear-regression" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># model definition</span>
-<span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">ProbModel</span><span class="p">()</span> <span class="k">as</span> <span class="n">model</span><span class="p">:</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># define the weights</span>
+<span class="n">w0</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
 
-    <span class="c1"># define the weights</span>
-    <span class="n">w0</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">w</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
-
-    <span class="c1"># define the generative model</span>
-    <span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">):</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">w0</span> <span class="o">+</span> <span class="n">inf</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">w</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-
+<span class="c1"># define the generative model</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">N</span><span class="p">,</span><span class="n">d</span><span class="p">]),</span> <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">N</span><span class="p">,</span><span class="n">d</span><span class="p">]))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">ed</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span> <span class="o">+</span> <span class="n">w0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
 
 <span class="c1"># compile and fit the model with training data</span>
-<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
-<span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="n">x_train</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">y_train</span><span class="p">}</span>
-<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">qw</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="n">d</span><span class="p">])),</span>
+                      <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softplus</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="n">d</span><span class="p">]))))</span>
+<span class="n">qw0</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="mi">1</span><span class="p">])),</span>
+                       <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softplus</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="mi">1</span><span class="p">]))))</span>
+
+<span class="n">inference</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">KLqp</span><span class="p">({</span><span class="n">w</span><span class="p">:</span> <span class="n">qw</span><span class="p">,</span> <span class="n">w0</span><span class="p">:</span> <span class="n">qw0</span><span class="p">},</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="n">x_train</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">y_train</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">N</span><span class="p">)})</span>
+<span class="n">inference</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 
 <span class="c1"># print the posterior distributions</span>
+<span class="k">print</span><span class="p">([</span><span class="n">qw</span><span class="o">.</span><span class="n">loc</span><span class="o">.</span><span class="n">eval</span><span class="p">(),</span> <span class="n">qw0</span><span class="o">.</span><span class="n">loc</span><span class="o">.</span><span class="n">eval</span><span class="p">()])</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="gaussian-mixture">
 <h2>Gaussian Mixture<a class="headerlink" href="#gaussian-mixture" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre><span></span>
-    <span class="c1"># define the generative model</span>
-    <span class="k">with</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">):</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">probs</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">mu</span><span class="p">[</span><span class="n">z</span><span class="p">],</span> <span class="n">sigma</span><span class="p">[</span><span class="n">z</span><span class="p">],</span> <span class="n">observed</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
-
-<span class="c1"># compile and fit the model with training data</span>
-<span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="n">x_train</span><span class="p">}</span>
-<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">infMethod</span><span class="o">=</span><span class="s2">&quot;MCMC&quot;</span><span class="p">)</span>
-<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-
-<span class="c1"># print the posterior</span>
-<span class="k">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">posterior</span><span class="p">(</span><span class="n">mu</span><span class="p">))</span>
-
-<span class="c1">############################## Edward ##################################################</span>
-
-
-
-<span class="c1"># model definition</span>
-
-<span class="c1"># prior distributions</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># prior distributions</span>
 <span class="n">p</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Dirichlet</span><span class="p">(</span><span class="n">concentration</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">K</span><span class="p">)</span> <span class="o">/</span> <span class="n">K</span><span class="p">)</span>
 <span class="n">mu</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">sample_shape</span><span class="o">=</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">d</span><span class="p">])</span>
 <span class="n">sigma</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">InverseGamma</span><span class="p">(</span><span class="n">concentration</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">sample_shape</span><span class="o">=</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">d</span><span class="p">])</span>
@@ -387,14 +371,12 @@
 
 <span class="c1"># print the posterior</span>
 <span class="k">print</span><span class="p">(</span><span class="n">qmu</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">eval</span><span class="p">())</span>
-
 </pre></div>
 </div>
 </div>
 <div class="section" id="logistic-regression">
 <h2>Logistic Regression<a class="headerlink" href="#logistic-regression" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre><span></span>
-<span class="c1"># define the weights</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># define the weights</span>
 <span class="n">w0</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
 <span class="n">w</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
 
@@ -419,8 +401,7 @@
 </div>
 <div class="section" id="multinomial-logistic-regression">
 <h2>Multinomial Logistic Regression<a class="headerlink" href="#multinomial-logistic-regression" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre><span></span>
-<span class="c1"># define the weights</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># define the weights</span>
 <span class="n">w0</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">K</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">K</span><span class="p">))</span>
 <span class="n">w</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">K</span><span class="p">,</span><span class="n">d</span><span class="p">]),</span> <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">K</span><span class="p">,</span><span class="n">d</span><span class="p">]))</span>
 
@@ -445,8 +426,7 @@
 </div>
 <div class="section" id="linear-factor-model-pca">
 <h2>Linear Factor Model (PCA)<a class="headerlink" href="#linear-factor-model-pca" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre><span></span>
-<span class="c1"># define the weights</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># define the weights</span>
 <span class="n">w</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">K</span><span class="p">,</span><span class="n">d</span><span class="p">]),</span> <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">K</span><span class="p">,</span><span class="n">d</span><span class="p">]))</span>
 
 <span class="c1"># define the generative model</span>
@@ -469,8 +449,7 @@
 </div>
 <div class="section" id="pca-with-ard-prior-pca">
 <h2>PCA with ARD Prior (PCA)<a class="headerlink" href="#pca-with-ard-prior-pca" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre><span></span>
-<span class="c1"># define the weights</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># define the weights</span>
 <span class="n">w</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">K</span><span class="p">,</span><span class="n">d</span><span class="p">]),</span> <span class="n">scale</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">K</span><span class="p">,</span><span class="n">d</span><span class="p">]))</span>
 
 <span class="n">sigma</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">InverseGamma</span><span class="p">(</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>

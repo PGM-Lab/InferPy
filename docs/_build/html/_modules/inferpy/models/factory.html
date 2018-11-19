@@ -107,10 +107,14 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../notes/requirements.html">Requirements</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#python">Python</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#edward">Edward</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#tensorflow">Tensorflow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#numpy">Numpy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#system">System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#package-dependencies">Package Dependencies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/requirements.html#edward">Edward</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/requirements.html#tensorflow">Tensorflow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/requirements.html#numpy">Numpy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/requirements.html#pandas">Pandas</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -392,11 +396,28 @@
 
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-            <span class="n">param_list</span> <span class="o">=</span> <span class="n">ParamList</span><span class="p">(</span><span class="n">params</span><span class="p">,</span><span class="n">args_list</span><span class="p">,</span><span class="n">kwargs</span><span class="p">,</span><span class="n">is_simple</span><span class="p">,</span><span class="n">param_dim</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dim&quot;</span><span class="p">))</span>
+
+
+            <span class="n">param_dim</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dim&quot;</span><span class="p">)</span>
+
+            <span class="n">rep</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">alen</span><span class="p">(</span><span class="n">param_dim</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">rep</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">param_dim</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">param_dim</span> <span class="o">=</span> <span class="n">param_dim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">rep</span><span class="o">.</span><span class="fm">__enter__</span><span class="p">()</span>
+
+            <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">alen</span><span class="p">(</span><span class="n">param_dim</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">2</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;ERROR: wrong shape of dim parameter&quot;</span><span class="p">)</span>
+
+
+
+
+
+
+            <span class="n">param_list</span> <span class="o">=</span> <span class="n">ParamList</span><span class="p">(</span><span class="n">params</span><span class="p">,</span><span class="n">args_list</span><span class="p">,</span><span class="n">kwargs</span><span class="p">,</span><span class="n">is_simple</span><span class="p">,</span><span class="n">param_dim</span><span class="o">=</span><span class="n">param_dim</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">param_list</span><span class="o">.</span><span class="n">is_empty</span><span class="p">():</span>
-
-
 
                 <span class="n">param_list</span><span class="o">.</span><span class="n">check_params</span><span class="p">()</span>
                 <span class="n">param_dist</span> <span class="o">=</span> <span class="n">param_list</span><span class="o">.</span><span class="n">get_reshaped_param_dict</span><span class="p">()</span>
@@ -410,6 +431,9 @@
 
                 <span class="n">dist</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">ed</span><span class="o">.</span><span class="n">models</span><span class="p">,</span> <span class="n">class_name</span><span class="p">)(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">validate_args</span><span class="o">=</span> <span class="n">validate_args</span><span class="p">,</span> <span class="n">allow_nan_stats</span><span class="o">=</span><span class="n">allow_nan_stats</span><span class="p">,</span> <span class="o">**</span><span class="n">param_dist</span><span class="p">)</span>
 
+
+            <span class="k">if</span> <span class="n">rep</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">rep</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
 
 
         <span class="nb">super</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="n">observed</span><span class="p">)</span>
@@ -439,21 +463,22 @@
     <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="nb">repr</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">repr</span><span class="p">)</span>
 
 
-
+<span class="c1">### general method for defining a random variable class ###</span>
 <div class="viewcode-block" id="def_random_variable"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.factory.def_random_variable">[docs]</a><span class="k">def</span> <span class="nf">def_random_variable</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
 
-
-
-
+    <span class="c1"># only the class_name is indicated</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
         <span class="n">v</span> <span class="o">=</span> <span class="p">{</span><span class="n">CLASS_NAME</span><span class="p">:</span> <span class="n">var</span><span class="p">}</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">v</span> <span class="o">=</span> <span class="n">var</span>
 
 
+    <span class="c1"># check the name of the encapsulated Edward class</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">BASE_CLASS_NAME</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
         <span class="n">v</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">BASE_CLASS_NAME</span> <span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">CLASS_NAME</span><span class="p">)})</span>
 
+    <span class="c1"># if the parameters (e.g., loc, scale, rate, etc.) are not indicated</span>
+    <span class="c1"># these are obtained from tf.contrib.distributions</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">PARAMS</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
 
         <span class="n">lst</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">distributions</span><span class="o">.</span><span class="n">_allowed_symbols</span>
@@ -466,6 +491,8 @@
         <span class="n">sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getargspec</span><span class="p">(</span><span class="n">init_f</span><span class="p">)</span>
         <span class="n">v</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">PARAMS</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">sig</span><span class="o">.</span><span class="n">args</span> <span class="p">]})</span>
 
+
+    <span class="c1"># remove non-specific parameters of the random variable</span>
     <span class="n">v</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">PARAMS</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PARAMS</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;self&#39;</span><span class="p">,</span> <span class="s1">&#39;validate_args&#39;</span><span class="p">,</span> <span class="s1">&#39;allow_nan_stats&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;dtype&#39;</span><span class="p">]]})</span>
 
 
@@ -473,10 +500,11 @@
         <span class="n">v</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">IS_SIMPLE</span> <span class="p">:</span> <span class="p">{}})</span>
 
 
-
+    <span class="c1"># starts the definition of the new class</span>
     <span class="n">newclass</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">CLASS_NAME</span><span class="p">),</span> <span class="p">(</span><span class="n">RandomVariable</span><span class="p">,),{})</span>
 
 
+    <span class="c1"># Add the properties</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">PROPS</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
         <span class="n">props</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PARAMS</span><span class="p">):</span>
@@ -484,19 +512,17 @@
                 <span class="n">props</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">p</span><span class="p">:</span><span class="n">p</span><span class="p">})</span>
 
         <span class="n">v</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">PROPS</span><span class="p">:</span><span class="n">props</span><span class="p">})</span>
-
-
-
-
-    <span class="c1">#for p in v.get(PARAMS):</span>
     <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">prop_call</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PROPS</span><span class="p">)):</span>
         <span class="n">__add_property</span><span class="p">(</span><span class="n">newclass</span><span class="p">,</span><span class="n">p</span><span class="p">,</span> <span class="n">call_name</span><span class="o">=</span><span class="n">prop_call</span><span class="p">,</span> <span class="n">from_dist</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
+
+    <span class="c1"># Add the constructor</span>
     <span class="n">__add_constructor</span><span class="p">(</span><span class="n">newclass</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">CLASS_NAME</span><span class="p">),</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">BASE_CLASS_NAME</span><span class="p">),</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PARAMS</span><span class="p">),</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">IS_SIMPLE</span><span class="p">))</span>
     <span class="n">__add_repr</span><span class="p">(</span><span class="n">newclass</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">CLASS_NAME</span><span class="p">),</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PARAMS</span><span class="p">))</span>
 
-
+    <span class="c1"># set a static list with the name of its parameters</span>
     <span class="n">newclass</span><span class="o">.</span><span class="n">PARAMS</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PARAMS</span><span class="p">)</span>
+
 
     <span class="nb">globals</span><span class="p">()[</span><span class="n">newclass</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="n">newclass</span></div>
 

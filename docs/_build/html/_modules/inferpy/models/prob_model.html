@@ -107,10 +107,14 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../notes/requirements.html">Requirements</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#python">Python</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#edward">Edward</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#tensorflow">Tensorflow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#numpy">Numpy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#system">System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notes/requirements.html#package-dependencies">Package Dependencies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/requirements.html#edward">Edward</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/requirements.html#tensorflow">Tensorflow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/requirements.html#numpy">Numpy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../notes/requirements.html#pandas">Pandas</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -384,7 +388,7 @@
 
 
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">q_vars</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Q</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">propagated</span> <span class="o">=</span> <span class="kc">False</span></div>
@@ -429,6 +433,8 @@
 
     <span class="c1"># other methods</span>
 
+
+
 <div class="viewcode-block" id="ProbModel.compile"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.compile">[docs]</a>    <span class="k">def</span> <span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">infMethod</span><span class="o">=</span><span class="s2">&quot;KLqp&quot;</span><span class="p">,</span> <span class="n">Q</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">proposal_vars</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot; This method initializes the structures for making inference in the model.&quot;&quot;&quot;</span>
@@ -445,19 +451,19 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">infMethod</span> <span class="o">=</span> <span class="n">infMethod</span>
 
-        <span class="k">if</span> <span class="n">Q</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">Q</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">Qmodel</span><span class="o">.</span><span class="n">build_from_pmodel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">infMethod</span><span class="o">==</span><span class="s2">&quot;MetropolisHastings&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Q</span> <span class="o">=</span> <span class="n">Q</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">Q</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Q</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">Qmodel</span><span class="o">.</span><span class="n">build_from_pmodel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">infMethod</span><span class="o">==</span><span class="s2">&quot;MetropolisHastings&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">proposal_vars</span><span class="o">==</span><span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">__inf_with_proposal_vars</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">proposal_vars</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">([(</span><span class="n">v</span><span class="o">.</span><span class="n">dist</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">dist</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">latent_vars</span><span class="p">])</span>
 
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">q_vars</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">dict</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">propagated</span> <span class="o">=</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="ProbModel.fit"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.fit">[docs]</a>    <span class="nd">@input_model_data</span>
-    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">reset_tf_vars</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot; Assings data to the observed variables&quot;&quot;&quot;</span>
 
@@ -473,7 +479,7 @@
 
 
         <span class="c1"># prepare inference arguments</span>
-        <span class="n">inf_args</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;latent_vars&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">q_vars</span><span class="p">}</span>
+        <span class="n">inf_args</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;latent_vars&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">Q</span><span class="o">.</span><span class="n">dict</span><span class="p">}</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__inf_with_proposal_vars</span><span class="p">():</span>
             <span class="n">inf_args</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;proposal_vars&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">proposal_vars</span><span class="p">})</span>
 
@@ -483,28 +489,8 @@
         <span class="c1"># inference</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inference</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">ed</span><span class="o">.</span><span class="n">inferences</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">infMethod</span><span class="p">)(</span><span class="o">**</span><span class="n">inf_args</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
 
-        <span class="n">sess</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">Runtime</span><span class="o">.</span><span class="n">tf_sess</span>
-
-
-
-        <span class="k">if</span> <span class="n">reset_tf_vars</span><span class="p">:</span>
-            <span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-
-        <span class="k">else</span><span class="p">:</span>
-
-            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tf</span><span class="o">.</span><span class="n">global_variables</span><span class="p">():</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">is_variable_initialized</span><span class="p">(</span><span class="n">t</span><span class="p">)):</span>
-                    <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">variables_initializer</span><span class="p">([</span><span class="n">t</span><span class="p">]))</span>
-
-
-        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">n_iter</span><span class="p">):</span>
-            <span class="n">info_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="n">info_dict</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 
 
         <span class="bp">self</span><span class="o">.</span><span class="n">propagated</span> <span class="o">=</span> <span class="kc">True</span></div>
@@ -618,13 +604,13 @@
 
         <span class="sd">&quot;&quot;&quot; Clear the structues created during the compilation of the model &quot;&quot;&quot;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">q_vars</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Q</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">propagated</span> <span class="o">=</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="ProbModel.is_compiled"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.is_compiled">[docs]</a>    <span class="k">def</span> <span class="nf">is_compiled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Determines if the model has been compiled &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q_vars</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Q</span> <span class="o">!=</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="ProbModel.get_config"><a class="viewcode-back" href="../../../modules/inferpy.models.html#inferpy.models.prob_model.ProbModel.get_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>

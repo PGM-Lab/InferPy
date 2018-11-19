@@ -109,10 +109,14 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../notes/requirements.html">Requirements</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../notes/requirements.html#python">Python</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notes/requirements.html#edward">Edward</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notes/requirements.html#tensorflow">Tensorflow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notes/requirements.html#numpy">Numpy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/requirements.html#system">System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/requirements.html#package-dependencies">Package Dependencies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../notes/requirements.html#edward">Edward</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/requirements.html#tensorflow">Tensorflow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/requirements.html#numpy">Numpy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../notes/requirements.html#pandas">Pandas</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -326,6 +330,40 @@
 <dt id="inferpy.inferences.inference.INF_METHODS_ALIAS">
 <code class="descclassname">inferpy.inferences.inference.</code><code class="descname">INF_METHODS_ALIAS</code><em class="property"> = {'Variational': 'KLqp', 'MCMC': 'MetropolisHastings'}</em><a class="headerlink" href="#inferpy.inferences.inference.INF_METHODS_ALIAS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Aliases for some of the inference methods</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="inferpy.inferences.inference.Inference">
+<em class="property">class </em><code class="descclassname">inferpy.inferences.inference.</code><code class="descname">Inference</code><a class="reference internal" href="../_modules/inferpy/inferences/inference.html#Inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.inferences.inference.Inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="inferpy.inferences.inference.Inference.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/inferences/inference.html#Inference.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.inferences.inference.Inference.run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="inferpy.inferences.inference.KLqp">
+<em class="property">class </em><code class="descclassname">inferpy.inferences.inference.</code><code class="descname">KLqp</code><span class="sig-paren">(</span><em>P=None</em>, <em>Q=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/inferences/inference.html#KLqp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.inferences.inference.KLqp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#inferpy.inferences.inference.Variational" title="inferpy.inferences.inference.Variational"><code class="xref py py-class docutils literal"><span class="pre">inferpy.inferences.inference.Variational</span></code></a></p>
+<dl class="method">
+<dt id="inferpy.inferences.inference.KLqp.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>P=None</em>, <em>Q=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inferpy/inferences/inference.html#KLqp.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.inferences.inference.KLqp.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="inferpy.inferences.inference.MCMC">
+<em class="property">class </em><code class="descclassname">inferpy.inferences.inference.</code><code class="descname">MCMC</code><a class="reference internal" href="../_modules/inferpy/inferences/inference.html#MCMC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.inferences.inference.MCMC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#inferpy.inferences.inference.Inference" title="inferpy.inferences.inference.Inference"><code class="xref py py-class docutils literal"><span class="pre">inferpy.inferences.inference.Inference</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="inferpy.inferences.inference.Variational">
+<em class="property">class </em><code class="descclassname">inferpy.inferences.inference.</code><code class="descname">Variational</code><a class="reference internal" href="../_modules/inferpy/inferences/inference.html#Variational"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inferpy.inferences.inference.Variational" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#inferpy.inferences.inference.Inference" title="inferpy.inferences.inference.Inference"><code class="xref py py-class docutils literal"><span class="pre">inferpy.inferences.inference.Inference</span></code></a></p>
 </dd></dl>
 
 </div>
