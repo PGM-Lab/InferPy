@@ -7,11 +7,16 @@ from setuptools import setup, find_packages
 
 __version__  = '0.2.0'
 
+with open("project_description.md", "r") as fh:
+    long_description = fh.read()
+
 
 setup(
     name='inferpy',
     version=__version__,
     description='Probabilistic modeling with Tensorflow made easy',
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     author='Andrés R. Masegosa, Rafael Cabañas',
     author_email="andresma@ual.es, rcabanas@ual.es",
     install_requires=['tensorflow >= 1.5, <1.8', 'numpy>=1.14', 'edward==1.3.5', 'pandas>0.15.0'],
