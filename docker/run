@@ -1,0 +1,3 @@
+#!/bin/bash
+path=`pwd`
+docker run --name inferpy --rm -ti -p 8888:8888 -v $path/data:/root inferpy /bin/bash
