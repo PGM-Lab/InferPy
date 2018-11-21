@@ -68,7 +68,7 @@ be defined as follows,
 
 .. figure:: docs/_static/imgs/LinearFactor.png
    :alt: Linear Factor Model
-   :scale: 35 %
+   :scale: 25 %
    :align: center
 
    Bayesian PCA
@@ -76,21 +76,35 @@ be defined as follows,
 We start defining the **prior** of the global parameters,
 
 
-.. literalinclude:: ./examples/docs/getting30s/1.py
-   :language: python
-   :lines: 1-13
+.. code-block:: python
+
+    import inferpy as inf
+    from inferpy.models import Normal
+
+    # K defines the number of components.
+    K=10
+
+    # d defines the number of dimensions
+    d=20
+
+    #Prior for the principal components
+    with inf.replicate(size = K):
+        w = Normal(loc = 0, scale = 1, dim = d)  # x.shape = [K,d]
+
+    # Number of observations (data)
+    N = 1000
+
+    # define the generative model
+    with inf.replicate(size=N):
+        z = Normal(0, 1, dim=K)  # z.shape = [N,K]
+        x = Normal(inf.matmul(z,w), 1.0, observed=True, dim=d)  # x.shape = [N,d]
+
 
 InferPy supports the definition of **plateau notation** by using the
 construct ``with inf.replicate(size = K)``, which replicates K times the
 random variables enclosed within this anotator. Every replicated
-variable is assumed to be **independent**.
-
-This ``with inf.replicate(size = N)`` construct is also useful when
-defining the model for the data:
-
-.. literalinclude:: ./examples/docs/getting30s/1.py
-   :language: python
-   :lines: 17-24
+variable is assumed to be **independent**. This ``with inf.replicate(size = N)`` construct is also useful when
+defining the model for the data.
 
 
 
@@ -104,38 +118,15 @@ defined above.
 Once the random variables of the model are defined, the probablitic
 model itself can be created and compiled. The probabilistic model
 defines a joint probability distribuiton over all these random
-variables.
-
-.. literalinclude:: ./examples/docs/getting30s/1.py
-   :language: python
-   :lines: 28-34
+variables. Finally, you can fit your model with a given data set:
 
 
-During the model compilation we specify different inference methods that
-will be used to learn the model.
+.. code-block:: python
 
-.. literalinclude:: ./examples/docs/getting30s/1.py
-   :language: python
-   :lines: 41-47
+    # compile and fit the model with training data
+    pca.compile()
+    pca.fit(data)
 
-
-The inference method can be further configure. But, as in Keras, a core
-principle is to try make things reasonbly simple, while allowing the
-user the full control if needed.
-
-Every random variable object is equipped with methods such as
-``log_prob()`` and ``sample()``. Similarly, a probabilistic model is also
-equipped with the same methods. Then, we can sample data from the model
-anbd compute the log-likelihood of a data set:
-
-.. literalinclude:: ./examples/docs/getting30s/1.py
-   :language: python
-   :lines: 52-56
-
-Of course, you can fit your model with a given data set:
-
-
-.. literalinclude:: ./examples/docs/getting30s/1.py
-   :language: python
-   :lines: 62-67
+    #extract the hidden representation from a set of observations
+    hidden_encoding = pca.posterior(z)
 
