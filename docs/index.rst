@@ -3,14 +3,23 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+
+
+
 InferPy: Probabilistic Modeling with Tensorflow Made Easy
 ==========================================================
+
 
 .. image:: _static/img/logo.png
    	:scale: 90 %
    	:align: center
 
 |
+
+
+
+
+
 
 InferPy is a high-level API for probabilistic modeling written in Python and 
 capable of running on top of Tensorflow. InferPy's API is 
@@ -110,3 +119,16 @@ A set of examples can be found in `Probabilistic Model Zoo <notes/probzoo.html>`
    :language: bash
 .. role:: python(code)
    :language: python
+
+
+
+
+.. image:: https://badge.fury.io/gh/PGM-Lab%2Finferpy.svg
+    :target: https://badge.fury.io/gh/PGM-Lab%2Finferpy
+
+.. image:: https://travis-ci.org/PGM-Lab/InferPy.svg?branch=master
+    :target: https://travis-ci.org/PGM-Lab/InferPy
+
+.. image:: https://img.shields.io/badge/License-Apache%202.0-blue.svg
+    :target: https://opensource.org/licenses/Apache-2.0
+
