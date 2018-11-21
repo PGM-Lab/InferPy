@@ -8,7 +8,7 @@ Install InferPy from PyPI:
 
 .. code:: bash
 
-   $ pip install inferpy
+   $ python -m pip install inferpy
 
 
 
