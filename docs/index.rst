@@ -123,12 +123,12 @@ A set of examples can be found in `Probabilistic Model Zoo <notes/probzoo.html>`
 
 
 
-.. image:: https://badge.fury.io/gh/PGM-Lab%2Finferpy.svg
-    :target: https://badge.fury.io/gh/PGM-Lab%2Finferpy
+
 
 .. image:: https://travis-ci.org/PGM-Lab/InferPy.svg?branch=master
     :target: https://travis-ci.org/PGM-Lab/InferPy
 
 .. image:: https://img.shields.io/badge/License-Apache%202.0-blue.svg
     :target: https://opensource.org/licenses/Apache-2.0
+
 
