@@ -66,9 +66,8 @@ parameterized by a set of Numpy's arrays.
 Let's look at a simple (Bayesian) **probabilistic component analysis** model. Graphically the model can
 be defined as follows,
 
-.. figure:: docs/_static/imgs/LinearFactor.png
+.. figure:: docs/_static/imgs/LinearFactor_scaled.png
    :alt: Linear Factor Model
-   :scale: 25 %
    :align: center
 
    Bayesian PCA
