@@ -1,7 +1,7 @@
 
 [![Docker Automated buil](https://img.shields.io/docker/automated/enriquegrodrigo/docker-sparkdev.svg)](https://hub.docker.com/r/rcabanas/inferpy/)
 [![Docker Build Statu](https://img.shields.io/docker/build/enriquegrodrigo/docker-sparkdev.svg)](https://hub.docker.com/r/rcabanas/inferpy/)
-# inferpy-sparkdev
+# Inferpy Docker image
 
 This is a base base image with InferPy package installed in a Linux System. 
 
@@ -9,7 +9,7 @@ This is a base base image with InferPy package installed in a Linux System.
 
 One can easily obtain the latest image using:
 ```
-docker pull rcabanas/inferpy:latest
+docker pull pgmlab/inferpy:latest
 ```
 
 ## Building 
@@ -31,7 +31,8 @@ To run the container:
 $ ./run
 ```
 
-Then, a linux shell is open
+Then, a linux shell is open. Afterwards you may open a python interpreter
+and start using inferpy:
 
 ```
 
