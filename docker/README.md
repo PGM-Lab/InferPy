@@ -1,6 +1,3 @@
-
-[![Docker Automated buil](https://img.shields.io/docker/automated/enriquegrodrigo/docker-sparkdev.svg)](https://hub.docker.com/r/rcabanas/inferpy/)
-[![Docker Build Statu](https://img.shields.io/docker/build/enriquegrodrigo/docker-sparkdev.svg)](https://hub.docker.com/r/rcabanas/inferpy/)
 # Inferpy Docker image
 
 This is a base base image with InferPy package installed in a Linux System. 
