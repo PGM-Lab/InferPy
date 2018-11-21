@@ -90,20 +90,13 @@ def __add_constructor(cls, class_name, base_class_name, params, is_simple):
 
 
             param_dim = kwargs.get("dim")
+            param_batch = kwargs.get("batches")
 
             rep = None
 
-            if np.alen(param_dim) == 2:
-                rep = inf.replicate(size=param_dim[0])
-                param_dim = param_dim[1]
+            if param_batch != None:
+                rep = inf.replicate(size=np.prod(param_batch))
                 rep.__enter__()
-
-            elif np.alen(param_dim)>2:
-                raise ValueError("ERROR: wrong shape of dim parameter")
-
-
-
-
 
 
             param_list = ParamList(params,args_list,kwargs,is_simple,param_dim=param_dim)

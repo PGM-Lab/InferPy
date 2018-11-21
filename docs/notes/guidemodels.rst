@@ -79,14 +79,14 @@ multi-dimensional objects:
 
 Following Edward's approach, the multivariate dimension is the innermost (right-most)
 dimension of the parameters. By contrast, with this replicate construct, we define the number
-of batches. In case of 'dim' being a list of 2 elements, the number of batches is specified as well.
-For example, the following code is equivalent to the previous one.
+of batches. The number of batches can also be specified with the 'batch' input parameter.
+For example, the definitions in following code are equivalent to the previous one.
 
 
 
 .. literalinclude:: ../../examples/docs/guidemodels/2.py
    :language: python
-   :lines: 22
+   :lines: 22-23
 
 
 Note that indexing is supported:
@@ -120,6 +120,8 @@ in the constructor:
 - ``observed``: Python boolean which is used to indicate whether a variable is observable or not . The default value is ``False``
 
 - ``dim``: dimension of the variable. The default value is ``None``
+
+- ``batches``: number of batches of the variable. The default value is ``None``
 
 
 Inferpy supports a wide range of probability distributions. Details of the specific arguments 
@@ -193,7 +195,7 @@ We can use the function ``inferpy.case_states`` with a list of variables (or mul
 
 .. literalinclude:: ../../examples/docs/guidemodels/4.py
    :language: python
-   :lines: 67-95
+   :lines: 67-94
 
 
 
