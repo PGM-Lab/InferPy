@@ -24,7 +24,6 @@ for the systems listed bellow.
 - Linux Mint 19
 - Linux Ubuntu 14.04 16.04 18.04
 - MacOS High Sierra (10.13) and Mojave (10.14)
-- Windows 10
 
 
 Package Dependencies

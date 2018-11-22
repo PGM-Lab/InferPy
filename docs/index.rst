@@ -47,7 +47,7 @@ Use InferPy if you need a probabilistic programming language that:
 .. complex probability constructs.
 
 
-A set of examples can be found in `Probabilistic Model Zoo <notes/probzoo.html>`_ section.
+A set of examples can be found in the `Probabilistic Model Zoo <notes/probzoo.html>`_ section.
 
 
 .. toctree::
