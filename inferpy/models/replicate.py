@@ -183,8 +183,8 @@ class replicate():
 
     @staticmethod
     def delete_all():
-        __active_rep = []
-        __all_rep = []
+        replicate.__active_rep = []
+        replicate.__all_rep = []
 
 
 
