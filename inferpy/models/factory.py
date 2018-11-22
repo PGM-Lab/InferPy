@@ -218,7 +218,7 @@ class Normal(RandomVariable):
     def __init__(self, loc=0, scale=1,
                  validate_args=False,
                  allow_nan_stats=True,
-                 dim=None, observed=False, name="Normal"):
+                 dim=None, batches=None, observed=False, name="Normal"):
         self.loc = loc
         self.scale = scale
 
@@ -231,7 +231,7 @@ class Beta(RandomVariable):
             validate_args=False,
             allow_nan_stats=True,
             observed=False,
-            dim=None,
+            dim=None, batches=None,
             name='Beta'):
         self.concentration1 = concentration1
         self.concentration0 = concentration0
@@ -258,7 +258,7 @@ class Uniform(RandomVariable):
             allow_nan_stats=True,
             name='Uniform',
             observed=False,
-            dim=None):
+            dim=None, batches=None):
         self.low = low
 
 class Poisson(RandomVariable):
@@ -269,7 +269,7 @@ class Poisson(RandomVariable):
             allow_nan_stats=True,
             name='Poisson',
             observed=False,
-            dim=None):
+            dim=None, batches=None):
         self.rate = rate
 
 class Categorical(RandomVariable):
@@ -281,7 +281,7 @@ class Categorical(RandomVariable):
             allow_nan_stats=True,
             name='Categorical',
             observed=False,
-            dim=None):
+            dim=None, batches=None):
         self.default_logits = logits
         self.default_probs = probs
 
@@ -295,7 +295,7 @@ class Multinomial(RandomVariable):
             allow_nan_stats=True,
             name='Categorical',
             observed=False,
-            dim=None):
+            dim=None, batches=None):
         self.logits = logits
         self.probs = probs
         self.total_count = None
@@ -307,7 +307,7 @@ class Dirichlet(RandomVariable):
             allow_nan_stats=True,
             name='Dirichlet',
             observed=False,
-            dim=None):
+            dim=None, batches=None):
         self.concentration=concentration
 
 class Gamma(RandomVariable):
@@ -317,7 +317,7 @@ class Gamma(RandomVariable):
             validate_args=False,
             allow_nan_stats=True,
             observed=False,
-            dim=None,
+            dim=None, batches=None,
             name='Gamma'):
         self.alpha = alpha
         self.beta = beta
@@ -329,7 +329,7 @@ class InverseGamma(RandomVariable):
             validate_args=False,
             allow_nan_stats=True,
             observed=False,
-            dim=None,
+            dim=None, batches=None,
             name='InverseGamma'):
         self.alpha = alpha
         self.beta = beta
@@ -343,7 +343,7 @@ class Bernoulli(RandomVariable):
             allow_nan_stats=True,
             name='Bernoulli',
             observed=False,
-            dim=None):
+            dim=None, batches=None):
         self.default_logits = logits
         self.default_probs = probs
 
@@ -351,7 +351,7 @@ class Laplace(RandomVariable):
     def __init__(self, loc, scale,
                  validate_args=False,
                  allow_nan_stats=True,
-                 dim=None, observed=False, name="Laplace"):
+                 dim=None, batches=None, observed=False, name="Laplace"):
         self.loc = loc
         self.scale = scale
 

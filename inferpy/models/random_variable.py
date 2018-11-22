@@ -537,10 +537,6 @@ def __add_getitem_operator():
                 ndim = ndim_new
             else:
                 axis = axis+1
-
-
-
-
         res.base_object = tf.reshape(res_tf, inf.fix_shape(res_tf.shape))
 
         return res
