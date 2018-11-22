@@ -6,6 +6,8 @@ import inferpy as inf
 class Test_replicate(unittest.TestCase):
     def test(self):
 
+        inf.replicate.delete_all()
+
         self.assertTrue(inf.replicate.in_replicate() == False)
         self.assertTrue(inf.replicate.get_active_replicate() == [])
         self.assertTrue(inf.replicate.get_all_replicate() == [])

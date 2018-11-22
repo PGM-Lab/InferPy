@@ -181,6 +181,12 @@ class replicate():
         return [r for r in replicate.get_all_replicate() if r.name==name][0]
 
 
+    @staticmethod
+    def delete_all():
+        __active_rep = []
+        __all_rep = []
+
+
 
     ##### properties and setters ########
 
