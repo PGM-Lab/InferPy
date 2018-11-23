@@ -3,6 +3,7 @@ python:
   - "2.7"
   - "3.5"
   - "3.6"
+  - "3.7"
 # PyPy versions
 #  - "pypy"   # PyPy2 5.8.0
 #  - "pypy3"  # Pypy3 5.8.0-beta0
