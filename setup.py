@@ -20,9 +20,9 @@ except IndexError:
     raise RuntimeError('Unable to determine version.')
 
 
+with open(os.path.join(here, 'project_description.md')) as f:
+    long_description = f.read()
 
-with open("project_description.md", "r") as fh:
-    long_description = fh.read()
 
 
 setup(
