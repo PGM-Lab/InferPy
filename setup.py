@@ -20,7 +20,7 @@ except IndexError:
     raise RuntimeError('Unable to determine version.')
 
 
-with open(os.path.join(here, 'project_description.md')) as f:
+with open(os.path.join(here, 'inferpy', 'project_description.md')) as f:
     long_description = f.read()
 
 
@@ -53,7 +53,7 @@ setup(
                  'Operating System :: Microsoft :: Windows',
                  'Programming Language :: Python :: 2.7',
                  'Programming Language :: Python :: 3.4'],
-    packages=find_packages(),
+    packages=find_packages(exclude=['playground_ignored', ]),
 )
 
 
