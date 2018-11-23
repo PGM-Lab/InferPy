@@ -13,7 +13,7 @@ Changes:
 - Version flag moved to inferpy/\_\_init\_\_.py
 - Fixed some bugs.
 
-**Release Date**: 02/10/2018
+**Release Date**: 23/11/2018
 **Further Information**: [Documentation](http://inferpy.readthedocs.io/)
 
 
