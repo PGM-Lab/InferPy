@@ -339,7 +339,7 @@ distributions in Bayesian statistics. The Dirichlet distribution of order :math:
 
 
 
-The definition of a random variable following a Beta distribution is done as follows:
+The definition of a random variable following a Dirichlet distribution is done as follows:
 
 .. literalinclude:: ../../examples/supported_distributions.py
    :language: python
@@ -452,7 +452,7 @@ The Laplace distribution is a continuous probability distribution with the follo
 
 
 
-The definition of a random variable following a Beta distribution is done as follows:
+The definition of a random variable following a Laplace distribution is done as follows:
 
 .. literalinclude:: ../../examples/supported_distributions.py
    :language: python
