@@ -20,7 +20,7 @@ except IndexError:
     raise RuntimeError('Unable to determine version.')
 
 
-with open(os.path.join(here, 'inferpy', 'project_description.md')) as f:
+with open(os.path.join(here, 'inferpy/docs/project_description.md')) as f:
     long_description = f.read()
 
 
@@ -54,6 +54,7 @@ setup(
                  'Programming Language :: Python :: 2.7',
                  'Programming Language :: Python :: 3.4'],
     packages=find_packages(exclude=['playground_ignored', ]),
+    package_data={'inferpy': ['docs/*.md']},
 )
 
 
