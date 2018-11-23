@@ -2,7 +2,7 @@
 #
 
 
-__version__ = '0.2.1rc3'
+__version__ = '0.2.1rc4'
 VERSION = __version__
 
 
