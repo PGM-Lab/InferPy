@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 #
 
+
+__version__ = '0.2.1'
+VERSION = __version__
+
+
 from inferpy import criticism
 from inferpy import models
 from inferpy import util
@@ -20,7 +25,6 @@ from inferpy.inferences.inference import INF_METHODS_ALIAS
 from inferpy.inferences.qmodel import *
 
 
-from inferpy.version import *
 
 ## basic funcitons
 

@@ -4,8 +4,22 @@
 
 from setuptools import setup, find_packages
 
+import os
+import re
 
-__version__  = '0.2.0'
+
+here = os.path.dirname(os.path.abspath(__file__))
+
+with open(os.path.join(here, 'inferpy', '__init__.py')) as f:
+    txt = f.read()
+
+try:
+    version = re.findall(r"^__version__ = '([^']+)'\r?$",
+                         txt, re.M)[0]
+except IndexError:
+    raise RuntimeError('Unable to determine version.')
+
+
 
 with open("project_description.md", "r") as fh:
     long_description = fh.read()
@@ -13,7 +27,7 @@ with open("project_description.md", "r") as fh:
 
 setup(
     name='inferpy',
-    version=__version__,
+    version=version,
     description='Probabilistic modeling with Tensorflow made easy',
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -27,7 +41,7 @@ setup(
                           'seaborn>=0.3.1']},
     tests_require=['pytest', 'pytest-pep8'],
     url='http://inferpy.readthedocs.io',
-    download_url='https://github.com/PGMLabSpain/InferPy/archive/' + __version__ + '.tar.gz',
+    download_url='https://github.com/PGMLabSpain/InferPy/archive/' + version + '.tar.gz',
     keywords='machine learning statistics probabilistic programming tensorflow edward',
     license='Apache License 2.0',
     classifiers=['Intended Audience :: Developers',
