@@ -15,6 +15,7 @@ class Test_replicate(unittest.TestCase):
 
         with inf.replicate(size=5):
 
+
             print(inf.replicate.get_active_replicate()[-1].name)
             self.assertTrue(inf.replicate.in_replicate() == True)
             self.assertTrue(len(inf.replicate.get_active_replicate()) == 1)
