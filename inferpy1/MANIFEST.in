@@ -1,0 +1,9 @@
+include LICENSE.txt
+include CHANGES.rst
+include README.rst
+graft inferpy
+graft docs
+graft examples
+graft tests
+graft requirements
+prune docs/_build

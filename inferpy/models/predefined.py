@@ -21,6 +21,10 @@ def gaussian_mixture(K,d,N):
 
 
 
+m.fit({m.vars.x: x_data})
+m.sample(['x'])
+
+
 @def_ProbModel
 def linear_regression(d,N):
 

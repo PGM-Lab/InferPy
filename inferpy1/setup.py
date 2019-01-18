@@ -2,7 +2,7 @@
 #
 
 
-from setuptools import setup, find_packages
+from setuptools import setup
 
 import os
 import re
@@ -28,8 +28,9 @@ except IndexError:
     raise RuntimeError('Unable to determine version.')
 
 # get long description from file in docs folder
-with open(os.path.join(here, 'inferpy/docs/project_description.md')) as f:
+with open(os.path.join(here, 'docs/project_description.md')) as f:
     long_description = f.read()
+
 
 # function to read requirements, and include them as package dependencies
 def get_requirements(file):
@@ -47,12 +48,6 @@ setup(
     long_description_content_type="text/markdown",
     author='Andrés R. Masegosa, Rafael Cabañas, Javier Cózar',
     author_email="andresma@ual.es, rcabanas@ual.es, jcozar87@ual.es",
-    install_requires=get_requirements('requirements/requirements.txt'),
-    extras_require={
-        'gpu': get_requirements('requirements/requirements-gpu.txt'),
-        'visualization': get_requirements('requirements/requirements-visualization.txt')
-    },
-    tests_require= get_requirements('requirements/requirements-test.txt'),
     url='http://inferpy.readthedocs.io',
     download_url='https://github.com/PGMLabSpain/InferPy/archive/{}.tar.gz'.format(version),
     keywords='machine learning statistics probabilistic programming tensorflow edward2',
@@ -65,6 +60,13 @@ setup(
                  'Operating System :: MacOS :: MacOS X',
                  'Operating System :: Microsoft :: Windows',
                  'Programming Language :: Python :: 3.4'],
-    packages=find_packages(exclude=['playground_ignored', '*.tests.*']),
-    package_data={'inferpy': ['docs/*.md']},
+    packages=['inferpy'],
+    python_requires='>=3.5',
+    install_requires=get_requirements('requirements/prod.txt'),
+    extras_require={
+        'gpu': get_requirements('requirements/gpu.txt'),
+        'visualization': get_requirements('requirements/visualization.txt')
+    },
+    tests_require=get_requirements('requirements/test.txt'),
+    include_package_data=True,
 )
