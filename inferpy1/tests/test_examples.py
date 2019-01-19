@@ -2,7 +2,7 @@ import os
 from os.path import isfile, join
 
 
-# List of fies that we do not want to test
+# List of files that we do not want to test
 BLACK_LIST = ["defmodels.py"]
 
 
@@ -17,7 +17,7 @@ def test_examples():
         filename = join(pth, f)
         print("testing " + filename)
         try:
-            exec (compile(open(filename, "rb").read(), filename, 'exec'))
+            exec(compile(open(filename, "rb").read(), filename, 'exec'))
         except Exception as e:
             failed.append(f)
             print("ERROR:")
