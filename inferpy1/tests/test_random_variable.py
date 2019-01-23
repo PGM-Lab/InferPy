@@ -7,6 +7,8 @@ from inferpy import models
 from inferpy.models.random_variable import _sanitize_args
 from inferpy.models.random_variable import _sanitize_kwargs
 
+from inferpy.util import tf_sess
+
 """
 clear_tf_default_graph is not used for the functions where Random Variables
 are created in the parametrize decorator, because these Tensors are created
@@ -128,3 +130,16 @@ def test_name(clear_tf_default_graph):
     x = models.Normal(0, 1)
     assert isinstance(x.name, str)
     assert x.name[-1] != '/'
+
+
+def test_tensor_register(clear_tf_default_graph):
+    x = models.Normal(0, 1, name='foo')
+
+    # This is basically x.sample(), so there is no need to implement it
+    # x.eval()
+
+    assert tf_sess.run(x) == 5
+    assert isinstance(tf.convert_to_tensor(x), tf.Tensor)
+    assert tf.convert_to_tensor(x).eval() == 5
+    # assert (tf.constant(5.) + x).eval() == 10  # "_as_graph_element" not implemented in "RandomVariable"
+    assert (x + tf.constant(5.)).eval() == 10

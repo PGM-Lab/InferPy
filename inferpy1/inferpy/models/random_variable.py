@@ -18,6 +18,7 @@ from tensorflow_probability.python.edward2 import generated_random_variables
 
 from inferpy.util import tf_run_eval
 
+from tensorflow.python.client import session as tf_session
 
 rv_all = generated_random_variables.rv_all  # the list of available RandomVariables in edward2
 
@@ -183,12 +184,12 @@ def _sanitize_args(list_args):
     """
     # For efficiency, we use a compregension list.
     return [
-                tf.stack(_sanitize_args(arg)) if isinstance(arg, list) else (
-                    arg.var if isinstance(arg, RandomVariable) else
-                    arg
-                )
-                for arg in list_args
-            ]
+        tf.stack(_sanitize_args(arg)) if isinstance(arg, list) else (
+            arg.var if isinstance(arg, RandomVariable) else
+            arg
+        )
+        for arg in list_args
+    ]
 
 
 # Each kwarg which is a RandomVariable is transformed into its edward2 RandomVariable instead
@@ -196,13 +197,13 @@ def _sanitize_kwargs(dict_kwargs):
     # Similarly than in _sanitize_args, we use a comprehension list for efficiency. This three-case-based
     # if-else is used to recursively sanitize internal lists
     return {
-                k: (
-                    tf.stack(_sanitize_args(v)) if isinstance(v, list) else (
-                        v.var if isinstance(v, RandomVariable) else
-                        v
-                    )
-                ) for k, v in dict_kwargs.items()
-            }
+        k: (
+            tf.stack(_sanitize_args(v)) if isinstance(v, list) else (
+                v.var if isinstance(v, RandomVariable) else
+                v
+            )
+        ) for k, v in dict_kwargs.items()
+    }
 
 
 def _make_random_variable(distribution_cls):
@@ -218,6 +219,7 @@ def _make_random_variable(distribution_cls):
         rv.__doc__ += docs
         rv.__name__ = name
         return rv
+
     # Doc for help menu
     func.__doc__ = docs
     func.__name__ = name
@@ -238,3 +240,27 @@ def _operator(var, other, operator_name):
 # Define all Random Variables existing in edward2
 for rv in rv_all:
     globals()[rv] = _make_random_variable(getattr(ed, rv))
+
+
+
+def _tensor_conversion_function(rv, dtype=None, name=None, as_ref=False):
+    """
+        Function that converts the inferpy variable into a Tensor.
+        This will enable the use of enable tf.convert_to_tensor(rv)
+    """
+    return tf.convert_to_tensor(rv.var)
+
+# register the conversion function into a tensor
+tf.register_tensor_conversion_function(  # enable tf.convert_to_tensor
+    RandomVariable, _tensor_conversion_function)
+
+
+def _session_run_conversion_fetch_function(rv):
+    """
+        This will enable run and operations with other tensors
+    """
+    return ([tf.convert_to_tensor(rv.var)], lambda val: val[0])
+
+tf_session.register_session_run_conversion_functions(  # enable sess.run, eval
+    RandomVariable,
+    _session_run_conversion_fetch_function)
