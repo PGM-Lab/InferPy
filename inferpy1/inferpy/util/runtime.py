@@ -25,16 +25,16 @@ from inferpy import util
 # configuration for the tf evaluation in sessions
 tf_run_default = True
 
-# get tf interactive session. If a default session exists, restore it as default
-__prev_sess = tf.get_default_session()
-tf_sess = tf.InteractiveSession()
-if __prev_sess:
-    __prev_sess.as_default()
+def get_default_session():
+    if tf.get_default_session():
+        return tf.get_default_session()
+    else:
+        return tf.InteractiveSession()
 
 # Run variable initializers
 __init_g = tf.global_variables_initializer()
 __init_l = tf.local_variables_initializer()
-tf_sess.run([__init_g, __init_l])
+get_default_session().run([__init_g, __init_l])
 
 
 def tf_run_eval(obj, tf_run=None):
@@ -54,6 +54,6 @@ def tf_run_eval(obj, tf_run=None):
         return util.tf_run_wrapper(obj)
     elif isinstance(obj, tf.Tensor) and run_sess:
         # evaluate the tensor if tf_run is true
-        return util.tf_sess.run(obj)
+        return util.get_default_session().run(obj)
     else:
         return obj

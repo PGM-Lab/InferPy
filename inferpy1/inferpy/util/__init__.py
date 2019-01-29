@@ -7,11 +7,11 @@ useful for the main functionality provided by inferpy
 """
 
 
-from inferpy.util.runtime import tf_sess, tf_run_default, tf_run_eval
+from inferpy.util.runtime import get_default_session, tf_run_default, tf_run_eval
 from inferpy.util.wrappers import tf_run_wrapper
 
 __all__ = [
-    'tf_sess',
+    'get_default_session',
     'tf_run_default',
     'tf_run_eval',
     'tf_run_wrapper'
