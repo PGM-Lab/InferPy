@@ -45,7 +45,7 @@ class RandomVariable:
 
     # If try to use attributes or functions not defined for RandomVariables, this function is executed.
     # First try to return the same attribute of function from the edward2 RandomVariable.
-    # Secondly try to return the same attribute of function from the distribution object inside the edward2 RandomVariable.
+    # Secondly try to return the same element from the distribution object inside the edward2 RandomVariable.
     # Otherwise, raise an Exception.
     def __getattr__(self, name):
         if hasattr(self.var, name):
@@ -176,9 +176,9 @@ def _make_random_variable(distribution_cls):
         # If arguments are Random Variables from inferpy, use its edward2 Random Variable instead.
         rv = RandomVariable(
             var=distribution_cls(
-                # if arg in args, or kwarg in kwargs are of type list, use tf.stack to convert the list of elements to a single tensor
+                # if arg in args, or kwarg in kwargs are of type list, use tf.stack to convert the list to a tensor
                 *([tf.stack(arg) if isinstance(arg, list) else arg for arg in args]),
-                **({k: tf.stack(v) if isinstance(v, list) else v for k,v in kwargs.items()})
+                **({k: tf.stack(v) if isinstance(v, list) else v for k, v in kwargs.items()})
             )
         )
         # Doc for help menu
@@ -208,13 +208,13 @@ for rv in rv_all:
     globals()[rv] = _make_random_variable(getattr(ed, rv))
 
 
-
 def _tensor_conversion_function(rv, dtype=None, name=None, as_ref=False):
     """
         Function that converts the inferpy variable into a Tensor.
         This will enable the use of enable tf.convert_to_tensor(rv)
     """
     return tf.convert_to_tensor(rv.var)
+
 
 # register the conversion function into a tensor
 tf.register_tensor_conversion_function(  # enable tf.convert_to_tensor
@@ -226,6 +226,7 @@ def _session_run_conversion_fetch_function(rv):
         This will enable run and operations with other tensors
     """
     return ([tf.convert_to_tensor(rv.var)], lambda val: val[0])
+
 
 tf_session.register_session_run_conversion_functions(  # enable sess.run, eval
     RandomVariable,
