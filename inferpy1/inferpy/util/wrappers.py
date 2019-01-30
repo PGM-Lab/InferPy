@@ -35,5 +35,15 @@ def tf_run_wrapper(f):
         else:
             tf_run = util.tf_run_default
         
-        return util.tf_run_eval(f(*args, **kwargs), tf_run=tf_run)
+        # Just run tensors in tf session, if required, in the outter level.
+        # This way, we do not care about calls inside decorated functions (tensors are never evaluated)
+        # First, disable tf_run_default to avoid inner decorated functions to be evaluated using the default value
+        _tmp = util.tf_run_default
+        util.tf_run_default = False
+        # eval the function
+        result = util.tf_run_eval(f(*args, **kwargs), tf_run=tf_run)
+        # restore the default tf_run
+        util.tf_run_default = _tmp
+        # return the result
+        return result
     return wrapper
