@@ -62,7 +62,7 @@ Graphically, a (Bayesian) multinomial logistic regression can be defined as foll
    :scale: 60 %
    :align: center
 
-   Bayesian Linear Regression
+   Bayesian Multinomial Logistic Regression
 
 The InferPy code for this model is shown below,
 
@@ -100,6 +100,7 @@ The InferPy code for this model is shown below,
 
 Linear Factor Model (PCA)
 ----------------------------------
+
 
 A linear factor model allows to perform principal component analysis (PCA). Graphically, it can be defined as follows,
 
