@@ -368,8 +368,12 @@ class MultivariateNormalDiag(RandomVariable):
 
 ####### run-time definition of random variables #########
 
-SIMPLE_VARS = ["Normal","Beta", "Exponential","Uniform","Poisson", "Gamma", "Laplace",
-               {CLASS_NAME : "InverseGamma", PARAMS : ['concentration', 'rate', 'self', 'validate_args', 'allow_nan_stats', 'name', 'dtype']}]
+SIMPLE_VARS = ["Normal","Beta", "Exponential","Uniform", "Gamma", "Laplace",
+               {CLASS_NAME : "InverseGamma",
+                PARAMS : ['concentration', 'rate', 'self', 'validate_args', 'allow_nan_stats', 'name', 'dtype']},
+               {CLASS_NAME : "Poisson",
+                PARAMS : ['rate', 'self', 'validate_args', 'allow_nan_stats', 'name', 'dtype']},
+               ]
 
 
 for v in SIMPLE_VARS:
