@@ -39,7 +39,7 @@ Graphically, a (Bayesian) logistic regression can be defined as follows,
    :scale: 60 %
    :align: center
 
-   Bayesian Linear Regression
+   Bayesian Logistic Regression
 
 The InferPy code for this model is shown below,
 
@@ -86,7 +86,7 @@ Graphically, a Mixture of Gaussians can be defined as follows,
    :scale: 100 %
    :align: center
 
-   Bayesian Linear Regression
+   Mixture of Gaussians
 
 The InferPy code for this model is shown below,
 
@@ -101,8 +101,7 @@ The InferPy code for this model is shown below,
 Linear Factor Model (PCA)
 -------------------------
 
-A linear factor model allows to perform principal component analysis (PCA). Graphically,
- it can be defined as follows,
+A linear factor model allows to perform principal component analysis (PCA). Graphically, it can be defined as follows,
 
 .. figure:: ../_static/img/pca.png
    :alt: Linear Factor Model (PCA)
