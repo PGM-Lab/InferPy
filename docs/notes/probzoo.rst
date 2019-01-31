@@ -75,8 +75,8 @@ The InferPy code for this model is shown below,
 
 --------------
 
-Mixture of Gaussians
---------------------------
+Bayesian Multinomial Logistic Regression
+---------------------------------------------
 
 
 Graphically, a Mixture of Gaussians can be defined as follows,
@@ -99,7 +99,7 @@ The InferPy code for this model is shown below,
 
 
 Linear Factor Model (PCA)
--------------------------
+----------------------------------
 
 A linear factor model allows to perform principal component analysis (PCA). Graphically, it can be defined as follows,
 
@@ -119,7 +119,7 @@ The InferPy code for this model is shown below,
 --------------
 
 PCA with ARD Prior (PCA)
-------------------------
+----------------------------------
 
 
 Similarly to the previous model, the PCA with ARD Prior can be graphically defined as follows,
