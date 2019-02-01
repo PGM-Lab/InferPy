@@ -16,6 +16,7 @@
 
 import functools
 from tensorflow_probability import edward2 as ed
+import tensorflow as tf
 
 from inferpy.util import tf_run_wrapper
 from inferpy.models import RandomVariable
@@ -47,3 +48,8 @@ class ProbModel:
     def sum_log_prob(self, sample_dict):
         """ Computes the sum of the log probabilities of a (set of) sample(s)"""
         return sum(self.log_prob(sample_dict).values())
+
+    @tf_run_wrapper
+    def sample(self, size=1):
+        """ Generates a sample for eache variable in the model """
+        return {name: tf.convert_to_tensor(var) for name, var in self.vars.items()}

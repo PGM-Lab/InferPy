@@ -26,19 +26,6 @@ from inferpy import util
 tf_run_default = True
 
 
-def get_default_session():
-    if tf.get_default_session():
-        return tf.get_default_session()
-    else:
-        return tf.InteractiveSession()
-
-
-# Run variable initializers
-__init_g = tf.global_variables_initializer()
-__init_l = tf.local_variables_initializer()
-get_default_session().run([__init_g, __init_l])
-
-
 def tf_run_eval(obj, tf_run=None):
     """
     Check if the obj object needs to be evaluated in a tf session or not.
@@ -61,6 +48,13 @@ def tf_run_eval(obj, tf_run=None):
     # If it fails to run the obj in a session, return the object as it is. Otherwise return the evaluated obj.
     else:
         try:
-            return util.get_default_session().run(obj)
+            with tf.Session() as sess:
+                # Run variable initializers
+                __init_g = tf.global_variables_initializer()
+                __init_l = tf.local_variables_initializer()
+                sess.run([__init_g, __init_l])
+                # Run obj in sess
+                result = sess.run(obj)
+            return result
         except Exception:
             return obj
