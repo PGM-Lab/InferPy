@@ -140,3 +140,12 @@ variables. Finally, you can fit your model with a given data set:
     #extract the hidden representation from a set of observations
     hidden_encoding = pca.posterior(z)
 
+
+
+Community
+-------------------
+
+To subscribe to our mailing list, please, write us an email to inferpy.api@gmail.com
+
+
+
