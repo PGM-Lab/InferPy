@@ -60,13 +60,14 @@ def test_name(tf_reset_default_graph, reproducible):
     x = models.Normal(0, 1, name='foo')
     assert x.name == 'foo'
 
+    # using the name, not the tensor name
     x = models.Normal(0, 1, name='foo')
-    assert x.name == 'foo_1'
+    assert x.name == 'foo'
 
-    # Automatic name generation. Internal final / is not shown
+    # Automatic name generation. It ends in / (it is delegated to ed random variable name)
     x = models.Normal(0, 1)
     assert isinstance(x.name, str)
-    assert x.name[-1] != '/'
+    assert x.name[-1] == '/'
 
 
 def test_tensor_register(tf_reset_default_graph, reproducible):

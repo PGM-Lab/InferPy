@@ -1,0 +1,2 @@
+class NotNamedRandomVariable(Exception):
+    pass

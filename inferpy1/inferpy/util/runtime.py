@@ -56,5 +56,5 @@ def tf_run_eval(obj, tf_run=None):
                 # Run obj in sess
                 result = sess.run(obj)
             return result
-        except Exception:
+        except (TypeError, ValueError):
             return obj

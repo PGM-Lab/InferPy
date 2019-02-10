@@ -12,13 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
+import numpy as np
 import tensorflow as tf
 from tensorflow_probability import edward2 as ed
 from tensorflow_probability.python.edward2 import generated_random_variables
+from tensorflow.python.client import session as tf_session
+import warnings
 
 from inferpy.util import tf_run_eval
+from . import contextmanager
+from inferpy import exceptions
 
-from tensorflow.python.client import session as tf_session
 
 rv_all = generated_random_variables.rv_all  # the list of available RandomVariables in edward2
 
@@ -34,14 +38,17 @@ class RandomVariable:
     - The first time the var property is used, it creates a var using the variable generator.
     """
 
-    def __init__(self, var, *args, **kwargs):
+    def __init__(self, var, name, is_expanded, is_datamodel, broadcast_shape):
         self.var = var
+        self.is_expanded = is_expanded
+        self.is_datamodel = is_datamodel
+        self.broadcast_shape = broadcast_shape
 
-    @property
-    def name(self):
-        """ name of the variable"""
-        ed_name = self.var.distribution.name
-        return ed_name[:-1]
+        # if name is provided, use it. Otherwise, use it from var or var.distribution
+        if name is None:
+            self.name = self.__getattr__('name')
+        else:
+            self.name = name
 
     # If try to use attributes or functions not defined for RandomVariables, this function is executed.
     # First try to return the same attribute of function from the edward2 RandomVariable.
@@ -166,24 +173,78 @@ class RandomVariable:
         return self.var.__nonzero__()
 
 
+def _sanitize_input(arg):
+    if isinstance(arg, list):
+        # if it is a list, it can be a list of tensors (or RVs) which must match their dimension
+        # to use tf.stack and create a single tensor as input
+        # 1) check dimension of every element.
+        shapes = [a.shape if hasattr(a, 'shape') else None for a in arg]
+
+        n_elements = [0 if s is None else(
+            s.num_elements() if hasattr(s, 'num_elements') else
+            np.multiply(*s)) for s in shapes]
+
+        idx = np.argmax(n_elements)
+        bc_shape = shapes[idx]
+
+        # Try to broadcast to bc_shape. If exception, use arg to stack (i.e. all are simple scalars)
+        try:
+            # 2) broadcast each element to the bigger shape
+            bc_arg = [tf.broadcast_to(a, bc_shape) for a in arg]
+        except ValueError:
+            # if broadcast fails, try to stack as it is
+            bc_arg = arg
+
+        return tf.stack(bc_arg, axis=-1)
+    else:
+        # if it is a dict, numpy array, or other objects return arg as it is (accepted by ed.RandomVariable).
+        return arg
+
+
 def _make_random_variable(distribution_cls):
     """Factory function to make random variable given distribution class."""
     docs = RandomVariable.__doc__ + '\n Random Variable information:\n' + ('-' * 30) + '\n' + distribution_cls.__doc__
     name = distribution_cls.__name__
 
     def func(*args, **kwargs):
-        # The arguments of RandomVariable can be tensors or edward2 Random Variables.
-        # If arguments are Random Variables from inferpy, use its edward2 Random Variable instead.
+        # At this point, the name argument MUST be declared if prob_model is active
+        if contextmanager.prob_model.is_active() and 'name' not in kwargs:
+            raise exceptions.NotNamedRandomVariable(
+                'Random Variables defined inside a probabilistic model must have a name.')
+
+        rv_name = kwargs.get('name', None)
+
+        rv_shape = contextmanager.data_model.get_random_variable_shape(args, kwargs)
+
+        # If it is inside a prob model, ommit the sample_shape in kwargs if exist and get sample_shape from data_model
+        if contextmanager.prob_model.is_active() and 'sample_shape' in kwargs:
+            # warn that sampe_shape will be ignored
+            warnings.warn('Random Variables defined inside a probabilistic model ignoe the sample_shape argument.')
+            kwargs.pop('sample_shape', None)
+        else:
+            # otherwise, use it to define the random variable
+            rv_shape['sampe_shape'] = kwargs.pop('sample_shape', ())
+
         rv = RandomVariable(
             var=distribution_cls(
-                # if arg in args, or kwarg in kwargs are of type list, use tf.stack to convert the list to a tensor
-                *([tf.stack(arg) if isinstance(arg, list) else arg for arg in args]),
-                **({k: tf.stack(v) if isinstance(v, list) else v for k, v in kwargs.items()})
-            )
+                # sanitize will consist on tf.stack list, and each element must be broadcast_to to match the shape
+                *([_sanitize_input(arg) for arg in args]),
+                **({k: _sanitize_input(v) for k, v in kwargs.items()}),
+                sample_shape=rv_shape['sample_shape']
+            ),
+            name=rv_name,
+            is_expanded=rv_shape['is_expanded'],
+            is_datamodel=contextmanager.data_model.is_active(),
+            broadcast_shape=rv_shape['broadcast_shape']
         )
         # Doc for help menu
         rv.__doc__ += docs
         rv.__name__ = name
+
+        if contextmanager.prob_model.is_active():
+            # inside prob models, register the variable as it is created. Used for prob model builder context
+            contextmanager.prob_model.register_variable(rv)
+
         return rv
 
     # Doc for help menu
@@ -212,8 +273,14 @@ def _tensor_conversion_function(rv, dtype=None, name=None, as_ref=False):
     """
         Function that converts the inferpy variable into a Tensor.
         This will enable the use of enable tf.convert_to_tensor(rv)
+
+        If the variable needs to be broadcast_to, do it right now
     """
-    return tf.convert_to_tensor(rv.var)
+    if rv.broadcast_shape is ():
+        return tf.convert_to_tensor(rv.var)
+    else:
+        new_shape = list(rv.broadcast_shape) + rv.var.shape.as_list()
+        return tf.broadcast_to(rv.var, new_shape)
 
 
 # register the conversion function into a tensor
@@ -225,7 +292,7 @@ def _session_run_conversion_fetch_function(rv):
     """
         This will enable run and operations with other tensors
     """
-    return ([tf.convert_to_tensor(rv.var)], lambda val: val[0])
+    return ([tf.convert_to_tensor(rv)], lambda val: val[0])
 
 
 tf_session.register_session_run_conversion_functions(  # enable sess.run, eval

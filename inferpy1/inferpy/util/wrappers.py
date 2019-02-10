@@ -23,27 +23,25 @@ from inferpy import util
 
 
 def tf_run_wrapper(f):
-    """ 
+    """
     A function might return a tensor or not. In order to decide if the result of this
     function needs to be evaluated in a tf session or not, wrap the output using the
     tf_run_eval function from the utils.Runtime module.
     """
     @wraps(f)
     def wrapper(*args, **kwargs):
+        # first obtains the tf_run, a bool which tells if we need to eval the output in a session or not
         if "tf_run" in kwargs:
             tf_run = kwargs.pop("tf_run")
         else:
             tf_run = util.tf_run_default
-        
+
         # Just run tensors in tf session, if required, in the outter level.
         # This way, we do not care about calls inside decorated functions (tensors are never evaluated)
-        # First, disable tf_run_default to avoid inner decorated functions to be evaluated using the default value
-        _tmp = util.tf_run_default
-        util.tf_run_default = False
+        # Disable tf_run_default to avoid inner decorated functions to be evaluated using the default value
+        kwargs.pop('tf_run', None)
         # eval the function
         result = util.tf_run_eval(f(*args, **kwargs), tf_run=tf_run)
-        # restore the default tf_run
-        util.tf_run_default = _tmp
         # return the result
         return result
     return wrapper
