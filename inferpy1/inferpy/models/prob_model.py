@@ -104,7 +104,7 @@ class ProbModel:
     """
     Class that implements the probabilistic model functionality.
     It is composed of a graph, capturing the variable relationships, an OrderedDict containing
-    the Random Variables in order of creation, and the function which 
+    the Random Variables in order of creation, and the function which
     """
     def __init__(self, builder):
         # Initialize object attributes

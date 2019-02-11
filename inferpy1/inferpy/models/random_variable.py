@@ -195,7 +195,7 @@ def _sanitize_input(arg):
             # if broadcast fails, try to stack as it is
             bc_arg = arg
 
-        return tf.stack(bc_arg, axis=-1)
+        return tf.stack(bc_arg, axis=0)
     else:
         # if it is a dict, numpy array, or other objects return arg as it is (accepted by ed.RandomVariable).
         return arg
