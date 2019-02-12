@@ -180,7 +180,7 @@ def _sanitize_input(arg, bc_shape):
             # Try to broadcast to bc_shape. If exception, use arg to stack (i.e. all are simple scalars)
             try:
                 # broadcast each element to the bc_shape
-                bc_arg = tf.broadcast_to(arg, bc_shape) 
+                bc_arg = tf.broadcast_to(arg, bc_shape)
             except ValueError:
                 # if broadcast fails, raise custom error
                 raise exceptions.InvalidParameterDimension('Parameters cannot be broadcasted. Check their shapes.')
