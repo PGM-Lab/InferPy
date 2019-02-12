@@ -37,7 +37,7 @@ def probmodel(builder):
         tf.get_default_graph()
         warnings.warn("Provisionally, TF default graph is reset when a prob model is built.")
         return ProbModel(
-            builder=builder
+            builder=lambda: builder(*args, **kwargs)
         )
     return wrapper
 

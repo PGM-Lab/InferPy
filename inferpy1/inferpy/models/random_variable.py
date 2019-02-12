@@ -254,8 +254,6 @@ def _make_random_variable(distribution_cls):
             # create graph once tensors are registered in graph
             contextmanager.prob_model.update_graph(rv_name)
 
-            print(contextmanager.prob_model.get_graph().nodes, contextmanager.prob_model.get_graph().edges)
-
             # compute sample_shape now that we have computed the dependencies
             sample_shape, is_expanded = contextmanager.data_model.get_random_variable_shape(args, kwargs)
             ed_random_var._sample_shape = sample_shape
