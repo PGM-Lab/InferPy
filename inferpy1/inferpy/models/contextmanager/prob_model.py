@@ -2,13 +2,16 @@ from contextlib import contextmanager
 from inferpy import exceptions
 from inferpy.util import tf_graph
 
+import tensorflow as tf
+
 
 # This dict store the active (if active is True) context parameters of prob model builder,
 # the model built as the initial model, and the builder vars that are being built now (model expanded?)
 _properties = dict(
     active=False,
     graph=None,
-    builder_vars=None
+    builder_vars=None,
+    is_default=False
 )
 
 
@@ -16,6 +19,9 @@ def is_active():
     # is the prob model builder context active?
     return _properties['active']
 
+def is_default():
+    # is the prob model builder context active?
+    return _properties['is_default']
 
 def register_variable(rv):
     # TODO: if not active, raise custom exception
@@ -47,6 +53,9 @@ def update_graph(rv_name):
     _properties['graph'] = tf_graph.get_graph(set(_properties['builder_vars']).union(set(rv_name)))
 
 
+
+
+
 @contextmanager
 def builder():
     # prob model builder context. Allows to get access to RVs as they are built (at the same time ed.tape registers vars)
@@ -61,3 +70,24 @@ def builder():
         _properties['active'] = False
         _properties['graph'] = None
         _properties['builder_vars'] = None
+
+
+
+def activate_default():
+
+    assert not _properties['active']
+
+    from inferpy.models.prob_model import default_model
+
+    _properties['active'] = True
+    _properties['graph'] = tf.get_default_graph()
+    _properties['builder_vars'] = default_model.vars
+    _properties['is_default'] = True
+
+
+
+def deactivate_default():
+    _properties['active'] = False
+    _properties['graph'] = None
+    _properties['builder_vars'] = None
+    _properties['is_default'] = False
