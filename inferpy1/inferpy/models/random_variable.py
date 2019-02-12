@@ -228,56 +228,66 @@ def _make_random_variable(distribution_cls):
         # compute maximum shape between shapes of inputs, and apply broadcast to the smallers in _sanitize_input
         max_shape = _maximum_shape(args + tuple(kwargs.values()))
 
-        if contextmanager.prob_model.is_active():
-            # At this point, the name argument MUST be declared if prob_model is active
-            if 'name' not in kwargs:
-                raise exceptions.NotNamedRandomVariable(
-                    'Random Variables defined inside a probabilistic model must have a name.')
-            if 'sample_shape' in kwargs:
-                # warn that sampe_shape will be ignored
-                warnings.warn('Random Variables defined inside a probabilistic model ignore the sample_shape argument.')
-                kwargs.pop('sample_shape', None)
-        else:
-            # only used if not prob_model.is_active()
-            sample_shape = kwargs.pop('sample_shape', ())
+        if not contextmanager.prob_model.is_active():
+            contextmanager.prob_model.activate_default()
 
-        # sanitize will consist on tf.stack list, and each element must be broadcast_to to match the shape
-        sanitized_args = [_sanitize_input(arg, max_shape) for arg in args]
-        sanitized_kwargs = {k: _sanitize_input(v, max_shape) for k, v in kwargs.items()}
+        try:
 
-        # If it is inside a prob model, ommit the sample_shape in kwargs if exist and use size from data_model
-        if contextmanager.prob_model.is_active():
-            # Not using sample shape yet. Used just to create the tensors, and
-            # compute the dependencies by using the tf graph
-            ed_random_var = distribution_cls(*sanitized_args, **sanitized_kwargs)
+            if contextmanager.prob_model.is_active():
+                # At this point, the name argument MUST be declared if prob_model is active
+                if 'name' not in kwargs:
+                    raise exceptions.NotNamedRandomVariable(
+                        'Random Variables defined inside a probabilistic model must have a name.')
+                if 'sample_shape' in kwargs:
+                    # warn that sampe_shape will be ignored
+                    warnings.warn('Random Variables defined inside a probabilistic model ignore the sample_shape argument.')
+                    kwargs.pop('sample_shape', None)
+            else:
+                # only used if not prob_model.is_active()
+                sample_shape = kwargs.pop('sample_shape', ())
 
-            # create graph once tensors are registered in graph
-            contextmanager.prob_model.update_graph(rv_name)
+            # sanitize will consist on tf.stack list, and each element must be broadcast_to to match the shape
+            sanitized_args = [_sanitize_input(arg, max_shape) for arg in args]
+            sanitized_kwargs = {k: _sanitize_input(v, max_shape) for k, v in kwargs.items()}
 
-            # compute sample_shape now that we have computed the dependencies
-            sample_shape, is_expanded = contextmanager.data_model.get_random_variable_shape(args, kwargs)
-            ed_random_var._sample_shape = sample_shape
-            is_datamodel = True
-        else:
-            # sample_shape is sample_shape in kwargs or ()
-            is_expanded = False
-            is_datamodel = False
-            ed_random_var = distribution_cls(*sanitized_args, **sanitized_kwargs, sample_shape=sample_shape)
+            # If it is inside a prob model, ommit the sample_shape in kwargs if exist and use size from data_model
+            if contextmanager.prob_model.is_active():
+                # Not using sample shape yet. Used just to create the tensors, and
+                # compute the dependencies by using the tf graph
+                ed_random_var = distribution_cls(*sanitized_args, **sanitized_kwargs)
 
-        rv = RandomVariable(
-            var=ed_random_var,
-            name=rv_name,
-            is_expanded=is_expanded,
-            is_datamodel=is_datamodel
-        )
+                # create graph once tensors are registered in graph
+                contextmanager.prob_model.update_graph(rv_name)
 
-        if is_datamodel:
-            # inside prob models, register the variable as it is created. Used for prob model builder context
-            contextmanager.prob_model.register_variable(rv)
+                # compute sample_shape now that we have computed the dependencies
+                sample_shape, is_expanded = contextmanager.data_model.get_random_variable_shape(args, kwargs)
+                ed_random_var._sample_shape = sample_shape
+                is_datamodel = True
+            else:
+                # sample_shape is sample_shape in kwargs or ()
+                is_expanded = False
+                is_datamodel = False
+                ed_random_var = distribution_cls(*sanitized_args, **sanitized_kwargs, sample_shape=sample_shape)
 
-        # Doc for help menu
-        rv.__doc__ += docs
-        rv.__name__ = name
+            rv = RandomVariable(
+                var=ed_random_var,
+                name=rv_name,
+                is_expanded=is_expanded,
+                is_datamodel=is_datamodel
+            )
+
+            if is_datamodel:
+                # inside prob models, register the variable as it is created. Used for prob model builder context
+                contextmanager.prob_model.register_variable(rv)
+
+            # Doc for help menu
+            rv.__doc__ += docs
+            rv.__name__ = name
+
+        finally:
+            ##### if using the default prob_model, this should be deactivate
+            if contextmanager.prob_model.is_default():
+                contextmanager.prob_model.deactivate_default()
 
         return rv
 
