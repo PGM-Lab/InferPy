@@ -103,10 +103,3 @@ class ProbModel:
         with contextmanager.data_model.fit(size=size):
             _, expanded_vars = self._build_model()
         return expanded_vars
-
-
-@probmodel
-def __empty():
-    pass
-
-default_model = __empty()
