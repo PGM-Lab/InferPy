@@ -22,6 +22,7 @@ import warnings
 from inferpy.util import tf_run_eval
 from . import contextmanager
 from inferpy import exceptions
+from inferpy import util
 
 
 rv_all = generated_random_variables.rv_all  # the list of available RandomVariables in edward2
@@ -176,7 +177,7 @@ def _sanitize_input(arg, bc_shape):
     if bc_shape is not None and (isinstance(arg, list) or hasattr(arg, 'shape')):
         # This items are used for sure as RV parameters (only sample_shape can interfer, and has been removed)
         # For each arg, try to tf.broadcast_to bc_shape, and convert to a single tensor using tf.stack
-        if _get_input_shape(arg) != bc_shape:
+        if util.iterables.get_shape(arg) != bc_shape:
             # Try to broadcast to bc_shape. If exception, use arg to stack (i.e. all are simple scalars)
             try:
                 # broadcast each element to the bc_shape
@@ -193,24 +194,8 @@ def _sanitize_input(arg, bc_shape):
         return arg
 
 
-def _get_input_shape(x):
-    # get the shape of an element x. If it is an element with a shape attribute, return it. If it is a list,
-    # compute the shape by checking the len, and the shape of internal elements. In that case, the shape must
-    # be consistent. Finally, in other case return () as shape.
-    if isinstance(x, list):
-        shapes = [_get_input_shape(subx) for subx in x]
-        if any([s != shapes[0] for s in shapes[1:]]):
-            raise exceptions.InvalidParameterDimension('Parameter dimension not consistent: {}'.format(x))
-        return (len(x), ) + shapes[0]
-    else:
-        if hasattr(x, 'shape'):
-            return tuple(x.shape)
-        else:
-            return ()
-
-
 def _maximum_shape(list_inputs):
-    shapes = [_get_input_shape(x) for x in list_inputs]
+    shapes = [util.iterables.get_shape(x) for x in list_inputs]
     # get the shape with maximum number of elements
     [s for s in shapes]
     idx = np.argmax([np.multiply.reduce(s) if len(s) > 0 else 0 for s in shapes])
