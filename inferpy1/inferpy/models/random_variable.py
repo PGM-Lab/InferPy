@@ -12,9 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
+import functools
 import numpy as np
 import tensorflow as tf
 from tensorflow_probability import edward2 as ed
+from tensorflow_probability.python.edward2.interceptor import interceptable
+
+import tensorflow_probability as tfp
 from tensorflow_probability.python.edward2 import generated_random_variables
 from tensorflow.python.client import session as tf_session
 import warnings
@@ -25,7 +29,31 @@ from inferpy import exceptions
 from inferpy import util
 
 
-rv_all = generated_random_variables.rv_all  # the list of available RandomVariables in edward2
+# the list of available RandomVariables in edward2. Matches with the available distributions in tensorflow_probability
+distributions_all = generated_random_variables.rv_all
+
+
+def _make_edward_random_variable(distribution_obj):
+    """Factory function to make random variable given distribution class."""
+
+    @interceptable
+    @functools.wraps(distribution_obj, assigned=('__module__', '__name__'))
+    def func(*args, **kwargs):
+        # pylint: disable=g-doc-args
+        """Create a random variable for ${cls}.
+        See ${cls} for more details.
+        Returns:
+          RandomVariable.
+        #### Original Docstring for Distribution
+        ${doc}
+        """
+        # pylint: enable=g-doc-args
+        sample_shape = kwargs.pop('sample_shape', ())
+        value = kwargs.pop('value', None)
+        return ed.RandomVariable(distribution=distribution_obj,
+                                 sample_shape=sample_shape,
+                                 value=value)
+    return func
 
 
 class RandomVariable:
@@ -202,10 +230,15 @@ def _maximum_shape(list_inputs):
     return shapes[idx]
 
 
-def _make_random_variable(distribution_cls):
-    """Factory function to make random variable given distribution class."""
-    docs = RandomVariable.__doc__ + '\n Random Variable information:\n' + ('-' * 30) + '\n' + distribution_cls.__doc__
-    name = distribution_cls.__name__
+def _make_random_variable(distribution_name):
+    """Factory function to make random variable given distribution name."""
+
+    distribution_cls = getattr(tfp.distributions, distribution_name)
+    ed_random_variable_cls = getattr(ed, distribution_name)
+
+    docs = RandomVariable.__doc__ + '\n Random Variable information:\n' + \
+        ('-' * 30) + '\n' + ed_random_variable_cls.__doc__
+    name = ed_random_variable_cls.__name__
 
     def func(*args, **kwargs):
         rv_name = kwargs.get('name', None)
@@ -234,20 +267,20 @@ def _make_random_variable(distribution_cls):
         if contextmanager.prob_model.is_active():
             # Not using sample shape yet. Used just to create the tensors, and
             # compute the dependencies by using the tf graph
-            ed_random_var = distribution_cls(*sanitized_args, **sanitized_kwargs)
+            tfp_dist = distribution_cls(*sanitized_args, **sanitized_kwargs)
 
             # create graph once tensors are registered in graph
             contextmanager.prob_model.update_graph(rv_name)
 
             # compute sample_shape now that we have computed the dependencies
             sample_shape, is_expanded = contextmanager.data_model.get_random_variable_shape(args, kwargs)
-            ed_random_var._sample_shape = sample_shape
+            ed_random_var = _make_edward_random_variable(tfp_dist)(sample_shape=sample_shape, name=rv_name)
             is_datamodel = True
         else:
             # sample_shape is sample_shape in kwargs or ()
             is_expanded = False
             is_datamodel = False
-            ed_random_var = distribution_cls(*sanitized_args, **sanitized_kwargs, sample_shape=sample_shape)
+            ed_random_var = ed_random_variable_cls(*sanitized_args, **sanitized_kwargs, sample_shape=sample_shape)
 
         rv = RandomVariable(
             var=ed_random_var,
@@ -284,8 +317,8 @@ def _operator(var, other, operator_name):
 
 
 # Define all Random Variables existing in edward2
-for rv in rv_all:
-    globals()[rv] = _make_random_variable(getattr(ed, rv))
+for d in distributions_all:
+    globals()[d] = _make_random_variable(d)
 
 
 def _tensor_conversion_function(rv, dtype=None, name=None, as_ref=False):

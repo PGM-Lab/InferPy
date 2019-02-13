@@ -6,4 +6,4 @@ from .prob_model import probmodel  # noqa: F401
 __all__ = [
             'datamodel',
             'probmodel'
-        ] + rv_all  # noqa: F405
+        ] + distributions_all  # noqa: F405

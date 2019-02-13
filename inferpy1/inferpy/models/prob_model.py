@@ -20,9 +20,24 @@ from tensorflow_probability import edward2 as ed
 import tensorflow as tf
 import warnings
 
-from inferpy.util import tf_run_wrapper
+from inferpy import util
+from inferpy import exceptions
 from . import contextmanager
 from .random_variable import RandomVariable
+
+
+def set_values(**model_kwargs):
+    """Creates a value-setting interceptor."""
+
+    def interceptor(f, *args, **kwargs):
+        """Sets random variable values to its aligned value."""
+        name = kwargs.get("name")
+        if name in model_kwargs:
+            kwargs["value"] = model_kwargs[name]
+
+        return ed.interceptable(f)(*args, **kwargs)
+
+    return interceptor
 
 
 def probmodel(builder):
@@ -82,17 +97,42 @@ class ProbModel:
 
         return nx_graph, model_vars
 
-    @tf_run_wrapper
+    def fit(self, sample_dict):
+        # sample_dict must be a non empty python dict
+        if not isinstance(sample_dict, dict):
+            raise TypeError('The `sample_dict` type must be dict.')
+        if len(sample_dict) == 0:
+            raise ValueError('The number of mapped variables must be at least 1.')
+
+        # check that all values in dict has the same length (will be the plate size)
+        plate_shapes = [util.iterables.get_shape(v) for v in sample_dict.values()]
+        plate_sizes = [s[0] if len(s) > 0 else 1 for s in plate_shapes]  # if the shape is (), it is just one element
+        plate_size = plate_sizes[0]
+
+        if any(plate_size != x for x in plate_sizes[1:]):
+            raise exceptions.InvalidParameterDimension(
+                'The number of elements for each mapped variable must be the same.')
+
+        # if the values mapped to randm variables has shape 0, raise an error
+        if plate_size == 0:
+            raise ValueError('The number of samples in sample_dict must be at least 1.')
+
+        with ed.interception(set_values(**sample_dict)):
+            expanded_vars = self._expand_vars(plate_size)
+
+        return expanded_vars
+
+    @util.tf_run_wrapper
     def log_prob(self, sample_dict):
         """ Computes the log probabilities of a (set of) sample(s)"""
         return {k: self.vars[k].log_prob(v) for k, v in sample_dict.items()}
 
-    @tf_run_wrapper
+    @util.tf_run_wrapper
     def sum_log_prob(self, sample_dict):
         """ Computes the sum of the log probabilities of a (set of) sample(s)"""
         return tf.reduce_sum([tf.reduce_mean(lp) for lp in self.log_prob(sample_dict).values()])
 
-    @tf_run_wrapper
+    @util.tf_run_wrapper
     def sample(self, size=1):
         """ Generates a sample for eache variable in the model """
         expanded_vars = self._expand_vars(size)
