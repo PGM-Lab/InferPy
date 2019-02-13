@@ -1,5 +1,6 @@
 from contextlib import contextmanager
 from . import prob_model
+from inferpy import exceptions
 
 
 # This dict store the active (if active is True) context parameters of datamodel
@@ -50,6 +51,10 @@ def get_random_variable_shape(var_args, var_kwargs):
 
 @contextmanager
 def fit(size):
+    # size must be an integer
+    if not isinstance(size, int):
+        raise exceptions.NotIntegerDataModelSize(
+            'The size of the data model must be an integer, not : {}'.format(type(size)))
     # Fit the datamodel parameters. We only allow to use one context level
     assert _active_datamodel['size'] == 1
     _active_datamodel['size'] = size

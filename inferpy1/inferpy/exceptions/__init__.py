@@ -4,3 +4,7 @@ class NotNamedRandomVariable(Exception):
 
 class InvalidParameterDimension(Exception):
     pass
+
+
+class NotIntegerDataModelSize(Exception):
+    pass
