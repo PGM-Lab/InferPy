@@ -12,7 +12,11 @@ _get_graph function computes a graph in networkx that represents these dependenc
 
 def _get_varname(op):
     op_name = op.name
-    return op_name[:op_name.find('/')]  # Use the first part of the operation name (until slash) as name
+    idx = op_name.find('/')  # Use the first part of the operation name (until slash) as name
+    if idx != -1 and '/Assign' not in op_name:  # Special case for tf.Variables
+        return op_name[:idx]
+    else:
+        return op_name
 
 
 def _children(op):
@@ -26,10 +30,24 @@ def _clean_graph(G, varnames):
     g_nodes = list(G.nodes)
     for n in g_nodes:
         if n not in varnames:
-            # remove and create edge between parent and child if exist
-            for p in G.predecessors(n):
-                for s in G.successors(n):
-                    G.add_edge(p, s)
+            if '/Assign' in n:  # Special case for tf.Variables
+                predecesors = list(G.predecessors(n))
+                n_name = n[n.rfind('/')]  # real name of the tf.variable
+
+                assert len(predecesors) <= 2  # At most, it should have two predecessors
+
+                if len(predecesors) == 2:
+                    if predecesors[0] == n_name:
+                        # create relation from predecesors[1] to predecesors[0]
+                        G.add_edge(predecesors[1], predecesors[0])
+                    else:
+                        # create relation from predecesors[0] to predecesors[1]
+                        G.add_edge(predecesors[0], predecesors[1])
+            else:
+                # remove and create edge between parent and child if exist
+                for p in G.predecessors(n):
+                    for s in G.successors(n):
+                        G.add_edge(p, s)
             G.remove_node(n)
     return G
 
@@ -51,10 +69,10 @@ def get_graph(varnames):
         # TODO: This is not robust, because sample shape tensors might use a different name (this is the default name)
         if 'sample_shape' not in op.name:
             c = _children(op)
-            if len(c) > 0:
-                op_name = _get_varname(op)
-                c.discard(op_name)  # avoid name references to itself
-                dependencies[op_name].update(c)
+            # if len(c) > 0:
+            op_name = _get_varname(op)
+            c.discard(op_name)  # avoid name references to itself
+            dependencies[op_name].update(c)
 
     # create networkx graph
     G = nx.DiGraph(dependencies)

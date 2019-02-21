@@ -49,7 +49,7 @@ def probmodel(builder):
     """
     @functools.wraps(builder)
     def wrapper(*args, **kwargs):
-        tf.get_default_graph()
+        tf.reset_default_graph()
         warnings.warn("Provisionally, TF default graph is reset when a prob model is built.")
         return ProbModel(
             builder=lambda: builder(*args, **kwargs)
@@ -79,7 +79,6 @@ class ProbModel:
         with contextmanager.prob_model.builder():
             # use edward2 model tape to capture RandomVariable declarations
             with ed.tape() as model_tape:
-                model_tape
                 self.builder()
 
             # ed2 RVs created. Relations between them captured in prob_model builder as a networkx graph
@@ -91,7 +90,8 @@ class ProbModel:
                 registered_rv = contextmanager.prob_model.get_builder_variable(k)
                 if registered_rv is None:
                     # a ed Random Variable. Create a inferpy Random Variable and assign the var directly.
-                    model_vars[k] = RandomVariable(v, name=k, is_expanded=False, is_datamodel=False, broadcast_shape=())
+                    # do not know the args and kwars used to build the ed random variable. Use None.
+                    model_vars[k] = RandomVariable(v, name=k, is_expanded=False, var_args=None, var_kwargs=None)
                 else:
                     model_vars[k] = registered_rv
 

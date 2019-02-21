@@ -1,5 +1,5 @@
 from contextlib import contextmanager
-from . import prob_model
+from . import util
 from inferpy import exceptions
 
 
@@ -16,37 +16,33 @@ def is_active():
 
 
 def _is_expanded_var_parameters(name):
-    graph = prob_model.get_graph()
+    active_model = util.get_active_model()
+    graph = active_model.get_graph()
     # is this a Random Variable with any parent expanded? If any, return True (will be expanded by parent size)
     # NOTE: we use the builder variables because parents (predecessors) is_expanded attribute is built right now
-    return any(prob_model.get_builder_variable(pname).is_expanded for pname in graph.predecessors(name))
+    return any(active_model.get_builder_variable(pname).is_expanded for pname in graph.predecessors(name))
 
 
-def get_random_variable_shape(var_args, var_kwargs):
-    # In this context, we have to expand only if variable is in a datamodel context.
+def get_sample_shape(name):
+    # In this context, we have to expand only if the element is in a datamodel context.
+    # Assert that element is in a model and datamodel is active
     # If var parameters are not expanded, and size has been provided, then expand.
     #
-    # Return a tuple with elements:
-    # size: The number of samples of the datamodel (an integer)
-    # is_expanded: Is this variable expanded directly (by size) or indirectly
-    #              (by broadcasting because of any of its parents, that is, var parameters)?
+    # Return a the sample_shape (number of samples of the datamodel). It is an integer, or ().
 
-    if prob_model.is_active() and _active_datamodel['active']:
-        # we need to expand this variable.
-        is_expanded = True
-        # Parameters already expanded?
-        # In probmodel definitions, each RandomVariable must have a name
-        if _is_expanded_var_parameters(var_kwargs['name']):
-            # yes, do not need to expand this var (it will be expanded by broadcast)
-            size = ()
-        else:
-            # no, we need to expand this variable
-            size = _active_datamodel['size']
+    # Check assertion
+    assert util.get_active_model() is not None and _active_datamodel['active']
+
+    # Parameters already expanded?
+    # In probmodel definitions, each RandomVariable must have a name
+    if _is_expanded_var_parameters(name):
+        # yes, do not need to expand this var (it will be expanded by broadcast)
+        size = ()
     else:
-        # not need to expand this variable
-        size, is_expanded = (), False
+        # no, we need to expand this variable
+        size = _active_datamodel['size']
 
-    return size, is_expanded
+    return size
 
 
 @contextmanager

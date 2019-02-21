@@ -23,7 +23,6 @@ from tensorflow_probability.python.edward2 import generated_random_variables
 from tensorflow.python.client import session as tf_session
 import warnings
 
-from inferpy.util import tf_run_eval
 from . import contextmanager
 from inferpy import exceptions
 from inferpy import util
@@ -67,10 +66,11 @@ class RandomVariable:
     - The first time the var property is used, it creates a var using the variable generator.
     """
 
-    def __init__(self, var, name, is_expanded, is_datamodel):
+    def __init__(self, var, name, is_expanded, var_args, var_kwargs):
         self.var = var
         self.is_expanded = is_expanded
-        self.is_datamodel = is_datamodel
+        self._var_args = var_args
+        self._var_kwargs = var_kwargs
 
         # if name is provided, use it. Otherwise, use it from var or var.distribution
         if name is None:
@@ -84,9 +84,9 @@ class RandomVariable:
     # Otherwise, raise an Exception.
     def __getattr__(self, name):
         if hasattr(self.var, name):
-            return tf_run_eval(getattr(self.var, name))
+            return util.tf_run_eval(getattr(self.var, name))
         elif hasattr(self.var.distribution, name):
-            return tf_run_eval(getattr(self.var.distribution, name))
+            return util.tf_run_eval(getattr(self.var.distribution, name))
         else:
             raise AttributeError('Property or method "{name}" not implemented in "{classname}"'.format(
                 name=name,
@@ -210,9 +210,14 @@ def _sanitize_input(arg, bc_shape):
             try:
                 # broadcast each element to the bc_shape
                 bc_arg = tf.broadcast_to(arg, bc_shape)
+                exception_happened = None
             except ValueError:
                 # if broadcast fails, raise custom error
-                raise exceptions.InvalidParameterDimension('Parameters cannot be broadcasted. Check their shapes.')
+                exception_happened = exceptions.InvalidParameterDimension(
+                    'Parameters cannot be broadcasted. Check their shapes.')
+            # Do not raise exception inside except, because it will be considered that first exception happened first
+            if exception_happened:
+                raise exception_happened
         else:
             bc_arg = arg
 
@@ -225,7 +230,6 @@ def _sanitize_input(arg, bc_shape):
 def _maximum_shape(list_inputs):
     shapes = [util.iterables.get_shape(x) for x in list_inputs]
     # get the shape with maximum number of elements
-    [s for s in shapes]
     idx = np.argmax([np.multiply.reduce(s) if len(s) > 0 else 0 for s in shapes])
     return shapes[idx]
 
@@ -246,8 +250,9 @@ def _make_random_variable(distribution_name):
         # compute maximum shape between shapes of inputs, and apply broadcast to the smallers in _sanitize_input
         max_shape = _maximum_shape(args + tuple(kwargs.values()))
 
-        if contextmanager.prob_model.is_active():
-            # At this point, the name argument MUST be declared if prob_model is active
+        active_model = contextmanager.util.get_active_model()
+        if active_model is not None:
+            # At this point, the name argument MUST be declared if active_model is not None
             if 'name' not in kwargs:
                 raise exceptions.NotNamedRandomVariable(
                     'Random Variables defined inside a probabilistic model must have a name.')
@@ -255,8 +260,9 @@ def _make_random_variable(distribution_name):
                 # warn that sampe_shape will be ignored
                 warnings.warn('Random Variables defined inside a probabilistic model ignore the sample_shape argument.')
                 kwargs.pop('sample_shape', None)
+            sample_shape = ()  # used in case that RV is in probmodel, but not in a datamodel
         else:
-            # only used if not prob_model.is_active()
+            # only used if active_model is None
             sample_shape = kwargs.pop('sample_shape', ())
 
         # sanitize will consist on tf.stack list, and each element must be broadcast_to to match the shape
@@ -264,34 +270,34 @@ def _make_random_variable(distribution_name):
         sanitized_kwargs = {k: _sanitize_input(v, max_shape) for k, v in kwargs.items()}
 
         # If it is inside a prob model, ommit the sample_shape in kwargs if exist and use size from data_model
-        if contextmanager.prob_model.is_active():
+        if active_model is not None and contextmanager.data_model.is_active():
             # Not using sample shape yet. Used just to create the tensors, and
             # compute the dependencies by using the tf graph
             tfp_dist = distribution_cls(*sanitized_args, **sanitized_kwargs)
 
             # create graph once tensors are registered in graph
-            contextmanager.prob_model.update_graph(rv_name)
+            active_model.update_graph(rv_name)
 
             # compute sample_shape now that we have computed the dependencies
-            sample_shape, is_expanded = contextmanager.data_model.get_random_variable_shape(args, kwargs)
+            sample_shape = contextmanager.data_model.get_sample_shape(rv_name)
             ed_random_var = _make_edward_random_variable(tfp_dist)(sample_shape=sample_shape, name=rv_name)
-            is_datamodel = True
+            is_expanded = True
         else:
             # sample_shape is sample_shape in kwargs or ()
-            is_expanded = False
-            is_datamodel = False
             ed_random_var = ed_random_variable_cls(*sanitized_args, **sanitized_kwargs, sample_shape=sample_shape)
+            is_expanded = False
 
         rv = RandomVariable(
             var=ed_random_var,
             name=rv_name,
             is_expanded=is_expanded,
-            is_datamodel=is_datamodel
+            var_args=sanitized_args,
+            var_kwargs=sanitized_kwargs
         )
 
-        if is_datamodel:
+        if active_model is not None:
             # inside prob models, register the variable as it is created. Used for prob model builder context
-            contextmanager.prob_model.register_variable(rv)
+            active_model.register_variable(rv)
 
         # Doc for help menu
         rv.__doc__ += docs
