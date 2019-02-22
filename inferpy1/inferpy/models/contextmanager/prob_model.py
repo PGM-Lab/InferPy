@@ -7,6 +7,7 @@ from inferpy.util import tf_graph
 # the model built as the initial model, and the builder vars that are being built now (model expanded?)
 _properties = dict(
     active=False,
+    build_graph=False,
     graph=None,
     builder_vars=None
 )
@@ -43,21 +44,26 @@ def update_graph(rv_name):
     # return the graph of dependencies of the prob model that is being built
     # create a new graph using the actual tf computational graph, and clean it using the actual
     # builder vars and the random var name which is being built
-
-    _properties['graph'] = tf_graph.get_graph(set(_properties['builder_vars']).union(set([rv_name])))
+    if _properties['build_graph']:
+        _properties['graph'] = tf_graph.get_graph(set(_properties['builder_vars']).union(set([rv_name])))
 
 
 @contextmanager
-def builder():
+def builder(graph):
     # prob model builder context. Allows to get access to RVs as they are built (at the same time ed.tape registers vars)
     # We only allow to use one context level
     assert not _properties['active']
     _properties['active'] = True
-    _properties['graph'] = tf_graph.get_empty_graph()
+    _properties['build_graph'] = graph is None
+    if _properties['build_graph']:
+        _properties['graph'] = tf_graph.get_empty_graph()
+    else:
+        _properties['graph'] = graph
     _properties['builder_vars'] = dict()
     try:
         yield
     finally:
         _properties['active'] = False
+        _properties['build_graph'] = False
         _properties['graph'] = None
         _properties['builder_vars'] = None

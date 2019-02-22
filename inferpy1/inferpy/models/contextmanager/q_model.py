@@ -9,8 +9,7 @@ _properties = dict(
     active=False,
     graph=None,
     builder_vars=None,
-    builder_params=None,
-    pvars=None
+    builder_params=None
 )
 
 
@@ -38,12 +37,6 @@ def register_parameter(p):
     _properties['builder_params'][p.name] = p
 
 
-def get_pvariable(name):
-    # TODO: if not active, raise custom exception
-    # return the variable if exists. Otherwise, return None
-    return _properties['pvars'].get(name, None)
-
-
 def get_builder_variable(name):
     # TODO: if not active, raise custom exception
     # return the variable or parameter if exists. Otherwise, return None
@@ -51,6 +44,10 @@ def get_builder_variable(name):
         name,
         _properties['builder_params'].get(name, None)
         )
+
+
+def get_var_parameters():
+    return {k: p.var for k, p in _properties['builder_params'].items()}
 
 
 def get_graph():
@@ -73,7 +70,7 @@ def update_graph(rv_name):
 
 
 @contextmanager
-def builder(pvars):
+def builder():
     # prob model builder context. Allows to get access to RVs as they are built (at the same time ed.tape registers vars)
     # We only allow to use one context level
     assert not _properties['active']
@@ -81,7 +78,6 @@ def builder(pvars):
     _properties['graph'] = tf_graph.get_empty_graph()
     _properties['builder_vars'] = dict()
     _properties['builder_params'] = dict()
-    _properties['pvars'] = pvars
     try:
         yield
     finally:
@@ -89,4 +85,3 @@ def builder(pvars):
         _properties['graph'] = None
         _properties['builder_vars'] = None
         _properties['builder_params'] = None
-        _properties['pvars'] = None
