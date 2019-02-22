@@ -24,3 +24,7 @@ class NotIntegerDataModelSize(Exception):
 
 class ParameterOutsideQModelError(Exception):
     pass
+
+
+class ProbModelInferenceError(Exception):
+    pass

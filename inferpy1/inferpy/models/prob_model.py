@@ -20,11 +20,14 @@ from tensorflow_probability import edward2 as ed
 import tensorflow as tf
 import networkx as nx
 from matplotlib import pyplot as plt
+from itertools import chain
+from collections import ChainMap
 
 from inferpy import util
 from inferpy import exceptions
 from . import contextmanager
 from .random_variable import RandomVariable
+from . import inference
 
 
 def set_values(**model_kwargs):
@@ -69,13 +72,21 @@ class ProbModel:
         with g_for_nxgraph.as_default():
             self.graph = self._build_model(only_graph=True)
         self._vars = None
+        self._params = None
 
     @property
     def vars(self):
         # Build _vars lazily
         if self._vars is None:
-            self._vars = self._build_model()
+            self._vars, self._params = self._build_model()
         return self._vars
+
+    @property
+    def params(self):
+        # Build _params lazily
+        if self._params is None:
+            self._vars, self._params = self._build_model()
+        return self._params
 
     def _build_model(self, only_graph=False):
         # set this graph as active, so datamodel can check and use the model graph
@@ -90,6 +101,9 @@ class ProbModel:
                 # ed2 RVs created. Relations between them captured in prob_model builder as a networkx graph
                 nx_graph = contextmanager.prob_model.get_graph()
             else:
+                # get variables from parameters
+                var_parameters = contextmanager.prob_model.get_var_parameters()
+
                 # wrap captured edward2 RVs into inferpy RVs
                 model_vars = OrderedDict()
                 for k, v in model_tape.items():
@@ -104,13 +118,27 @@ class ProbModel:
         if only_graph:
             return nx_graph
         else:
-            return model_vars
+            return model_vars, var_parameters
 
     def plot_graph(self):
         nx.draw(self.graph, cmap=plt.get_cmap('jet'), with_labels=True)
         plt.show()
 
+    def compile(self, qmodel=None):
+        if qmodel is None:
+            # TODO: if qmodel is None, create one by default.
+            pass
+
+        # Create the inference context object
+        self.inference_context = inference.InferenceContext(
+            qmodel=qmodel
+        )
+
     def fit(self, sample_dict):
+        # inference context must be defined by calling to compile method
+        if self.inference_context is None:
+            raise exceptions.ProbModelInferenceError(
+                'The compile method must be previously called to set the inference context')
         # sample_dict must be a non empty python dict
         if not isinstance(sample_dict, dict):
             raise TypeError('The `sample_dict` type must be dict.')
@@ -131,9 +159,15 @@ class ProbModel:
             raise ValueError('The number of samples in sample_dict must be at least 1.')
 
         with ed.interception(set_values(**sample_dict)):
-            expanded_vars = self._expand_vars(plate_size)
+            exp_p_vars = self._expand_vars(plate_size)
+            qmodel = self.inference_context.qmodel
+            exp_q_vars, expanded_q_params = qmodel._expand_vars(plate_size)
+            # Check that dimensions are correct between q and p variables
+            for name, rv in exp_q_vars.items():
+                if exp_p_vars[name].shape != rv.shape:
+                    raise Exception('Que haces loco!')
 
-        return expanded_vars
+        return exp_p_vars
 
     @util.tf_run_wrapper
     def log_prob(self, sample_dict):
@@ -148,11 +182,11 @@ class ProbModel:
     @util.tf_run_wrapper
     def sample(self, size=1):
         """ Generates a sample for eache variable in the model """
-        expanded_vars = self._expand_vars(size)
+        expanded_vars, expanded_params = self._expand_model(size)
         return {name: tf.convert_to_tensor(var) for name, var in expanded_vars.items()}
 
-    def _expand_vars(self, size):
+    def _expand_model(self, size):
         """ Create the expanded model vars using sample_shape as plate size and return the OrderedDict """
         with contextmanager.data_model.fit(size=size):
-            expanded_vars = self._build_model()
-        return expanded_vars
+            expanded_vars, expanded_params = self._build_model()
+        return expanded_vars, expanded_params

@@ -250,9 +250,8 @@ def _make_random_variable(distribution_name):
         # compute maximum shape between shapes of inputs, and apply broadcast to the smallers in _sanitize_input
         max_shape = _maximum_shape(args + tuple(kwargs.values()))
 
-        active_model = contextmanager.util.get_active_model()
-        if active_model is not None:
-            # At this point, the name argument MUST be declared if active_model is not None
+        if contextmanager.prob_model.is_active():
+            # At this point, the name argument MUST be declared if prob model is active
             if 'name' not in kwargs:
                 raise exceptions.NotNamedRandomVariable(
                     'Random Variables defined inside a probabilistic model must have a name.')
@@ -262,7 +261,7 @@ def _make_random_variable(distribution_name):
                 kwargs.pop('sample_shape', None)
             sample_shape = ()  # used in case that RV is in probmodel, but not in a datamodel
         else:
-            # only used if active_model is None
+            # only used if prob model is active
             sample_shape = kwargs.pop('sample_shape', ())
 
         # sanitize will consist on tf.stack list, and each element must be broadcast_to to match the shape
@@ -270,13 +269,13 @@ def _make_random_variable(distribution_name):
         sanitized_kwargs = {k: _sanitize_input(v, max_shape) for k, v in kwargs.items()}
 
         # If it is inside a prob model, ommit the sample_shape in kwargs if exist and use size from data_model
-        if active_model is not None and contextmanager.data_model.is_active():
+        if contextmanager.prob_model.is_active() and contextmanager.data_model.is_active():
             # Not using sample shape yet. Used just to create the tensors, and
             # compute the dependencies by using the tf graph
             tfp_dist = distribution_cls(*sanitized_args, **sanitized_kwargs)
 
             # create graph once tensors are registered in graph
-            active_model.update_graph(rv_name)
+            contextmanager.prob_model.update_graph(rv_name)
 
             # compute sample_shape now that we have computed the dependencies
             sample_shape = contextmanager.data_model.get_sample_shape(rv_name)
@@ -295,9 +294,9 @@ def _make_random_variable(distribution_name):
             var_kwargs=sanitized_kwargs
         )
 
-        if active_model is not None:
+        if contextmanager.prob_model.is_active():
             # inside prob models, register the variable as it is created. Used for prob model builder context
-            active_model.register_variable(rv)
+            contextmanager.prob_model.register_variable(rv)
 
         # Doc for help menu
         rv.__doc__ += docs

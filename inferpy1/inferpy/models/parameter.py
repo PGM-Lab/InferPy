@@ -28,21 +28,21 @@ class Parameter:
         # By defult, parameter is not expanded
         self.is_expanded = False
 
-        if contextmanager.q_model.is_active():
+        if contextmanager.prob_model.is_active():
             # in this case, the parameter musy have a name
             if self.name is None:
                 raise exceptions.NotNamedParameter(
-                    'Parameters defined inside a qmodel must have a name.')
+                    'Parameters defined inside a prob model must have a name.')
 
-        # check if Parameter is created inside a qmodel and datamodel context or not.
-        if contextmanager.q_model.is_active() and contextmanager.data_model.is_active():
+        # check if Parameter is created inside a prob model and datamodel context or not.
+        if contextmanager.prob_model.is_active() and contextmanager.data_model.is_active():
             # convert parameter to tensor if it is not
             if not isinstance(initial_value, (tf.Tensor, tf.SparseTensor, tf.Variable)):
                 initial_value = tf.convert_to_tensor(initial_value)
 
-            input_varname = initial_value.op.name
+            input_varname = initial_value.op.name if contextmanager.prob_model.is_building_graph() else name
             # check the sample_shape. If not empty, expand the initial_value
-            contextmanager.q_model.update_graph(input_varname)
+            contextmanager.prob_model.update_graph(input_varname)
 
             sample_shape = contextmanager.data_model.get_sample_shape(input_varname)
             if sample_shape is not ():
@@ -54,9 +54,9 @@ class Parameter:
         # Build the tf variable
         self.var = tf.Variable(initial_value, name=self.name)
 
-        # register the variable in the qmodel
-        if contextmanager.q_model.is_active():
-            contextmanager.q_model.register_parameter(self)
+        # register the variable in the prob model
+        if contextmanager.prob_model.is_active():
+            contextmanager.prob_model.register_parameter(self)
 
 
 def _tensor_conversion_function(p, dtype=None, name=None, as_ref=False):

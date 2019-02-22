@@ -1,5 +1,5 @@
 from contextlib import contextmanager
-from . import util
+from . import prob_model
 from inferpy import exceptions
 
 
@@ -16,11 +16,10 @@ def is_active():
 
 
 def _is_expanded_var_parameters(name):
-    active_model = util.get_active_model()
-    graph = active_model.get_graph()
+    graph = prob_model.get_graph()
     # is this a Random Variable with any parent expanded? If any, return True (will be expanded by parent size)
     # NOTE: we use the builder variables because parents (predecessors) is_expanded attribute is built right now
-    return any(active_model.get_builder_variable(pname).is_expanded for pname in graph.predecessors(name))
+    return any(prob_model.get_builder_variable(pname).is_expanded for pname in graph.predecessors(name))
 
 
 def get_sample_shape(name):
@@ -31,7 +30,7 @@ def get_sample_shape(name):
     # Return a the sample_shape (number of samples of the datamodel). It is an integer, or ().
 
     # Check assertion
-    assert util.get_active_model() is not None and _active_datamodel['active']
+    assert prob_model.is_active() and _active_datamodel['active']
 
     # Parameters already expanded?
     # In probmodel definitions, each RandomVariable must have a name
