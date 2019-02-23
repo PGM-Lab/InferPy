@@ -8,11 +8,11 @@ matrix:
     - python: 3.5
       env: TOXENV=py35
     - python: 3.6
-      env: TOXENV=py35
+      env: TOXENV=py36
 
 # command to install dependencies
 install:
   - pip install tox
 # command to run tests
 script:
-  - TOX_SKIP_MISSING_INTERPRETERS="False"; tox
+  - TOX_SKIP_MISSING_INTERPRETERS="True"; tox
