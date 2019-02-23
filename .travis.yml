@@ -15,5 +15,4 @@ install:
   - pip install tox
 # command to run tests
 script:
-  - export TOX_SKIP_MISSING_INTERPRETERS="False"
-  - tox
+  - TOX_SKIP_MISSING_INTERPRETERS="False"; tox
