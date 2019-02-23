@@ -53,7 +53,8 @@ def get_builder_variable(name):
 
 
 def get_var_parameters():
-    return {k: p.var for k, p in _properties['builder_params'].items()}
+    # return {k: p.var for k, p in _properties['builder_params'].items()}
+    return _properties['builder_params']
 
 
 def get_graph():

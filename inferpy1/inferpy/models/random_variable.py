@@ -66,9 +66,9 @@ class RandomVariable:
     - The first time the var property is used, it creates a var using the variable generator.
     """
 
-    def __init__(self, var, name, is_expanded, var_args, var_kwargs):
+    def __init__(self, var, name, is_datamodel, var_args, var_kwargs):
         self.var = var
-        self.is_expanded = is_expanded
+        self.is_datamodel = is_datamodel
         self._var_args = var_args
         self._var_kwargs = var_kwargs
 
@@ -280,16 +280,16 @@ def _make_random_variable(distribution_name):
             # compute sample_shape now that we have computed the dependencies
             sample_shape = contextmanager.data_model.get_sample_shape(rv_name)
             ed_random_var = _make_edward_random_variable(tfp_dist)(sample_shape=sample_shape, name=rv_name)
-            is_expanded = True
+            is_datamodel = True
         else:
             # sample_shape is sample_shape in kwargs or ()
             ed_random_var = ed_random_variable_cls(*sanitized_args, **sanitized_kwargs, sample_shape=sample_shape)
-            is_expanded = False
+            is_datamodel = False
 
         rv = RandomVariable(
             var=ed_random_var,
             name=rv_name,
-            is_expanded=is_expanded,
+            is_datamodel=is_datamodel,
             var_args=sanitized_args,
             var_kwargs=sanitized_kwargs
         )
@@ -297,6 +297,7 @@ def _make_random_variable(distribution_name):
         if contextmanager.prob_model.is_active():
             # inside prob models, register the variable as it is created. Used for prob model builder context
             contextmanager.prob_model.register_variable(rv)
+            contextmanager.prob_model.update_graph(rv.name)
 
         # Doc for help menu
         rv.__doc__ += docs

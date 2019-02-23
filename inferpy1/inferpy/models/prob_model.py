@@ -20,28 +20,11 @@ from tensorflow_probability import edward2 as ed
 import tensorflow as tf
 import networkx as nx
 from matplotlib import pyplot as plt
-from itertools import chain
-from collections import ChainMap
 
 from inferpy import util
 from inferpy import exceptions
 from . import contextmanager
 from .random_variable import RandomVariable
-from . import inference
-
-
-def set_values(**model_kwargs):
-    """Creates a value-setting interceptor."""
-
-    def interceptor(f, *args, **kwargs):
-        """Sets random variable values to its aligned value."""
-        name = kwargs.get("name")
-        if name in model_kwargs:
-            kwargs["value"] = model_kwargs[name]
-
-        return ed.interceptable(f)(*args, **kwargs)
-
-    return interceptor
 
 
 def probmodel(builder):
@@ -71,22 +54,8 @@ class ProbModel:
         g_for_nxgraph = tf.Graph()
         with g_for_nxgraph.as_default():
             self.graph = self._build_model(only_graph=True)
-        self._vars = None
-        self._params = None
-
-    @property
-    def vars(self):
-        # Build _vars lazily
-        if self._vars is None:
-            self._vars, self._params = self._build_model()
-        return self._vars
-
-    @property
-    def params(self):
-        # Build _params lazily
-        if self._params is None:
-            self._vars, self._params = self._build_model()
-        return self._params
+        # Now initialize vars and params for the model (no sample_shape)
+        self.vars, self.params = self._build_model()
 
     def _build_model(self, only_graph=False):
         # set this graph as active, so datamodel can check and use the model graph
@@ -111,7 +80,7 @@ class ProbModel:
                     if registered_rv is None:
                         # a ed Random Variable. Create a inferpy Random Variable and assign the var directly.
                         # do not know the args and kwars used to build the ed random variable. Use None.
-                        model_vars[k] = RandomVariable(v, name=k, is_expanded=False, var_args=None, var_kwargs=None)
+                        model_vars[k] = RandomVariable(v, name=k, is_datamodel=False, var_args=None, var_kwargs=None)
                     else:
                         model_vars[k] = registered_rv
 
@@ -124,50 +93,16 @@ class ProbModel:
         nx.draw(self.graph, cmap=plt.get_cmap('jet'), with_labels=True)
         plt.show()
 
-    def compile(self, qmodel=None):
-        if qmodel is None:
-            # TODO: if qmodel is None, create one by default.
-            pass
-
-        # Create the inference context object
-        self.inference_context = inference.InferenceContext(
-            qmodel=qmodel
-        )
-
-    def fit(self, sample_dict):
-        # inference context must be defined by calling to compile method
-        if self.inference_context is None:
-            raise exceptions.ProbModelInferenceError(
-                'The compile method must be previously called to set the inference context')
+    def fit(self, sample_dict, inference_method):
+        # Parameter checkings
         # sample_dict must be a non empty python dict
         if not isinstance(sample_dict, dict):
             raise TypeError('The `sample_dict` type must be dict.')
         if len(sample_dict) == 0:
             raise ValueError('The number of mapped variables must be at least 1.')
 
-        # check that all values in dict has the same length (will be the plate size)
-        plate_shapes = [util.iterables.get_shape(v) for v in sample_dict.values()]
-        plate_sizes = [s[0] if len(s) > 0 else 1 for s in plate_shapes]  # if the shape is (), it is just one element
-        plate_size = plate_sizes[0]
-
-        if any(plate_size != x for x in plate_sizes[1:]):
-            raise exceptions.InvalidParameterDimension(
-                'The number of elements for each mapped variable must be the same.')
-
-        # if the values mapped to randm variables has shape 0, raise an error
-        if plate_size == 0:
-            raise ValueError('The number of samples in sample_dict must be at least 1.')
-
-        with ed.interception(set_values(**sample_dict)):
-            exp_p_vars = self._expand_vars(plate_size)
-            qmodel = self.inference_context.qmodel
-            exp_q_vars, expanded_q_params = qmodel._expand_vars(plate_size)
-            # Check that dimensions are correct between q and p variables
-            for name, rv in exp_q_vars.items():
-                if exp_p_vars[name].shape != rv.shape:
-                    raise Exception('Que haces loco!')
-
-        return exp_p_vars
+        # Run the inference method
+        return inference_method.run(self, sample_dict)
 
     @util.tf_run_wrapper
     def log_prob(self, sample_dict):
@@ -182,11 +117,29 @@ class ProbModel:
     @util.tf_run_wrapper
     def sample(self, size=1):
         """ Generates a sample for eache variable in the model """
-        expanded_vars, expanded_params = self._expand_model(size)
+        expanded_vars, expanded_params = self.expand_model(size)
         return {name: tf.convert_to_tensor(var) for name, var in expanded_vars.items()}
 
-    def _expand_model(self, size):
-        """ Create the expanded model vars using sample_shape as plate size and return the OrderedDict """
+    def expand_model(self, size=None):
+        """ Create the expanded model vars using size as plate size and return the OrderedDict """
+
         with contextmanager.data_model.fit(size=size):
             expanded_vars, expanded_params = self._build_model()
         return expanded_vars, expanded_params
+
+    def _get_plate_size(self, sample_dict):
+        # get the plate size by analyzing the sample_dict input
+        # check that all values in dict whose name is a datamodel RV has the same length (will be the plate size)
+        plate_shapes = [util.iterables.get_shape(v) for k, v in sample_dict.items()
+                        if k in self.vars and self.vars[k].is_datamodel]
+        plate_sizes = [s[0] if len(s) > 0 else 1 for s in plate_shapes]  # if the shape is (), it is just one element
+        if len(plate_sizes) == 0:
+            return 1
+        else:
+            plate_size = plate_sizes[0]
+
+            if any(plate_size != x for x in plate_sizes[1:]):
+                raise exceptions.InvalidParameterDimension(
+                    'The number of elements for each mapped variable must be the same.')
+
+            return plate_size

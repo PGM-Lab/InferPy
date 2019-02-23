@@ -50,9 +50,7 @@ def tf_run_eval(obj, tf_run=None):
         try:
             with tf.Session() as sess:
                 # Run variable initializers
-                __init_g = tf.global_variables_initializer()
-                __init_l = tf.local_variables_initializer()
-                sess.run([__init_g, __init_l])
+                sess.run(tf.global_variables_initializer())
                 # Run obj in sess
                 result = sess.run(obj)
             return result

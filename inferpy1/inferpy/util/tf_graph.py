@@ -66,10 +66,8 @@ def get_graph(varnames):
     for op in ops:
         # in tensorflow_probability, the tensor named *sample_shape* is a op in child-parent order.
         # as we want to capture only the parent-child relations, skip these op names
-        # TODO: This is not robust, because sample shape tensors might use a different name (this is the default name)
         if 'sample_shape' not in op.name:
             c = _children(op)
-            # if len(c) > 0:
             op_name = _get_varname(op)
             c.discard(op_name)  # avoid name references to itself
             dependencies[op_name].update(c)

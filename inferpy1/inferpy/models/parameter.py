@@ -26,7 +26,7 @@ class Parameter:
     def __init__(self, initial_value, name=None):
         self.name = name
         # By defult, parameter is not expanded
-        self.is_expanded = False
+        self.is_datamodel = False
 
         if contextmanager.prob_model.is_active():
             # in this case, the parameter musy have a name
@@ -36,6 +36,9 @@ class Parameter:
 
         # check if Parameter is created inside a prob model and datamodel context or not.
         if contextmanager.prob_model.is_active() and contextmanager.data_model.is_active():
+            # In this case, the parameter is in datamodel
+            self.is_datamodel = True
+
             # convert parameter to tensor if it is not
             if not isinstance(initial_value, (tf.Tensor, tf.SparseTensor, tf.Variable)):
                 initial_value = tf.convert_to_tensor(initial_value)
@@ -48,8 +51,6 @@ class Parameter:
             if sample_shape is not ():
                 initial_value = \
                     tf.broadcast_to(initial_value, tf.TensorShape(sample_shape).concatenate(initial_value.shape))
-                # In this case, the parameter is expanded
-                self.is_expanded = True
 
         # Build the tf variable
         self.var = tf.Variable(initial_value, name=self.name)
@@ -57,6 +58,7 @@ class Parameter:
         # register the variable in the prob model
         if contextmanager.prob_model.is_active():
             contextmanager.prob_model.register_parameter(self)
+            contextmanager.prob_model.update_graph(self.name)
 
 
 def _tensor_conversion_function(p, dtype=None, name=None, as_ref=False):

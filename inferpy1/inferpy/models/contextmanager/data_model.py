@@ -15,11 +15,11 @@ def is_active():
     return _active_datamodel['active']
 
 
-def _is_expanded_var_parameters(name):
+def _is_datamodel_var_parameters(name):
     graph = prob_model.get_graph()
     # is this a Random Variable with any parent expanded? If any, return True (will be expanded by parent size)
-    # NOTE: we use the builder variables because parents (predecessors) is_expanded attribute is built right now
-    return any(prob_model.get_builder_variable(pname).is_expanded for pname in graph.predecessors(name))
+    # NOTE: we use the builder variables because parents (predecessors) is_datamodel attribute is built right now
+    return any(prob_model.get_builder_variable(pname).is_datamodel for pname in graph.predecessors(name))
 
 
 def get_sample_shape(name):
@@ -34,7 +34,7 @@ def get_sample_shape(name):
 
     # Parameters already expanded?
     # In probmodel definitions, each RandomVariable must have a name
-    if _is_expanded_var_parameters(name):
+    if _is_datamodel_var_parameters(name):
         # yes, do not need to expand this var (it will be expanded by broadcast)
         size = ()
     else:
