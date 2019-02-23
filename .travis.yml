@@ -14,4 +14,6 @@ matrix:
 install:
   - pip install tox
 # command to run tests
-script: tox
+script:
+  - export TOX_SKIP_MISSING_INTERPRETERS="False"
+  - tox
