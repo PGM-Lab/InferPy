@@ -4,7 +4,6 @@ import numpy as np
 import pytest
 
 from inferpy import models
-from inferpy.util import tf_run_eval
 
 
 def test_operations(tf_reset_default_graph, reproducible):
@@ -75,8 +74,9 @@ def test_tensor_register(tf_reset_default_graph, reproducible):
 
     x = models.Normal(5., 0., name='foo')
 
-    assert tf_run_eval(x, tf_run=True) == 5.
-    assert isinstance(tf.convert_to_tensor(x), tf.Tensor)
-    assert tf_run_eval(tf.convert_to_tensor(x)) == 5.
-    assert tf_run_eval(tf.constant(5.) + x) == 10.
-    assert tf_run_eval(x + tf.constant(5.)) == 10.
+    with tf.Session() as sess:
+        assert sess.run(x) == 5.
+        assert isinstance(tf.convert_to_tensor(x), tf.Tensor)
+        assert sess.run(tf.convert_to_tensor(x)) == 5.
+        assert sess.run(tf.constant(5.) + x) == 10.
+        assert sess.run(x + tf.constant(5.)) == 10.

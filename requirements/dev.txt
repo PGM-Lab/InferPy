@@ -1,4 +1,2 @@
-tox>=3.7,<4
 flake8>=3.6<4
 gitchangelog>=3<4
-pytest-cov>=2.6<3
