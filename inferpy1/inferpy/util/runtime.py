@@ -15,44 +15,81 @@
 
 
 """
-Module with useful definitions to be used in runtime
+Module focused on evaluating tensors to makes the usage easier, forgetting about tensors and sessions
 """
 
 import tensorflow as tf
+from functools import wraps
+from contextlib import contextmanager
 
-from inferpy import util
-
-# configuration for the tf evaluation in sessions
+# default value for tf_run in decorated tf_run_allowed functions
 tf_run_default = True
 
+# configuration environment for runner_scopes
+runner_context = dict(
+    runner_recursive_depth=0
+)
 
-def tf_run_eval(obj, tf_run=None):
-    """
-    Check if the obj object needs to be evaluated in a tf session or not.
-    :param obj: Object to test if it needs to be evaluated in a tf session or not
-    :param tf_run: Check if eval the `obj` or not. If None, use the `inferpy.util.Runtime.tf_run_default`,
-    otherwise is a boolean telling if evaluate `obj` or not.
-    """
-    # If None, use the default tf_run declared in util
-    run_sess = tf_run
-    if run_sess is None:
-        run_sess = util.tf_run_default
 
-    # if it is a function, wrap it such that the return obj pass through this function
-    if hasattr(obj, '__call__'):
-        return util.tf_run_wrapper(obj)
-    # else, if not run_sess, return the obj as it is
-    elif not run_sess:
-        return obj
-    # otherwise, try to evaluate the obj in a session. It can be a Tensor or not, an iterable with Tensors or not.
-    # If it fails to run the obj in a session, return the object as it is. Otherwise return the evaluated obj.
-    else:
-        try:
-            with tf.Session() as sess:
-                # Run variable initializers
-                sess.run(tf.global_variables_initializer())
-                # Run obj in sess
-                result = sess.run(obj)
-            return result
-        except (TypeError, ValueError):
-            return obj
+@contextmanager
+def runner_scope():
+    # Update the runner recursive depth, because decorated functions might call other decorated functions too.
+    # This way, we can control that only first level decorated functions will be evaluated in a tf Session.
+    runner_context['runner_recursive_depth'] += 1
+    try:
+        yield
+    finally:
+        runner_context['runner_recursive_depth'] -= 1
+
+
+def tf_run_allowed(f):
+    """
+    A function might return a tensor or not. In order to decide if the result of this function needs to be evaluated
+    in a tf session or not, use the tf_run extra parameter or the tf_run_default value. If True, and this function is
+    in the first level of execution depth, use a tf Session to evaluate the tensor or other evaluable object (like dicts)
+    """
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        # first obtains the tf_run, a bool which tells if we need to eval the output in a session or not
+        if "tf_run" in kwargs:
+            tf_run = kwargs.pop("tf_run")
+        else:
+            tf_run = tf_run_default
+
+        # use this context to keep track of the decorated functions calls (recursive depth level)
+        with runner_scope():
+            # now execute the function
+            obj = f(*args, **kwargs)
+            if tf_run and runner_context['runner_recursive_depth'] == 1:
+                # first recursive depth, and tf_run is True: we can eval the function
+                try:
+                    with tf.Session() as sess:
+                        # Run variable initializers
+                        sess.run(tf.global_variables_initializer())
+                        # Run obj in sess
+                        ev_obj = sess.run(obj)
+                    return ev_obj
+                except (TypeError, ValueError):
+                    # cannot evaluate the result, return the obj
+                    return obj
+            else:
+                # tf_run is False or we are in a deeper runner levels than 1 (do not eval the result yet)
+                return obj
+    return wrapper
+
+
+def tf_run_ignored(f):
+    """
+    A function might call other functions decorated with tf_run_allowed.
+    This decorator is used to avoid that such functions are evaluated.
+    """
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        # use this context to keep track of the decorated functions calls (recursive depth level).
+        # this way, deeper execution level will not be evaluated.
+        # finally, in first execution level we do not evaluate the result neither
+        with runner_scope():
+            # now execute the function and return the result
+            return f(*args, **kwargs)
+
+    return wrapper

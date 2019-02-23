@@ -93,6 +93,7 @@ class ProbModel:
         nx.draw(self.graph, cmap=plt.get_cmap('jet'), with_labels=True)
         plt.show()
 
+    @util.tf_run_ignored
     def fit(self, sample_dict, inference_method):
         # Parameter checkings
         # sample_dict must be a non empty python dict
@@ -104,17 +105,17 @@ class ProbModel:
         # Run the inference method
         return inference_method.run(self, sample_dict)
 
-    @util.tf_run_wrapper
+    @util.tf_run_allowed
     def log_prob(self, sample_dict):
         """ Computes the log probabilities of a (set of) sample(s)"""
         return {k: self.vars[k].log_prob(v) for k, v in sample_dict.items()}
 
-    @util.tf_run_wrapper
+    @util.tf_run_allowed
     def sum_log_prob(self, sample_dict):
         """ Computes the sum of the log probabilities of a (set of) sample(s)"""
         return tf.reduce_sum([tf.reduce_mean(lp) for lp in self.log_prob(sample_dict).values()])
 
-    @util.tf_run_wrapper
+    @util.tf_run_allowed
     def sample(self, size=1):
         """ Generates a sample for eache variable in the model """
         expanded_vars, expanded_params = self.expand_model(size)

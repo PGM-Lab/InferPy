@@ -84,9 +84,17 @@ class RandomVariable:
     # Otherwise, raise an Exception.
     def __getattr__(self, name):
         if hasattr(self.var, name):
-            return util.tf_run_eval(getattr(self.var, name))
+            obj = getattr(self.var, name)
+            if hasattr(obj, '__call__'):
+                return util.tf_run_allowed(obj)
+            else:
+                return obj
         elif hasattr(self.var.distribution, name):
-            return util.tf_run_eval(getattr(self.var.distribution, name))
+            obj = getattr(self.var.distribution, name)
+            if hasattr(obj, '__call__'):
+                return util.tf_run_allowed(obj)
+            else:
+                return obj
         else:
             raise AttributeError('Property or method "{name}" not implemented in "{classname}"'.format(
                 name=name,
