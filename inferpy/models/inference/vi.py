@@ -1,4 +1,5 @@
 import tensorflow as tf
+import inspect
 
 from . import loss_functions
 
@@ -8,6 +9,8 @@ class VI:
         # TODO: implement qmodel automatic builder is qmodel is None
 
         if callable(qmodel):
+            if len(inspect.signature(qmodel).parameters)>0:
+                raise Exception("input qmodel can only be a callable object if this does not has any input parameter")
             self.qmodel = qmodel()
         else:
             self.qmodel
