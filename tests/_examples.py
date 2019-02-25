@@ -7,7 +7,7 @@ BLACK_LIST = ["defmodels.py"]
 
 
 def test_examples():
-    pth = "examples/"
+    pth = "examples_old/"
     inf_examples = [f for f in os.listdir(pth) if isfile(join(pth, f)) and
                     f.endswith(".py") and not f.endswith("__init__.py") and f not in BLACK_LIST]
 
