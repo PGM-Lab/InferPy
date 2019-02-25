@@ -6,7 +6,13 @@ from . import loss_functions
 class VI:
     def __init__(self, qmodel, loss='ELBO', optimizer='AdamOptimizer', epochs=1000):
         # TODO: implement qmodel automatic builder is qmodel is None
-        self.qmodel = qmodel
+
+        if callable(qmodel):
+            self.qmodel = qmodel()
+        else:
+            self.qmodel
+
+
         if isinstance(loss, str):
             self.loss_fn = getattr(loss_functions, loss)
         else:

@@ -31,7 +31,11 @@ x_train = sess.run(ed.Normal(5., 2.).distribution.sample(N))
 
 m = simple()
 
-VI = models.inference.VI(q_model(), epochs=5000)
+VI = models.inference.VI(q_model, epochs=5000)
 
 m.fit({"x": x_train}, VI)
 
+
+f = q_model
+
+type(q_model)
