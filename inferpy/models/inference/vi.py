@@ -32,7 +32,7 @@ class VI:
         # NOTE: right now we use a session in a with context, so it is open and close.
         # If we want to use consecutive inference, we need the same session to reuse the same variables.
         # In this case, the build_in_session function from RandomVariables should not be used.
-        
+
         # Create the loss function tensor
         loss_tensor = self.loss_fn(pmodel, self.qmodel, data)
 
