@@ -56,6 +56,16 @@ class ProbModel:
             self.graph = self._build_model(only_graph=True)
         # Now initialize vars and params for the model (no sample_shape)
         self.vars, self.params = self._build_model()
+        self._last_expanded_vars = None
+        self._last_expanded_params = None
+        self._last_fitted_vars = None
+        self._last_fitted_params = None
+
+    @property
+    def posterior(self):
+        if self._last_fitted_vars is None:
+            raise RuntimeError("posterior cannot be accessed before using the fit function.")
+        return self._last_fitted_vars
 
     def _build_model(self, only_graph=False):
         # set this graph as active, so datamodel can check and use the model graph
@@ -80,7 +90,8 @@ class ProbModel:
                     if registered_rv is None:
                         # a ed Random Variable. Create a inferpy Random Variable and assign the var directly.
                         # do not know the args and kwars used to build the ed random variable. Use None.
-                        model_vars[k] = RandomVariable(v, name=k, is_datamodel=False, var_args=None, var_kwargs=None)
+                        model_vars[k] = RandomVariable(v, name=k, is_datamodel=False, ed_cls=None,
+                                                       var_args=None, var_kwargs=None, sample_shape=())
                     else:
                         model_vars[k] = registered_rv
 
@@ -103,7 +114,11 @@ class ProbModel:
             raise ValueError('The number of mapped variables must be at least 1.')
 
         # Run the inference method
-        return inference_method.run(self, sample_dict)
+        fitted_vars, fitted_params = inference_method.run(self, sample_dict)
+        self._last_fitted_vars = fitted_vars
+        self._last_fitted_params = fitted_params
+
+        return self.posterior
 
     @util.tf_run_allowed
     def log_prob(self, sample_dict):
@@ -126,6 +141,10 @@ class ProbModel:
 
         with contextmanager.data_model.fit(size=size):
             expanded_vars, expanded_params = self._build_model()
+
+        self._last_expanded_vars = expanded_vars
+        self._last_expanded_params = expanded_params
+
         return expanded_vars, expanded_params
 
     def _get_plate_size(self, sample_dict):

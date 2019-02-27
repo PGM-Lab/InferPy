@@ -4,9 +4,12 @@ import tensorflow as tf
 from inferpy import util
 
 
-def ELBO(pmodel, qvars, sample_dict):
+def ELBO(pmodel, qmodel, sample_dict):
     # create combined model
     plate_size = pmodel._get_plate_size(sample_dict)
+
+    qvars, _ = qmodel.expand_model(plate_size)
+
     with ed.interception(util.random_variable.set_values(**{**qvars, **sample_dict})):
         pvars, _ = pmodel.expand_model(plate_size)
 

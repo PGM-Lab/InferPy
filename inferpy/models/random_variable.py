@@ -55,6 +55,13 @@ def _make_edward_random_variable(distribution_obj):
     return func
 
 
+def _try_sess_run(p, sess):
+    try:
+        return sess.run(p)
+    except (RuntimeError, TypeError, ValueError):
+        return p
+
+
 class RandomVariable:
     """
     Class for random variables. It encapsulares the Random Variable from edward2, and additional properties.
@@ -66,11 +73,14 @@ class RandomVariable:
     - The first time the var property is used, it creates a var using the variable generator.
     """
 
-    def __init__(self, var, name, is_datamodel, var_args, var_kwargs):
+    def __init__(self, var, name, is_datamodel, ed_cls, var_args, var_kwargs, sample_shape):
         self.var = var
         self.is_datamodel = is_datamodel
+        # These parameters are used to allow the re-creation of the random var by build_in_session function
+        self._ed_cls = ed_cls
         self._var_args = var_args
         self._var_kwargs = var_kwargs
+        self._sample_shape = sample_shape
 
         # if name is provided, use it. Otherwise, use it from var or var.distribution
         if name is None:
@@ -78,11 +88,58 @@ class RandomVariable:
         else:
             self.name = name
 
-    # If try to use attributes or functions not defined for RandomVariables, this function is executed.
-    # First try to return the same attribute of function from the edward2 RandomVariable.
-    # Secondly try to return the same element from the distribution object inside the edward2 RandomVariable.
-    # Otherwise, raise an Exception.
+    def build_in_session(self, sess):
+        """
+        Allow to build a copy of the random variable but running previously each parameter in the tf session.
+        This way, it uses the value of each tf variable or placeholder as a tensor, not as a tf variable or placeholder.
+        If this random variable is a ed random variable directly assigned to .var, we cannot re-create it. In this
+        case, return self.
+        :param sess: tf session used to run each parameter used to build this random variable.
+        :returns: the random variable object
+        """
+        # Cannot re-create the random variable. Return this var itself
+        if self._ed_cls is None:
+            return self
+
+        # create the ed random variable evaluating each parameter in a tf session
+        ed_random_var = self._ed_cls(*[_try_sess_run(a, sess) for a in self._var_args],
+                                     **{k: _try_sess_run(v, sess) for k, v in self._var_kwargs.items()},
+                                     sample_shape=self._sample_shape)
+        # build the random variable by using the ed random var
+        rv = RandomVariable(
+            var=ed_random_var,
+            name=self.name,
+            is_datamodel=self.is_datamodel,
+            ed_cls=self._ed_cls,
+            var_args=self._var_args,
+            var_kwargs=self._var_kwargs,
+            sample_shape=self._sample_shape
+        )
+
+        # put the docstring and the name as well as in _make_random_variable function
+        docs = RandomVariable.__doc__ + '\n Random Variable information:\n' + \
+            ('-' * 30) + '\n' + self._ed_cls.__doc__
+        name = self._ed_cls.__name__
+
+        rv.__doc__ += docs
+        rv.__name__ = name
+
+        return rv
+
+    def __repr__(self):
+        # Custom representation of the random variable
+        string = "inf.RandomVariable ({} distribution) named {}, shape={}, dtype={}".format(
+            self.__name__, self.distribution.name, self.shape, self.dtype.name)
+
+        return "<%s>" % string
+
     def __getattr__(self, name):
+        """
+        If try to use attributes or functions not defined for RandomVariables, this function is executed.
+        First try to return the same attribute of function from the edward2 RandomVariable.
+        Secondly try to return the same element from the distribution object inside the edward2 RandomVariable.
+        Otherwise, raise an Exception.
+        """
         if hasattr(self.var, name):
             obj = getattr(self.var, name)
             if hasattr(obj, '__call__'):
@@ -298,8 +355,10 @@ def _make_random_variable(distribution_name):
             var=ed_random_var,
             name=rv_name,
             is_datamodel=is_datamodel,
+            ed_cls=ed_random_variable_cls,
             var_args=sanitized_args,
-            var_kwargs=sanitized_kwargs
+            var_kwargs=sanitized_kwargs,
+            sample_shape=sample_shape
         )
 
         if contextmanager.prob_model.is_active():

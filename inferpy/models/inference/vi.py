@@ -9,12 +9,11 @@ class VI:
         # TODO: implement qmodel automatic builder is qmodel is None
 
         if callable(qmodel):
-            if len(inspect.signature(qmodel).parameters)>0:
+            if len(inspect.signature(qmodel).parameters) > 0:
                 raise Exception("input qmodel can only be a callable object if this does not has any input parameter")
             self.qmodel = qmodel()
         else:
-            self.qmodel
-
+            self.qmodel = qmodel
 
         if isinstance(loss, str):
             self.loss_fn = getattr(loss_functions, loss)
@@ -29,12 +28,13 @@ class VI:
         else:
             self.optimizer = optimizer
 
-    def run(self, pmodel, sample_dict):
-        # Create expanded q model
-        plate_size = pmodel._get_plate_size(sample_dict)
-        qvars, qparams = self.qmodel.expand_model(plate_size)
-
-        loss_tensor = self.loss_fn(pmodel, qvars, sample_dict)
+    def run(self, pmodel, data):
+        # NOTE: right now we use a session in a with context, so it is open and close.
+        # If we want to use consecutive inference, we need the same session to reuse the same variables.
+        # In this case, the build_in_session function from RandomVariables should not be used.
+        
+        # Create the loss function tensor
+        loss_tensor = self.loss_fn(pmodel, self.qmodel, data)
 
         train = self.optimizer.minimize(loss_tensor)
 
@@ -53,6 +53,8 @@ class VI:
                     print(".", end="", flush=True)
 
             # extract the inferred parameters
-            params = {n: sess.run(p) for n, p in qparams.items()}
+            params = {n: sess.run(p) for n, p in self.qmodel._last_expanded_params.items()}
 
-        return params
+            posterior_qvars = {name: qv.build_in_session(sess) for name, qv in self.qmodel._last_expanded_vars.items()}
+
+        return posterior_qvars, params
