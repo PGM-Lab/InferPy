@@ -7,7 +7,7 @@ useful for the main functionality provided by inferpy
 """
 
 
-from inferpy.util.runtime import tf_run_allowed, tf_run_ignored
+from .runtime import tf_run_allowed, tf_run_ignored
 from . import iterables
 from . import random_variable
 

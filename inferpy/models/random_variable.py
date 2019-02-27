@@ -23,7 +23,7 @@ from tensorflow_probability.python.edward2 import generated_random_variables
 from tensorflow.python.client import session as tf_session
 import warnings
 
-from . import contextmanager
+from inferpy import contextmanager
 from inferpy import exceptions
 from inferpy import util
 

@@ -15,7 +15,7 @@
 import tensorflow as tf
 from tensorflow.python.client import session as tf_session
 
-from . import contextmanager
+from inferpy import contextmanager
 from inferpy import exceptions
 
 

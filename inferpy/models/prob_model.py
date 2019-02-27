@@ -23,7 +23,7 @@ from matplotlib import pyplot as plt
 
 from inferpy import util
 from inferpy import exceptions
-from . import contextmanager
+from inferpy import contextmanager
 from .random_variable import RandomVariable
 
 
