@@ -28,6 +28,9 @@ class VI:
         else:
             self.optimizer = optimizer
 
+        # list for storing the loss evolution
+        self.__losses = []
+
     def run(self, pmodel, data):
         # NOTE: right now we use a session in a with context, so it is open and close.
         # If we want to use consecutive inference, we need the same session to reuse the same variables.
@@ -48,13 +51,19 @@ class VI:
 
                 t.append(sess.run(loss_tensor))
                 if i % 200 == 0:
-                    print("\n"+str(t[-1]), end="", flush=True)
+                    print("\n"+ str(i) + " epochs\t"+str(t[-1]), end="", flush=True)
                 if i % 10 == 0:
                     print(".", end="", flush=True)
 
             # extract the inferred parameters
             params = {n: sess.run(p) for n, p in self.qmodel._last_expanded_params.items()}
-
             posterior_qvars = {name: qv.build_in_session(sess) for name, qv in self.qmodel._last_expanded_vars.items()}
 
+        self.__losses = t
+
         return posterior_qvars, params
+
+
+    @property
+    def losses(self):
+        return self.__losses
