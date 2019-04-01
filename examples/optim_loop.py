@@ -27,13 +27,32 @@ sess = tf.Session()
 x_train = sess.run(ed.Normal(5., 2.).distribution.sample(N))
 
 
+import inferpy.inference.loss_functions.elbo
 
-##
 
 m = simple()
-#
-VI = inf.inference.VI(q_model(), epochs=1000)
-m.fit({"x": x_train}, VI)
+
+q = q_model()
 
 
-####
+
+inf.util.runtime.set_tf_run(False)
+
+loss_tensor = inf.inference.loss_functions.elbo.ELBO(m,q, {"x": x_train})
+optimizer = tf.train.AdamOptimizer(learning_rate=0.1)
+train = optimizer.minimize(loss_tensor)
+
+
+with tf.Session() as sess:
+    sess.run(tf.global_variables_initializer())
+
+    t = []
+    for i in range(0,100):
+        sess.run(train)
+        t += [sess.run(loss_tensor)]
+        print(t[-1])
+
+    posterior_qvars = {name: qv.build_in_session(sess) for name, qv in q._last_expanded_vars.items()}
+
+
+
