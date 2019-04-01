@@ -77,7 +77,7 @@ def update_graph(rv_name):
 
 
 @contextmanager
-def builder(graph):
+def init(graph=None):
     # prob model builder context. Allows to get access to RVs as they are built (at the same time ed.tape registers vars)
     # We only allow to use one context level
     assert not _properties['active']

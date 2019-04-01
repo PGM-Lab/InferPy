@@ -53,7 +53,7 @@ class ProbModel:
         self.builder = builder
         g_for_nxgraph = tf.Graph()
         with g_for_nxgraph.as_default():
-            self.graph = self._build_model(only_graph=True)
+            self.graph = self._build_graph()
         # Now initialize vars and params for the model (no sample_shape)
         self.vars, self.params = self._build_model()
         self._last_expanded_vars = None
@@ -67,38 +67,36 @@ class ProbModel:
             raise RuntimeError("posterior cannot be accessed before using the fit function.")
         return self._last_fitted_vars
 
-    def _build_model(self, only_graph=False):
-        # set this graph as active, so datamodel can check and use the model graph
-        builder_graph = None if only_graph else self.graph
+    def _build_graph(self):
+        with contextmanager.randvar_registry.init():
+            self.builder()
+            # ed2 RVs created. Relations between them captured in randvar_registry builder as a networkx graph
+            nx_graph = contextmanager.randvar_registry.get_graph()
 
-        with contextmanager.prob_model.builder(builder_graph):
+        return nx_graph
+
+    def _build_model(self):
+        with contextmanager.randvar_registry.init(self.graph):
             # use edward2 model tape to capture RandomVariable declarations
             with ed.tape() as model_tape:
                 self.builder()
 
-            if only_graph:
-                # ed2 RVs created. Relations between them captured in prob_model builder as a networkx graph
-                nx_graph = contextmanager.prob_model.get_graph()
-            else:
-                # get variables from parameters
-                var_parameters = contextmanager.prob_model.get_var_parameters()
+            # get variables from parameters
+            var_parameters = contextmanager.randvar_registry.get_var_parameters()
 
-                # wrap captured edward2 RVs into inferpy RVs
-                model_vars = OrderedDict()
-                for k, v in model_tape.items():
-                    registered_rv = contextmanager.prob_model.get_builder_variable(k)
-                    if registered_rv is None:
-                        # a ed Random Variable. Create a inferpy Random Variable and assign the var directly.
-                        # do not know the args and kwars used to build the ed random variable. Use None.
-                        model_vars[k] = RandomVariable(v, name=k, is_datamodel=False, ed_cls=None,
-                                                       var_args=None, var_kwargs=None, sample_shape=())
-                    else:
-                        model_vars[k] = registered_rv
+            # wrap captured edward2 RVs into inferpy RVs
+            model_vars = OrderedDict()
+            for k, v in model_tape.items():
+                registered_rv = contextmanager.randvar_registry.get_builder_variable(k)
+                if registered_rv is None:
+                    # a ed Random Variable. Create a inferpy Random Variable and assign the var directly.
+                    # do not know the args and kwars used to build the ed random variable. Use None.
+                    model_vars[k] = RandomVariable(v, name=k, is_datamodel=False, ed_cls=None,
+                                                   var_args=None, var_kwargs=None, sample_shape=())
+                else:
+                    model_vars[k] = registered_rv
 
-        if only_graph:
-            return nx_graph
-        else:
-            return model_vars, var_parameters
+        return model_vars, var_parameters
 
     def plot_graph(self):
         nx.draw(self.graph, cmap=plt.get_cmap('jet'), with_labels=True)

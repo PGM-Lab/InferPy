@@ -1,5 +1,5 @@
-from contextlib import contextmanager
-from . import prob_model
+from contextlib import contextmanager, ExitStack
+from . import randvar_registry
 from inferpy import exceptions
 
 
@@ -11,15 +11,15 @@ _active_datamodel = dict(
 
 
 def is_active():
-    # is the prob model builder context active?
+    # is the data model context active?
     return _active_datamodel['active']
 
 
 def _is_datamodel_var_parameters(name):
-    graph = prob_model.get_graph()
+    graph = randvar_registry.get_graph()
     # is this a Random Variable with any parent expanded? If any, return True (will be expanded by parent size)
     # NOTE: we use the builder variables because parents (predecessors) is_datamodel attribute is built right now
-    return any(prob_model.get_builder_variable(pname).is_datamodel for pname in graph.predecessors(name))
+    return any(randvar_registry.get_builder_variable(pname).is_datamodel for pname in graph.predecessors(name))
 
 
 def get_sample_shape(name):
@@ -28,9 +28,6 @@ def get_sample_shape(name):
     # If var parameters are not expanded, and size has been provided, then expand.
     #
     # Return a the sample_shape (number of samples of the datamodel). It is an integer, or ().
-
-    # Check assertion
-    assert prob_model.is_active() and _active_datamodel['active']
 
     # Parameters already expanded?
     # In probmodel definitions, each RandomVariable must have a name
@@ -61,11 +58,24 @@ def fit(size):
 
 
 @contextmanager
-def datamodel():
-    # Context decorator. A function with no parameters. We only allow to use one context level
+def datamodel(size=1):
+    # Context decorator. We only allow to use one context level
     assert not _active_datamodel['active']
     _active_datamodel['active'] = True
+
+    # collect all the contextmanager decorated functions that we want to use before yield
+    contexts = []
+    # if size is provided and greater to 1, use the fit context
+    if size > 1:
+        contexts.append(fit(size))
+    # if randvar_registry is not active (data_model outside prob_model) use the builder
+    if not randvar_registry.is_active():
+        contexts.append(randvar_registry.init())
+    # use the ExitStack to enter all the contexts
     try:
-        yield
+        with ExitStack() as stack:
+            for c in contexts:
+                stack.enter_context(c)
+            yield
     finally:
         _active_datamodel['active'] = False
