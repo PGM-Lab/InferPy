@@ -23,7 +23,7 @@ from functools import wraps
 from contextlib import contextmanager
 
 # default value for tf_run in decorated tf_run_allowed functions
-tf_run_default = True
+__tf_run_default = True
 
 # configuration environment for runner_scopes
 runner_context = dict(
@@ -54,7 +54,7 @@ def tf_run_allowed(f):
         if "tf_run" in kwargs:
             tf_run = kwargs.pop("tf_run")
         else:
-            tf_run = tf_run_default
+            tf_run = __tf_run_default
 
         # use this context to keep track of the decorated functions calls (recursive depth level)
         with runner_scope():
@@ -93,3 +93,11 @@ def tf_run_ignored(f):
             return f(*args, **kwargs)
 
     return wrapper
+
+
+def set_tf_run(enable):
+    global __tf_run_default
+    __tf_run_default = enable
+
+
+
