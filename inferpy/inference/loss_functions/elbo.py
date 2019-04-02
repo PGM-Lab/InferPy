@@ -10,7 +10,7 @@ def ELBO(pmodel, qmodel, sample_dict):
 
     qvars, _ = qmodel.expand_model(plate_size)
 
-    with ed.interception(util.random_variable.set_values(**{**qvars, **sample_dict})):
+    with ed.interception(util.interceptor.set_values(**{**qvars, **sample_dict})):
         pvars, _ = pmodel.expand_model(plate_size)
 
     # compute energy

@@ -27,6 +27,21 @@ from inferpy import contextmanager
 from .random_variable import RandomVariable
 
 
+# global variable to know if the prob model is being built or not
+is_probmodel_building = False
+
+
+def build_model(f):
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        global is_probmodel_building
+        try:
+            is_probmodel_building = True
+            return f(*args, **kwargs)
+        finally:
+            is_probmodel_building = False
+
+
 def probmodel(builder):
     """
     Decorator to create probabilistic models. The function decorated
@@ -67,6 +82,7 @@ class ProbModel:
             raise RuntimeError("posterior cannot be accessed before using the fit function.")
         return self._last_fitted_vars
 
+    @build_model
     def _build_graph(self):
         with contextmanager.randvar_registry.init():
             self.builder()
@@ -75,6 +91,7 @@ class ProbModel:
 
         return nx_graph
 
+    @build_model
     def _build_model(self):
         with contextmanager.randvar_registry.init(self.graph):
             # use edward2 model tape to capture RandomVariable declarations
@@ -87,7 +104,7 @@ class ProbModel:
             # wrap captured edward2 RVs into inferpy RVs
             model_vars = OrderedDict()
             for k, v in model_tape.items():
-                registered_rv = contextmanager.randvar_registry.get_builder_variable(k)
+                registered_rv = contextmanager.randvar_registry.get_variable(k)
                 if registered_rv is None:
                     # a ed Random Variable. Create a inferpy Random Variable and assign the var directly.
                     # do not know the args and kwars used to build the ed random variable. Use None.

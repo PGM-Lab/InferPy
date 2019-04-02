@@ -310,16 +310,15 @@ def _make_random_variable(distribution_name):
     name = ed_random_variable_cls.__name__
 
     def func(*args, **kwargs):
-        rv_name = kwargs.get('name', None)
+        # The name...
+        if 'name' not in kwargs:
+            kwargs['name'] = util.name.generate('randvar')
+        rv_name = kwargs.get('name')
 
         # compute maximum shape between shapes of inputs, and apply broadcast to the smallers in _sanitize_input
         max_shape = _maximum_shape(args + tuple(kwargs.values()))
 
-        if contextmanager.randvar_registry.is_active():
-            # At this point, the name argument MUST be declared if prob model or data model is active
-            if 'name' not in kwargs:
-                raise exceptions.NotNamedRandomVariable(
-                    'Random Variables defined inside a probabilistic or data model must have a name.')
+        if contextmanager.data_model.is_active():
             if 'sample_shape' in kwargs:
                 # warn that sampe_shape will be ignored
                 warnings.warn('Random Variables defined inside a probabilistic model ignore the sample_shape argument.')
@@ -361,10 +360,9 @@ def _make_random_variable(distribution_name):
             sample_shape=sample_shape
         )
 
-        if contextmanager.randvar_registry.is_active():
-            # inside prob models, register the variable as it is created. Used for prob model builder context
-            contextmanager.randvar_registry.register_variable(rv)
-            contextmanager.randvar_registry.update_graph(rv.name)
+        # register the variable as it is created. Used to detect dependencies
+        contextmanager.randvar_registry.register_variable(rv)
+        contextmanager.randvar_registry.update_graph()
 
         # Doc for help menu
         rv.__doc__ += docs

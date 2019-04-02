@@ -16,7 +16,7 @@ import tensorflow as tf
 from tensorflow.python.client import session as tf_session
 
 from inferpy import contextmanager
-from inferpy import exceptions
+from inferpy import util
 
 
 class Parameter:
@@ -24,18 +24,14 @@ class Parameter:
     Random Variable parameter which can be optimized by an inference mechanism.
     """
     def __init__(self, initial_value, name=None):
-        self.name = name
         # By defult, parameter is not expanded
         self.is_datamodel = False
 
-        if contextmanager.randvar_registry.is_active():
-            # in this case, the parameter musy have a name
-            if self.name is None:
-                raise exceptions.NotNamedParameter(
-                    'Parameters defined inside a prob model must have a name.')
+        # the parameter must have a name
+        self.name = name if name else util.name.generate('parameter')
 
-        # check if Parameter is created inside a prob model and datamodel context or not.
-        if contextmanager.randvar_registry.is_active() and contextmanager.data_model.is_active():
+        # check if Parameter is created inside a datamodel context or not.
+        if contextmanager.data_model.is_active():
             # In this case, the parameter is in datamodel
             self.is_datamodel = True
 
@@ -55,10 +51,9 @@ class Parameter:
         # Build the tf variable
         self.var = tf.Variable(initial_value, name=self.name)
 
-        # register the variable in the prob model
-        if contextmanager.randvar_registry.is_active():
-            contextmanager.randvar_registry.register_parameter(self)
-            contextmanager.randvar_registry.update_graph(self.name)
+        # register the variable, which is used to detect dependencies
+        contextmanager.randvar_registry.register_parameter(self)
+        contextmanager.randvar_registry.update_graph()
 
 
 def _tensor_conversion_function(p, dtype=None, name=None, as_ref=False):

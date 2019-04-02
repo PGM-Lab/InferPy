@@ -6,7 +6,7 @@ import pytest
 from inferpy import models
 
 
-def test_operations(tf_reset_default_graph, reproducible):
+def test_operations():
     # TODO: test all operations using parametrize
     # Use both inferpy Random Variables
     x = models.Normal([0., 1.], 1)
@@ -51,11 +51,11 @@ def test_operations(tf_reset_default_graph, reproducible):
     # Random variable operation used to define a Random Variable
     (models.Normal(models.Normal(0, 1) + models.Normal(0, 1), 1)),
 ])
-def test_edward_type(tf_reset_default_graph, reproducible, model_object):
+def test_edward_type(model_object):
     assert isinstance(model_object.var, ed.RandomVariable)
 
 
-def test_name(tf_reset_default_graph, reproducible):
+def test_name():
     x = models.Normal(0, 1, name='foo')
     assert x.name == 'foo'
 
@@ -63,13 +63,13 @@ def test_name(tf_reset_default_graph, reproducible):
     x = models.Normal(0, 1, name='foo')
     assert x.name == 'foo'
 
-    # Automatic name generation. It ends in / (it is delegated to ed random variable name)
+    # Automatic name generation. It starts with 'randvar_X', where initially X is 0
     x = models.Normal(0, 1)
     assert isinstance(x.name, str)
-    assert x.name[-1] == '/'
+    assert x.name == 'randvar_0'
 
 
-def test_tensor_register(tf_reset_default_graph, reproducible):
+def test_tensor_register():
     # This allows to run a inferpy.models.RandomVariable directly in a tf session.
 
     x = models.Normal(5., 0., name='foo')
