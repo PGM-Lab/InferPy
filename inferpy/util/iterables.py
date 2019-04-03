@@ -11,7 +11,7 @@ def get_shape(x):
     :raises : class `InvalidParameterDimension`: list shape not consistent
     :returns: A tuple with the shape of `x`
     """
-    if isinstance(x, list):
+    if isinstance(x, list) and len(x) > 0:
         shapes = [get_shape(subx) for subx in x]
         if any([s != shapes[0] for s in shapes[1:]]):
             raise exceptions.InvalidParameterDimension('Parameter dimension not consistent: {}'.format(x))

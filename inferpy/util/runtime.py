@@ -98,6 +98,3 @@ def tf_run_ignored(f):
 def set_tf_run(enable):
     global __tf_run_default
     __tf_run_default = enable
-
-
-
