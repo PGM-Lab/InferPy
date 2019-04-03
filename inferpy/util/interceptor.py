@@ -1,6 +1,7 @@
 from tensorflow_probability import edward2 as ed
 
 
+# this function is used to intercept the value property of edward2 random variables
 def set_values(**model_kwargs):
     """Creates a value-setting interceptor."""
 

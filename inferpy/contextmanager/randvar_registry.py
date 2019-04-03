@@ -82,7 +82,7 @@ def get_variable(name):
 
 
 def get_var_parameters():
-    # return a copy of the internal dict properties field 'builder_params', just to 
+    # return a copy of the internal dict properties field 'builder_params', just to
     # avoid the modification of the _properties dict from outside
     return {k: p for k, p in _properties['builder_params'].items()}
 

@@ -3,8 +3,8 @@ from inferpy import exceptions
 
 def get_shape(x):
     """
-    Get the shape of an element x. If it is an element with a shape attribute, return it. If it is a list,
-    compute the shape by checking the len, and the shape of internal elements. In that case, the shape must
+    Get the shape of an element x. If it is an element with a shape attribute, return it. If it is a list with more than
+    one element, compute the shape by checking the len, and the shape of internal elements. In that case, the shape must
     be consistent. Finally, in other case return () as shape.
 
     :param x: The element to compute its shape

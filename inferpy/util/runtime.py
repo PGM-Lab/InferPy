@@ -25,7 +25,7 @@ from contextlib import contextmanager
 # default value for tf_run in decorated tf_run_allowed functions
 __tf_run_default = True
 
-# configuration environment for runner_scopes
+# configuration environment for runner_scopes. It counts the number of nested contexts
 runner_context = dict(
     runner_recursive_depth=0
 )
@@ -96,5 +96,6 @@ def tf_run_ignored(f):
 
 
 def set_tf_run(enable):
+    # this function is used to modify the default state of tf run (eval tensors or not)
     global __tf_run_default
     __tf_run_default = enable
