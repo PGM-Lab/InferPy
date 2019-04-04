@@ -1,5 +1,4 @@
 from contextlib import contextmanager
-from inferpy import exceptions
 from inferpy.util import tf_graph
 import warnings
 
@@ -47,9 +46,8 @@ def register_variable(rv):
             warnings.warn("The variable {} was already defined in the default random variable registry, \
                 and is going to be removed. ".format(rv.name))
         else:
-            raise exceptions.NotUniqueRandomVariableName(
-                'Random Variable names must be unique among Random Variables and Parameters. \
-                    Detected twice: {}'.format(rv.name))
+            raise ValueError('Random Variable names must be unique among Random Variables and Parameters. \
+                             Detected twice: {}'.format(rv.name))
     _properties['builder_vars'][rv.name] = rv
 
 
@@ -66,9 +64,8 @@ def register_parameter(p):
             warnings.warn("The parameter {} was already defined in the default random parameter registry, \
                 and is going to be removed. ".format(p.name))
         else:
-            raise exceptions.NotUniqueParameterName(
-                'Parameter names must be unique among Parameters and Random Variables. \
-                    Detected twice: {}'.format(p.name))
+            raise ValueError('Parameter names must be unique among Parameters and Random Variables. \
+                             Detected twice: {}'.format(p.name))
     _properties['builder_params'][p.name] = p
 
 

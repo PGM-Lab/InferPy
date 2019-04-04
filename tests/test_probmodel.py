@@ -69,7 +69,7 @@ def test_build_model():
     # two variable data with different size
     (
         dict(x=np.ones(100), y=np.ones(150)),
-        pytest.raises(inf.InvalidParameterDimension),
+        pytest.raises(ValueError),
         None
     ),
 ])

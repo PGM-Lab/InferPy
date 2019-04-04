@@ -51,7 +51,7 @@ def test_register_variable(init_context):
         assert randvar_registry.get_variable(name) is not None
         assert randvar_registry.get_variable_or_parameter(name) is not None
     else:
-        with pytest.raises(inf.exceptions.NotUniqueRandomVariableName):
+        with pytest.raises(ValueError):
             inf.Normal(0, 1, name=name)
 
 
@@ -77,7 +77,7 @@ def test_register_parameter(init_context):
         assert randvar_registry.get_var_parameters()[name] == p
         assert randvar_registry.get_variable_or_parameter(name) == p
     else:
-        with pytest.raises(inf.exceptions.NotUniqueParameterName):
+        with pytest.raises(ValueError):
             inf.Parameter(0, name=name)
 
 

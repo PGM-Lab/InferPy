@@ -1,6 +1,5 @@
 from contextlib import contextmanager, ExitStack
 from . import randvar_registry
-from inferpy import exceptions
 
 
 # This dict store the active (if active is True) context and the size of the dtamodel plate in the current context
@@ -45,8 +44,7 @@ def get_sample_shape(name):
 def fit(size):
     # size must be an integer
     if not isinstance(size, int):
-        raise exceptions.NotIntegerDataModelSize(
-            'The size of the data model must be an integer, not : {}'.format(type(size)))
+        raise TypeError('The size of the data model must be an integer, not : {}'.format(type(size)))
     # Fit the datamodel parameters. We only allow to use one context level
     assert _active_datamodel['size'] == 1
     _active_datamodel['size'] = size

@@ -24,7 +24,6 @@ from tensorflow.python.client import session as tf_session
 import warnings
 
 from inferpy import contextmanager
-from inferpy import exceptions
 from inferpy import util
 
 

@@ -22,7 +22,6 @@ import networkx as nx
 from matplotlib import pyplot as plt
 
 from inferpy import util
-from inferpy import exceptions
 from inferpy import contextmanager
 from .random_variable import RandomVariable
 
@@ -181,7 +180,6 @@ class ProbModel:
             plate_size = plate_sizes[0]
 
             if any(plate_size != x for x in plate_sizes[1:]):
-                raise exceptions.InvalidParameterDimension(
-                    'The number of elements for each mapped variable must be the same.')
+                raise ValueError('The number of elements for each mapped variable must be the same.')
 
             return plate_size

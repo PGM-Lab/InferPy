@@ -1,7 +1,6 @@
 import pytest
 import numpy as np
 
-import inferpy as inf
 from inferpy.util.iterables import get_shape
 
 
@@ -37,5 +36,5 @@ def test_iterables(x, expected):
 
 def test_iterables_exception():
     x = [[1, 2], [3]]  # different number of elements per index in 0-dimension
-    with pytest.raises(inf.exceptions.InvalidParameterDimension):
+    with pytest.raises(ValueError):
         get_shape(x)
