@@ -18,8 +18,8 @@ def is_active():
 def _has_datamodel_var_parameters(name):
     graph = randvar_registry.get_graph()
     # is this a Random Variable with any parent expanded? If any, return True (will be expanded by parent size)
-    # NOTE: we use the builder variables because parents (predecessors) is_datamodel attribute is built right now
-    return any(randvar_registry.get_variable(pname).is_datamodel for pname in graph.predecessors(name))
+    # we use the builder variables or parameters because parents (predecessors) is_datamodel attribute is built right now
+    return any(randvar_registry.get_variable_or_parameter(pname).is_datamodel for pname in graph.predecessors(name))
 
 
 def get_sample_shape(name):

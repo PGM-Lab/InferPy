@@ -73,12 +73,15 @@ def register_parameter(p):
 
 
 def get_variable(name):
-    # return the variable or parameter if exists. Otherwise, return None
-    # return _properties['builder_vars'].get(
-    #     name,
-    #     _properties['builder_params'].get(name, None)
-    #     )
     return _properties['builder_vars'].get(name, None)
+
+
+def get_variable_or_parameter(name):
+    # return the variable or parameter if exists. Otherwise, return None
+    return _properties['builder_vars'].get(
+        name,
+        _properties['builder_params'].get(name, None)
+        )
 
 
 def get_var_parameters():

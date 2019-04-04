@@ -140,22 +140,25 @@ class ProbModel:
         return self.posterior
 
     @util.tf_run_allowed
-    def log_prob(self, sample_dict):
+    def log_prob(self, data):
         """ Computes the log probabilities of a (set of) sample(s)"""
-        return {k: self.vars[k].log_prob(v) for k, v in sample_dict.items()}
+        with ed.interception(util.interceptor.set_values(**data)):
+            expanded_vars, _ = self.expand_model()
+            return {k: self.vars[k].log_prob(v) for k, v in expanded_vars.items()}
 
     @util.tf_run_allowed
-    def sum_log_prob(self, sample_dict):
+    def sum_log_prob(self, data):
         """ Computes the sum of the log probabilities of a (set of) sample(s)"""
-        return tf.reduce_sum([tf.reduce_mean(lp) for lp in self.log_prob(sample_dict).values()])
+        return tf.reduce_sum([tf.reduce_mean(lp) for lp in self.log_prob(data).values()])
 
     @util.tf_run_allowed
-    def sample(self, size=1):
+    def sample(self, size=1, data={}):
         """ Generates a sample for eache variable in the model """
-        expanded_vars, expanded_params = self.expand_model(size)
+        with ed.interception(util.interceptor.set_values(**data)):
+            expanded_vars, expanded_params = self.expand_model(size)
         return {name: tf.convert_to_tensor(var) for name, var in expanded_vars.items()}
 
-    def expand_model(self, size=None):
+    def expand_model(self, size=1):
         """ Create the expanded model vars using size as plate size and return the OrderedDict """
 
         with contextmanager.data_model.fit(size=size):

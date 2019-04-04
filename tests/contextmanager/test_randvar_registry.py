@@ -37,16 +37,19 @@ def test_register_variable(init_context):
 
     # the variable does not exist in the context
     assert randvar_registry.get_variable(name) is None
+    assert randvar_registry.get_variable_or_parameter(name) is None
     inf.Normal(0, 1, name=name)
 
     # the variable exists in the context
     # randvar_registry.register_variable(x) has been automatically called
     assert randvar_registry.get_variable(name) is not None
+    assert randvar_registry.get_variable_or_parameter(name) is not None
 
     # if create a new variable with the same name, it fails just if is_default is False
     if is_default:
         inf.Normal(0, 1, name=name)
         assert randvar_registry.get_variable(name) is not None
+        assert randvar_registry.get_variable_or_parameter(name) is not None
     else:
         with pytest.raises(inf.exceptions.NotUniqueRandomVariableName):
             inf.Normal(0, 1, name=name)
@@ -58,18 +61,21 @@ def test_register_parameter(init_context):
 
     # the parameter does not exist in the context
     assert len(randvar_registry.get_var_parameters()) == 0
+    assert randvar_registry.get_variable_or_parameter(name) is None
     p = inf.Parameter(0, name=name)
 
     # the parameter exists in the context
     # randvar_registry.register_variable(x) has been automatically called
     assert len(randvar_registry.get_var_parameters()) == 1
     assert randvar_registry.get_var_parameters()[name] == p
+    assert randvar_registry.get_variable_or_parameter(name) == p
 
     # if create a new parameter with the same name, it fails just if is_default is False
     if is_default:
         p = inf.Parameter(0, name=name)
         assert len(randvar_registry.get_var_parameters()) == 1
         assert randvar_registry.get_var_parameters()[name] == p
+        assert randvar_registry.get_variable_or_parameter(name) == p
     else:
         with pytest.raises(inf.exceptions.NotUniqueParameterName):
             inf.Parameter(0, name=name)
