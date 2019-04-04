@@ -12,12 +12,13 @@ SEED = 607742924
 
 
 @pytest.fixture(autouse=True)
-def tf_reset_default_graph():
+def tf_new_default_graph():
     """
-    Reset the tf default graph
+    Reset the tf default graph at teardown, so parametrize can declare tensors
     """
-    tf.reset_default_graph()
-    yield
+    g = tf.Graph()
+    with g.as_default():
+        yield g
 
 
 @pytest.fixture(autouse=True)

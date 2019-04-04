@@ -40,6 +40,7 @@ def build_model(f):
             return f(*args, **kwargs)
         finally:
             is_probmodel_building = False
+    return wrapper
 
 
 def probmodel(builder):
@@ -51,8 +52,11 @@ def probmodel(builder):
     """
     @functools.wraps(builder)
     def wrapper(*args, **kwargs):
+        @util.tf_run_ignored
+        def fn():
+            return builder(*args, **kwargs)
         return ProbModel(
-            builder=lambda: builder(*args, **kwargs)
+            builder=fn
         )
     return wrapper
 

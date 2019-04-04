@@ -278,7 +278,7 @@ def _sanitize_input(arg, bc_shape):
                 exception_happened = None
             except ValueError:
                 # if broadcast fails, raise custom error
-                exception_happened = exceptions.InvalidParameterDimension(
+                exception_happened = ValueError(
                     'Parameters cannot be broadcasted. Check their shapes.')
             # Do not raise exception inside except, because it will be considered that first exception happened first
             if exception_happened:
