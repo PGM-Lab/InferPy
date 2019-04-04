@@ -13,3 +13,8 @@ install:
 # command to run tests
 script:
   - tox
+
+addons:
+  artifacts:
+    paths:
+    - $HOME/htmlcov

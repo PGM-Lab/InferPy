@@ -182,3 +182,9 @@ def test_random_variable_in_datamodel():
         assert x.sample_shape == 10
     # assert also that is_datamodel is true
     assert x.is_datamodel
+
+
+def test_run_in_session():
+    x = inf.Normal(1, 0)
+    with tf.Session() as sess:
+        assert sess.run(x) == 1
