@@ -272,7 +272,8 @@ def _is_broadcastable_arg(arg):
 
 def _is_castable_arg(arg):
     # cast is for numeric objects: basic types int and float and every element with an int or float dtype
-    return isinstance(arg, (int, float)) or (hasattr(arg, 'dtype') and ('int' in str(arg.dtype) or 'float' in str(arg.dtype)))
+    return isinstance(arg, (int, float)) or \
+        (hasattr(arg, 'dtype') and ('int' in str(arg.dtype) or 'float' in str(arg.dtype)))
 
 
 def _sanitize_input(arg, bc_shape):

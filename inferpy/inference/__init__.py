@@ -4,7 +4,9 @@ and returns a dict of posterior objects (random distributions, list of samples, 
 """
 
 from .vi import VI
+from .svi import SVI
 
 __all__ = [
+    'SVI',
     'VI'
 ]

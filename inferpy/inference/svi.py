@@ -4,8 +4,8 @@ import inspect
 from . import loss_functions
 
 
-class VI:
-    def __init__(self, qmodel, loss='ELBO', optimizer='AdamOptimizer', epochs=1000):
+class SVI:
+    def __init__(self, qmodel, loss='ELBO', optimizer='AdamOptimizer', batch_size=100, epochs=1000):
         # store the qmodel in self.qmodel. Can be a callable with no parameters which returns the qmodel
         if callable(qmodel):
             if len(inspect.signature(qmodel).parameters) > 0:
@@ -21,6 +21,7 @@ class VI:
         else:
             self.loss_fn = loss
 
+        self.batch_size = batch_size
         self.epochs = epochs
 
         # store the optimizer function in self.optimizer
@@ -34,12 +35,21 @@ class VI:
         self.__losses = []
 
     def run(self, pmodel, sample_dict):
-        # NOTE: right now we use a session in a with context, so it is open and close.
-        # If we want to use consecutive inference, we need the same session to reuse the same variables.
-        # In this case, the build_in_session function from RandomVariables should not be used.
+        # create a tf dataset and an iterator, specifying the batch size
+        plate_size = pmodel._get_plate_size(sample_dict)
+        batches = int(plate_size / self.batch_size)
+
+        tfdataset = (
+            tf.data.Dataset.from_tensor_slices(sample_dict)
+            .shuffle(plate_size)  # use the size of the complete dataset for shuffle buffer, so we use a perfect shuffle
+            .batch(self.batch_size)
+            .repeat(self.batch_size * self.epochs)
+        )
+        iterator = tfdataset.make_one_shot_iterator()
+        input_data = iterator.get_next()  # each time this tensor is evaluated in a session it contains new data
 
         # Create the loss function tensor
-        loss_tensor = self.loss_fn(pmodel, self.qmodel, sample_dict)
+        loss_tensor = self.loss_fn(pmodel, self.qmodel, input_data, plate_size=self.batch_size)
 
         train = self.optimizer.minimize(loss_tensor)
 
@@ -49,13 +59,14 @@ class VI:
             sess.run(tf.global_variables_initializer())
 
             for i in range(self.epochs):
-                sess.run(train)
+                for j in range(batches):
+                    sess.run(train)
 
-                t.append(sess.run(loss_tensor))
-                if i % 200 == 0:
-                    print("\n {} epochs\t {}".format(i, t[-1]), end="", flush=True)
-                if i % 10 == 0:
-                    print(".", end="", flush=True)
+                    t.append(sess.run(loss_tensor))
+                    if i % 200 == 0:
+                        print("\n {} epochs\t {}".format(i, t[-1]), end="", flush=True)
+                    if i % 20 == 0:
+                        print(".", end="", flush=True)
 
             # extract the inferred parameters run in the session to get raw values
             params = {n: sess.run(p) for n, p in self.qmodel._last_expanded_params.items()}

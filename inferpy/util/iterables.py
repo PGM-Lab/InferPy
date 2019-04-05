@@ -15,7 +15,9 @@ def get_shape(x):
             raise ValueError('Parameter dimension not consistent: {}'.format(x))
         return (len(x), ) + shapes[0]
     else:
-        if hasattr(x, 'shape'):
+        if hasattr(x, '_shape_tuple'):
+            return x._shape_tuple()  # method to return the shape as a tuple
+        elif hasattr(x, 'shape'):
             return tuple(x.shape)
         else:
             return ()

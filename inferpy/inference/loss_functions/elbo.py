@@ -4,9 +4,10 @@ import tensorflow as tf
 from inferpy import util
 
 
-def ELBO(pmodel, qmodel, sample_dict):
+def ELBO(pmodel, qmodel, sample_dict, plate_size=None):
     # create combined model; for that first compute the plate size (for now, just one plate can be used)
-    plate_size = pmodel._get_plate_size(sample_dict)
+    if not plate_size:
+        plate_size = pmodel._get_plate_size(sample_dict)
 
     # expand the qmodel (just in case the q model uses data from sample_dict, use interceptor too)
     with ed.interception(util.interceptor.set_values(**sample_dict)):
