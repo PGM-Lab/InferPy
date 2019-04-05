@@ -119,6 +119,7 @@ def custom_elbo(pmodel, qmodel, sample_dict):
 VI = inf.inference.VI(qmodel(k=1,d0=2, d1=2), epochs=5000, loss=custom_elbo)
 m.fit({"x": x_train}, VI)
 
+
 post = m.posterior
 
 sess.run(post["beta0"].loc)
