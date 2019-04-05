@@ -64,12 +64,14 @@ class ProbModel:
     """
     Class that implements the probabilistic model functionality.
     It is composed of a graph, capturing the variable relationships, an OrderedDict containing
-    the Random Variables in order of creation, and the function which
+    the Random Variables/Parameters in order of creation, and the function which declare the
+    Random Variables/Parameters.
     """
     def __init__(self, builder):
         # Initialize object attributes
         self.builder = builder
         g_for_nxgraph = tf.Graph()
+        # first buid the graph of dependencies
         with g_for_nxgraph.as_default():
             self.graph = self._build_graph()
         # Now initialize vars and params for the model (no sample_shape)

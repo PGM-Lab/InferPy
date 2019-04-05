@@ -36,8 +36,7 @@ class Parameter:
             self.is_datamodel = True
 
             # convert parameter to tensor if it is not
-            if not isinstance(initial_value, (tf.Tensor, tf.SparseTensor, tf.Variable)):
-                initial_value = tf.convert_to_tensor(initial_value)
+            initial_value = tf.cast(initial_value, tf.float32)
 
             input_varname = initial_value.op.name if contextmanager.randvar_registry.is_building_graph() else name
             # check the sample_shape. If not empty, expand the initial_value

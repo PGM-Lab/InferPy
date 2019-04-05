@@ -265,8 +265,24 @@ class RandomVariable:
         return self.var.__nonzero__()
 
 
+def _is_broadcastable_arg(arg):
+    # basic types int, float or lists and every element with a shape attribute
+    return isinstance(arg, (int, float, list)) or hasattr(arg, 'shape')
+
+
+def _is_castable_arg(arg):
+    # cast is for numeric objects: basic types int and float and every element with an int or float dtype
+    return isinstance(arg, (int, float)) or (hasattr(arg, 'dtype') and ('int' in str(arg.dtype) or 'float' in str(arg.dtype)))
+
+
 def _sanitize_input(arg, bc_shape):
-    if bc_shape is not None and (isinstance(arg, list) or hasattr(arg, 'shape')):
+
+    # there are some distributions which do not admit float64 types
+    # distributions which require an int argument admit also floats (and apply floor)
+    # therefore, to avoid problems, data is always casted to float32
+    arg = tf.cast(arg, tf.float32) if _is_castable_arg(arg) else arg
+
+    if bc_shape and _is_broadcastable_arg(arg):
         # This items are used for sure as RV parameters (only sample_shape can interfer, and has been removed)
         # For each arg, try to tf.broadcast_to bc_shape, and convert to a single tensor using tf.stack
         if util.iterables.get_shape(arg) != bc_shape:
@@ -309,13 +325,17 @@ def _make_random_variable(distribution_name):
     name = ed_random_variable_cls.__name__
 
     def func(*args, **kwargs):
-        # The name...
+        # The name used to identify the random variable by string
         if 'name' not in kwargs:
             kwargs['name'] = util.name.generate('randvar')
         rv_name = kwargs.get('name')
 
         # compute maximum shape between shapes of inputs, and apply broadcast to the smallers in _sanitize_input
-        max_shape = _maximum_shape(args + tuple(kwargs.values()))
+        # if batch_shape is provided, use such shape instead
+        if 'batch_shape' in kwargs:
+            max_shape = kwargs.pop('batch_shape')
+        else:
+            max_shape = _maximum_shape(args + tuple(kwargs.values()))
 
         if contextmanager.data_model.is_active():
             if 'sample_shape' in kwargs:

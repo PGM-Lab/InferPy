@@ -57,12 +57,12 @@ from inferpy.models import random_variable
     (abs(inf.Normal(5., 0)), 5),
     (abs(inf.Normal(-5., 0)), 5),
     # matmul
-    (tf.matmul(inf.Normal(tf.ones((2, 3), dtype=np.float64), 0),
-               inf.Normal(tf.eye(3, dtype=np.float64), 0)), np.ones((2, 3))),
-    (tf.matmul(np.ones((2, 3), dtype=np.float64),
-               inf.Normal(tf.eye(3, dtype=np.float64), 0)), np.ones((2, 3))),
-    (tf.matmul(inf.Normal(np.ones((2, 3), dtype=np.float64), 0),
-               np.eye(3, dtype=np.float64)), np.ones((2, 3))),
+    (tf.matmul(inf.Normal(tf.ones((2, 3), dtype=np.float32), 0),
+               inf.Normal(tf.eye(3, dtype=np.float32), 0)), np.ones((2, 3))),
+    (tf.matmul(np.ones((2, 3), dtype=np.float32),
+               inf.Normal(tf.eye(3, dtype=np.float32), 0)), np.ones((2, 3))),
+    (tf.matmul(inf.Normal(np.ones((2, 3), dtype=np.float32), 0),
+               np.eye(3, dtype=np.float32)), np.ones((2, 3))),
 ])
 def test_operations(tensor, expected):
     with tensor.graph.as_default():
