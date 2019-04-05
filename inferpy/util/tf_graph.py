@@ -54,13 +54,12 @@ def _clean_graph(G, varnames):
 
 def get_graph(varnames):
     # varnames is a set or dict where keys are the var names of the Random Variables
-
-    # TODO: using default graph to build the model and get the graph.
-    # In the future we should use a new graph, or at least allow to give a
-    # new one as parameter.
+    if not (isinstance(varnames, dict) or isinstance(varnames, set)):
+        raise TypeError("The type of varnames must be dict or set, not {}".format(type(varnames)))
 
     # Creates dictionary {node: {child1, child2, ..},..} for current
     # TensorFlow graph. Result is compatible with networkx/toposort
+    # Uses the default_graph
     ops = tf.get_default_graph().get_operations()
     dependencies = defaultdict(set)
     for op in ops:

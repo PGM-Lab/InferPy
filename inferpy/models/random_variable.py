@@ -24,7 +24,6 @@ from tensorflow.python.client import session as tf_session
 import warnings
 
 from inferpy import contextmanager
-from inferpy import exceptions
 from inferpy import util
 
 
@@ -266,8 +265,24 @@ class RandomVariable:
         return self.var.__nonzero__()
 
 
+def _is_broadcastable_arg(arg):
+    # basic types int, float or lists and every element with a shape attribute
+    return isinstance(arg, (int, float, list)) or hasattr(arg, 'shape')
+
+
+def _is_castable_arg(arg):
+    # cast is for numeric objects: basic types int and float and every element with an int or float dtype
+    return isinstance(arg, (int, float)) or (hasattr(arg, 'dtype') and ('int' in str(arg.dtype) or 'float' in str(arg.dtype)))
+
+
 def _sanitize_input(arg, bc_shape):
-    if bc_shape is not None and (isinstance(arg, list) or hasattr(arg, 'shape')):
+
+    # there are some distributions which do not admit float64 types
+    # distributions which require an int argument admit also floats (and apply floor)
+    # therefore, to avoid problems, data is always casted to float32
+    arg = tf.cast(arg, tf.float32) if _is_castable_arg(arg) else arg
+
+    if bc_shape and _is_broadcastable_arg(arg):
         # This items are used for sure as RV parameters (only sample_shape can interfer, and has been removed)
         # For each arg, try to tf.broadcast_to bc_shape, and convert to a single tensor using tf.stack
         if util.iterables.get_shape(arg) != bc_shape:
@@ -278,7 +293,7 @@ def _sanitize_input(arg, bc_shape):
                 exception_happened = None
             except ValueError:
                 # if broadcast fails, raise custom error
-                exception_happened = exceptions.InvalidParameterDimension(
+                exception_happened = ValueError(
                     'Parameters cannot be broadcasted. Check their shapes.')
             # Do not raise exception inside except, because it will be considered that first exception happened first
             if exception_happened:
@@ -310,16 +325,19 @@ def _make_random_variable(distribution_name):
     name = ed_random_variable_cls.__name__
 
     def func(*args, **kwargs):
-        rv_name = kwargs.get('name', None)
+        # The name used to identify the random variable by string
+        if 'name' not in kwargs:
+            kwargs['name'] = util.name.generate('randvar')
+        rv_name = kwargs.get('name')
 
         # compute maximum shape between shapes of inputs, and apply broadcast to the smallers in _sanitize_input
-        max_shape = _maximum_shape(args + tuple(kwargs.values()))
+        # if batch_shape is provided, use such shape instead
+        if 'batch_shape' in kwargs:
+            max_shape = kwargs.pop('batch_shape')
+        else:
+            max_shape = _maximum_shape(args + tuple(kwargs.values()))
 
-        if contextmanager.randvar_registry.is_active():
-            # At this point, the name argument MUST be declared if prob model or data model is active
-            if 'name' not in kwargs:
-                raise exceptions.NotNamedRandomVariable(
-                    'Random Variables defined inside a probabilistic or data model must have a name.')
+        if contextmanager.data_model.is_active():
             if 'sample_shape' in kwargs:
                 # warn that sampe_shape will be ignored
                 warnings.warn('Random Variables defined inside a probabilistic model ignore the sample_shape argument.')
@@ -361,10 +379,9 @@ def _make_random_variable(distribution_name):
             sample_shape=sample_shape
         )
 
-        if contextmanager.randvar_registry.is_active():
-            # inside prob models, register the variable as it is created. Used for prob model builder context
-            contextmanager.randvar_registry.register_variable(rv)
-            contextmanager.randvar_registry.update_graph(rv.name)
+        # register the variable as it is created. Used to detect dependencies
+        contextmanager.randvar_registry.register_variable(rv)
+        contextmanager.randvar_registry.update_graph()
 
         # Doc for help menu
         rv.__doc__ += docs

@@ -24,7 +24,7 @@ def q_model():
 def custom_elbo(pmodel, qvars, sample_dict):
     # create combined model
     plate_size = pmodel._get_plate_size(sample_dict)
-    with ed.interception(inf.util.random_variable.set_values(**{**qvars, **sample_dict})):
+    with ed.interception(inf.util.interceptor.set_values(**{**qvars, **sample_dict})):
         pvars, _ = pmodel.expand_model(plate_size)
 
     # compute energy

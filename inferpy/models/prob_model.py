@@ -22,9 +22,24 @@ import networkx as nx
 from matplotlib import pyplot as plt
 
 from inferpy import util
-from inferpy import exceptions
 from inferpy import contextmanager
 from .random_variable import RandomVariable
+
+
+# global variable to know if the prob model is being built or not
+is_probmodel_building = False
+
+
+def build_model(f):
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        global is_probmodel_building
+        try:
+            is_probmodel_building = True
+            return f(*args, **kwargs)
+        finally:
+            is_probmodel_building = False
+    return wrapper
 
 
 def probmodel(builder):
@@ -36,8 +51,11 @@ def probmodel(builder):
     """
     @functools.wraps(builder)
     def wrapper(*args, **kwargs):
+        @util.tf_run_ignored
+        def fn():
+            return builder(*args, **kwargs)
         return ProbModel(
-            builder=lambda: builder(*args, **kwargs)
+            builder=fn
         )
     return wrapper
 
@@ -46,12 +64,14 @@ class ProbModel:
     """
     Class that implements the probabilistic model functionality.
     It is composed of a graph, capturing the variable relationships, an OrderedDict containing
-    the Random Variables in order of creation, and the function which
+    the Random Variables/Parameters in order of creation, and the function which declare the
+    Random Variables/Parameters.
     """
     def __init__(self, builder):
         # Initialize object attributes
         self.builder = builder
         g_for_nxgraph = tf.Graph()
+        # first buid the graph of dependencies
         with g_for_nxgraph.as_default():
             self.graph = self._build_graph()
         # Now initialize vars and params for the model (no sample_shape)
@@ -67,6 +87,7 @@ class ProbModel:
             raise RuntimeError("posterior cannot be accessed before using the fit function.")
         return self._last_fitted_vars
 
+    @build_model
     def _build_graph(self):
         with contextmanager.randvar_registry.init():
             self.builder()
@@ -75,6 +96,7 @@ class ProbModel:
 
         return nx_graph
 
+    @build_model
     def _build_model(self):
         with contextmanager.randvar_registry.init(self.graph):
             # use edward2 model tape to capture RandomVariable declarations
@@ -87,7 +109,7 @@ class ProbModel:
             # wrap captured edward2 RVs into inferpy RVs
             model_vars = OrderedDict()
             for k, v in model_tape.items():
-                registered_rv = contextmanager.randvar_registry.get_builder_variable(k)
+                registered_rv = contextmanager.randvar_registry.get_variable(k)
                 if registered_rv is None:
                     # a ed Random Variable. Create a inferpy Random Variable and assign the var directly.
                     # do not know the args and kwars used to build the ed random variable. Use None.
@@ -119,22 +141,25 @@ class ProbModel:
         return self.posterior
 
     @util.tf_run_allowed
-    def log_prob(self, sample_dict):
+    def log_prob(self, data):
         """ Computes the log probabilities of a (set of) sample(s)"""
-        return {k: self.vars[k].log_prob(v) for k, v in sample_dict.items()}
+        with ed.interception(util.interceptor.set_values(**data)):
+            expanded_vars, _ = self.expand_model()
+            return {k: self.vars[k].log_prob(v) for k, v in expanded_vars.items()}
 
     @util.tf_run_allowed
-    def sum_log_prob(self, sample_dict):
+    def sum_log_prob(self, data):
         """ Computes the sum of the log probabilities of a (set of) sample(s)"""
-        return tf.reduce_sum([tf.reduce_mean(lp) for lp in self.log_prob(sample_dict).values()])
+        return tf.reduce_sum([tf.reduce_mean(lp) for lp in self.log_prob(data).values()])
 
     @util.tf_run_allowed
-    def sample(self, size=1):
+    def sample(self, size=1, data={}):
         """ Generates a sample for eache variable in the model """
-        expanded_vars, expanded_params = self.expand_model(size)
+        with ed.interception(util.interceptor.set_values(**data)):
+            expanded_vars, expanded_params = self.expand_model(size)
         return {name: tf.convert_to_tensor(var) for name, var in expanded_vars.items()}
 
-    def expand_model(self, size=None):
+    def expand_model(self, size=1):
         """ Create the expanded model vars using size as plate size and return the OrderedDict """
 
         with contextmanager.data_model.fit(size=size):
@@ -157,7 +182,6 @@ class ProbModel:
             plate_size = plate_sizes[0]
 
             if any(plate_size != x for x in plate_sizes[1:]):
-                raise exceptions.InvalidParameterDimension(
-                    'The number of elements for each mapped variable must be the same.')
+                raise ValueError('The number of elements for each mapped variable must be the same.')
 
             return plate_size

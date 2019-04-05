@@ -1,9 +1,8 @@
 from contextlib import contextmanager, ExitStack
 from . import randvar_registry
-from inferpy import exceptions
 
 
-# This dict store the active (if active is True) context parameters of datamodel
+# This dict store the active (if active is True) context and the size of the dtamodel plate in the current context
 _active_datamodel = dict(
     size=1,
     active=False
@@ -15,11 +14,11 @@ def is_active():
     return _active_datamodel['active']
 
 
-def _is_datamodel_var_parameters(name):
+def _has_datamodel_var_parameters(name):
     graph = randvar_registry.get_graph()
     # is this a Random Variable with any parent expanded? If any, return True (will be expanded by parent size)
-    # NOTE: we use the builder variables because parents (predecessors) is_datamodel attribute is built right now
-    return any(randvar_registry.get_builder_variable(pname).is_datamodel for pname in graph.predecessors(name))
+    # we use the builder variables or parameters because parents (predecessors) is_datamodel attribute is built right now
+    return any(randvar_registry.get_variable_or_parameter(pname).is_datamodel for pname in graph.predecessors(name))
 
 
 def get_sample_shape(name):
@@ -31,7 +30,7 @@ def get_sample_shape(name):
 
     # Parameters already expanded?
     # In probmodel definitions, each RandomVariable must have a name
-    if _is_datamodel_var_parameters(name):
+    if _has_datamodel_var_parameters(name):
         # yes, do not need to expand this var (it will be expanded by broadcast)
         size = ()
     else:
@@ -45,8 +44,7 @@ def get_sample_shape(name):
 def fit(size):
     # size must be an integer
     if not isinstance(size, int):
-        raise exceptions.NotIntegerDataModelSize(
-            'The size of the data model must be an integer, not : {}'.format(type(size)))
+        raise TypeError('The size of the data model must be an integer, not : {}'.format(type(size)))
     # Fit the datamodel parameters. We only allow to use one context level
     assert _active_datamodel['size'] == 1
     _active_datamodel['size'] = size
@@ -68,10 +66,8 @@ def datamodel(size=1):
     # if size is provided and greater to 1, use the fit context
     if size > 1:
         contexts.append(fit(size))
-    # if randvar_registry is not active (data_model outside prob_model) use the builder
-    if not randvar_registry.is_active():
-        contexts.append(randvar_registry.init())
-    # use the ExitStack to enter all the contexts
+
+    # use the ExitStack to enter the context if exists, or do nothing if contexts is empty
     try:
         with ExitStack() as stack:
             for c in contexts:
