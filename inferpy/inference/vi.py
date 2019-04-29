@@ -2,6 +2,7 @@ import tensorflow as tf
 import inspect
 
 from . import loss_functions
+import inferpy as inf
 
 
 class VI:
@@ -45,21 +46,21 @@ class VI:
 
         t = []
 
-        with tf.Session() as sess:
-            sess.run(tf.global_variables_initializer())
+        sess = inf.get_session()
+        sess.run(tf.global_variables_initializer())
 
-            for i in range(self.epochs):
-                sess.run(train)
+        for i in range(self.epochs):
+            sess.run(train)
 
-                t.append(sess.run(loss_tensor))
-                if i % 200 == 0:
-                    print("\n {} epochs\t {}".format(i, t[-1]), end="", flush=True)
-                if i % 10 == 0:
-                    print(".", end="", flush=True)
+            t.append(sess.run(loss_tensor))
+            if i % 200 == 0:
+                print("\n {} epochs\t {}".format(i, t[-1]), end="", flush=True)
+            if i % 10 == 0:
+                print(".", end="", flush=True)
 
-            # extract the inferred parameters run in the session to get raw values
-            params = {n: sess.run(p) for n, p in self.qmodel._last_expanded_params.items()}
-            posterior_qvars = {name: qv.build_in_session(sess) for name, qv in self.qmodel._last_expanded_vars.items()}
+        # extract the inferred parameters run in the session to get raw values
+        params = self.qmodel._last_expanded_params.items()
+        posterior_qvars = self.qmodel._last_expanded_vars.items()
 
         # set the private __losses attribute for the losses property
         self.__losses = t

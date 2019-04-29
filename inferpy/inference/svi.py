@@ -2,6 +2,7 @@ import tensorflow as tf
 import inspect
 
 from . import loss_functions
+import inferpy as inf
 
 
 class SVI:
@@ -42,8 +43,8 @@ class SVI:
         tfdataset = (
             tf.data.Dataset.from_tensor_slices(sample_dict)
             .shuffle(plate_size)  # use the size of the complete dataset for shuffle buffer, so we use a perfect shuffle
-            .batch(self.batch_size)
-            .repeat(self.batch_size * self.epochs)
+            .batch(self.batch_size, drop_remainder=True)  # discard the remainder batch with less elements if exists
+            .repeat()
         )
         iterator = tfdataset.make_one_shot_iterator()
         input_data = iterator.get_next()  # each time this tensor is evaluated in a session it contains new data
@@ -55,22 +56,22 @@ class SVI:
 
         t = []
 
-        with tf.Session() as sess:
-            sess.run(tf.global_variables_initializer())
+        sess = inf.get_session()
+        sess.run(tf.global_variables_initializer())
 
-            for i in range(self.epochs):
-                for j in range(batches):
-                    sess.run(train)
+        for i in range(self.epochs):
+            for j in range(batches):
+                sess.run(train)
 
-                    t.append(sess.run(loss_tensor))
-                    if i % 200 == 0:
-                        print("\n {} epochs\t {}".format(i, t[-1]), end="", flush=True)
-                    if i % 20 == 0:
-                        print(".", end="", flush=True)
+                t.append(sess.run(loss_tensor))
+                if i % 200 == 0:
+                    print("\n {} epochs\t {}".format(i, t[-1]), end="", flush=True)
+                if i % 20 == 0:
+                    print(".", end="", flush=True)
 
-            # extract the inferred parameters run in the session to get raw values
-            params = {n: sess.run(p) for n, p in self.qmodel._last_expanded_params.items()}
-            posterior_qvars = {name: qv.build_in_session(sess) for name, qv in self.qmodel._last_expanded_vars.items()}
+        # extract the inferred parameters run in the session to get raw values
+        params = {n: sess.run(p) for n, p in self.qmodel._last_expanded_params.items()}
+        posterior_qvars = {name: qv.build_in_session(sess) for name, qv in self.qmodel._last_expanded_vars.items()}
 
         # set the private __losses attribute for the losses property
         self.__losses = t
