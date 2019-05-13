@@ -37,15 +37,18 @@ And this is how this Bayesian PCA model is denfined in InferPy:
 
 .. literalinclude:: ../../examples/docs/guidemodels/1.py
    :language: python
+   :lines: 1-14
 
 
-
-The ``with inf.replicate(size = N)`` sintaxis is used to replicate the
+The ``with inf.datamodel()`` sintaxis is used to replicate the
 random variables contained within this construct. It follows from the
 so-called *plateau notation* to define the data generation part of a
 probabilistic model. Every replicated variable is **conditionally
 idependent** given the previous random variables (if any) defined
-outside the **with** statement.
+outside the **with** statement. The plateau size will be later automatically calculated,
+so there is not need to specify it. Yet, this construct has an optional input parameter for specifying
+its size, e.g., ``with inf.datamodel(size=N)``. This should be consistent with the size of
+our data.
 
 .. Internally, ``with inf.replicate(size = N)`` construct modifies the
    random variable shape by adding an extra dimension. For the above
@@ -55,38 +58,65 @@ outside the **with** statement.
 Random Variables
 ----------------
 
-Following Edward's approach, a random variable :math:`x` is an object
-parametrized by a tensor :math:`\theta` (i.e. a TensorFlow's tensor or
-numpy's ndarray). The number of random variables in one object is
-determined by the dimensions of its parameters (like in Edward) or by
-the 'dim' argument (inspired by PyMC3 and Keras):
+Any random variable in InferPy encapsulates an equivalent one in Edward (i.e., version 2), and hence it also has associated
+a distribution object from TensorFlow Probability. These can be access using the properties ```var```and
+```dist``` respectively:
+
+.. literalinclude:: ../../examples/docs/guidemodels/2.py
+   :language: python
+   :lines: 12-19
+
+
+Even more, InferPy random variables inherit all the properties and methods from Edward variables. For
+example:
 
 
 .. literalinclude:: ../../examples/docs/guidemodels/2.py
    :language: python
-   :lines: 1-14
-
-
-The ``with inf.replicate(size = N)`` sintaxis can also be used to define
-multi-dimensional objects:
+   :lines: 25-29
 
 
 
-.. literalinclude:: ../../examples/docs/guidemodels/2.py
-   :language: python
-   :lines: 19-20
+Following Edward's approach, we (conceptually) partition a random variable's shape into three groups:
+
+- *Batch shape* describes independent, not identically distributed draws. Namely, we may have a set of (different) parameterizations to the same distribution.
+- *Sample shape* describes independent, identically distributed draws from the distribution.
+- *Event shape* describes the shape of a single draw (event space) from the distribution; it may be dependent across dimensions.
 
 
-Following Edward's approach, the multivariate dimension is the innermost (right-most)
-dimension of the parameters. By contrast, with this replicate construct, we define the number
-of batches. The number of batches can also be specified with the 'batch' input parameter.
-For example, the definitions in following code are equivalent to the previous one.
-
+When declaring random variables, InferPy provides different ways for defining previous shapes. First,
+the batch shape could be obtained from the distribution parameter shapes or explicitly stated using the input parameter
+```batch_shape```.  With this in mind, all the definitions in the following code are equivalent.
 
 
 .. literalinclude:: ../../examples/docs/guidemodels/2.py
    :language: python
-   :lines: 22-23
+   :lines: 38-44
+
+
+The ``with inf.datamodel(size = N)`` sintaxis is used to specify the sample shape. Alternatively,
+we might explicitly state it using the input paramenter ```sample_shape```. This is actually inherit
+from Edward.
+
+.. literalinclude:: ../../examples/docs/guidemodels/2.py
+   :language: python
+   :lines: 50-53
+
+
+Finally, the sample shape will only be consider in some distributions. This is the case of the
+multivariate Gaussian:
+
+
+.. literalinclude:: ../../examples/docs/guidemodels/2.py
+   :language: python
+   :lines: 59
+
+
+.. literalinclude:: ../../examples/docs/guidemodels/2.py
+   :language: python
+   :lines: 67-74
+
+
 
 
 Note that indexing is supported:
@@ -94,39 +124,10 @@ Note that indexing is supported:
 
 .. literalinclude:: ../../examples/docs/guidemodels/2.py
    :language: python
-   :lines: 24-30
+   :lines: 85-95
 
 
-Moreover, we may use indexation for defining new variables whose indexes may be other (discrete) variables:
-
-
-.. literalinclude:: ../../examples/docs/guidemodels/2.py
-   :language: python
-   :lines: 34-35
-
-
-
-Any random variable in InferPy contain the following (optional) input parameters
-in the constructor:
-
-- ``validate_args`` : Python boolean indicating that possibly expensive checks with the input parameters are enabled.
-  By default, it is set to ``False``.
-
-- ``allow_nan_stats`` : When ``True``, the value "NaN" is used to indicate the result is undefined. Otherwise an exception is raised.
-  Its default value is ``True``.
-
-- ``name``: Python string with the name of the underlying Tensor object.
-
-- ``observed``: Python boolean which is used to indicate whether a variable is observable or not . The default value is ``False``
-
-- ``dim``: dimension of the variable. The default value is ``None``.
-
-- ``batches``: number of batches of the variable. The default value is ``None``.
-
-
-Inferpy supports a wide range of probability distributions. Details of the specific arguments 
-for each supported distributions are specified in the following sections.
-`
+Moreover, we may use indexation for defining new variables whose indexes may be other (discrete) variables.
 
 
 
