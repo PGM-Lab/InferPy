@@ -76,6 +76,17 @@ class ProbModel:
             self.graph = self._build_graph()
         # Now initialize vars and params for the model (no sample_shape)
         self.vars, self.params = self._build_model()
+
+        # build the dict of _predict_dict tf.Variables used by the predict function
+        self._predict_dict = {}
+        for k, v in self.vars.items():
+            _var = tf.Variable(tf.zeros(v.shape), trainable=False)
+            util.session.get_session().run(_var.initializer)
+            self._predict_dict[k] = _var
+
+        self._predict_enabled = tf.Variable(False, trainable=False)
+        util.session.get_session().run(self._predict_enabled.initializer)
+
         self._last_expanded_vars = None
         self._last_expanded_params = None
         self._last_fitted_vars = None
@@ -159,29 +170,42 @@ class ProbModel:
             expanded_vars, expanded_params = self.expand_model(size)
         return {name: tf.convert_to_tensor(var) for name, var in expanded_vars.items()}
 
-    def expand_model(self, size=1):
+    def predict(self, observations={}):
+        sess = util.get_session()
+        self._predict_enabled.load(True, session=sess)
+        try:
+            # TODO:
+            # bucle para las local, samplear e interceptar a continuacion
+            for k, v in observations.items():
+                self._predict_dict_expanded[k].load(v, session=sess)
+
+            return sess.run({k: v for k, v in self.posterior.items()})
+        except Exception:
+            self._predict_enabled.load(False, session=sess)
+            raise
+
+    def expand_model(self, size=1, enable_predict=False):
         """ Create the expanded model vars using size as plate size and return the OrderedDict """
 
         with contextmanager.data_model.fit(size=size):
-            expanded_vars, expanded_params = self._build_model()
+            if enable_predict:
+                # need to create other vars for expanded model (different dimmension)
+                self._predict_dict_expanded = {}
+                for k, v in self.vars.items():
+                    shape = v.shape.as_list()                    # set this plate size
+                    shape[0] = size
+                    _var = tf.Variable(tf.zeros(shape), trainable=False)
+                    util.session.get_session().run(_var.initializer)
+                    self._predict_dict_expanded[k] = _var
+
+                with ed.interception(
+                    util.interceptor.set_values_condition(
+                        self._predict_enabled, **self._predict_dict_expanded)):
+                    expanded_vars, expanded_params = self._build_model()
+            else:
+                expanded_vars, expanded_params = self._build_model()
 
         self._last_expanded_vars = expanded_vars
         self._last_expanded_params = expanded_params
 
         return expanded_vars, expanded_params
-
-    def _get_plate_size(self, sample_dict):
-        # get the plate size by analyzing the sample_dict input
-        # check that all values in dict whose name is a datamodel RV has the same length (will be the plate size)
-        plate_shapes = [util.iterables.get_shape(v) for k, v in sample_dict.items()
-                        if k in self.vars and self.vars[k].is_datamodel]
-        plate_sizes = [s[0] if len(s) > 0 else 1 for s in plate_shapes]  # if the shape is (), it is just one element
-        if len(plate_sizes) == 0:
-            return 1
-        else:
-            plate_size = plate_sizes[0]
-
-            if any(plate_size != x for x in plate_sizes[1:]):
-                raise ValueError('The number of elements for each mapped variable must be the same.')
-
-            return plate_size

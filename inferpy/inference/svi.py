@@ -3,6 +3,7 @@ import inspect
 
 from . import loss_functions
 import inferpy as inf
+from inferpy import util
 
 
 class SVI:
@@ -37,7 +38,7 @@ class SVI:
 
     def run(self, pmodel, sample_dict):
         # create a tf dataset and an iterator, specifying the batch size
-        plate_size = pmodel._get_plate_size(sample_dict)
+        plate_size = util.iterables.get_plate_size(pmodel.vars, sample_dict)
         batches = int(plate_size / self.batch_size)
 
         tfdataset = (

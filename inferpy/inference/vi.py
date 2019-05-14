@@ -47,7 +47,6 @@ class VI:
         t = []
 
         sess = inf.get_session()
-        sess.run(tf.global_variables_initializer())
 
         for i in range(self.epochs):
             sess.run(train)

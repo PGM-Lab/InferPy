@@ -26,5 +26,4 @@ def test_parameter_in_datamodel():
 def test_run_in_session():
     x = inf.Parameter(0)
     with tf.Session() as sess:
-        sess.run(tf.global_variables_initializer())
         assert sess.run(x) == 0
