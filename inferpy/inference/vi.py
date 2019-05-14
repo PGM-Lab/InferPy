@@ -58,14 +58,10 @@ class VI:
             if i % 10 == 0:
                 print(".", end="", flush=True)
 
-        # extract the inferred parameters run in the session to get raw values
-        params = self.qmodel._last_expanded_params.items()
-        posterior_qvars = self.qmodel._last_expanded_vars.items()
-
         # set the private __losses attribute for the losses property
         self.__losses = t
 
-        return posterior_qvars, params
+        return self.qmodel._last_expanded_vars, self.qmodel._last_expanded_params
 
     @property
     def losses(self):

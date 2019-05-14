@@ -69,14 +69,10 @@ class SVI:
                 if i % 20 == 0:
                     print(".", end="", flush=True)
 
-        # extract the inferred parameters run in the session to get raw values
-        params = {n: sess.run(p) for n, p in self.qmodel._last_expanded_params.items()}
-        posterior_qvars = {name: qv.build_in_session(sess) for name, qv in self.qmodel._last_expanded_vars.items()}
-
         # set the private __losses attribute for the losses property
         self.__losses = t
 
-        return posterior_qvars, params
+        return self.qmodel._last_expanded_vars, self.qmodel._last_expanded_params
 
     @property
     def losses(self):
