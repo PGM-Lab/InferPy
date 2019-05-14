@@ -69,9 +69,8 @@ m.fit({"x": x_train}, VI)
 #### 69
 
 #extract the hidden representation
-hidden_encoding = m.posterior()["z"]
+hidden_encoding = m.posterior["z"]
 print(hidden_encoding.sample())
-
 
 
 ####

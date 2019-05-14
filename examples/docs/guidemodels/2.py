@@ -107,6 +107,40 @@ assert(y4.shape==[10])
 
 
 
+@inf.probmodel
+def simple(mu=0):
+    # global variables
+    theta = inf.Normal(mu, 0.1, name="theta")
+
+    # local variables
+    with inf.datamodel():
+        x = inf.Normal(theta, 1, name="x")
+
+
+
+
+
+m = simple()
+
+"""
+>>> m.sample()
+{'theta': -0.074800275, 'x': array([0.07758344], dtype=float32)}
+"""
+
+"""
+>>> m.vars["theta"]
+<inf.RandomVariable (Normal distribution) named theta/, shape=(), dtype=float32>
+"""
+
+
+
+m2 = simple(mu=5)
+
+"""
+>>> sess = tf.session()
+>>> sess.run(m2.vars["x"].loc)
+4.849595
+"""
 
 
 

@@ -59,8 +59,8 @@ Random Variables
 ----------------
 
 Any random variable in InferPy encapsulates an equivalent one in Edward (i.e., version 2), and hence it also has associated
-a distribution object from TensorFlow Probability. These can be access using the properties ```var```and
-```dist``` respectively:
+a distribution object from TensorFlow Probability. These can be access using the properties ``var`` and
+``dist`` respectively:
 
 .. literalinclude:: ../../examples/docs/guidemodels/2.py
    :language: python
@@ -86,7 +86,7 @@ Following Edward's approach, we (conceptually) partition a random variable's sha
 
 When declaring random variables, InferPy provides different ways for defining previous shapes. First,
 the batch shape could be obtained from the distribution parameter shapes or explicitly stated using the input parameter
-```batch_shape```.  With this in mind, all the definitions in the following code are equivalent.
+``batch_shape``.  With this in mind, all the definitions in the following code are equivalent.
 
 
 .. literalinclude:: ../../examples/docs/guidemodels/2.py
@@ -95,7 +95,7 @@ the batch shape could be obtained from the distribution parameter shapes or expl
 
 
 The ``with inf.datamodel(size = N)`` sintaxis is used to specify the sample shape. Alternatively,
-we might explicitly state it using the input paramenter ```sample_shape```. This is actually inherit
+we might explicitly state it using the input paramenter ``sample_shape``. This is actually inherit
 from Edward.
 
 .. literalinclude:: ../../examples/docs/guidemodels/2.py
@@ -134,70 +134,51 @@ Moreover, we may use indexation for defining new variables whose indexes may be 
 Probabilistic Models
 --------------------
 A **probabilistic model** defines a joint distribution over observable
-and non-observable variables, :math:`p(\mathbf{w}, \mathbf{z}, \mathbf{x})` for the
-running example. The variables in the model are the ones defined using the
-``with inf.ProbModel() as pca:`` construct. Alternatively, we can also use a builder,
+and hidden variables, :math:`p(\mathbf{w}, \mathbf{z}, \mathbf{x})`. Note that a
+variable might be observable or hidden depending on the fitted data. Thus this is
+not specified when defining the model.
+
+
+A probabilistic model is defined by decorating any function with ``@inf.probmodel``.
+The model is made of any variable defined inside this function. A simple example is shown
+below.
 
 .. literalinclude:: ../../examples/docs/guidemodels/3.py
    :language: python
-   :lines: 24-25
+   :lines: 6-13
 
-The model must be **compiled** before it can be used.
 
-Like any random variable object, a probabilistic model is equipped with
-methods such as  ``sample()``, ``log_prob()`` and  ``sum_log_prob()``. Then, we can sample data
-from the model and compute the log-likelihood of a data set:
+Note that any variable in a model must be initialized with a name (this
+is not required when defining random variables outside the probmodel scope).
+
+
+The model must be **instantiated** before it can be used. This is done by simple
+invoking the function (which will return a probmodel object).
 
 .. literalinclude:: ../../examples/docs/guidemodels/3.py
    :language: python
-   :lines: 29-31
+   :lines: 20-22
 
 
-.. Folowing Edward's approach, a random variable :math:`x` is associated to
-.. a tensor :math:`x^*` in the computational graph handled by TensorFlow,
-.. where the computations takes place. This tensor :math:`x^*` contains the
-.. samples of the random variable :math:`x`, i.e.
-.. :math:`x^*\sim p(x|\theta)`. 
+Now we can use the model with the prior probabilities. For example,
+we might get a sample:
 
-Random variables can be involved in expressive deterministic operations. Dependecies 
-between variables are modelled by setting a given variable as a parameter of another variable. For example:
-
-.. literalinclude:: ../../examples/docs/guidemodels/4.py
+.. literalinclude:: ../../examples/docs/guidemodels/3.py
    :language: python
-   :lines: 4-9
+   :lines: 28-29
 
-Moreover, we might consider using the function ``inferpy.case`` as the parameter of other random variables:
+or extract the variables:
 
-.. literalinclude:: ../../examples/docs/guidemodels/4.py
+
+.. literalinclude:: ../../examples/docs/guidemodels/3.py
    :language: python
-   :lines: 12-36
+   :lines: 33-34
 
+We can create new and different instances of our model:
 
-Note that we might use the case function inside the replicate construct. The result will be
-a multi-batch random variable having the same distribution for each batch. When obtaining a sample from
-the model, each sample of a given batch in x is independent of the rest.
-
-.. literalinclude:: ../../examples/docs/guidemodels/4.py
+.. literalinclude:: ../../examples/docs/guidemodels/3.py
    :language: python
-   :lines: 41-46
-
-
-We can also use the functions ``inferpy.case_states`` or ``inferpy.gather`` for defining
-the same model.
-
-
-.. literalinclude:: ../../examples/docs/guidemodels/4.py
-   :language: python
-   :lines: 50-62
-
-
-We can use the function ``inferpy.case_states`` with a list of variables (or multidimensional variables):
-
-
-.. literalinclude:: ../../examples/docs/guidemodels/4.py
-   :language: python
-   :lines: 67-94
-
+   :lines: 39-41
 
 
 
@@ -211,366 +192,10 @@ Supported probability distributions are located in the package ``inferpy.models`
 have ``inferpy.models.RandomVariable`` as superclass. A list with all the supported distributions can be obtained as
 as follows.
 
-.. code:: python
 
-   >>> inf.models.ALLOWED_VARS
-   ['Bernoulli', 'Beta', 'Categorical', 'Deterministic', 'Dirichlet', 'Exponential', 'Gamma', 'InverseGamma', 'Laplace', 'Multinomial', 'Normal', 'Poisson', 'Uniform']
-
-
-Bernoulli
-~~~~~~~~~~~~~~~
-
-Binary distribution which takes the value 1 with probability :math:`p` and the value with :math:`1-p`. Its probability mass
-function is
-
-.. math::
-
-   p(x;p) =\left\{\begin{array}{cc} p & \mathrm{if\ } x=1 \\
-    1-p & \mathrm{if\ } x=0 \\ \end{array} \right.
-
-
-An example of definition in InferPy of a random variable following a Bernoulli distribution is shown below. Note that the
-input parameter ``probs`` corresponds to :math:`p` in the previous equation.
-
-.. literalinclude:: ../../examples/supported_distributions.py
+.. literalinclude:: ../../examples/docs/guidemodels/3.py
    :language: python
-   :lines: 8-12
+   :lines: 53-71
 
-
-This distribution can be initialized by indicating the logit function of the probability, i.e., :math:`logit(p) = log(\frac{p}{1-p})`.
-
-
-Beta
-~~~~~~~~~~~~~~~
-
-Continuous distribution defined in the interval :math:`[0,1]` and parametrized by two positive shape parameters,
-denoted :math:`\alpha` and :math:`\beta`.
-
-.. math::
-
-   p(x;\alpha,\beta)=\frac{x^{\alpha-1}(1-x)^{\beta-1}}{B(\alpha,\beta)}
-
-where `B` is the beta function
-
-.. math::
-
-   B(\alpha,\beta)=\int_{0}^{1}t^{\alpha-1}(1-t)^{\beta-1}dt
-
-
-
-The definition of a random variable following a Beta distribution is done as follows.
-
-.. literalinclude:: ../../examples/supported_distributions.py
-   :language: python
-   :lines: 19-23
-
-Note that the input parameters ``concentration0`` and ``concentration1`` correspond to the shape
-parameters :math:`\alpha` and :math:`\beta` respectively.
-
-
-Categorical
-~~~~~~~~~~~~~~~
-
-Discrete probability distribution that can take :math:`k` possible states or categories. The probability
-of each state is separately defined:
-
-.. math::
-
-   p(x;\mathbf{p}) = p_i
-
-where :math:`\mathbf{p} = (p_1, p_2, \ldots, p_k)` is a k-dimensional vector with the probability associated to each possible state.
-
-
-
-
-
-The definition of a random variable following a Categorical distribution is done as follows.
-
-.. literalinclude:: ../../examples/supported_distributions.py
-   :language: python
-   :lines: 28-32
-
-
-
-
-Deterministic
-~~~~~~~~~~~~~~~
-
-
-The deterministic distribution is a probability distribution in a space (continuous or discrete) that always takes
-the same value :math:`k_0`. Its probability density (or mass) function can be defined as follows.
-
-
-.. math::
-
-   p(x;k_0) =\left\{\begin{array}{cc} 1 & \mathrm{if\ } x=k_0 \\
-    0 & \mathrm{if\ } x \neq k_0 \\ \end{array} \right.
-
-
-
-
-The definition of a random variable following a Beta distribution is done as follows:
-
-.. literalinclude:: ../../examples/supported_distributions.py
-   :language: python
-   :lines: 37
-
-
-where the input parameter ``loc`` corresponds to the value :math:`k_0`.
-
-
-Dirichlet
-~~~~~~~~~~~~~~~
-
-
-Dirichlet distribution is a continuous multivariate probability distribution parmeterized by a vector of positive reals
-:math:`(\alpha_1,\alpha_2,\ldots,\alpha_k)`.
-It is a multivariate generalization of the beta distribution. Dirichlet distributions are commonly used as prior
-distributions in Bayesian statistics. The Dirichlet distribution of order :math:`k \geq 2` has the following density function.
-
-
-
-
-.. math::
-
-   p(x_1,x_2,\ldots x_k; \alpha_1,\alpha_2,\ldots,\alpha_k) = {\frac{\Gamma\left(\sum_i \alpha_i\right)}
-   {\prod_i \Gamma(\alpha_i)} \prod_{i=1}^k x_i^{\alpha_i-1}}{}
-
-
-
-
-
-The definition of a random variable following a Dirichlet distribution is done as follows:
-
-.. literalinclude:: ../../examples/supported_distributions.py
-   :language: python
-   :lines: 49-53
-
-where the input parameter ``concentration`` is the vector  :math:`(\alpha_1,\alpha_2,\ldots,\alpha_k)`.
-
-
-
-
-Exponential
-~~~~~~~~~~~~~~~
-
-The exponential distribution (also known as negative exponential distribution) is defined over a continuous domain and
-describes the time between events in a Poisson point process, i.e., a process in which events occur continuously
-and independently at a constant average rate. Its probability density function is
-
-
-
-.. math::
-
-   p(x;\lambda) =\left\{\begin{array}{cc} \lambda e^{-\lambda x} & \mathrm{if\ } x\geq 0 \\
-    0 & \mathrm{if\ } x < k_0 \\ \end{array} \right.
-
-
-where :math:`\lambda>0` is the rate or inverse scale.
-
-
-The definition of a random variable following a exponential distribution is done as follows:
-
-.. literalinclude:: ../../examples/supported_distributions.py
-   :language: python
-   :lines: 57-61
-
-where the input parameter ``rate`` corresponds to the value :math:`\lambda`.
-
-
-
-
-Gamma
-~~~~~~~~~~~~~~~
-
-
-The Gamma distribution is a continuous probability distribution parametrized by a concentration (or shape)
-parameter :math:`\alpha>0`, and an inverse scale parameter :math:`\lambda>0` called rate. Its density function is
-defined as follows.
-
-
-.. math::
-
-   p(x;\alpha, \beta) = \frac{\beta^\alpha x^{\alpha - 1} e^{\beta x}}{\Gamma(\alpha)}
-
-
-for :math:`x > 0` and where :math:`\Gamma(\alpha)` is the gamma function.
-
-
-The definition of a random variable following a gamma distribution is done as follows:
-
-.. literalinclude:: ../../examples/supported_distributions.py
-   :language: python
-   :lines: 67
-
-where the input parameters ``concentration`` and ``rate`` corespond to  :math:`\alpha` and :math:`\beta` respectively.
-
-
-
-
-
-Inverse-gamma
-~~~~~~~~~~~~~~~
-
-
-The Inverse-gamma distribution is a continuous probability distribution which is the distribution of the reciprocal
-of a variable distributed according to the gamma distribution. It is also parametrized by a concentration (or shape)
-parameter :math:`\alpha>0`, and an inverse scale parameter :math:`\lambda>0` called rate. Its density function is
-defined as follows.
-
-
-.. math::
-
-   p(x;\alpha, \beta) = \frac{\beta^\alpha x^{-\alpha - 1} e^{-\frac{\beta}{x}}}{\Gamma(\alpha)}
-
-
-for :math:`x > 0` and where :math:`\Gamma(\alpha)` is the gamma function.
-
-
-The definition of a random variable following a inverse-gamma distribution is done as follows:
-
-.. literalinclude:: ../../examples/supported_distributions.py
-   :language: python
-   :lines: 73
-
-where the input parameters ``concentration`` and ``rate`` corespond to  :math:`\alpha` and :math:`\beta` respectively.
-
-
-
-
-
-
-
-Laplace
-~~~~~~~~~~~~~~~
-
-The Laplace distribution is a continuous probability distribution with the following density function
-
-.. math::
-
-   p(x;\mu,\sigma) = \frac{1}{2\sigma} exp \left( - \frac{|x - \mu |}{\sigma}\right)
-
-
-
-
-The definition of a random variable following a Laplace distribution is done as follows:
-
-.. literalinclude:: ../../examples/supported_distributions.py
-   :language: python
-   :lines: 80-84
-
-where the input parameter ``loc`` and ``scale`` correspond to :math:`\mu` and :math:`\sigma` respectively.
-
-
-
-
-
-Multinomial
-~~~~~~~~~~~~~~~
-
-The multinomial is a discrete distribution which models the probability of counts resulting from repeating :math:`n`
-times an experiment with :math:`k` possible outcomes. Its probability mass function is defined below.
-
-.. math::
-
-   p(x_1,x_2,\ldots x_k; \mathbf{p}) =  \frac{n!}{\prod_{i=1}^k x_i}\prod_{i=1}^k p_i^{x^i}
-
-
-where :math:`\mathbf{p}` is a k-dimensional vector defined as :math:`\mathbf{p} = (p_1, p_2, \ldots, p_k)` with the probability
-associated to each possible outcome.
-
-
-
-The definition of a random variable following a multinomial distribution is done as follows:
-
-.. literalinclude:: ../../examples/supported_distributions.py
-   :language: python
-   :lines: 93-97
-
-
-
-Multivariate-Normal
-~~~~~~~~~~~~~~~~~~~~~~~
-
-A multivariate-normal (or Gaussian) defines a set of  normal-distributed variables which are assumed
-to be idependent. In other words, the covariance matrix is diagonal.
-
-A single multivariate-normal distribution defined on :math:`\mathbb{R}^2` can be defined as follows.
-
-.. literalinclude:: ../../examples/supported_distributions.py
-   :language: python
-   :lines: 140-143
-
-
-Normal
-~~~~~~~~~~~~~~~
-
-The normal (or Gaussian) distribution is a continuous probability distribution with the following density function
-
-.. math::
-
-   p(x;\mu,\sigma) = \frac{1}{2\sigma} exp \left( - \frac{|x - \mu |}{\sigma}\right)
-
-where :math:`\mu`  is the mean or expectation of the distribution, :math:`\sigma`  is the standard deviation, and :math:`\sigma^{2}` is the variance.
-
-
-A normal distribution can be defined as follows.
-
-.. literalinclude:: ../../examples/supported_distributions.py
-   :language: python
-   :lines: 105-109
-
-where the input parameter ``loc`` and ``scale`` correspond to :math:`\mu` and :math:`\sigma` respectively.
-
-
-
-
-Poisson
-~~~~~~~~~~~~~~~
-
-The Poisson distribution is a discrete probability distribution for modeling the number of times an event occurs
-in an interval of time or space. Its probability mass function is
-
-
-.. math::
-
-   p(x;\lambda) = e^{- \lambda} \frac{\lambda^x}{x!}
-
-where :math:`\lambda` is the rate or number of events per interval.
-
-A Poisson distribution can be defined as follows.
-
-.. literalinclude:: ../../examples/supported_distributions.py
-   :language: python
-   :lines: 116-120
-
-
-
-
-
-
-
-Uniform
-~~~~~~~~~~~~~~~
-
-The continuous uniform distribution or rectangular distribution assings the same probability to any :math:`x`  in
-the interval :math:`[a,b]`.
-
-
-.. math::
-
-   p(x;a,b) =\left\{\begin{array}{cc} \frac{1}{b-a} & \mathrm{if\ } x\in [a,b]\\
-    0 & \mathrm{if\ } x\not\in [a,b] \\ \end{array} \right.
-
-
-A uniform distribution can be defined as follows.
-
-.. literalinclude:: ../../examples/supported_distributions.py
-   :language: python
-   :lines: 128-132
-
-
-where the input parameters ``low`` and ``high`` correspond to the lower and upper bounds of the interval :math:`[a,b]`.
-
-
-
+Note that these are all the distributions in Edward 2 and hence in TensorFlow Probability. Their
+input parameters will be the same.
