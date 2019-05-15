@@ -6,7 +6,7 @@
 
 
 
-InferPy: Probabilistic Modeling with Tensorflow Made Easy
+InferPy: Deep Probabilistic Modeling with Tensorflow Made Easy
 ==========================================================
 
 
@@ -69,8 +69,9 @@ A set of examples can be found in the `Probabilistic Model Zoo <notes/probzoo.ht
    
    notes/guidemodels
    notes/guideinference
-   notes/guidevalidation
-   notes/guidedata
+
+..   notes/guidevalidation
+..   notes/guidedata
 
 ..   notes/guidebayesian
 
@@ -84,11 +85,11 @@ A set of examples can be found in the `Probabilistic Model Zoo <notes/probzoo.ht
    notes/inf_vs_ed
 
 
-.. toctree::
+..   .. toctree::
    :maxdepth: 1
    :caption: Package Reference
 
-   modules/inferpy
+..      modules/inferpy
    modules/inferpy.criticism
    modules/inferpy.inferences
    modules/inferpy.models
