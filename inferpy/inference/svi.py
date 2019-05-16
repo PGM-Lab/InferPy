@@ -38,7 +38,8 @@ class SVI:
     def run(self, pmodel, sample_dict):
         # create a tf dataset and an iterator, specifying the batch size
         plate_size = pmodel._get_plate_size(sample_dict)
-        batches = int(plate_size / self.batch_size)
+        batches = int(plate_size / self.batch_size)  # M/N
+        batch_weight =  self.batch_size / plate_size # N/M
 
         tfdataset = (
             tf.data.Dataset.from_tensor_slices(sample_dict)
@@ -50,7 +51,7 @@ class SVI:
         input_data = iterator.get_next()  # each time this tensor is evaluated in a session it contains new data
 
         # Create the loss function tensor
-        loss_tensor = self.loss_fn(pmodel, self.qmodel, input_data, plate_size=self.batch_size)
+        loss_tensor = self.loss_fn(pmodel, self.qmodel, input_data, plate_size=self.batch_size, batch_weight=batch_weight)
 
         train = self.optimizer.minimize(loss_tensor)
 
