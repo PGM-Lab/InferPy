@@ -334,7 +334,9 @@ def _make_random_variable(distribution_name):
         # compute maximum shape between shapes of inputs, and apply broadcast to the smallers in _sanitize_input
         # if batch_shape is provided, use such shape instead
         if 'batch_shape' in kwargs:
-            max_shape = kwargs.pop('batch_shape')
+            b = kwargs.pop('batch_shape')
+            if np.isscalar(b): b  = [b]
+            max_shape =  b
         else:
             max_shape = _maximum_shape(args + tuple(kwargs.values()))
 
