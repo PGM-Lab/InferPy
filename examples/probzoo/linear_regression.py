@@ -35,9 +35,13 @@ y_train = data["y"]
 
 
 
-VI = inf.inference.VI(qmodel(2))
+VI = inf.inference.VI(qmodel(2), epochs=10000)
 m.fit({"x": x_train, "y":y_train}, VI)
 
-with tf.Session() as sess:
-    print(m.posterior["w"].sample())
-    print(sess.run(m.posterior["w"].loc))  # fails
+sess = inf.get_session()
+print(m.posterior["w"].sample())
+print(sess.run(m.posterior["w"].loc))
+
+with tf.Session() as sess2:
+    print(sess2.run(m.posterior["w"].copy().loc))
+

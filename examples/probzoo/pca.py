@@ -43,5 +43,10 @@ def qmodel(k,d):
 
 
 
-VI = inf.inference.VI(qmodel(k=1,d=2), epochs=1000)
+VI = inf.inference.VI(qmodel(k=1,d=2), epochs=2000)
 m.fit({"x": x_train}, VI)
+
+
+post_z = m.posterior["z"]
+with inf.get_session() as sess:
+    print(sess.run(post_z.loc))

@@ -25,6 +25,7 @@ import warnings
 
 from inferpy import contextmanager
 from inferpy import util
+import inferpy.util.session
 
 
 # the list of available RandomVariables in edward2. Matches with the available distributions in tensorflow_probability
@@ -124,6 +125,13 @@ class RandomVariable:
         rv.__name__ = name
 
         return rv
+
+    def copy(self):
+        """
+        Makes a of the current random variable where the distribution parameters are fixed.
+        :return: new object of class RandomVariable
+        """
+        return self.build_in_session(inferpy.get_session())
 
     def __repr__(self):
         # Custom representation of the random variable
