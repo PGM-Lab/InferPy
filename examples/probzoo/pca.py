@@ -46,7 +46,19 @@ def qmodel(k,d):
 VI = inf.inference.VI(qmodel(k=1,d=2), epochs=2000)
 m.fit({"x": x_train}, VI)
 
+sess = inf.get_session()
+post_z = sess.run(m.posterior["z"].loc)
+print(post_z)
 
-post_z = m.posterior["z"]
-with inf.get_session() as sess:
-    print(sess.run(post_z.loc))
+
+sess2 = tf.Session()
+post_z2 = sess.run(m.posterior["z"].copy().loc)
+print(post_z2)
+
+import math
+np.mean(np.abs((post_z*10000000-post_z2*10000000)))
+
+
+
+
+
