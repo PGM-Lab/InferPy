@@ -49,7 +49,7 @@ class Parameter:
 
         # Build the tf variable
         self.var = tf.Variable(initial_value, name=self.name)
-        util.session.get_session().run(self.var.initializer)
+        util.session.get_session().run(tf.variables_initializer([self.var]))
 
         # register the variable, which is used to detect dependencies
         contextmanager.randvar_registry.register_parameter(self)

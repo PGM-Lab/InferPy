@@ -1,5 +1,6 @@
 import tensorflow as tf
 import inspect
+import itertools
 
 from . import loss_functions
 import inferpy as inf
@@ -60,7 +61,17 @@ class SVI:
         t = []
 
         sess = inf.get_session()
-        sess.run(tf.global_variables_initializer())
+        # Initialize all variables which are not in the probmodel p, because they have been initialized before
+        model_variables = set([v for v in itertools.chain(
+            pmodel.params.values(),
+            (pmodel._last_expanded_params or {}).values(),
+            (pmodel._last_fitted_params or {}).values(),
+            self.qmodel.params.values(),
+            (self.qmodel._last_expanded_params or {}).values(),
+            (self.qmodel._last_fitted_params or {}).values()
+            )])
+        sess.run(tf.variables_initializer([v for v in tf.global_variables()
+                                           if v not in model_variables and not v.name.startswith("inferpy-")]))
 
         for i in range(self.epochs):
             for j in range(batches):
@@ -72,14 +83,10 @@ class SVI:
                 if i % 20 == 0:
                     print(".", end="", flush=True)
 
-        # extract the inferred parameters run in the session to get raw values
-        params = {n: sess.run(p) for n, p in self.qmodel._last_expanded_params.items()}
-        posterior_qvars = {name: qv.build_in_session(sess) for name, qv in self.qmodel._last_expanded_vars.items()}
-
         # set the private __losses attribute for the losses property
         self.__losses = t
 
-        return posterior_qvars, params
+        return self.qmodel._last_expanded_vars, self.qmodel._last_expanded_params
 
     @property
     def losses(self):

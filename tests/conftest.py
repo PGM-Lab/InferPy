@@ -4,6 +4,7 @@ import numpy as np
 import random
 import tensorflow as tf
 
+import inferpy as inf
 from inferpy.contextmanager import randvar_registry
 from inferpy.util import name
 
@@ -18,7 +19,9 @@ def tf_new_default_graph():
     """
     g = tf.Graph()
     with g.as_default():
-        yield g
+        with tf.Session() as sess:
+            inf.set_session(sess)
+            yield g
 
 
 @pytest.fixture(autouse=True)

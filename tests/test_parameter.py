@@ -1,5 +1,3 @@
-import tensorflow as tf
-
 import inferpy as inf
 
 
@@ -25,5 +23,4 @@ def test_parameter_in_datamodel():
 
 def test_run_in_session():
     x = inf.Parameter(0)
-    with tf.Session() as sess:
-        assert sess.run(x) == 0
+    assert inf.get_session().run(x) == 0

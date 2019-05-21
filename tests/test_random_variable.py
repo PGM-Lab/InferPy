@@ -112,12 +112,11 @@ def test_tensor_register():
 
     x = inf.Normal(5., 0., name='foo')
 
-    with tf.Session() as sess:
-        assert sess.run(x) == 5.
-        assert isinstance(tf.convert_to_tensor(x), tf.Tensor)
-        assert sess.run(tf.convert_to_tensor(x)) == 5.
-        assert sess.run(tf.constant(5.) + x) == 10.
-        assert sess.run(x + tf.constant(5.)) == 10.
+    assert inf.get_session().run(x) == 5.
+    assert isinstance(tf.convert_to_tensor(x), tf.Tensor)
+    assert inf.get_session().run(tf.convert_to_tensor(x)) == 5.
+    assert inf.get_session().run(tf.constant(5.) + x) == 10.
+    assert inf.get_session().run(x + tf.constant(5.)) == 10.
 
 
 @pytest.mark.parametrize("arg, bc_shape, expected_flow, expected_result", [

@@ -19,7 +19,7 @@ def set_values(**model_kwargs):
 
 # this function is used to intercept the value property of edward2 random variables
 # dependent on a tf variable value: if true use predict_input dict, otherwise use variable value
-def set_values_condition(condition_var, **input_dict):
+def set_values_condition(model):
     """Creates a value-setting interceptor."""
 
     def interceptor(f, *args, **kwargs):
@@ -29,8 +29,8 @@ def set_values_condition(condition_var, **input_dict):
         _value = ed.interceptable(f)(*args, **kwargs).value
 
         conditional_value = tf.cond(
-            tf.math.logical_and(condition_var, tf.constant(name in input_dict)),
-            lambda: input_dict.get(name, 0.),  # ckecks that it return something, even if it is not used
+            model.is_observed[name],
+            lambda: model.observed_values[name],
             lambda: _value
         )
 
