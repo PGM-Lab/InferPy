@@ -63,6 +63,9 @@ VI = inf.inference.VI(q, epochs=1000)
 
 (x_train, y_train), _ = mnist.load_data(num_instances=N, digits=DIG)
 
+# plot the digits
+mnist.plot_digits(x_train)
+
 # learn the parameters
 m.fit({"x": x_train}, VI)
 
