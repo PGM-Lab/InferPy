@@ -64,7 +64,7 @@ def _try_sess_run(p, sess):
 
 class RandomVariable:
     """
-    Class for random variables. It encapsulares the Random Variable from edward2, and additional properties.
+    Class for random variables. It encapsulates the Random Variable from edward2, and additional properties.
 
     - It creates a variable generator. It must be a function without parameters, that creates a
       new Random Variable from edward2. It is used to define edward2 models as functions.
