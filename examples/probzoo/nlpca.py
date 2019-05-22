@@ -1,5 +1,17 @@
+import numpy as np
 import inferpy as inf
+N=1000
+x_train = np.concatenate([inf.Normal([0.0,0.0], scale=1.).sample(int(N/2)), inf.Normal([10.0,10.0], scale=1.).sample(int(N/2))])
+##########
+
+
+# required pacakges
+import inferpy as inf
+import numpy as np
 import tensorflow as tf
+
+# definition of a generic model
+
 
 # number of components
 k = 1
@@ -22,14 +34,10 @@ def nlpca(k, d0, dx, decoder):
         x = inf.Normal(x_loc, x_scale, name="x")   # shape = [N,d]
 
 
-###########  25
-
 def decoder(z,d0,dx):
     h0 = tf.layers.dense(z, d0, tf.nn.relu)
     return tf.layers.dense(h0, 2 * dx)
 
-
-######### 32
 
 # Q-model  approximating P
 
@@ -42,22 +50,8 @@ def qmodel(k):
         qz = inf.Normal(qz_loc, qz_scale, name="z")
 
 
-
-####### 46
-
 # create an instance of the model
 m = nlpca(k,d0,dx, decoder)
-
-# Sample from priors
-samples = m.sample()
-
-
-#### NOT showing  55
-import numpy as np
-x_train = np.concatenate([inf.Normal([0.0,0.0], scale=1.).sample(int(N/2)), inf.Normal([10.0,10.0], scale=1.).sample(int(N/2))])
-
-
-###### 60
 
 # set the inference algorithm
 VI = inf.inference.VI(qmodel(k), epochs=5000)
@@ -66,11 +60,9 @@ VI = inf.inference.VI(qmodel(k), epochs=5000)
 m.fit({"x": x_train}, VI)
 
 
-#### 69
-
 #extract the hidden representation
 hidden_encoding = m.posterior["z"]
 print(hidden_encoding.sample())
 
-
-####
+sess = inf.get_session()
+print(sess.run(hidden_encoding.loc))

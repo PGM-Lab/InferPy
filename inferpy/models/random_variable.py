@@ -25,6 +25,7 @@ import warnings
 
 from inferpy import contextmanager
 from inferpy import util
+import inferpy.util.session
 
 
 # the list of available RandomVariables in edward2. Matches with the available distributions in tensorflow_probability
@@ -63,7 +64,7 @@ def _try_sess_run(p, sess):
 
 class RandomVariable:
     """
-    Class for random variables. It encapsulares the Random Variable from edward2, and additional properties.
+    Class for random variables. It encapsulates the Random Variable from edward2, and additional properties.
 
     - It creates a variable generator. It must be a function without parameters, that creates a
       new Random Variable from edward2. It is used to define edward2 models as functions.
@@ -128,6 +129,13 @@ class RandomVariable:
         rv.__name__ = name
 
         return rv
+
+    def copy(self):
+        """
+        Makes a of the current random variable where the distribution parameters are fixed.
+        :return: new object of class RandomVariable
+        """
+        return self.build_in_session(inferpy.get_session())
 
     def __repr__(self):
         # Custom representation of the random variable
@@ -338,7 +346,9 @@ def _make_random_variable(distribution_name):
         # compute maximum shape between shapes of inputs, and apply broadcast to the smallers in _sanitize_input
         # if batch_shape is provided, use such shape instead
         if 'batch_shape' in kwargs:
-            max_shape = kwargs.pop('batch_shape')
+            b = kwargs.pop('batch_shape')
+            if np.isscalar(b): b  = [b]
+            max_shape =  b
         else:
             max_shape = _maximum_shape(args + tuple(kwargs.values()))
 
