@@ -5,6 +5,7 @@ import itertools
 from . import loss_functions
 import inferpy as inf
 from inferpy import util
+from inferpy import contextmanager
 
 
 class SVI:
@@ -53,8 +54,7 @@ class SVI:
         input_data = iterator.get_next()  # each time this tensor is evaluated in a session it contains new data
 
         # Create the loss function tensor
-        loss_tensor = self.loss_fn(pmodel, self.qmodel, input_data,
-                                   plate_size=self.batch_size, batch_weight=batch_weight)
+        loss_tensor = self.loss_fn(pmodel, self.qmodel, plate_size=self.batch_size, batch_weight=batch_weight)
 
         train = self.optimizer.minimize(loss_tensor)
 
@@ -73,15 +73,17 @@ class SVI:
         sess.run(tf.variables_initializer([v for v in tf.global_variables()
                                            if v not in model_variables and not v.name.startswith("inferpy-")]))
 
-        for i in range(self.epochs):
-            for j in range(batches):
-                sess.run(train)
+        with contextmanager.observe(pmodel._last_expanded_vars, input_data):
+            with contextmanager.observe(self.qmodel._last_expanded_vars, input_data):
+                for i in range(self.epochs):
+                    for j in range(batches):
+                        sess.run(train)
 
-                t.append(sess.run(loss_tensor))
-                if i % 200 == 0:
-                    print("\n {} epochs\t {}".format(i, t[-1]), end="", flush=True)
-                if i % 20 == 0:
-                    print(".", end="", flush=True)
+                        t.append(sess.run(loss_tensor))
+                        if i % 200 == 0:
+                            print("\n {} epochs\t {}".format(i, t[-1]), end="", flush=True)
+                        if i % 20 == 0:
+                            print(".", end="", flush=True)
 
         # set the private __losses attribute for the losses property
         self.__losses = t
