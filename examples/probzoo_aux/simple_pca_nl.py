@@ -2,6 +2,7 @@
 import inferpy as inf
 import numpy as np
 import tensorflow as tf
+from inferpy import util
 
 # definition of a generic model
 @inf.probmodel
@@ -92,7 +93,7 @@ from tensorflow_probability import edward2 as ed
 # define custom elbo function
 def custom_elbo(pmodel, qmodel, sample_dict):
     # create combined model
-    plate_size = pmodel._get_plate_size(sample_dict)
+    plate_size = util.iterables.get_plate_size(pmodel.vars, sample_dict)
 
     qvars, _ = qmodel.expand_model(plate_size)
 

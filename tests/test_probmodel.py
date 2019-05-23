@@ -1,9 +1,8 @@
 import numpy as np
 import pytest
-from tensorflow_probability.python import edward2 as ed
 
 import inferpy as inf
-from inferpy.util import interceptor
+from inferpy import util
 from tests import no_raised_exc
 
 
@@ -84,7 +83,7 @@ def test_probmodel_get_plate_size(data, expected_flow, expected_result):
     with expected_flow:
         m = model()
 
-        plate_size = m._get_plate_size(data)
+        plate_size = util.iterables.get_plate_size(m.vars, data)
         assert expected_result == plate_size
 
 

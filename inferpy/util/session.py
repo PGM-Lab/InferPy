@@ -21,6 +21,13 @@ def set_session(session):
     __session = session
 
 
+def swap_session(new_session):
+    global __session
+    old_session = __session
+    __session = new_session
+    return old_session
+
+
 def clear_session():
     global __session
     if __session:

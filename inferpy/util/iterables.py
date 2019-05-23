@@ -21,3 +21,20 @@ def get_shape(x):
             return tuple(x.shape)
         else:
             return ()
+
+
+def get_plate_size(variables, sample_dict):
+        # get the plate size by analyzing the sample_dict input
+        # check that all values in dict whose name is a datamodel RV has the same length (will be the plate size)
+        plate_shapes = [get_shape(v) for k, v in sample_dict.items()
+                        if k in variables and variables[k].is_datamodel]
+        plate_sizes = [s[0] if len(s) > 0 else 1 for s in plate_shapes]  # if the shape is (), it is just one element
+        if len(plate_sizes) == 0:
+            return 1
+        else:
+            plate_size = plate_sizes[0]
+
+            if any(plate_size != x for x in plate_sizes[1:]):
+                raise ValueError('The number of elements for each mapped variable must be the same.')
+
+            return plate_size

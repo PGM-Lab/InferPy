@@ -73,7 +73,8 @@ class RandomVariable:
     - The first time the var property is used, it creates a var using the variable generator.
     """
 
-    def __init__(self, var, name, is_datamodel, ed_cls, var_args, var_kwargs, sample_shape):
+    def __init__(self, var, name, is_datamodel, ed_cls, var_args, var_kwargs, sample_shape,
+                 is_observed, is_observed_var, observed_value_var):
         self.var = var
         self.is_datamodel = is_datamodel
         # These parameters are used to allow the re-creation of the random var by build_in_session function
@@ -81,6 +82,9 @@ class RandomVariable:
         self._var_args = var_args
         self._var_kwargs = var_kwargs
         self._sample_shape = sample_shape
+        self.is_observed = is_observed
+        self.is_observed_var = is_observed_var
+        self.observed_value_var = observed_value_var
 
         # if name is provided, use it. Otherwise, use it from var or var.distribution
         if name is None:
@@ -363,21 +367,45 @@ def _make_random_variable(distribution_name):
         sanitized_kwargs = {k: _sanitize_input(v, max_shape) for k, v in kwargs.items()}
 
         # If it is inside a data model, ommit the sample_shape in kwargs if exist and use size from data_model
+        # NOTE: comment this. Needed here because we need to know the shape of the distribution
+        # Not using sample shape yet. Used just to create the tensors, and
+        # compute the dependencies by using the tf graph
+        tfp_dist = distribution_cls(*sanitized_args, **sanitized_kwargs)
         if contextmanager.data_model.is_active():
-            # Not using sample shape yet. Used just to create the tensors, and
-            # compute the dependencies by using the tf graph
-            tfp_dist = distribution_cls(*sanitized_args, **sanitized_kwargs)
-
             # create graph once tensors are registered in graph
             contextmanager.randvar_registry.update_graph(rv_name)
 
             # compute sample_shape now that we have computed the dependencies
             sample_shape = contextmanager.data_model.get_sample_shape(rv_name)
-            ed_random_var = _make_edward_random_variable(tfp_dist)(sample_shape=sample_shape, name=rv_name)
+
+            # create tf.Variable's to allow to observe the Random Variable
+            is_observed = False
+            is_observed_var = tf.Variable(is_observed, trainable=False,
+                                          name="inferpy-predict-enabled-{name}".format(name=rv_name or "default"))
+            shape = ([sample_shape] if sample_shape else []) + \
+                tfp_dist.batch_shape.as_list() + \
+                tfp_dist.event_shape.as_list()
+            observed_value_var = tf.Variable(tf.zeros(shape), trainable=False,
+                                             name="inferpy-predict-{name}".format(name=rv_name or "default"))
+            util.session.get_session().run(tf.variables_initializer([is_observed_var, observed_value_var]))
+
+            with ed.interception(util.interceptor.set_values_condition(is_observed_var, observed_value_var)):
+                ed_random_var = _make_edward_random_variable(tfp_dist)(sample_shape=sample_shape, name=rv_name)
+
             is_datamodel = True
         else:
+            # create tf.Variable's to allow to observe the Random Variable
+            is_observed = False
+            is_observed_var = tf.Variable(is_observed, trainable=False,
+                                          name="inferpy-predict-enabled-{name}".format(name=rv_name or "default"))
+            shape = tfp_dist.batch_shape.as_list() + tfp_dist.event_shape.as_list()
+            observed_value_var = tf.Variable(tf.zeros(shape), trainable=False,
+                                             name="inferpy-predict-{name}".format(name=rv_name or "default"))
+            util.session.get_session().run(tf.variables_initializer([is_observed_var, observed_value_var]))
+
             # sample_shape is sample_shape in kwargs or ()
-            ed_random_var = ed_random_variable_cls(*sanitized_args, **sanitized_kwargs, sample_shape=sample_shape)
+            with ed.interception(util.interceptor.set_values_condition(is_observed_var, observed_value_var)):
+                ed_random_var = ed_random_variable_cls(*sanitized_args, **sanitized_kwargs, sample_shape=sample_shape)
             is_datamodel = False
 
         rv = RandomVariable(
@@ -387,7 +415,10 @@ def _make_random_variable(distribution_name):
             ed_cls=ed_random_variable_cls,
             var_args=sanitized_args,
             var_kwargs=sanitized_kwargs,
-            sample_shape=sample_shape
+            sample_shape=sample_shape,
+            is_observed=is_observed,
+            is_observed_var=is_observed_var,
+            observed_value_var=observed_value_var,
         )
 
         # register the variable as it is created. Used to detect dependencies

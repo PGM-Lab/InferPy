@@ -3,6 +3,7 @@ from tensorflow_probability import edward2 as ed
 import inferpy as inf
 
 from inferpy import models
+from inferpy import util
 
 
 @models.probmodel
@@ -23,7 +24,7 @@ def q_model():
 # define custom elbo function
 def custom_elbo(pmodel, qvars, sample_dict):
     # create combined model
-    plate_size = pmodel._get_plate_size(sample_dict)
+    plate_size = util.iterables.get_plate_size(pmodel.vars, sample_dict)
     with ed.interception(inf.util.interceptor.set_values(**{**qvars, **sample_dict})):
         pvars, _ = pmodel.expand_model(plate_size)
 

@@ -73,9 +73,14 @@ class ProbModel:
         g_for_nxgraph = tf.Graph()
         # first buid the graph of dependencies
         with g_for_nxgraph.as_default():
-            self.graph = self._build_graph()
+            with tf.Session() as sess:
+                default_sess = util.session.swap_session(sess)
+                self.graph = self._build_graph()
+            # sess is closed by context, no need to use set_session (which closes the actual running session)
+            util.session.swap_session(default_sess)
         # Now initialize vars and params for the model (no sample_shape)
         self.vars, self.params = self._build_model()
+
         self._last_expanded_vars = None
         self._last_expanded_params = None
         self._last_fitted_vars = None
@@ -143,9 +148,8 @@ class ProbModel:
     @util.tf_run_allowed
     def log_prob(self, data):
         """ Computes the log probabilities of a (set of) sample(s)"""
-        with ed.interception(util.interceptor.set_values(**data)):
-            expanded_vars, _ = self.expand_model()
-            return {k: self.vars[k].log_prob(v) for k, v in expanded_vars.items()}
+        with contextmanager.observe(self.vars, data):
+            return {k: self.vars[k].log_prob(v) for k, v in self.data.items()}
 
     @util.tf_run_allowed
     def sum_log_prob(self, data):
@@ -155,9 +159,15 @@ class ProbModel:
     @util.tf_run_allowed
     def sample(self, size=1, data={}):
         """ Generates a sample for eache variable in the model """
-        with ed.interception(util.interceptor.set_values(**data)):
-            expanded_vars, expanded_params = self.expand_model(size)
-        return {name: tf.convert_to_tensor(var) for name, var in expanded_vars.items()}
+        with contextmanager.observe(self.vars, data):
+            samples = {name: data[name] if var.is_observed else var.sample()
+                       for name, var in self.vars.items()}
+        return samples
+
+    def predict(self, observations={}):
+        sess = util.session.get_session()
+        with contextmanager.observe(self.posterior, observations):
+            return sess.run({k: v for k, v in self.posterior.items()})
 
     def expand_model(self, size=1):
         """ Create the expanded model vars using size as plate size and return the OrderedDict """
@@ -169,19 +179,3 @@ class ProbModel:
         self._last_expanded_params = expanded_params
 
         return expanded_vars, expanded_params
-
-    def _get_plate_size(self, sample_dict):
-        # get the plate size by analyzing the sample_dict input
-        # check that all values in dict whose name is a datamodel RV has the same length (will be the plate size)
-        plate_shapes = [util.iterables.get_shape(v) for k, v in sample_dict.items()
-                        if k in self.vars and self.vars[k].is_datamodel]
-        plate_sizes = [s[0] if len(s) > 0 else 1 for s in plate_shapes]  # if the shape is (), it is just one element
-        if len(plate_sizes) == 0:
-            return 1
-        else:
-            plate_size = plate_sizes[0]
-
-            if any(plate_size != x for x in plate_sizes[1:]):
-                raise ValueError('The number of elements for each mapped variable must be the same.')
-
-            return plate_size

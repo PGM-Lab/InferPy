@@ -1,8 +1,11 @@
 import tensorflow as tf
 import inspect
+import itertools
 
 from . import loss_functions
 import inferpy as inf
+from inferpy import util
+from inferpy import contextmanager
 
 
 class SVI:
@@ -37,9 +40,9 @@ class SVI:
 
     def run(self, pmodel, sample_dict):
         # create a tf dataset and an iterator, specifying the batch size
-        plate_size = pmodel._get_plate_size(sample_dict)
+        plate_size = util.iterables.get_plate_size(pmodel.vars, sample_dict)
         batches = int(plate_size / self.batch_size)  # M/N
-        batch_weight =  self.batch_size / plate_size # N/M
+        batch_weight = self.batch_size / plate_size  # N/M
 
         tfdataset = (
             tf.data.Dataset.from_tensor_slices(sample_dict)
@@ -51,24 +54,38 @@ class SVI:
         input_data = iterator.get_next()  # each time this tensor is evaluated in a session it contains new data
 
         # Create the loss function tensor
-        loss_tensor = self.loss_fn(pmodel, self.qmodel, input_data, plate_size=self.batch_size, batch_weight=batch_weight)
+        loss_tensor = self.loss_fn(pmodel, self.qmodel, plate_size=self.batch_size, batch_weight=batch_weight)
 
         train = self.optimizer.minimize(loss_tensor)
 
         t = []
 
         sess = inf.get_session()
-        sess.run(tf.global_variables_initializer())
+        # Initialize all variables which are not in the probmodel p, because they have been initialized before
+        model_variables = set([v for v in itertools.chain(
+            pmodel.params.values(),
+            (pmodel._last_expanded_params or {}).values(),
+            (pmodel._last_fitted_params or {}).values(),
+            self.qmodel.params.values(),
+            (self.qmodel._last_expanded_params or {}).values(),
+            (self.qmodel._last_fitted_params or {}).values()
+            )])
+        sess.run(tf.variables_initializer([v for v in tf.global_variables()
+                                           if v not in model_variables and not v.name.startswith("inferpy-")]))
 
-        for i in range(self.epochs):
-            for j in range(batches):
-                sess.run(train)
+        # TODO: Not tested. Probably it will fail because tensors cannot be loaded into variables.
+        # Also, we need to assign a different value for observations at each iteration (different inputs)
+        with contextmanager.observe(pmodel._last_expanded_vars, input_data):
+            with contextmanager.observe(self.qmodel._last_expanded_vars, input_data):
+                for i in range(self.epochs):
+                    for j in range(batches):
+                        sess.run(train)
 
-                t.append(sess.run(loss_tensor))
-                if i % 200 == 0:
-                    print("\n {} epochs\t {}".format(i, t[-1]), end="", flush=True)
-                if i % 20 == 0:
-                    print(".", end="", flush=True)
+                        t.append(sess.run(loss_tensor))
+                        if i % 200 == 0:
+                            print("\n {} epochs\t {}".format(i, t[-1]), end="", flush=True)
+                        if i % 20 == 0:
+                            print(".", end="", flush=True)
 
         # set the private __losses attribute for the losses property
         self.__losses = t
