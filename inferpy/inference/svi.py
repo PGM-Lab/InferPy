@@ -73,12 +73,12 @@ class SVI:
         sess.run(tf.variables_initializer([v for v in tf.global_variables()
                                            if v not in model_variables and not v.name.startswith("inferpy-")]))
 
-        # TODO: Not tested. Probably it will fail because tensors cannot be loaded into variables.
-        # Also, we need to assign a different value for observations at each iteration (different inputs)
-        with contextmanager.observe(pmodel._last_expanded_vars, input_data):
-            with contextmanager.observe(self.qmodel._last_expanded_vars, input_data):
-                for i in range(self.epochs):
-                    for j in range(batches):
+        for i in range(self.epochs):
+            for j in range(batches):
+                # evaluate the data tensor to get an evaluated one which can be used to observe varoables
+                local_input_data = sess.run(input_data)
+                with contextmanager.observe(pmodel._last_expanded_vars, local_input_data):
+                    with contextmanager.observe(self.qmodel._last_expanded_vars, local_input_data):
                         sess.run(train)
 
                         t.append(sess.run(loss_tensor))
