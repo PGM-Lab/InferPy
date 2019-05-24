@@ -369,6 +369,10 @@ def _make_random_variable(distribution_name):
             # only used if prob model is active
             sample_shape = kwargs.pop('sample_shape', ())
 
+        # Random Variables inside prob models always have a sample_shape specified (at least 1)
+        if contextmanager.prob_model.is_probmodel_building and not sample_shape:
+            sample_shape = 1
+
         # sanitize will consist on tf.stack list, and each element must be broadcast_to to match the shape
         sanitized_args = [_sanitize_input(arg, max_shape) for arg in args]
         sanitized_kwargs = {k: _sanitize_input(v, max_shape) for k, v in kwargs.items()}
@@ -389,7 +393,7 @@ def _make_random_variable(distribution_name):
             shape = ([sample_shape] if sample_shape else []) + \
                 tfp_dist.batch_shape.as_list() + \
                 tfp_dist.event_shape.as_list()
-            initial_value = tf.zeros(shape)
+            initial_value = tf.zeros(shape) if shape else 0.
 
             is_observed, is_observed_var, observed_value_var = _make_predictable_variables(initial_value, rv_name)
 
@@ -400,7 +404,8 @@ def _make_random_variable(distribution_name):
         else:
             # create tf.Variable's to allow to observe the Random Variable
             shape = tfp_dist.batch_shape.as_list() + tfp_dist.event_shape.as_list()
-            initial_value = tf.zeros(shape)
+
+            initial_value = tf.zeros(shape) if shape else 0.
 
             is_observed, is_observed_var, observed_value_var = _make_predictable_variables(initial_value, rv_name)
 
@@ -474,7 +479,8 @@ def _tensor_conversion_function(rv, dtype=None, name=None, as_ref=False):
 
         If the variable needs to be broadcast_to, do it right now
     """
-    return tf.convert_to_tensor(rv.var)
+    # return the tf.Variable last snapshot if it is observed, and the ed2 evaluation (ed2.value) otherwise
+    return tf.convert_to_tensor(rv.observed_value_var.value() if rv.is_observed else rv.var)
 
 
 # register the conversion function into a tensor

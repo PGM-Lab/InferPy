@@ -11,66 +11,63 @@ from inferpy.models import random_variable
 # TODO: boolean operators and iter are not tested
 @pytest.mark.parametrize("tensor, expected", [
     # sum
-    (inf.Normal([0., 1.], 0) + inf.Normal([1., 2.], 0), [1., 3.]),
-    ([0, 1] + inf.Normal([1., 2.], 0), [1., 3.]),
-    (inf.Normal([0., 1.], 0) + [1, 2], [1., 3.]),
+    ("inf.Normal([0., 1.], 0) + inf.Normal([1., 2.], 0)", [1., 3.]),
+    ("[0, 1] + inf.Normal([1., 2.], 0)", [1., 3.]),
+    ("inf.Normal([0., 1.], 0) + [1, 2]", [1., 3.]),
     # sub
-    (inf.Normal([0., 1.], 0) - inf.Normal([1., 2.], 0), [-1., -1.]),
-    ([0, 1] - inf.Normal([1., 2.], 0), [-1., -1.]),
-    (inf.Normal([0., 1.], 0) - [1, 2], [-1., -1.]),
+    ("inf.Normal([0., 1.], 0) - inf.Normal([1., 2.], 0)", [-1., -1.]),
+    ("[0, 1] - inf.Normal([1., 2.], 0)", [-1., -1.]),
+    ("inf.Normal([0., 1.], 0) - [1, 2]", [-1., -1.]),
     # mult
-    (inf.Normal([0., 1.], 0) * inf.Normal([1., 2.], 0), [0., 2.]),
-    ([0, 1] * inf.Normal([1., 2.], 0), [0., 2.]),
-    (inf.Normal([0., 1.], 0) * [1, 2], [0., 2.]),
+    ("inf.Normal([0., 1.], 0) * inf.Normal([1., 2.], 0)", [0., 2.]),
+    ("[0, 1] * inf.Normal([1., 2.], 0)", [0., 2.]),
+    ("inf.Normal([0., 1.], 0) * [1, 2]", [0., 2.]),
     # div
-    (inf.Normal([0., 1.], 0) / inf.Normal([1., 2.], 0), [0., 0.5]),
-    ([0, 1] / inf.Normal([1., 2.], 0), [0., 0.5]),
-    (inf.Normal([0., 1.], 0) / [1, 2], [0., 0.5]),
+    ("inf.Normal([0., 1.], 0) / inf.Normal([1., 2.], 0)", [0., 0.5]),
+    ("[0, 1] / inf.Normal([1., 2.], 0)", [0., 0.5]),
+    ("inf.Normal([0., 1.], 0) / [1, 2]", [0., 0.5]),
     # mod
-    (inf.Normal([0., 1.], 0) % inf.Normal([2., 2.], 0), [0., 1.]),
-    ([0, 1] % inf.Normal([2., 2.], 0), [0., 1.]),
-    (inf.Normal([0., 1.], 0) % [2, 2], [0., 1.]),
+    ("inf.Normal([0., 1.], 0) % inf.Normal([2., 2.], 0)", [0., 1.]),
+    ("[0, 1] % inf.Normal([2., 2.], 0)", [0., 1.]),
+    ("inf.Normal([0., 1.], 0) % [2, 2]", [0., 1.]),
     # lt
-    (inf.Normal(0., 0) < inf.Normal(2., 0), True),
-    (1 < inf.Normal(0., 0), False),
-    (inf.Normal(1., 0) < 2, True),
+    ("inf.Normal(0., 0) < inf.Normal(2., 0)", True),
+    ("1 < inf.Normal(0., 0)", False),
+    ("inf.Normal(1., 0) < 2", True),
     # le
-    (inf.Normal(2., 0) <= inf.Normal(2., 0), True),
-    (1 <= inf.Normal(0., 0), False),
-    (inf.Normal(1., 0) <= 1, True),
+    ("inf.Normal(2., 0) <= inf.Normal(2., 0)", True),
+    ("1 <= inf.Normal(0., 0)", False),
+    ("inf.Normal(1., 0) <= 1", True),
     # gt
-    (inf.Normal(5., 0) > inf.Normal(2., 0), True),
-    (1 > inf.Normal(3., 0), False),
-    (inf.Normal(3., 0) > 1, True),
+    ("inf.Normal(5., 0) > inf.Normal(2., 0)", True),
+    ("1 > inf.Normal(3., 0)", False),
+    ("inf.Normal(3., 0) > 1", True),
     # getitem
-    (inf.Normal([0., 1., 2., 3.], 0)[0], 0),
-    (inf.Normal([0., 1., 2., 3.], 0)[2], 2),
-    (inf.Normal(tf.ones((3, 2)), 0)[2][0], 1),
+    ("inf.Normal([0., 1., 2., 3.], 0)[0]", 0),
+    ("inf.Normal([0., 1., 2., 3.], 0)[2]", 2),
+    ("inf.Normal(tf.ones((3, 2)), 0)[2][0]", 1),
     # pow
-    (inf.Normal(2., 0) ** inf.Normal(3., 0), 8.),
-    (3 ** inf.Normal(2., 0), 9.),
-    (inf.Normal(3., 0) ** 3, 27.),
+    ("inf.Normal(2., 0) ** inf.Normal(3., 0)", 8.),
+    ("3 ** inf.Normal(2., 0)", 9.),
+    ("inf.Normal(3., 0) ** 3", 27.),
     # neg
-    (-inf.Normal(5., 0), -5),
-    (-inf.Normal(-5., 0), 5),
+    ("-inf.Normal(5., 0)", -5),
+    ("-inf.Normal(-5., 0)", 5),
     # abs
-    (abs(inf.Normal(5., 0)), 5),
-    (abs(inf.Normal(-5., 0)), 5),
+    ("abs(inf.Normal(5., 0))", 5),
+    ("abs(inf.Normal(-5., 0))", 5),
     # matmul
-    (tf.matmul(inf.Normal(tf.ones((2, 3), dtype=np.float32), 0),
-               inf.Normal(tf.eye(3, dtype=np.float32), 0)), np.ones((2, 3))),
-    (tf.matmul(np.ones((2, 3), dtype=np.float32),
-               inf.Normal(tf.eye(3, dtype=np.float32), 0)), np.ones((2, 3))),
-    (tf.matmul(inf.Normal(np.ones((2, 3), dtype=np.float32), 0),
-               np.eye(3, dtype=np.float32)), np.ones((2, 3))),
+    ("tf.matmul(inf.Normal(tf.ones((2, 3), dtype=np.float32), 0), inf.Normal(tf.eye(3, dtype=np.float32), 0))",
+     np.ones((2, 3))),
+    ("tf.matmul(np.ones((2, 3), dtype=np.float32), inf.Normal(tf.eye(3, dtype=np.float32), 0))",
+     np.ones((2, 3))),
+    ("tf.matmul(inf.Normal(np.ones((2, 3), dtype=np.float32), 0), np.eye(3, dtype=np.float32))",
+     np.ones((2, 3))),
 ])
 def test_operations(tensor, expected):
-    with tensor.graph.as_default():
-        # evaluate the tensor from the operation
-        with tf.Session() as sess:
-            result = sess.run(tensor)
-        # assert that it is equal to expected
-        assert np.array_equal(result, expected)
+    result = inf.get_session().run(eval(tensor))
+    # assert that it is equal to expected
+    assert np.array_equal(result, expected)
 
 
 @pytest.mark.parametrize("model_object", [
@@ -184,6 +181,6 @@ def test_random_variable_in_datamodel():
 
 
 def test_run_in_session():
+    inf.get_session()
     x = inf.Normal(1, 0)
-    with tf.Session() as sess:
-        assert sess.run(x) == 1
+    assert inf.get_session().run(x) == 1

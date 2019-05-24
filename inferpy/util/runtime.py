@@ -66,10 +66,6 @@ def tf_run_allowed(f):
             if tf_run and runner_context['runner_recursive_depth'] == 1:
                 # first recursive depth, and tf_run is True: we can eval the function
                 try:
-                    #with tf.Session() as sess:
-                    #    # Run variable initializers
-                    #    sess.run(tf.global_variables_initializer())
-                    #    # Run obj in sess
                     ev_obj = util.get_session().run(obj)
                     return ev_obj
                 except (TypeError, ValueError):

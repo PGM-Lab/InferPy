@@ -26,22 +26,6 @@ from inferpy import contextmanager
 from .random_variable import RandomVariable
 
 
-# global variable to know if the prob model is being built or not
-is_probmodel_building = False
-
-
-def build_model(f):
-    @functools.wraps(f)
-    def wrapper(*args, **kwargs):
-        global is_probmodel_building
-        try:
-            is_probmodel_building = True
-            return f(*args, **kwargs)
-        finally:
-            is_probmodel_building = False
-    return wrapper
-
-
 def probmodel(builder):
     """
     Decorator to create probabilistic models. The function decorated
@@ -92,7 +76,7 @@ class ProbModel:
             raise RuntimeError("posterior cannot be accessed before using the fit function.")
         return self._last_fitted_vars
 
-    @build_model
+    @contextmanager.prob_model.build_model
     def _build_graph(self):
         with contextmanager.randvar_registry.init():
             self.builder()
@@ -101,7 +85,7 @@ class ProbModel:
 
         return nx_graph
 
-    @build_model
+    @contextmanager.prob_model.build_model
     def _build_model(self):
         # get the global variables defined before building the model
         _before_global_variables = tf.global_variables()
@@ -158,7 +142,7 @@ class ProbModel:
     def log_prob(self, data):
         """ Computes the log probabilities of a (set of) sample(s)"""
         with contextmanager.observe(self.vars, data):
-            return {k: self.vars[k].log_prob(v) for k, v in self.data.items()}
+            return {k: self.vars[k].log_prob(tf.convert_to_tensor(v)) for k, v in data.items()}
 
     @util.tf_run_allowed
     def sum_log_prob(self, data):
@@ -169,8 +153,11 @@ class ProbModel:
     def sample(self, size=1, data={}):
         """ Generates a sample for eache variable in the model """
         with contextmanager.observe(self.vars, data):
-            samples = {name: data[name] if var.is_observed else var.sample()
-                       for name, var in self.vars.items()}
+            samples = {
+                # NOTE: first shape dim of random variables in prob models always exists (min 1 sample shape)
+                name: tf.broadcast_to(tf.convert_to_tensor(var), [size] + var.shape.as_list()[1:])
+                for name, var in self.vars.items()
+                }
         return samples
 
     def predict(self, observations={}):

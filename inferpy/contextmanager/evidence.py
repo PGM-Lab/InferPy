@@ -1,4 +1,5 @@
 import contextlib
+import numpy as np
 from inferpy import util
 
 
@@ -10,7 +11,19 @@ def observe(variables, data):
             continue
         variables[k].is_observed = True
         variables[k].is_observed_var.load(True, session=sess)
-        variables[k].observed_value_var.load(v, session=sess)
+        if hasattr(v, 'shape'):
+            if v.shape == variables[k].observed_value_var.shape:
+                variables[k].observed_value_var.load(v, session=sess)
+            elif len(v.shape) > 0 and v.shape[1:] == variables[k].observed_value_var.shape:
+                variables[k].observed_value_var.load(v[0], session=sess)
+            else:
+                # try to broadcast v using numpy (it cannot be a tensor)
+                variables[k].observed_value_var.load(
+                    np.broadcast_to(v, variables[k].observed_value_var.shape.as_list()), session=sess)
+        else:
+            # try to broadcast v using numpy (it cannot be a tensor)
+            variables[k].observed_value_var.load(
+                np.broadcast_to(v, variables[k].observed_value_var.shape.as_list()), session=sess)
     try:
         yield
     finally:
