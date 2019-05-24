@@ -109,6 +109,9 @@ class RandomVariable:
         ed_random_var = self._ed_cls(*[_try_sess_run(a, sess) for a in self._var_args],
                                      **{k: _try_sess_run(v, sess) for k, v in self._var_kwargs.items()},
                                      sample_shape=self._sample_shape)
+
+        initial_value = util.get_session().run(self.observed_value_var)
+        is_observed, is_observed_var, observed_value_var = _make_predictable_variables(initial_value, self.name)
         # build the random variable by using the ed random var
         rv = RandomVariable(
             var=ed_random_var,
@@ -117,7 +120,10 @@ class RandomVariable:
             ed_cls=self._ed_cls,
             var_args=self._var_args,
             var_kwargs=self._var_kwargs,
-            sample_shape=self._sample_shape
+            sample_shape=self._sample_shape,
+            is_observed=self.is_observed,
+            is_observed_var=self.is_observed_var,
+            observed_value_var=self.observed_value_var
         )
 
         # put the docstring and the name as well as in _make_random_variable function
@@ -347,8 +353,9 @@ def _make_random_variable(distribution_name):
         # if batch_shape is provided, use such shape instead
         if 'batch_shape' in kwargs:
             b = kwargs.pop('batch_shape')
-            if np.isscalar(b): b  = [b]
-            max_shape =  b
+            if np.isscalar(b):
+                b = [b]
+            max_shape = b
         else:
             max_shape = _maximum_shape(args + tuple(kwargs.values()))
 
@@ -379,15 +386,12 @@ def _make_random_variable(distribution_name):
             sample_shape = contextmanager.data_model.get_sample_shape(rv_name)
 
             # create tf.Variable's to allow to observe the Random Variable
-            is_observed = False
-            is_observed_var = tf.Variable(is_observed, trainable=False,
-                                          name="inferpy-predict-enabled-{name}".format(name=rv_name or "default"))
             shape = ([sample_shape] if sample_shape else []) + \
                 tfp_dist.batch_shape.as_list() + \
                 tfp_dist.event_shape.as_list()
-            observed_value_var = tf.Variable(tf.zeros(shape), trainable=False,
-                                             name="inferpy-predict-{name}".format(name=rv_name or "default"))
-            util.session.get_session().run(tf.variables_initializer([is_observed_var, observed_value_var]))
+            initial_value = tf.zeros(shape)
+
+            is_observed, is_observed_var, observed_value_var = _make_predictable_variables(initial_value, rv_name)
 
             with ed.interception(util.interceptor.set_values_condition(is_observed_var, observed_value_var)):
                 ed_random_var = _make_edward_random_variable(tfp_dist)(sample_shape=sample_shape, name=rv_name)
@@ -395,13 +399,10 @@ def _make_random_variable(distribution_name):
             is_datamodel = True
         else:
             # create tf.Variable's to allow to observe the Random Variable
-            is_observed = False
-            is_observed_var = tf.Variable(is_observed, trainable=False,
-                                          name="inferpy-predict-enabled-{name}".format(name=rv_name or "default"))
             shape = tfp_dist.batch_shape.as_list() + tfp_dist.event_shape.as_list()
-            observed_value_var = tf.Variable(tf.zeros(shape), trainable=False,
-                                             name="inferpy-predict-{name}".format(name=rv_name or "default"))
-            util.session.get_session().run(tf.variables_initializer([is_observed_var, observed_value_var]))
+            initial_value = tf.zeros(shape)
+
+            is_observed, is_observed_var, observed_value_var = _make_predictable_variables(initial_value, rv_name)
 
             # sample_shape is sample_shape in kwargs or ()
             with ed.interception(util.interceptor.set_values_condition(is_observed_var, observed_value_var)):
@@ -435,6 +436,19 @@ def _make_random_variable(distribution_name):
     func.__doc__ = docs
     func.__name__ = name
     return func
+
+
+def _make_predictable_variables(initial_value, rv_name):
+    is_observed = False
+    is_observed_var = tf.Variable(is_observed, trainable=False,
+                                  name="inferpy-predict-enabled-{name}".format(name=rv_name or "default"))
+
+    observed_value_var = tf.Variable(initial_value, trainable=False,
+                                     name="inferpy-predict-{name}".format(name=rv_name or "default"))
+
+    util.session.get_session().run(tf.variables_initializer([is_observed_var, observed_value_var]))
+
+    return is_observed, is_observed_var, observed_value_var
 
 
 def _operator(var, other, operator_name):
