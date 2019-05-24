@@ -23,14 +23,14 @@ learning_rate = 0.01
 
 # definition of a generic model
 @inf.probmodel
-def pca(k,d, N=1):
+def pca(k,d):
     w = inf.Normal(loc=tf.zeros([k,d]),
                    scale=1, name="w")               # shape = [k,d]
 
     w0 = inf.Normal(loc=tf.zeros([d]),
                     scale=1, name="w0")  # shape = [d]
 
-    with inf.datamodel(size=N):
+    with inf.datamodel():
 
         z = inf.Normal(tf.zeros([k]),1, name="z")       # shape = [N,k]
         x = inf.Normal( z @ w + w0, 1, name="x")         # shape = [N,d]
@@ -65,7 +65,7 @@ q = qmodel(k,d)
 (x_train, y_train), _ = mnist.load_data(num_instances=N, digits=DIG)
 
 optimizer = tf.train.AdamOptimizer(learning_rate)
-VI = inf.inference.VI(q, optimizer=optimizer, epochs=1500)
+VI = inf.inference.VI(q, optimizer=optimizer, epochs=2000)
 
 m.fit({"x": x_train}, VI)
 
@@ -85,8 +85,10 @@ plt.show()
 
 #extract the hidden encoding
 sess = inf.get_session()
-post = {v:sess.run(m.posterior[v].copy().loc) for v in ["z", "w", "w0"] }
+post = {v:sess.run(m.posterior[v].loc) for v in ["z", "w", "w0"] }
 
+
+m.posterior["z"].copy()
 
 # plot
 markers = ["x", "+", "o"]
@@ -107,7 +109,7 @@ plt.show()
 
 
 
-x_gen = pca(k,d,N).sample(data=post)["x"]
-mnist.plot_digits(x_gen)
+with inf.contextmanager.observe(m.posterior, {"z": post["z"]}):
+    x_gen = m._last_expanded_vars['x'].sample()
 
-
+mnist.plot_digits(x_gen, grid=[10,5])
