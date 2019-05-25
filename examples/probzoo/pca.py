@@ -51,14 +51,5 @@ post_z = sess.run(m.posterior["z"].loc)
 print(post_z)
 
 
-sess2 = tf.Session()
-post_z2 = sess.run(m.posterior["z"].copy().loc)
-print(post_z2)
-
-import math
-np.mean(np.abs((post_z*10000000-post_z2*10000000)))
-
-
-
 
 

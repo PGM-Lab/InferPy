@@ -29,7 +29,7 @@ m = linear_reg(d=2)
 
 ### create toy data
 N = 1000
-data = m.sample(size = N, data={"w0":[0], "w":[[2,1]]})
+data = m.sample(size = N, data={"w0":0, "w":[[2,1]]})
 x_train = data["x"]
 y_train = data["y"]
 

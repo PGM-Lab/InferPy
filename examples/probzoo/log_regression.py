@@ -6,12 +6,15 @@ import tensorflow as tf
 
 @inf.probmodel
 def log_reg(d):
-    w0 = inf.Normal(0, 1, name="w0")
-    w = inf.Normal(0, 1, batch_shape=[d, 1], name="w")
+    w0 = inf.Normal(0., 1, name="w0")
+    w = inf.Normal(0., 1, batch_shape=[d], name="w")
 
     with inf.datamodel():
-        x = inf.Normal(0, 2, batch_shape=d, name="x")
-        y = inf.Bernoulli(logits = w0 + x @ w, name="y")
+        x = inf.Normal(0., 2., batch_shape=d, name="x")
+        y = inf.Bernoulli(logits = w0 + x @ tf.transpose(w), name="y")
+
+
+
 
 @inf.probmodel
 def qmodel(d):
@@ -21,7 +24,7 @@ def qmodel(d):
 
     qw_loc = inf.Parameter(tf.zeros([d,1]), name="qw_loc")
     qw_scale = tf.math.softplus(inf.Parameter(tf.ones([d,1]), name="qw_scale"))
-    qbeta = inf.Normal(qw_loc, qw_scale, name="w")
+    qw = inf.Normal(qw_loc, qw_scale, name="w")
 
 
 # create an instance of the model

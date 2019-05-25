@@ -370,8 +370,8 @@ def _make_random_variable(distribution_name):
             sample_shape = kwargs.pop('sample_shape', ())
 
         # Random Variables inside prob models always have a sample_shape specified (at least 1)
-        if contextmanager.prob_model.is_probmodel_building and not sample_shape:
-            sample_shape = 1
+        if contextmanager.prob_model.is_probmodel_building and not sample_shape and np.shape(max_shape) ==  (1,):
+             sample_shape = 1
 
         # sanitize will consist on tf.stack list, and each element must be broadcast_to to match the shape
         sanitized_args = [_sanitize_input(arg, max_shape) for arg in args]
