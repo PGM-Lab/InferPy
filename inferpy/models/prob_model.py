@@ -152,13 +152,22 @@ class ProbModel:
     @util.tf_run_allowed
     def sample(self, size=1, data={}):
         """ Generates a sample for eache variable in the model """
-        with contextmanager.observe(self.vars, data):
-            samples = {
-                # NOTE: first shape dim of random variables in prob models always exists (min 1 sample shape)
-                name: tf.broadcast_to(tf.convert_to_tensor(var), [size] + var.shape.as_list()[1:])
-                for name, var in self.vars.items()
-                }
-        return samples
+        expanded_vars, expanded_params = self.expand_model(size)
+        with ed.interception(util.interceptor.set_values(**data)):
+            expanded_vars, expanded_params = self.expand_model(size)
+        return {name: tf.convert_to_tensor(var) for name, var in expanded_vars.items()}
+
+        #
+        # with contextmanager.observe(self.vars, data):
+        #
+        #
+        #
+        #     samples = {
+        #         # NOTE: first shape dim of random variables in prob models always exists (min 1 sample shape)
+        #         name: tf.broadcast_to(tf.convert_to_tensor(var), [size] + var.shape.as_list()[1:])
+        #         for name, var in self.vars.items()
+        #         }
+        # return samples
 
     def predict(self, observations={}):
         sess = util.session.get_session()
