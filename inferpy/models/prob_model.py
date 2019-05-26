@@ -163,6 +163,21 @@ class ProbModel:
         with contextmanager.observe(self.posterior, observations):
             return sess.run({k: v for k, v in self.posterior.items()})
 
+    def post_predictive_sample(self):
+        """
+        Sample from the posterior predictive distribution, i.e., from the
+        observed variables with the inferred posterior fixed to the model.
+        :return: dictionary of samples with an entry for each observed variable.
+        """
+
+        sess = util.session.get_session()
+        post = {k: sess.run(v.loc) for k, v in self.posterior.items()}
+        with contextmanager.observe(self.posterior, post):
+            samples = {var: self._last_expanded_vars[var].sample()
+                       for var in self.vars.keys()
+                       if var not in self.posterior.keys()}
+        return samples
+
     def expand_model(self, size=1):
         """ Create the expanded model vars using size as plate size and return the OrderedDict """
 
