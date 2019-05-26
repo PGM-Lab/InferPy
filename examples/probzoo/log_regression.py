@@ -7,11 +7,11 @@ import tensorflow as tf
 @inf.probmodel
 def log_reg(d):
     w0 = inf.Normal(0., 1, name="w0")
-    w = inf.Normal(0., 1, batch_shape=[d], name="w")
+    w = inf.Normal(0., 1, batch_shape=[d,1], name="w")
 
     with inf.datamodel():
         x = inf.Normal(0., 2., batch_shape=d, name="x")
-        y = inf.Bernoulli(logits = w0 + x @ tf.transpose(w), name="y")
+        y = inf.Bernoulli(logits = w0 + x @ w, name="y")
 
 
 
