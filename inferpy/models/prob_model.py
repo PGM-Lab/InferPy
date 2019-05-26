@@ -157,19 +157,8 @@ class ProbModel:
             expanded_vars, expanded_params = self.expand_model(size)
         return {name: tf.convert_to_tensor(var) for name, var in expanded_vars.items()}
 
-        #
-        # with contextmanager.observe(self.vars, data):
-        #
-        #
-        #
-        #     samples = {
-        #         # NOTE: first shape dim of random variables in prob models always exists (min 1 sample shape)
-        #         name: tf.broadcast_to(tf.convert_to_tensor(var), [size] + var.shape.as_list()[1:])
-        #         for name, var in self.vars.items()
-        #         }
-        # return samples
-
     def predict(self, observations={}):
+        # TODO: this function is under design. Should not be used as it is right now.
         sess = util.session.get_session()
         with contextmanager.observe(self.posterior, observations):
             return sess.run({k: v for k, v in self.posterior.items()})

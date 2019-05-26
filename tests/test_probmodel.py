@@ -118,7 +118,7 @@ def test_sample_intercept():
             inf.Normal(x, 1., name='y')
 
     N = 10
-    data_y = 1.
+    data_y = np.ones(N)
     m = model()
 
     sample_dict = m.sample(N, {'y': data_y})
@@ -132,7 +132,7 @@ def test_sample_intercept():
     assert len(sample_dict['y']) == N
     print(sample_dict)
     # assert that y is data_y
-    assert np.array_equal(sample_dict['y'], np.tile(data_y, N))
+    assert np.array_equal(sample_dict['y'], data_y)
 
 
 def test_log_prob():

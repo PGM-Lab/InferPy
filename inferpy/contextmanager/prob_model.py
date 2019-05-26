@@ -1,5 +1,8 @@
 import functools
 
+# NOTE: This context might be deprecated. Right now, the is_probmodel_building context
+# var is not used. Check if this context must be removed in the following days...
+
 # global variable to know if the prob model is being built or not
 is_probmodel_building = False
 
