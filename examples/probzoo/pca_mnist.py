@@ -113,3 +113,6 @@ with inf.contextmanager.observe(m.posterior, {"z": post["z"]}):
     x_gen = m._last_expanded_vars['x'].sample()
 
 mnist.plot_digits(x_gen, grid=[10,5])
+
+
+
