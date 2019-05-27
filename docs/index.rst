@@ -82,16 +82,17 @@ A set of examples can be found in the `Probabilistic Model Zoo <notes/probzoo.ht
    :caption: Model Zoo
    
    notes/probzoo
-   notes/inf_vs_ed
 
 
-..   .. toctree::
+.. .. toctree::
    :maxdepth: 1
    :caption: Package Reference
 
-..      modules/inferpy
-   modules/inferpy.criticism
-   modules/inferpy.inferences
+..    modules/inferpy
+   modules/inferpy.contextmanager
+   modules/inferpy.datasets
+   modules/inferpy.exceptions
+   modules/inferpy.inference
    modules/inferpy.models
    modules/inferpy.util
 

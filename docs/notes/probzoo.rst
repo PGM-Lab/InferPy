@@ -4,8 +4,7 @@
 Probabilistic Model Zoo
 ===========================
 
-In this section, we present the code for implementing some models in Inferpy. The corresponding code
-in Edward can be found in the  `Inferpy vs Edward <inf_vs_ed.html>`_ section.
+In this section, we present the code for implementing some models in Inferpy.
 
 
 Bayesian Linear Regression
@@ -51,52 +50,6 @@ The InferPy code for this model is shown below,
 
 --------------
 
-Bayesian Multinomial Logistic Regression
------------------------------------------------
-
-
-Graphically, a (Bayesian) multinomial logistic regression can be defined as follows,
-
-.. figure:: ../_static/img/multinomial_logistic_regression.png
-   :alt: Bayesian Multinomial Logistic Regression
-   :scale: 60 %
-   :align: center
-
-   Bayesian Linear Regression
-
-The InferPy code for this model is shown below,
-
-
-
-.. literalinclude:: ../../examples/probzoo/multinomial_log_regression.py
-   :language: python
-
-
-
---------------
-
-Mixture of Gaussians
---------------------------
-
-
-Graphically, a Mixture of Gaussians can be defined as follows,
-
-.. figure:: ../_static/img/MoG.png
-   :alt: Mixture of Gaussians
-   :scale: 100 %
-   :align: center
-
-   Bayesian Linear Regression
-
-The InferPy code for this model is shown below,
-
-
-
-.. literalinclude:: ../../examples/probzoo/gaussian_mixture.py
-   :language: python
-
---------------
-
 
 Linear Factor Model (PCA)
 -------------------------
@@ -115,27 +68,29 @@ The InferPy code for this model is shown below,
 
 .. literalinclude:: ../../examples/probzoo/pca.py
    :language: python
+   :lines: 8-32
 
 
 --------------
 
-PCA with ARD Prior (PCA)
-------------------------
+Non-linear Factor Model (NLPCA)
+--------------------------------------
 
 
-Similarly to the previous model, the PCA with ARD Prior can be graphically defined as follows,
+Similarly to the previous model, the Non-linear PCA can be graphically defined as follows,
 
-.. figure:: ../_static/img/pca_ard.png
-   :alt: PCA with ARD Prior
+.. figure:: ../_static/img/nlpca.png
+   :alt: Non-linear PCA
    :scale: 100 %
    :align: center
 
-   PCA with ARD Prior
+   Non-linear PCA
 
 Its code in InferPy is shown below,
 
-.. literalinclude:: ../../examples/probzoo/pca_with_ARD_prior.py
+.. literalinclude:: ../../examples/probzoo/nlpca.py
    :language: python
+   :lines: 8-68
 
 
 

@@ -4,26 +4,26 @@ inferpy\.util package
 Submodules
 ----------
 
-inferpy\.util\.error module
----------------------------
+inferpy\.util\.interceptor module
+---------------------------------
 
-.. automodule:: inferpy.util.error
+.. automodule:: inferpy.util.interceptor
     :members:
     :undoc-members:
     :show-inheritance:
 
-inferpy\.util\.format module
-----------------------------
+inferpy\.util\.iterables module
+-------------------------------
 
-.. automodule:: inferpy.util.format
+.. automodule:: inferpy.util.iterables
     :members:
     :undoc-members:
     :show-inheritance:
 
-inferpy\.util\.ops module
--------------------------
+inferpy\.util\.name module
+--------------------------
 
-.. automodule:: inferpy.util.ops
+.. automodule:: inferpy.util.name
     :members:
     :undoc-members:
     :show-inheritance:
@@ -36,12 +36,27 @@ inferpy\.util\.runtime module
     :undoc-members:
     :show-inheritance:
 
-inferpy\.util\.wrappers module
-------------------------------
+inferpy\.util\.session module
+-----------------------------
 
-.. automodule:: inferpy.util.wrappers
+.. automodule:: inferpy.util.session
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+inferpy\.util\.tf\_graph module
+-------------------------------
+
+.. automodule:: inferpy.util.tf_graph
     :members:
     :undoc-members:
     :show-inheritance:
 
 
+Module contents
+---------------
+
+.. automodule:: inferpy.util
+    :members:
+    :undoc-members:
+    :show-inheritance:

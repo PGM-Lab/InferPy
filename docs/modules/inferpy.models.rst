@@ -4,26 +4,10 @@ inferpy\.models package
 Submodules
 ----------
 
-inferpy\.models\.deterministic module
--------------------------------------
+inferpy\.models\.parameter module
+---------------------------------
 
-.. automodule:: inferpy.models.deterministic
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-inferpy\.models\.factory module
--------------------------------
-
-.. automodule:: inferpy.models.factory
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-inferpy\.models\.predefined module
-----------------------------------
-
-.. automodule:: inferpy.models.predefined
+.. automodule:: inferpy.models.parameter
     :members:
     :undoc-members:
     :show-inheritance:
@@ -44,12 +28,11 @@ inferpy\.models\.random\_variable module
     :undoc-members:
     :show-inheritance:
 
-inferpy\.models\.replicate module
----------------------------------
 
-.. automodule:: inferpy.models.replicate
+Module contents
+---------------
+
+.. automodule:: inferpy.models
     :members:
     :undoc-members:
     :show-inheritance:
-
-
