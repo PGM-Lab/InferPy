@@ -5,7 +5,12 @@ import warnings
 
 # This dict store the context parameters of random variable and parameters registry; if the graph is being built or not;
 # the graph of dependencies (can be built here or provided through the init function), and the builder vars and params
-# that are being built now
+# that are being built now.
+
+# Finally, there is a special registry which is the default (marked with `is_default`). The default registry is used to
+# declare variables and parameters just to play, and therefore it is allowed to declare these elements using already declared
+# names (overwriting theme). If it is the case, a warning message is raised.
+
 def restart_default():
     global _default_properties
     _default_properties = dict(
