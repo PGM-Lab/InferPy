@@ -58,10 +58,13 @@ class ProbModel:
         # first buid the graph of dependencies
         with g_for_nxgraph.as_default():
             with tf.Session() as sess:
-                default_sess = util.session.swap_session(sess)
-                self.graph = self._build_graph()
-            # sess is closed by context, no need to use set_session (which closes the actual running session)
-            util.session.swap_session(default_sess)
+                try:
+                    default_sess = util.session.swap_session(sess)
+                    self.graph = self._build_graph()
+                finally:
+                    # sess is closed by context, no need to use set_session (which closes the actual running session)
+                    util.session.swap_session(default_sess)
+
         # Now initialize vars and params for the model (no sample_shape)
         self.vars, self.params = self._build_model()
 
@@ -76,7 +79,6 @@ class ProbModel:
             raise RuntimeError("posterior cannot be accessed before using the fit function.")
         return self._last_fitted_vars
 
-    @contextmanager.prob_model.build_model
     def _build_graph(self):
         with contextmanager.randvar_registry.init():
             self.builder()
@@ -85,7 +87,6 @@ class ProbModel:
 
         return nx_graph
 
-    @contextmanager.prob_model.build_model
     def _build_model(self):
         # get the global variables defined before building the model
         _before_global_variables = tf.global_variables()

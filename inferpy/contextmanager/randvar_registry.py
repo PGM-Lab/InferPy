@@ -8,8 +8,8 @@ import warnings
 # that are being built now.
 
 # Finally, there is a special registry which is the default (marked with `is_default`). The default registry is used to
-# declare variables and parameters just to play, and therefore it is allowed to declare these elements using already declared
-# names (overwriting theme). If it is the case, a warning message is raised.
+# declare variables and parameters just to play, and therefore it is allowed to declare these elements using already
+# declared names (overwriting theme). If it is the case, a warning message is raised.
 
 def restart_default():
     global _default_properties
