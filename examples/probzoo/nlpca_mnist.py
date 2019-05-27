@@ -22,7 +22,6 @@ DIG = [0,1,2]
 
 scale_epsilon = 0.01
 
-
 @inf.probmodel
 def nlpca(k, d0, dx, decoder):
     with inf.datamodel():
