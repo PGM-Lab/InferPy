@@ -72,71 +72,134 @@ Install InferPy from PyPI:
 The core data structures of InferPy is a **probabilistic model**,
 defined as a set of **random variables** with a conditional dependency
 structure. A **random varible** is an object
-parameterized by a set of Numpy's arrays.
+parameterized by a set of tensors.
 
-Let's look at a simple (Bayesian) **probabilistic component analysis** model. Graphically the model can
+Let's look at a simple non-linear **probabilistic component analysis** model (NLPCA). Graphically the model can
 be defined as follows,
 
-.. figure:: docs/_static/imgs/LinearFactor_scaled.png
-   :alt: Linear Factor Model
+.. figure:: docs/_static/img/nlpca.png
+   :alt: Non-linear PCA
+   :scale: 60 %
    :align: center
 
-   Bayesian PCA
+   Non-linear PCA
 
-We start defining the **prior** of the global parameters,
+We start by importing the required packages and defining the constant parameters in the model.
 
 
 .. code-block:: python
 
     import inferpy as inf
-    from inferpy.models import Normal
+    import tensorflow as tf
 
-    # K defines the number of components.
-    K=10
-
-    # d defines the number of dimensions
-    d=20
-
-    #Prior for the principal components
-    with inf.replicate(size = K):
-        w = Normal(loc = 0, scale = 1, dim = d)  # x.shape = [K,d]
-
-    # Number of observations (data)
+    # number of components
+    k = 1
+    # size of the hidden layer in the NN
+    d0 = 100
+    # dimensionality of the data
+    dx = 2
+    # number of observations (dataset size)
     N = 1000
 
-    # define the generative model
-    with inf.replicate(size=N):
-        z = Normal(0, 1, dim=K)  # z.shape = [N,K]
-        x = Normal(inf.matmul(z,w), 1.0, observed=True, dim=d)  # x.shape = [N,d]
 
 
-InferPy supports the definition of **plateau notation** by using the
-construct ``with inf.replicate(size = K)``, which replicates K times the
-random variables enclosed within this anotator. Every replicated
-variable is assumed to be **independent**. This ``with inf.replicate(size = N)`` construct is also useful when
-defining the model for the data.
-
-
-
-
-As commented above, the variables are surrounded by a
-``with`` statement to inidicate that the defined random variables will
-be reapeatedly used in each data sample. In this case, every replicated
-variable is conditionally idependent given the variable :math:`\mathbf{w}`
-defined above.
-
-Once the random variables of the model are defined, the probablitic
-model itself can be created and compiled. The probabilistic model
-defines a joint probability distribuiton over all these random
-variables. Finally, you can fit your model with a given data set:
+A model can be defined by decorating any function with ``@inf.probmodel``. The model is fully specified by
+the variables defined inside this function:
 
 
 .. code-block:: python
 
-    # compile and fit the model with training data
-    pca.compile()
-    pca.fit(data)
+    @inf.probmodel
+    def nlpca(k, d0, dx, decoder):
 
-    #extract the hidden representation from a set of observations
-    hidden_encoding = pca.posterior(z)
+        with inf.datamodel():
+            z = inf.Normal(tf.ones([k])*0.5, 1., name="z")    # shape = [N,k]
+            output = decoder(z,d0,dx)
+            x_loc = output[:,:dx]
+            x_scale = tf.nn.softmax(output[:,dx:])
+            x = inf.Normal(x_loc, x_scale, name="x")   # shape = [N,d]
 
+
+
+
+The construct ``with inf.datamodel()``, which resembles to the **plateau notation**, will replicate
+N times the variables enclosed, where N is the size of our data.
+
+
+In the previous model, the input argument ``decoder`` must be a function implementing a neural network.
+This might be defined outside the model as follows.
+
+
+
+
+.. code-block:: python
+
+    def decoder(z,d0,dx):
+        h0 = tf.layers.dense(z, d0, tf.nn.relu)
+        return tf.layers.dense(h0, 2 * dx)
+
+
+
+Now, we can instantiate our model and obtain samples (from the prior distributions).
+
+
+
+.. code-block:: python
+
+
+    # create an instance of the model
+    m = nlpca(k,d0,dx, decoder)
+
+    # Sample from priors
+    samples = m.sample()
+
+
+In variational inference, we must defined a Q-model as follows.
+
+
+
+
+.. code-block:: python
+
+    @inf.probmodel
+    def qmodel(k):
+        with inf.datamodel():
+            qz_loc = inf.Parameter(tf.ones([k])*0.5, name="qz_loc")
+            qz_scale = tf.math.softplus(inf.Parameter(tf.ones([k]),name="qz_scale"))
+
+            qz = inf.Normal(qz_loc, qz_scale, name="z")
+
+
+
+
+Afterwards, we define the parameters of our inference algorithm and fit the data to the model.
+
+
+
+
+.. code-block:: python
+
+    # set the inference algorithm
+    VI = inf.inference.VI(qmodel(k), epochs=5000)
+
+    # learn the parameters
+    m.fit({"x": x_train}, VI)
+
+
+
+The inference method can be further configure. But, as in Keras, a core
+principle is to try make things reasonably simple, while allowing the
+user the full control if needed.
+
+
+
+Finally, we might extract the posterior of ``z``, which is basically the hidden representation
+of our data.
+
+
+
+.. code-block:: python
+
+    #extract the hidden representation
+    hidden_encoding = m.posterior["z"]
+    print(hidden_encoding.sample())
