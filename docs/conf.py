@@ -100,8 +100,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'InferPy'
-copyright = u'2017, Andrés R. Masegosa, Rafael Cabañas'
-author = u'Andrés R. Masegosa,  Rafael Cabañas'
+copyright = u'2017, Javier Cózar, Rafael Cabañas, Antonio Salmerón, Andrés R. Masegosa'
+author = u'Javier Cózar, Rafael Cabañas, Antonio Salmerón, Andrés R. Masegosa'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -214,7 +214,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'InferPy.tex', u'InferPy Documentation',
-     u'Rafael Cabañas', 'manual'),
+     u'Javier Cózar, Rafael Cabañas, Antonio Salmerón, Andrés R. Masegosa', 'manual'),
 ]
 
 
