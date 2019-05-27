@@ -3,6 +3,10 @@ import tensorflow as tf
 import warnings
 
 
+"""
+Module to manage global sessions and graphs executed in sessions
+"""
+
 __session = None
 
 
