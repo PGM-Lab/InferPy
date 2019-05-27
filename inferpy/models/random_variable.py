@@ -374,9 +374,8 @@ def _make_random_variable(distribution_name):
         sanitized_kwargs = {k: _sanitize_input(v, max_shape) for k, v in kwargs.items()}
 
         # If it is inside a data model, ommit the sample_shape in kwargs if exist and use size from data_model
-        # NOTE: comment this. Needed here because we need to know the shape of the distribution
-        # Not using sample shape yet. Used just to create the tensors, and
-        # compute the dependencies by using the tf graph
+        # NOTE: Needed here because we need to know the shape of the distribution, as well as its dtype
+        # Not using sample shape yet. Used just to create the tensors, and compute the dependencies using the tf graph
         tfp_dist = distribution_cls(*sanitized_args, **sanitized_kwargs)
         if contextmanager.data_model.is_active():
             # create graph once tensors are registered in graph
@@ -389,12 +388,14 @@ def _make_random_variable(distribution_name):
             shape = ([sample_shape] if sample_shape else []) + \
                 tfp_dist.batch_shape.as_list() + \
                 tfp_dist.event_shape.as_list()
-            
+
             # take into account the dtype of tfp_dist in order to create the initial value correctly
             initial_value = tf.zeros(shape, dtype=tfp_dist.dtype) if shape else tf.constant(0,  dtype=tfp_dist.dtype)
 
+            # build the respective boolean and tf.Variables
             is_observed, is_observed_var, observed_value_var = _make_predictable_variables(initial_value, rv_name)
 
+            # use this context to intercept the value using the tf.cond dependent on the previous tf.Variables
             with ed.interception(util.interceptor.set_values_condition(is_observed_var, observed_value_var)):
                 ed_random_var = _make_edward_random_variable(tfp_dist)(sample_shape=sample_shape, name=rv_name)
 
@@ -406,10 +407,12 @@ def _make_random_variable(distribution_name):
             # take into account the dtype of tfp_dist in order to create the initial value correctly
             initial_value = tf.zeros(shape, dtype=tfp_dist.dtype) if shape else tf.constant(0,  dtype=tfp_dist.dtype)
 
+            # build the respective boolean and tf.Variables
             is_observed, is_observed_var, observed_value_var = _make_predictable_variables(initial_value, rv_name)
 
-            # sample_shape is sample_shape in kwargs or ()
+            # use this context to intercept the value using the tf.cond dependent on the previous tf.Variables
             with ed.interception(util.interceptor.set_values_condition(is_observed_var, observed_value_var)):
+                # sample_shape is sample_shape in kwargs or ()
                 ed_random_var = ed_random_variable_cls(*sanitized_args, **sanitized_kwargs, sample_shape=sample_shape)
             is_datamodel = False
 
