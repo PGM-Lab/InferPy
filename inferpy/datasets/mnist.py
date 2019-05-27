@@ -5,8 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def load_data(vectorize = True, num_instances=None, digits=[0,1,2,3,4,5,6,7,8,9]):
-
+def load_data(vectorize=True, num_instances=None, digits=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]):
     """ Loads the MNIST datase
 
     :param vectorize: if true, each 2D image is transformed into a 1D vector
@@ -15,7 +14,6 @@ def load_data(vectorize = True, num_instances=None, digits=[0,1,2,3,4,5,6,7,8,9]
     :return:  Tuple of Numpy arrays: `(x_train, y_train), (x_test, y_test)
     """
 
-
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
     (x_train, y_train) = _preprocess_data(x_train, y_train, vectorize, num_instances, digits)
     (x_test, y_test) = _preprocess_data(x_test, y_test, vectorize, num_instances, digits)
@@ -23,9 +21,7 @@ def load_data(vectorize = True, num_instances=None, digits=[0,1,2,3,4,5,6,7,8,9]
     return (x_train, y_train), (x_test, y_test)
 
 
-
-
-def _preprocess_data(x_data, y_data, vectorize = True, num_instances=None, digits=[0,1,2,3,4,5,6,7,8,9]):
+def _preprocess_data(x_data, y_data, vectorize=True, num_instances=None, digits=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]):
 
     num_pixels = np.prod(np.shape(x_data)[1:])
     x_data = x_data[np.isin(y_data, digits)]
@@ -38,14 +34,13 @@ def _preprocess_data(x_data, y_data, vectorize = True, num_instances=None, digit
     x_data = x_data[:num_instances]
 
     if vectorize:
-        x_data = np.reshape(x_data, (num_instances,num_pixels))  #serialize the data
+        x_data = np.reshape(x_data, (num_instances, num_pixels))  # serialize the data
         x_data = np.float32(x_data)
 
     return x_data, y_data
 
 
-
-def plot_digits(data , grid = [3,3]):
+def plot_digits(data, grid=[3, 3]):
     nx, ny = grid
     fig, ax = plt.subplots(nx, ny, figsize=(12, 12))
     fig.tight_layout(pad=0.3, rect=[0, 0, 0.9, 0.9])
