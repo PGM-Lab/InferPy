@@ -182,7 +182,7 @@ class ProbModel:
         """
         # argument type checking
         if not(names is None or isinstance(names, (list, dict))):
-            raise TypeError(f"The argument 'names' must be None, a list or a dict, not {type(names)}.")
+            raise TypeError("The argument 'names' must be None, a list or a dict, not {}.".format(type(names)))
         # now we can assume that names is None, a list or a dict
 
         # function to filter the parameters for each Random Variable
