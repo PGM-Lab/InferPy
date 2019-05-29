@@ -46,6 +46,6 @@ def plot_digits(data, grid=[3, 3]):
     fig.tight_layout(pad=0.3, rect=[0, 0, 0.9, 0.9])
     for x, y in [(i, j) for i in list(range(nx)) for j in list(range(ny))]:
         img_i = data[x + y * nx].reshape((28, 28))
-        i = (x, y) if nx > 1 else y
+        i = (y, x) if nx > 1 else y
         ax[i].imshow(img_i, cmap='gray')
     plt.show()
