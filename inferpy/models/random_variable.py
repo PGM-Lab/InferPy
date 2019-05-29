@@ -13,6 +13,7 @@
 # limitations under the License.
 # ==============================================================================
 import functools
+from enum import IntEnum
 import numpy as np
 import tensorflow as tf
 from tensorflow_probability import edward2 as ed
@@ -62,6 +63,13 @@ def _try_sess_run(p, sess):
         return p
 
 
+class Kind(IntEnum):
+    GLOBAL_HIDDEN = 0
+    GLOBAL_OBSERVED = 1
+    LOCAL_HIDDEN = 2
+    LOCAL_OBSERVED = 3
+
+
 class RandomVariable:
     """
     Class for random variables. It encapsulates the Random Variable from edward2, and additional properties.
@@ -90,6 +98,13 @@ class RandomVariable:
             self.name = self.__getattr__('name')
         else:
             self.name = name
+
+    @property
+    def type(self):
+        first_part = 'LOCAL' if self.is_datamodel else 'GLOBAL'
+        second_part = 'OBSERVED' if util.get_session().run(self.is_observed) else 'HIDDEN'
+
+        return getattr(Kind, "{}_{}".format(first_part, second_part))
 
     def build_in_session(self, sess):
         """
