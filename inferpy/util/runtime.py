@@ -18,7 +18,6 @@
 Module focused on evaluating tensors to makes the usage easier, forgetting about tensors and sessions
 """
 
-import tensorflow as tf
 from functools import wraps
 from contextlib import contextmanager
 

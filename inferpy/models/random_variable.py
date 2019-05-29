@@ -13,6 +13,7 @@
 # limitations under the License.
 # ==============================================================================
 import functools
+from enum import IntEnum
 import numpy as np
 import tensorflow as tf
 from tensorflow_probability import edward2 as ed
@@ -62,6 +63,13 @@ def _try_sess_run(p, sess):
         return p
 
 
+class Kind(IntEnum):
+    GLOBAL_HIDDEN = 0
+    GLOBAL_OBSERVED = 1
+    LOCAL_HIDDEN = 2
+    LOCAL_OBSERVED = 3
+
+
 class RandomVariable:
     """
     Class for random variables. It encapsulates the Random Variable from edward2, and additional properties.
@@ -74,7 +82,7 @@ class RandomVariable:
     """
 
     def __init__(self, var, name, is_datamodel, ed_cls, var_args, var_kwargs, sample_shape,
-                 is_observed, is_observed_var, observed_value_var):
+                 is_observed, observed_value):
         self.var = var
         self.is_datamodel = is_datamodel
         # These parameters are used to allow the re-creation of the random var by build_in_session function
@@ -83,14 +91,20 @@ class RandomVariable:
         self._var_kwargs = var_kwargs
         self._sample_shape = sample_shape
         self.is_observed = is_observed
-        self.is_observed_var = is_observed_var
-        self.observed_value_var = observed_value_var
+        self.observed_value = observed_value
 
         # if name is provided, use it. Otherwise, use it from var or var.distribution
         if name is None:
             self.name = self.__getattr__('name')
         else:
             self.name = name
+
+    @property
+    def type(self):
+        first_part = 'LOCAL' if self.is_datamodel else 'GLOBAL'
+        second_part = 'OBSERVED' if util.get_session().run(self.is_observed) else 'HIDDEN'
+
+        return getattr(Kind, "{}_{}".format(first_part, second_part))
 
     def build_in_session(self, sess):
         """
@@ -111,7 +125,7 @@ class RandomVariable:
                                      sample_shape=self._sample_shape)
 
         initial_value = util.get_session().run(self.observed_value_var)
-        is_observed, is_observed_var, observed_value_var = _make_predictable_variables(initial_value, self.name)
+        is_observed, observed_value = _make_predictable_variables(initial_value, self.name)
         # build the random variable by using the ed random var
         rv = RandomVariable(
             var=ed_random_var,
@@ -122,8 +136,7 @@ class RandomVariable:
             var_kwargs=self._var_kwargs,
             sample_shape=self._sample_shape,
             is_observed=self.is_observed,
-            is_observed_var=self.is_observed_var,
-            observed_value_var=self.observed_value_var
+            observed_value=self.observed_value
         )
 
         # put the docstring and the name as well as in _make_random_variable function
@@ -374,9 +387,8 @@ def _make_random_variable(distribution_name):
         sanitized_kwargs = {k: _sanitize_input(v, max_shape) for k, v in kwargs.items()}
 
         # If it is inside a data model, ommit the sample_shape in kwargs if exist and use size from data_model
-        # NOTE: comment this. Needed here because we need to know the shape of the distribution
-        # Not using sample shape yet. Used just to create the tensors, and
-        # compute the dependencies by using the tf graph
+        # NOTE: Needed here because we need to know the shape of the distribution, as well as its dtype
+        # Not using sample shape yet. Used just to create the tensors, and compute the dependencies using the tf graph
         tfp_dist = distribution_cls(*sanitized_args, **sanitized_kwargs)
         if contextmanager.data_model.is_active():
             # create graph once tensors are registered in graph
@@ -389,13 +401,15 @@ def _make_random_variable(distribution_name):
             shape = ([sample_shape] if sample_shape else []) + \
                 tfp_dist.batch_shape.as_list() + \
                 tfp_dist.event_shape.as_list()
-            
+
             # take into account the dtype of tfp_dist in order to create the initial value correctly
             initial_value = tf.zeros(shape, dtype=tfp_dist.dtype) if shape else tf.constant(0,  dtype=tfp_dist.dtype)
 
-            is_observed, is_observed_var, observed_value_var = _make_predictable_variables(initial_value, rv_name)
+            # build the respective boolean and tf.Variables
+            is_observed, observed_value = _make_predictable_variables(initial_value, rv_name)
 
-            with ed.interception(util.interceptor.set_values_condition(is_observed_var, observed_value_var)):
+            # use this context to intercept the value using the tf.cond dependent on the previous tf.Variables
+            with ed.interception(util.interceptor.set_values_condition(is_observed, observed_value)):
                 ed_random_var = _make_edward_random_variable(tfp_dist)(sample_shape=sample_shape, name=rv_name)
 
             is_datamodel = True
@@ -406,10 +420,12 @@ def _make_random_variable(distribution_name):
             # take into account the dtype of tfp_dist in order to create the initial value correctly
             initial_value = tf.zeros(shape, dtype=tfp_dist.dtype) if shape else tf.constant(0,  dtype=tfp_dist.dtype)
 
-            is_observed, is_observed_var, observed_value_var = _make_predictable_variables(initial_value, rv_name)
+            # build the respective boolean and tf.Variables
+            is_observed, observed_value = _make_predictable_variables(initial_value, rv_name)
 
-            # sample_shape is sample_shape in kwargs or ()
-            with ed.interception(util.interceptor.set_values_condition(is_observed_var, observed_value_var)):
+            # use this context to intercept the value using the tf.cond dependent on the previous tf.Variables
+            with ed.interception(util.interceptor.set_values_condition(is_observed, observed_value)):
+                # sample_shape is sample_shape in kwargs or ()
                 ed_random_var = ed_random_variable_cls(*sanitized_args, **sanitized_kwargs, sample_shape=sample_shape)
             is_datamodel = False
 
@@ -422,8 +438,7 @@ def _make_random_variable(distribution_name):
             var_kwargs=sanitized_kwargs,
             sample_shape=sample_shape,
             is_observed=is_observed,
-            is_observed_var=is_observed_var,
-            observed_value_var=observed_value_var,
+            observed_value=observed_value,
         )
 
         # register the variable as it is created. Used to detect dependencies
@@ -443,16 +458,15 @@ def _make_random_variable(distribution_name):
 
 
 def _make_predictable_variables(initial_value, rv_name):
-    is_observed = False
-    is_observed_var = tf.Variable(is_observed, trainable=False,
-                                  name="inferpy-predict-enabled-{name}".format(name=rv_name or "default"))
+    is_observed = tf.Variable(False, trainable=False,
+                              name="inferpy-predict-enabled-{name}".format(name=rv_name or "default"))
 
-    observed_value_var = tf.Variable(initial_value, trainable=False,
-                                     name="inferpy-predict-{name}".format(name=rv_name or "default"))
+    observed_value = tf.Variable(initial_value, trainable=False,
+                                 name="inferpy-predict-{name}".format(name=rv_name or "default"))
 
-    util.session.get_session().run(tf.variables_initializer([is_observed_var, observed_value_var]))
+    util.session.get_session().run(tf.variables_initializer([is_observed, observed_value]))
 
-    return is_observed, is_observed_var, observed_value_var
+    return is_observed, observed_value
 
 
 def _operator(var, other, operator_name):
@@ -479,7 +493,7 @@ def _tensor_conversion_function(rv, dtype=None, name=None, as_ref=False):
         If the variable needs to be broadcast_to, do it right now
     """
     # return the tf.Variable last snapshot if it is observed, and the ed2 evaluation (ed2.value) otherwise
-    return tf.convert_to_tensor(rv.observed_value_var.value() if rv.is_observed else rv.var)
+    return tf.convert_to_tensor(rv.observed_value_var.value() if util.get_session().run(rv.is_observed) else rv.var)
 
 
 # register the conversion function into a tensor

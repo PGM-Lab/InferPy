@@ -58,10 +58,13 @@ class ProbModel:
         # first buid the graph of dependencies
         with g_for_nxgraph.as_default():
             with tf.Session() as sess:
-                default_sess = util.session.swap_session(sess)
-                self.graph = self._build_graph()
-            # sess is closed by context, no need to use set_session (which closes the actual running session)
-            util.session.swap_session(default_sess)
+                try:
+                    default_sess = util.session.swap_session(sess)
+                    self.graph = self._build_graph()
+                finally:
+                    # sess is closed by context, no need to use set_session (which closes the actual running session)
+                    util.session.swap_session(default_sess)
+
         # Now initialize vars and params for the model (no sample_shape)
         self.vars, self.params = self._build_model()
 
@@ -76,7 +79,6 @@ class ProbModel:
             raise RuntimeError("posterior cannot be accessed before using the fit function.")
         return self._last_fitted_vars
 
-    @contextmanager.prob_model.build_model
     def _build_graph(self):
         with contextmanager.randvar_registry.init():
             self.builder()
@@ -85,7 +87,6 @@ class ProbModel:
 
         return nx_graph
 
-    @contextmanager.prob_model.build_model
     def _build_model(self):
         # get the global variables defined before building the model
         _before_global_variables = tf.global_variables()
@@ -162,6 +163,40 @@ class ProbModel:
         sess = util.session.get_session()
         with contextmanager.observe(self.posterior, observations):
             return sess.run({k: v for k, v in self.posterior.items()})
+
+    @util.tf_run_allowed
+    def parameters(self, names=None):
+        """ Return the parameters of the Random Variables of the model.
+        If `names` is None, then return all the parameters of all the Random Variables.
+        If `names` is a list, then return the parameters specified in the list (if exists) for all the Random Variables.
+        If `names` is a dict, then return all the parameters specified (value) for each Random Variable (key).
+
+        NOTE: If tf_run=True, but any of the returned parameters is not a Tensor *and therefore cannot be evaluated)
+            this returns a not evaluated dict (because the evaluation will raise an Exception)
+
+        Args:
+            names: A list, a dict or None. Specify the parameters for the Random Variables to be obtained.
+
+        Returns:
+            A dict, where the keys are the names of the Random Variables and the values a dict of parameters (name-value)
+        """
+        # argument type checking
+        if not(names is None or isinstance(names, (list, dict))):
+            raise TypeError("The argument 'names' must be None, a list or a dict, not {}.".format(type(names)))
+        # now we can assume that names is None, a list or a dict
+
+        # function to filter the parameters for each Random Variable
+        def filter_parameters(varname, parametes):
+            if names is None:
+                return parametes
+
+            selected_parameters = set(names if isinstance(names, list) else names[varname])
+
+            return {k: v for k, v in parametes.items() if k in selected_parameters}
+
+        return {k: filter_parameters(v.name, v.parameters) for k, v in self.vars.items()
+                # filter variables based on names attribute
+                if names is None or isinstance(names, list) or k in names}
 
     def post_predictive_sample(self):
         """
