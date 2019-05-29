@@ -28,7 +28,7 @@ def set_values(**model_kwargs):
                 hasattr(model_kwargs[name], 'is_observed') and hasattr(model_kwargs[name], 'observed_value'):
             randvar.is_observed = model_kwargs[name].is_observed
             randvar.observed_value = model_kwargs[name].observed_value
-        
+
         # finally return the built random variable
         return randvar
 
