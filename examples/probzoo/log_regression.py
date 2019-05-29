@@ -20,7 +20,7 @@ def log_reg(d):
 def qmodel(d):
     qw0_loc = inf.Parameter(0., name="qw0_loc")
     qw0_scale = tf.math.softplus(inf.Parameter(1., name="qw0_scale"))
-    qw0 = inf.Normal(qw0_loc, qw0_scale, name="qw0")
+    qw0 = inf.Normal(qw0_loc, qw0_scale, name="w0")
 
     qw_loc = inf.Parameter(tf.zeros([d,1]), name="qw_loc")
     qw_scale = tf.math.softplus(inf.Parameter(tf.ones([d,1]), name="qw_scale"))
