@@ -7,8 +7,10 @@ import inferpy as inf
 from inferpy import util
 from inferpy import contextmanager
 
+from ..inference import Inference
 
-class VI:
+
+class VI(Inference):
     def __init__(self, qmodel, loss='ELBO', optimizer='AdamOptimizer', epochs=1000):
         # store the qmodel in self.qmodel. Can be a callable with no parameters which returns the qmodel
         if callable(qmodel):
@@ -84,3 +86,12 @@ class VI:
     @property
     def losses(self):
         return self.__losses
+
+    def sample(self, size=1, data={}):
+        raise NotImplementedError
+
+    def log_prob(self, data):
+        raise NotImplementedError
+
+    def parameters(names=None):
+        raise NotImplementedError

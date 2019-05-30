@@ -1,42 +1,19 @@
 import tensorflow as tf
-import inspect
 import itertools
 
-from . import loss_functions
 import inferpy as inf
 from inferpy import util
 from inferpy import contextmanager
+from .vi import VI
 
 
-class SVI:
-    def __init__(self, qmodel, loss='ELBO', optimizer='AdamOptimizer', batch_size=100, epochs=1000):
-        # store the qmodel in self.qmodel. Can be a callable with no parameters which returns the qmodel
-        if callable(qmodel):
-            if len(inspect.signature(qmodel).parameters) > 0:
-                raise ValueError("input qmodel can only be a callable object if this does not has any input parameter")
-            self.qmodel = qmodel()
-        else:
-            self.qmodel = qmodel
+class SVI(VI):
+    def __init__(self, *args, batch_size=100, **kwargs):
+        # Build the super object
+        super().__init__(*args, **kwargs)
 
-        # store the loss function in self.loss_fn
-        # if it is a string, build the object automatically from loss_functions package
-        if isinstance(loss, str):
-            self.loss_fn = getattr(loss_functions, loss)
-        else:
-            self.loss_fn = loss
-
+        # and save the extra argument batch size
         self.batch_size = batch_size
-        self.epochs = epochs
-
-        # store the optimizer function in self.optimizer
-        # if it is a string, build a new optimizer from tf.train (default parametrization)
-        if isinstance(optimizer, str):
-            self.optimizer = getattr(tf.train, optimizer)()
-        else:
-            self.optimizer = optimizer
-
-        # list for storing the loss evolution
-        self.__losses = []
 
     def run(self, pmodel, sample_dict):
         # create a tf dataset and an iterator, specifying the batch size
@@ -92,6 +69,3 @@ class SVI:
 
         return self.qmodel._last_expanded_vars, self.qmodel._last_expanded_params
 
-    @property
-    def losses(self):
-        return self.__losses
