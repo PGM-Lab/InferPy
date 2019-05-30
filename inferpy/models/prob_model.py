@@ -68,16 +68,24 @@ class ProbModel:
         # Now initialize vars and params for the model (no sample_shape)
         self.vars, self.params = self._build_model()
 
-        self._last_expanded_vars = None
-        self._last_expanded_params = None
-        self._last_fitted_vars = None
-        self._last_fitted_params = None
+        # This attribute contains the inference method used. If it is None, the `fit` function has not been used yet
+        self.inference_method = None
+
+    @property
+    def prior(self):
+        raise NotImplementedError("To be implemented")
 
     @property
     def posterior(self):
-        if self._last_fitted_vars is None:
-            raise RuntimeError("posterior cannot be accessed before using the fit function.")
-        return self._last_fitted_vars
+        if self.inference_method is None:
+            raise RuntimeError("posterior cannot be used before using the fit function.")
+        raise NotImplementedError("To be implemented")
+
+    @property
+    def posterior_predictive(self):
+        if self.inference_method is None:
+            raise RuntimeError("posterior_preductive cannot be used before using the fit function.")
+        raise NotImplementedError("To be implemented")
 
     def _build_graph(self):
         with contextmanager.randvar_registry.init():
@@ -132,12 +140,11 @@ class ProbModel:
         if len(sample_dict) == 0:
             raise ValueError('The number of mapped variables must be at least 1.')
 
-        # Run the inference method
-        fitted_vars, fitted_params = inference_method.run(self, sample_dict)
-        self._last_fitted_vars = fitted_vars
-        self._last_fitted_params = fitted_params
+        # set the inference method
+        self.inference_method = inference_method
 
-        return self.posterior
+        # Run the inference method
+        inference_method.run(self, sample_dict)
 
     @util.tf_run_allowed
     def log_prob(self, data):
@@ -198,28 +205,11 @@ class ProbModel:
                 # filter variables based on names attribute
                 if names is None or isinstance(names, list) or k in names}
 
-    def post_predictive_sample(self):
-        """
-        Sample from the posterior predictive distribution, i.e., from the
-        observed variables with the inferred posterior fixed to the model.
-        :return: dictionary of samples with an entry for each observed variable.
-        """
-
-        sess = util.session.get_session()
-        post = {k: sess.run(v.loc) for k, v in self.posterior.items()}
-        with contextmanager.observe(self.posterior, post):
-            samples = {var: self._last_expanded_vars[var].sample()
-                       for var in self.vars.keys()
-                       if var not in self.posterior.keys()}
-        return samples
 
     def expand_model(self, size=1):
         """ Create the expanded model vars using size as plate size and return the OrderedDict """
 
         with contextmanager.data_model.fit(size=size):
             expanded_vars, expanded_params = self._build_model()
-
-        self._last_expanded_vars = expanded_vars
-        self._last_expanded_params = expanded_params
 
         return expanded_vars, expanded_params

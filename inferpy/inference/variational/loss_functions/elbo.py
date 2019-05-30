@@ -1,16 +1,16 @@
-from tensorflow_probability import edward2 as ed
 import tensorflow as tf
 
-from inferpy import util
 
+def ELBO(pvars, qvars, batch_weight=1):
+    """ Compute the loss tensor from the expanded variables of p and q models.
+        Args:
+            pvars (`dict<inferpy.RandomVariable>`): The dict with the expanded p random variables
+            qvars (`dict<inferpy.RandomVariable>`): The dict with the expanded q random variables
+            batch_weight (`float`): Weight to assign less importance to the energy, used when processing data in batches
 
-def ELBO(pmodel, qmodel, plate_size, batch_weight=1):
-    # expand de qmodel
-    qvars, _ = qmodel.expand_model(plate_size)
-
-    # expand de pmodel, using the intercept.set_values function, to include the sample_dict and the expanded qvars
-    with ed.interception(util.interceptor.set_values(**qvars)):
-        pvars, _ = pmodel.expand_model(plate_size)
+        Returns (`tf.Tensor`):
+            The generated loss tensor
+    """
 
     # compute energy
     energy = tf.reduce_sum(
