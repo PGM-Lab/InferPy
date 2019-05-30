@@ -64,8 +64,8 @@ class SVI(VI):
                         if i % 20 == 0:
                             print(".", end="", flush=True)
 
-        # set the private __losses attribute for the losses property
-        self.__losses = t
+        # set the protected _losses attribute for the losses property
+        self._losses = t
 
         return self.qmodel._last_expanded_vars, self.qmodel._last_expanded_params
 

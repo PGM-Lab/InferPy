@@ -37,7 +37,7 @@ class VI(Inference):
             self.optimizer = optimizer
 
         # list for storing the loss evolution
-        self.__losses = []
+        self._losses = []
 
     def run(self, pmodel, sample_dict):
         # NOTE: right now we use a session in a with context, so it is open and close.
@@ -78,14 +78,14 @@ class VI(Inference):
                     if i % 10 == 0:
                         print(".", end="", flush=True)
 
-        # set the private __losses attribute for the losses property
+        # set the protected _losses attribute for the losses property
         self.__losses = t
 
         return self.qmodel._last_expanded_vars, self.qmodel._last_expanded_params
 
     @property
     def losses(self):
-        return self.__losses
+        return self._losses
 
     def sample(self, size=1, data={}):
         raise NotImplementedError
