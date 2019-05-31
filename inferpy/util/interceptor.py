@@ -22,8 +22,8 @@ def set_values(**model_kwargs):
 
         randvar = ed.interceptable(f)(*args, **kwargs)
 
-        # if the value used to intercept is an inferpy RandomVariable,
-        # replace the tf.Variables to observe the Random Variable as well
+        # if the value used to intercept is an inferpy RandomVariable, assign to the object
+        # the tf.Variables to observe the Random Variable as well
         if name in model_kwargs and \
                 hasattr(model_kwargs[name], 'is_observed') and hasattr(model_kwargs[name], 'observed_value'):
             randvar.is_observed = model_kwargs[name].is_observed

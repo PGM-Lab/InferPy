@@ -51,6 +51,8 @@ class VI(Inference):
 
         # pmodel not established yet
         self.pmodel = None
+        # The size of the plate when expand the models
+        self.plate_size = None
 
         # expanded variables and parameters
         self.expanded_variables = {"p": None, "q": None}
@@ -68,10 +70,10 @@ class VI(Inference):
         self.pmodel = pmodel
 
         # get the plate size
-        plate_size = util.iterables.get_plate_size(self.pmodel.vars, sample_dict)
+        self.plate_size = util.iterables.get_plate_size(self.pmodel.vars, sample_dict)
 
         # create the train tensor
-        train = self._generate_train_tensor(plate_size=plate_size)
+        train = self._generate_train_tensor(plate_size=self.plate_size)
 
         t = []
         sess = util.get_session()
@@ -102,15 +104,12 @@ class VI(Inference):
     def parameters(names=None):
         raise NotImplementedError
 
-    def _generate_train_tensor(self, plate_size, **kwargs):
+    def _generate_train_tensor(self, **kwargs):
         """ This function expand the p and q models. Then, it uses the  loss function to create the loss tensor
             and store it into the debug object as a new attribute.
             Then, uses the optimizer to create the train tensor used in the gradient descent iterative process.
             It store the expanded random variables and parameters from the p and q models in self.expanded_variables
             and self.expanded_parameters dicts.
-
-            Args:
-                plate_size (`int`): The size of the plate to expand the models
 
             Returns:
                 The `tf.Tensor` train tensor used in the gradient descent iterative process.
@@ -118,11 +117,11 @@ class VI(Inference):
         """
         # expand the p and q models
         # expand de qmodel
-        qvars, qparams = self.qmodel.expand_model(plate_size)
+        qvars, qparams = self.qmodel.expand_model(self.plate_size)
 
         # expand de pmodel, using the intercept.set_values function, to include the sample_dict and the expanded qvars
         with ed.interception(util.interceptor.set_values(**qvars)):
-            pvars, pparams = self.pmodel.expand_model(plate_size)
+            pvars, pparams = self.pmodel.expand_model(self.plate_size)
 
         # create the loss tensor and trainable tensor for the gradient descent process
         loss_tensor = self.loss_fn(pvars, qvars, **kwargs)

@@ -64,12 +64,7 @@ def tf_run_allowed(f):
             obj = f(*args, **kwargs)
             if tf_run and runner_context['runner_recursive_depth'] == 1:
                 # first recursive depth, and tf_run is True: we can eval the function
-                try:
-                    ev_obj = util.get_session().run(obj)
-                    return ev_obj
-                except (TypeError, ValueError):
-                    # cannot evaluate the result, return the obj
-                    return obj
+                return try_run(obj)
             else:
                 # tf_run is False or we are in a deeper runner levels than 1 (do not eval the result yet)
                 return obj
@@ -97,3 +92,12 @@ def set_tf_run(enable):
     # this function is used to modify the default state of tf run (eval tensors or not)
     global __tf_run_default
     __tf_run_default = enable
+
+
+def try_run(obj):
+    try:
+        ev_obj = util.get_session().run(obj)
+        return ev_obj
+    except (TypeError, ValueError):
+        # cannot evaluate the result, return the obj
+        return obj

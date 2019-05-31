@@ -40,8 +40,11 @@ class SVI(VI):
         iterator = tfdataset.make_one_shot_iterator()
         input_data = iterator.get_next()  # each time this tensor is evaluated in a session it contains new data
 
+        # Use self.batch_size as plate_size
+        self.plate_size = self.batch_size
+
         # create the train tensor
-        train = self._generate_train_tensor(plate_size=self.batch_size, batch_weight=batch_weight)
+        train = self._generate_train_tensor(batch_weight=batch_weight)
 
         t = []
         sess = util.get_session()
@@ -54,9 +57,9 @@ class SVI(VI):
                         sess.run(train)
 
                         t.append(sess.run(self.debug.loss_tensor))
-                        if (i + batches * j) % 200 == 0:
+                        if j == 0 and i % 200 == 0:
                             print("\n {} epochs\t {}".format(i, t[-1]), end="", flush=True)
-                        if (i + batches * j) % 20 == 0:
+                        if j == 0:
                             print(".", end="", flush=True)
 
         # set the protected _losses attribute for the losses property

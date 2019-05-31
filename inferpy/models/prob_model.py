@@ -14,6 +14,7 @@
 # ==============================================================================
 
 
+from enum import IntEnum
 import functools
 from collections import OrderedDict
 from tensorflow_probability import edward2 as ed
@@ -23,6 +24,7 @@ from matplotlib import pyplot as plt
 
 from inferpy import util
 from inferpy import contextmanager
+from inferpy.queries import Query
 from .random_variable import RandomVariable
 
 
@@ -51,6 +53,12 @@ class ProbModel:
     the Random Variables/Parameters in order of creation, and the function which declare the
     Random Variables/Parameters.
     """
+
+    class Belief(IntEnum):
+        PRIOR = 0
+        POSTERIOR = 1
+        POSTERIOR_PREDICTIVE = 2
+
     def __init__(self, builder):
         # Initialize object attributes
         self.builder = builder
@@ -86,6 +94,38 @@ class ProbModel:
         if self.inference_method is None:
             raise RuntimeError("posterior_preductive cannot be used before using the fit function.")
         raise NotImplementedError("To be implemented")
+
+    def query(self, target_names, belief=Belief.PRIOR, data={}):
+        # all the results are evaluated always, because they depends on tf.Variables, and therefore a tensor cannot
+        # be return because the results would depend on the value of that tf.Variables.
+
+        # assert that the parameter is of type Belief
+        if not isinstance(belief, ProbModel.Belief):
+            raise TypeError("The `belief` argument must be of type `ProbModel.Belief`, not {}".format(type(belief)))
+
+        # depending on belief, use the queries from self.vars variables or from inference expanded variables
+        if belief == ProbModel.Belief.PRIOR:
+            # create the query object
+            return Query(self.vars, target_names, self.vars, data)
+        else:
+            if not self.inference_method:
+                raise RuntimeError("The fit method must be called first to use the {} belief.".format(belief.name))
+            # NOTE: implementation trick. As p model variables are intercepted with q model variables,
+            # compute prior observations for local hidden variables which are not targets,
+            # expanding a new model using plate_size and then sampling
+            hidden_variables = [k for k in self.vars.keys() if k not in target_names and k not in data]
+            if hidden_variables:
+                expanded_vars, _ = self.expand_model(self.inference_method.plate_size)
+                prior_data = Query(expanded_vars, hidden_variables, data).sample()
+            else:
+                prior_data = {}
+            # then create the query object
+            # if it is posterior_predictive, then use as target the p variables
+            if belief == ProbModel.Belief.POSTERIOR_PREDICTIVE:
+                return Query(self.inference_method.expanded_variables["p"], target_names, {**data, **prior_data})
+            # else, use the q variables
+            else:
+                return Query(self.inference_method.expanded_variables["q"], target_names, {**data, **prior_data})
 
     def _build_graph(self):
         with contextmanager.randvar_registry.init():
@@ -165,12 +205,6 @@ class ProbModel:
             expanded_vars, expanded_params = self.expand_model(size)
         return {name: tf.convert_to_tensor(var) for name, var in expanded_vars.items()}
 
-    def predict(self, observations={}):
-        # TODO: this function is under design. Should not be used as it is right now.
-        sess = util.session.get_session()
-        with contextmanager.observe(self.posterior, observations):
-            return sess.run({k: v for k, v in self.posterior.items()})
-
     @util.tf_run_allowed
     def parameters(self, names=None):
         """ Return the parameters of the Random Variables of the model.
@@ -204,7 +238,6 @@ class ProbModel:
         return {k: filter_parameters(v.name, v.parameters) for k, v in self.vars.items()
                 # filter variables based on names attribute
                 if names is None or isinstance(names, list) or k in names}
-
 
     def expand_model(self, size=1):
         """ Create the expanded model vars using size as plate size and return the OrderedDict """
