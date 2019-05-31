@@ -27,11 +27,18 @@ class Query:
         """ Computes the sum of the log probabilities (evaluated) of a (set of) sample(s)"""
         return np.sum([np.mean(lp) for lp in self.log_prob().values()])
 
-    def sample(self):
+    def sample(self, size=1):
         """ Generates a sample for eache variable in the model """
         with contextmanager.observe(self.observed_variables, self.data):
-            return util.runtime.try_run({k: (v.sample(v.sample_shape) if v.sample_shape else v.sample())
-                                        for k, v in self.target_variables.items()})
+            samples = [util.runtime.try_run({k: (v.sample(v.sample_shape) if v.sample_shape else v.sample())
+                                             for k, v in self.target_variables.items()})
+                       for _ in range(size)]
+
+        if size == 1:
+            return samples[0]
+        else:
+            # compact all samples in one single dict
+            return {k: np.concatenate([sample[k] for sample in samples]) for k in self.target_variables.keys() }
 
     def parameters(self, names=None):
         """ Return the parameters of the Random Variables of the model.

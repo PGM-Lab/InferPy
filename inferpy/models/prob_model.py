@@ -106,17 +106,17 @@ class ProbModel:
         # depending on belief, use the queries from self.vars variables or from inference expanded variables
         if belief == ProbModel.Belief.PRIOR:
             # create the query object
-            return Query(self.vars, target_names, self.vars, data)
+            return Query(self.vars, target_names, data)
         else:
             if not self.inference_method:
                 raise RuntimeError("The fit method must be called first to use the {} belief.".format(belief.name))
             # NOTE: implementation trick. As p model variables are intercepted with q model variables,
             # compute prior observations for local hidden variables which are not targets,
             # expanding a new model using plate_size and then sampling
-            hidden_variables = [k for k in self.vars.keys() if k not in target_names and k not in data]
-            if hidden_variables:
+            hidden_variable_names = [k for k in self.vars.keys() if k not in target_names and k not in data]
+            if hidden_variable_names:
                 expanded_vars, _ = self.expand_model(self.inference_method.plate_size)
-                prior_data = Query(expanded_vars, hidden_variables, data).sample()
+                prior_data = Query(expanded_vars, hidden_variable_names, data).sample()
             else:
                 prior_data = {}
             # then create the query object
