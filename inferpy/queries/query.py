@@ -7,8 +7,13 @@ from inferpy import util
 
 class Query:
     def __init__(self, variables, target_names=None, data={}):
+        # if provided a single name, create a list with only one item
+        if isinstance(target_names, str):
+            target_names = [target_names]
+
         self.target_variables = variables if not target_names else \
             {k: v for k, v in variables.items() if k in target_names}
+
         # warn if target variables contains observations in data (will be removed)
         prev_len = len(self.target_variables)
         self.target_variables = {k: v for k, v in self.target_variables.items() if k not in data}
@@ -21,7 +26,9 @@ class Query:
     def log_prob(self):
         """ Computes the log probabilities of a (set of) sample(s)"""
         with contextmanager.observe(self.observed_variables, self.data):
-            return util.runtime.try_run({k: v.log_prob(v.value) for k, v in self.target_variables.items()})
+            result = util.runtime.try_run({k: v.log_prob(v.value) for k, v in self.target_variables.items()})
+
+        return Query._flatten_if_single(result)
 
     def sum_log_prob(self):
         """ Computes the sum of the log probabilities (evaluated) of a (set of) sample(s)"""
@@ -35,10 +42,12 @@ class Query:
                        for _ in range(size)]
 
         if size == 1:
-            return samples[0]
+            result = samples[0]
         else:
             # compact all samples in one single dict
-            return {k: np.concatenate([sample[k] for sample in samples]) for k in self.target_variables.keys() }
+            result = {k: np.concatenate([sample[k] for sample in samples]) for k in self.target_variables.keys()}
+
+        return Query._flatten_if_single(result)
 
     def parameters(self, names=None):
         """ Return the parameters of the Random Variables of the model.
@@ -73,4 +82,13 @@ class Query:
             return {k: util.runtime.try_run(v) for k, v in parameters.items() if k in selected_parameters}
 
         with contextmanager.observe(self.observed_variables, self.data):
-            return {k: filter_parameters(k, v.parameters) for k, v in self.target_variables.items()}
+            result = {k: filter_parameters(k, v.parameters) for k, v in self.target_variables.items()}
+
+        return Query._flatten_if_single(result)
+
+    @staticmethod
+    def _flatten_if_single(result):
+        if len(result) == 1:
+            return result[list(result.keys())[0]]
+        else:
+            return result
