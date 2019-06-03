@@ -6,6 +6,7 @@ from tests import no_raised_exc
 
 import inferpy as inf
 from inferpy.models import random_variable
+from inferpy.util.runtime import try_run
 
 
 # TODO: boolean operators and iter are not tested
@@ -116,45 +117,42 @@ def test_tensor_register():
     assert inf.get_session().run(x + tf.constant(5.)) == 10.
 
 
-@pytest.mark.parametrize("arg, bc_shape, expected_flow, expected_result", [
-    # No bc_shape makes no broadcast
-    (1, None, no_raised_exc(), 1),
-    # Element not list and without shape makes no broadcast
-    (1, (2, 3), no_raised_exc(), 1),
-    # list and bc_shape, bc can be done
-    ([1], (2,), no_raised_exc(), [1, 1]),
-    # list and bc_shape, bc can be done but shape is the same
-    ([1., 2.], (2,), no_raised_exc(), [1., 2.]),
-    # list and bc_shape, bc cannot be done
-    ([1., 2.], (2, 3), pytest.raises(ValueError), None),
-    # element with shape and bc_shape, bc can be done
-    (np.ones(1), (2,), no_raised_exc(), [1, 1]),
-    # element with shape and bc_shape, bc can be done but shape is the same
-    (np.ones(2), (2,), no_raised_exc(), [1., 1.]),
-    # element with shape and bc_shape, bc cannot be done
-    (np.ones(2), (2, 3), pytest.raises(ValueError), None),
+def test_convert_random_variables_to_tensors():
+    # element without RVs
+    element = 1
+    element = random_variable._convert_random_variables_to_tensors(element)
+    assert element == element
 
-])
-def test_sanitize_input(arg, bc_shape, expected_flow, expected_result):
-    with expected_flow:
-        result = random_variable._sanitize_input(arg, bc_shape)
-        print(result)
+    # list of elements different from RVs
+    element = [1, 1]
+    element = random_variable._convert_random_variables_to_tensors(element)
+    assert element == element
 
+    # numpy array of elements different from RVs
+    element = np.ones((3, 2))
+    element = random_variable._convert_random_variables_to_tensors(element)
+    assert (element == element).all()
 
-@pytest.mark.parametrize("inputs, expected_shape", [
-    # single basic element
-    ([1], ()),
-    # multiple basic elements
-    ([1, 2, 3], ()),
-    # single complex element
-    ([np.ones((2, 3))], (2, 3)),
-    # multiple complex elements
-    ([np.ones((2, 3)), np.ones((2, 6)), np.ones((4, 6))], (4, 6)),
-    # multiple simple and complex elements
-    ([1, np.ones((2, 6)), 10, np.ones((10, 20))], (10, 20)),
-])
-def test_maximum_shape(inputs, expected_shape):
-    assert np.array_equal(random_variable._maximum_shape(inputs), expected_shape)
+    # A single Random Variable
+    element = inf.Normal(0, 1)
+    result = random_variable._convert_random_variables_to_tensors(element)
+    assert isinstance(element, random_variable.RandomVariable) and not isinstance(result, random_variable.RandomVariable)
+
+    # A list with some Random Variables
+    element = [inf.Normal(0, 1), 1, inf.Normal(0, 1), 2]
+    result = random_variable._convert_random_variables_to_tensors(element)
+    assert all([
+        isinstance(element[i], random_variable.RandomVariable) and
+        not isinstance(result[i], random_variable.RandomVariable)
+        for i in [0, 2]])
+
+    # A list with some nested Random Variables
+    element = [[inf.Normal(0, 1), 1, inf.Normal(0, 1), 2]]
+    result = random_variable._convert_random_variables_to_tensors(element)
+    assert all([
+        isinstance(element[0][i], random_variable.RandomVariable) and
+        not isinstance(result[0][i], random_variable.RandomVariable)
+        for i in [0, 2]])
 
 
 def test_random_variable_in_pmodel():
