@@ -2,11 +2,9 @@ import tensorflow as tf
 from tensorflow_probability import edward2 as ed
 import numpy as np
 import pytest
-from tests import no_raised_exc
 
 import inferpy as inf
 from inferpy.models import random_variable
-from inferpy.util.runtime import try_run
 
 
 # TODO: boolean operators and iter are not tested
