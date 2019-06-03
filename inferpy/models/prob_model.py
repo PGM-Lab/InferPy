@@ -14,6 +14,7 @@
 # ==============================================================================
 
 
+from enum import IntEnum
 import functools
 from collections import OrderedDict
 from tensorflow_probability import edward2 as ed
@@ -23,6 +24,7 @@ from matplotlib import pyplot as plt
 
 from inferpy import util
 from inferpy import contextmanager
+from inferpy.queries import Query
 from .random_variable import RandomVariable
 
 
@@ -51,6 +53,7 @@ class ProbModel:
     the Random Variables/Parameters in order of creation, and the function which declare the
     Random Variables/Parameters.
     """
+
     def __init__(self, builder):
         # Initialize object attributes
         self.builder = builder
@@ -71,21 +74,45 @@ class ProbModel:
         # This attribute contains the inference method used. If it is None, the `fit` function has not been used yet
         self.inference_method = None
 
-    @property
-    def prior(self):
-        raise NotImplementedError("To be implemented")
+    # all the results of prior, posterior and posterior_predictive are evaluated always, because they depends on
+    # tf.Variables, and therefore a tensor cannot be return because the results would depend on the value of that
+    # tf.Variables
 
-    @property
-    def posterior(self):
+    def prior(self, target_names, data={}):
+        return Query(self.vars, target_names, data)
+
+    def posterior(self, target_names, data={}):
         if self.inference_method is None:
             raise RuntimeError("posterior cannot be used before using the fit function.")
-        raise NotImplementedError("To be implemented")
 
-    @property
-    def posterior_predictive(self):
+        prior_data = self._create_hidden_observations(target_names, data)
+
+        return Query(self.inference_method.expanded_variables["q"], target_names, {**data, **prior_data})
+
+    def posterior_predictive(self, target_names, data={}):
         if self.inference_method is None:
             raise RuntimeError("posterior_preductive cannot be used before using the fit function.")
-        raise NotImplementedError("To be implemented")
+
+        prior_data = self._create_hidden_observations(target_names, data)
+
+        return Query(self.inference_method.expanded_variables["p"], target_names, {**data, **prior_data})
+
+    def _create_hidden_observations(self, target_names, data={}):
+        # TODO: This code must be implemented independent of the inference method. Right now we are using the p and q
+        # expanded variables, which belongs only to variational inference methods. When a different VI is implemented
+        # think about a better way to implement this function and access to the correct dict of random variables
+
+        # NOTE: implementation trick. As p model variables are intercepted with q model variables,
+        # compute prior observations for local hidden variables which are not targets,
+        # expanding a new model using plate_size and then sampling
+        hidden_variable_names = [k for k in self.vars.keys() if k not in target_names and k not in data]
+        if hidden_variable_names:
+            expanded_vars, _ = self.expand_model(self.inference_method.plate_size)
+            prior_data = Query(expanded_vars, hidden_variable_names, data).sample(simplify_result=False)
+        else:
+            prior_data = {}
+
+        return prior_data
 
     def _build_graph(self):
         with contextmanager.randvar_registry.init():
@@ -165,12 +192,6 @@ class ProbModel:
             expanded_vars, expanded_params = self.expand_model(size)
         return {name: tf.convert_to_tensor(var) for name, var in expanded_vars.items()}
 
-    def predict(self, observations={}):
-        # TODO: this function is under design. Should not be used as it is right now.
-        sess = util.session.get_session()
-        with contextmanager.observe(self.posterior, observations):
-            return sess.run({k: v for k, v in self.posterior.items()})
-
     @util.tf_run_allowed
     def parameters(self, names=None):
         """ Return the parameters of the Random Variables of the model.
@@ -204,7 +225,6 @@ class ProbModel:
         return {k: filter_parameters(v.name, v.parameters) for k, v in self.vars.items()
                 # filter variables based on names attribute
                 if names is None or isinstance(names, list) or k in names}
-
 
     def expand_model(self, size=1):
         """ Create the expanded model vars using size as plate size and return the OrderedDict """

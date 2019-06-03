@@ -412,6 +412,12 @@ def _make_random_variable(distribution_name):
             with ed.interception(util.interceptor.set_values_condition(is_observed, observed_value)):
                 ed_random_var = _make_edward_random_variable(tfp_dist)(sample_shape=sample_shape, name=rv_name)
 
+            # if the random variable has been intercepted with other random variable, which also has the tf.Variables,
+            # then use their tf.Variables instead of the previously created tf.Variables
+            if hasattr(ed_random_var, 'is_observed') and hasattr(ed_random_var, 'observed_value'):
+                is_observed = ed_random_var.is_observed
+                observed_value = ed_random_var.observed_value
+
             is_datamodel = True
         else:
             # create tf.Variable's to allow to observe the Random Variable
@@ -427,6 +433,13 @@ def _make_random_variable(distribution_name):
             with ed.interception(util.interceptor.set_values_condition(is_observed, observed_value)):
                 # sample_shape is sample_shape in kwargs or ()
                 ed_random_var = ed_random_variable_cls(*sanitized_args, **sanitized_kwargs, sample_shape=sample_shape)
+
+            # if the random variable has been intercepted with other random variable, which also has the tf.Variables,
+            # then use their tf.Variables instead of the previously created tf.Variables
+            if hasattr(ed_random_var, 'is_observed') and hasattr(ed_random_var, 'observed_value'):
+                is_observed = ed_random_var.is_observed
+                observed_value = ed_random_var.observed_value
+
             is_datamodel = False
 
         rv = RandomVariable(
@@ -493,7 +506,7 @@ def _tensor_conversion_function(rv, dtype=None, name=None, as_ref=False):
         If the variable needs to be broadcast_to, do it right now
     """
     # return the tf.Variable last snapshot if it is observed, and the ed2 evaluation (ed2.value) otherwise
-    return tf.convert_to_tensor(rv.observed_value_var.value() if util.get_session().run(rv.is_observed) else rv.var)
+    return tf.convert_to_tensor(rv.observed_value.value() if util.get_session().run(rv.is_observed) else rv.var)
 
 
 # register the conversion function into a tensor
