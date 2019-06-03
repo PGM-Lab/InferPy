@@ -1,7 +1,5 @@
 import tensorflow as tf
-import itertools
 
-import inferpy as inf
 from inferpy import util
 from inferpy import contextmanager
 from .vi import VI
@@ -59,7 +57,7 @@ class SVI(VI):
                         t.append(sess.run(self.debug.loss_tensor))
                         if j == 0 and i % 200 == 0:
                             print("\n {} epochs\t {}".format(i, t[-1]), end="", flush=True)
-                        if j == 0:
+                        if j == 0 and i % 20 == 0:
                             print(".", end="", flush=True)
 
         # set the protected _losses attribute for the losses property

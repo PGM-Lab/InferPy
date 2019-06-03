@@ -1,8 +1,21 @@
 import numpy as np
+import functools
 import warnings
 
 from inferpy import contextmanager
 from inferpy import util
+
+
+def flatten_result(f):
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        simplify_result = kwargs.pop('simplify_result', True)
+        result = f(*args, **kwargs)
+        if simplify_result and len(result) == 1:
+            return result[list(result.keys())[0]]
+        else:
+            return result
+    return wrapper
 
 
 class Query:
@@ -23,20 +36,25 @@ class Query:
         self.observed_variables = variables
         self.data = data
 
+    @flatten_result
     def log_prob(self):
         """ Computes the log probabilities of a (set of) sample(s)"""
         with contextmanager.observe(self.observed_variables, self.data):
             result = util.runtime.try_run({k: v.log_prob(v.value) for k, v in self.target_variables.items()})
 
-        return Query._flatten_if_single(result)
+        return result
 
     def sum_log_prob(self):
         """ Computes the sum of the log probabilities (evaluated) of a (set of) sample(s)"""
-        return np.sum([np.mean(lp) for lp in self.log_prob().values()])
+        # The decorator is not needed here because this function returns a single value
+        return np.sum([np.mean(lp) for lp in self.log_prob(simplify_result=False).values()])
 
+    @flatten_result
     def sample(self, size=1):
         """ Generates a sample for eache variable in the model """
         with contextmanager.observe(self.observed_variables, self.data):
+            # each iteration for `size` run the dict in the session, so if there are dependencies among random variables
+            # they are computed in the same graph operations, and reflected in the results
             samples = [util.runtime.try_run({k: (v.sample(v.sample_shape) if v.sample_shape else v.sample())
                                              for k, v in self.target_variables.items()})
                        for _ in range(size)]
@@ -47,8 +65,9 @@ class Query:
             # compact all samples in one single dict
             result = {k: np.concatenate([sample[k] for sample in samples]) for k in self.target_variables.keys()}
 
-        return Query._flatten_if_single(result)
+        return result
 
+    @flatten_result
     def parameters(self, names=None):
         """ Return the parameters of the Random Variables of the model.
         If `names` is None, then return all the parameters of all the Random Variables.
@@ -84,11 +103,4 @@ class Query:
         with contextmanager.observe(self.observed_variables, self.data):
             result = {k: filter_parameters(k, v.parameters) for k, v in self.target_variables.items()}
 
-        return Query._flatten_if_single(result)
-
-    @staticmethod
-    def _flatten_if_single(result):
-        if len(result) == 1:
-            return result[list(result.keys())[0]]
-        else:
-            return result
+        return result

@@ -108,6 +108,9 @@ class ProbModel:
             # create the query object
             return Query(self.vars, target_names, data)
         else:
+            # TODO: This code must be implemented independent of the inference method. Right now we are using the p and q
+            # expanded variables, which belongs only to variational inference methods. When a different VI is implemented
+            # think about a better way to implement this function and access to the correct dict of random variables
             if not self.inference_method:
                 raise RuntimeError("The fit method must be called first to use the {} belief.".format(belief.name))
             # NOTE: implementation trick. As p model variables are intercepted with q model variables,
@@ -116,7 +119,7 @@ class ProbModel:
             hidden_variable_names = [k for k in self.vars.keys() if k not in target_names and k not in data]
             if hidden_variable_names:
                 expanded_vars, _ = self.expand_model(self.inference_method.plate_size)
-                prior_data = Query(expanded_vars, hidden_variable_names, data).sample()
+                prior_data = Query(expanded_vars, hidden_variable_names, data).sample(simplify_result=False)
             else:
                 prior_data = {}
             # then create the query object
