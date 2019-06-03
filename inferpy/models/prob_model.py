@@ -54,11 +54,6 @@ class ProbModel:
     Random Variables/Parameters.
     """
 
-    class Belief(IntEnum):
-        PRIOR = 0
-        POSTERIOR = 1
-        POSTERIOR_PREDICTIVE = 2
-
     def __init__(self, builder):
         # Initialize object attributes
         self.builder = builder
@@ -79,56 +74,45 @@ class ProbModel:
         # This attribute contains the inference method used. If it is None, the `fit` function has not been used yet
         self.inference_method = None
 
-    @property
-    def prior(self):
-        raise NotImplementedError("To be implemented")
+    # all the results of prior, posterior and posterior_predictive are evaluated always, because they depends on
+    # tf.Variables, and therefore a tensor cannot be return because the results would depend on the value of that
+    # tf.Variables
 
-    @property
-    def posterior(self):
+    def prior(self, target_names, data={}):
+        return Query(self.vars, target_names, data)
+
+    def posterior(self, target_names, data={}):
         if self.inference_method is None:
             raise RuntimeError("posterior cannot be used before using the fit function.")
-        raise NotImplementedError("To be implemented")
 
-    @property
-    def posterior_predictive(self):
+        prior_data = self._create_hidden_observations(target_names, data)
+
+        return Query(self.inference_method.expanded_variables["q"], target_names, {**data, **prior_data})
+
+    def posterior_predictive(self, target_names, data={}):
         if self.inference_method is None:
             raise RuntimeError("posterior_preductive cannot be used before using the fit function.")
-        raise NotImplementedError("To be implemented")
 
-    def query(self, target_names, belief=Belief.PRIOR, data={}):
-        # all the results are evaluated always, because they depends on tf.Variables, and therefore a tensor cannot
-        # be return because the results would depend on the value of that tf.Variables.
+        prior_data = self._create_hidden_observations(target_names, data)
 
-        # assert that the parameter is of type Belief
-        if not isinstance(belief, ProbModel.Belief):
-            raise TypeError("The `belief` argument must be of type `ProbModel.Belief`, not {}".format(type(belief)))
+        return Query(self.inference_method.expanded_variables["p"], target_names, {**data, **prior_data})
 
-        # depending on belief, use the queries from self.vars variables or from inference expanded variables
-        if belief == ProbModel.Belief.PRIOR:
-            # create the query object
-            return Query(self.vars, target_names, data)
+    def _create_hidden_observations(self, target_names, data={}):
+        # TODO: This code must be implemented independent of the inference method. Right now we are using the p and q
+        # expanded variables, which belongs only to variational inference methods. When a different VI is implemented
+        # think about a better way to implement this function and access to the correct dict of random variables
+
+        # NOTE: implementation trick. As p model variables are intercepted with q model variables,
+        # compute prior observations for local hidden variables which are not targets,
+        # expanding a new model using plate_size and then sampling
+        hidden_variable_names = [k for k in self.vars.keys() if k not in target_names and k not in data]
+        if hidden_variable_names:
+            expanded_vars, _ = self.expand_model(self.inference_method.plate_size)
+            prior_data = Query(expanded_vars, hidden_variable_names, data).sample(simplify_result=False)
         else:
-            # TODO: This code must be implemented independent of the inference method. Right now we are using the p and q
-            # expanded variables, which belongs only to variational inference methods. When a different VI is implemented
-            # think about a better way to implement this function and access to the correct dict of random variables
-            if not self.inference_method:
-                raise RuntimeError("The fit method must be called first to use the {} belief.".format(belief.name))
-            # NOTE: implementation trick. As p model variables are intercepted with q model variables,
-            # compute prior observations for local hidden variables which are not targets,
-            # expanding a new model using plate_size and then sampling
-            hidden_variable_names = [k for k in self.vars.keys() if k not in target_names and k not in data]
-            if hidden_variable_names:
-                expanded_vars, _ = self.expand_model(self.inference_method.plate_size)
-                prior_data = Query(expanded_vars, hidden_variable_names, data).sample(simplify_result=False)
-            else:
-                prior_data = {}
-            # then create the query object
-            # if it is posterior_predictive, then use as target the p variables
-            if belief == ProbModel.Belief.POSTERIOR_PREDICTIVE:
-                return Query(self.inference_method.expanded_variables["p"], target_names, {**data, **prior_data})
-            # else, use the q variables
-            else:
-                return Query(self.inference_method.expanded_variables["q"], target_names, {**data, **prior_data})
+            prior_data = {}
+
+        return prior_data
 
     def _build_graph(self):
         with contextmanager.randvar_registry.init():
