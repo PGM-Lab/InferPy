@@ -14,7 +14,6 @@
 # ==============================================================================
 import functools
 from enum import IntEnum
-import numpy as np
 import tensorflow as tf
 from tensorflow_probability import edward2 as ed
 from tensorflow_probability.python.edward2.interceptor import interceptable
@@ -296,54 +295,15 @@ class RandomVariable:
         return self.var.__nonzero__()
 
 
-def _is_broadcastable_arg(arg):
-    # basic types int, float or lists and every element with a shape attribute
-    return isinstance(arg, (int, float, list)) or hasattr(arg, 'shape')
-
-
-def _is_castable_arg(arg):
-    # cast is for numeric objects: basic types int and float and every element with an int or float dtype
-    return isinstance(arg, (int, float)) or \
-        (hasattr(arg, 'dtype') and ('int' in str(arg.dtype) or 'float' in str(arg.dtype)))
-
-
-def _sanitize_input(arg, bc_shape):
-
-    # there are some distributions which do not admit float64 types
-    # distributions which require an int argument admit also floats (and apply floor)
-    # therefore, to avoid problems, data is always casted to float32
-    arg = tf.cast(arg, tf.float32) if _is_castable_arg(arg) else arg
-
-    if bc_shape and _is_broadcastable_arg(arg):
-        # This items are used for sure as RV parameters (only sample_shape can interfer, and has been removed)
-        # For each arg, try to tf.broadcast_to bc_shape, and convert to a single tensor using tf.stack
-        if util.iterables.get_shape(arg) != bc_shape:
-            # Try to broadcast to bc_shape. If exception, use arg to stack (i.e. all are simple scalars)
-            try:
-                # broadcast each element to the bc_shape
-                bc_arg = tf.broadcast_to(arg, bc_shape)
-                exception_happened = None
-            except ValueError:
-                # if broadcast fails, raise custom error
-                exception_happened = ValueError(
-                    'Parameters cannot be broadcasted. Check their shapes.')
-            # Do not raise exception inside except, because it will be considered that first exception happened first
-            if exception_happened:
-                raise exception_happened
-        else:
-            bc_arg = arg
-
-        return tf.stack(bc_arg, axis=0)
+def _convert_random_variables_to_tensors(arg):
+    # function used to convert Random Variables (from inferpy or edward2) to tensors, even if there
+    # are in a list or nested list, in order to allow to use them as arguments for other Random Variables
+    if isinstance(arg, (ed.RandomVariable, RandomVariable)):
+        return tf.convert_to_tensor(arg)
+    elif isinstance(arg, list):
+        return [_convert_random_variables_to_tensors(nested_arg) for nested_arg in arg]
     else:
-        # if it is a dict, other objects return arg as it is (can be other input accepted by ed.RandomVariable).
         return arg
-
-
-def _maximum_shape(list_inputs):
-    shapes = [util.iterables.get_shape(x) for x in list_inputs]
-    # get the shape with maximum number of elements
-    idx = np.argmax([np.multiply.reduce(s) if len(s) > 0 else 0 for s in shapes])
-    return shapes[idx]
 
 
 def _make_random_variable(distribution_name):
@@ -362,16 +322,6 @@ def _make_random_variable(distribution_name):
             kwargs['name'] = util.name.generate('randvar')
         rv_name = kwargs.get('name')
 
-        # compute maximum shape between shapes of inputs, and apply broadcast to the smallers in _sanitize_input
-        # if batch_shape is provided, use such shape instead
-        if 'batch_shape' in kwargs:
-            b = kwargs.pop('batch_shape')
-            if np.isscalar(b):
-                b = [b]
-            max_shape = b
-        else:
-            max_shape = _maximum_shape(args + tuple(kwargs.values()))
-
         if contextmanager.data_model.is_active():
             if 'sample_shape' in kwargs:
                 # warn that sampe_shape will be ignored
@@ -382,9 +332,9 @@ def _make_random_variable(distribution_name):
             # only used if prob model is active
             sample_shape = kwargs.pop('sample_shape', ())
 
-        # sanitize will consist on tf.stack list, and each element must be broadcast_to to match the shape
-        sanitized_args = [_sanitize_input(arg, max_shape) for arg in args]
-        sanitized_kwargs = {k: _sanitize_input(v, max_shape) for k, v in kwargs.items()}
+        # convert any Random Variable in a list or nested list in arguments to tensors, allowing to use RV's as arguments
+        sanitized_args = [_convert_random_variables_to_tensors(arg) for arg in args]
+        sanitized_kwargs = {k: _convert_random_variables_to_tensors(v) for k, v in kwargs.items()}
 
         # If it is inside a data model, ommit the sample_shape in kwargs if exist and use size from data_model
         # NOTE: Needed here because we need to know the shape of the distribution, as well as its dtype

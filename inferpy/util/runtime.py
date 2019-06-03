@@ -98,6 +98,6 @@ def try_run(obj):
     try:
         ev_obj = util.get_session().run(obj)
         return ev_obj
-    except (TypeError, ValueError):
+    except (RuntimeError, TypeError, ValueError):
         # cannot evaluate the result, return the obj
         return obj

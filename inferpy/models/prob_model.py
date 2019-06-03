@@ -14,7 +14,6 @@
 # ==============================================================================
 
 
-from enum import IntEnum
 import functools
 from collections import OrderedDict
 from tensorflow_probability import edward2 as ed
