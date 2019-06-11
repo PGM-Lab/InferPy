@@ -23,7 +23,10 @@ class Inference:
     def __init__(self):
         raise NotImplementedError
 
-    def run(self, pmodel, sample_dict):
+    def compile(self, pmodel, data_size):
+        raise NotImplementedError
+
+    def update(self, sample_dict):
         raise NotImplementedError
 
     def sample(self, size=1, data={}):

@@ -20,6 +20,7 @@ from tensorflow_probability import edward2 as ed
 import tensorflow as tf
 import networkx as nx
 from matplotlib import pyplot as plt
+import warnings
 
 from inferpy import util
 from inferpy import contextmanager
@@ -176,14 +177,37 @@ class ProbModel:
         if len(sample_dict) == 0:
             raise ValueError('The number of mapped variables must be at least 1.')
 
+        # if fit was called before, warn that it restarts everything
+        if self.inference_method:
+            warnings.warn("Fit was called before. This will restart the inference method and \
+                re-build the expanded model.")
+
         # set the inference method
         self.inference_method = inference_method
 
-        # Run the inference method
-        inference_method.run(self, sample_dict)
+        # get the plate size
+        plate_size = util.iterables.get_plate_size(self.vars, sample_dict)
+        # compile the inference method
+        inference_method.compile(self, plate_size)
+        # and run the update method with the data
+        inference_method.update(sample_dict)
 
         # If it works, set the observed variables
         self.observed_vars = list(sample_dict.keys())
+
+    @util.tf_run_ignored
+    def update(self, sample_dict):
+        # Check that fit was called first
+        if self.inference_method is None:
+            raise RuntimeError("The fit method must be called before update")
+
+        # check that the observed_vars are the same
+        if set(self.observed_vars) != sample_dict.keys():
+            raise ValueError("The data in sample dict must contain only data from observed variables: \
+                {}.".format(self.observed_vars))
+
+        # Run the inference method
+        self.inference_method.update(sample_dict)
 
     def expand_model(self, size=1):
         """ Create the expanded model vars using size as plate size and return the OrderedDict """

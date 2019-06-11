@@ -53,6 +53,8 @@ class VI(Inference):
         self.pmodel = None
         # The size of the plate when expand the models
         self.plate_size = None
+        # The tensor to optimize the tf.Variables
+        self.train_tensor = None
 
         # expanded variables and parameters
         self.expanded_variables = {"p": None, "q": None}
@@ -63,24 +65,28 @@ class VI(Inference):
             pass
         self.debug = Debug()
 
-        self.debug.losses = None
+        self.debug.losses = []
 
-    def run(self, pmodel, sample_dict):
+    def compile(self, pmodel, data_size):
         # set the used pmodel
         self.pmodel = pmodel
-
-        # get the plate size
-        self.plate_size = util.iterables.get_plate_size(self.pmodel.vars, sample_dict)
-
+        # and the plate size, which matches the data size
+        self.plate_size = data_size
         # create the train tensor
-        train = self._generate_train_tensor(plate_size=self.plate_size)
+        self.train_tensor = self._generate_train_tensor(plate_size=self.plate_size)
+
+    def update(self, sample_dict):
+        # ensure that the size of the data matches with the self.plate_size
+        data_size = util.iterables.get_plate_size(self.pmodel.vars, sample_dict)
+        if data_size != self.plate_size:
+            raise ValueError("The size of the data must be equal to the plate size: {}".format(self.plate_size))
 
         t = []
         sess = util.get_session()
         with contextmanager.observe(self.expanded_variables["p"], sample_dict):
             with contextmanager.observe(self.expanded_variables["q"], sample_dict):
                 for i in range(self.epochs):
-                    sess.run(train)
+                    sess.run(self.train_tensor)
 
                     t.append(sess.run(self.debug.loss_tensor))
                     if i % 200 == 0:
@@ -89,7 +95,7 @@ class VI(Inference):
                         print(".", end="", flush=True)
 
         # set the protected _losses attribute for the losses property
-        self.debug.losses = t
+        self.debug.losses += t
 
     @property
     def losses(self):
