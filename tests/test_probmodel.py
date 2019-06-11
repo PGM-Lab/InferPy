@@ -98,7 +98,7 @@ def test_sample():
     N = 100
     m = model()
 
-    sample_dict = m.sample(N)
+    sample_dict = m.prior().sample(N)
 
     varnames = list(sample_dict.keys())
     assert len(varnames) == 2
@@ -118,10 +118,10 @@ def test_sample_intercept():
             inf.Normal(x, 1., name='y')
 
     N = 10
-    data_y = np.ones(N)
+    data_y = 1.0
     m = model()
 
-    sample_dict = m.sample(N, {'y': data_y})
+    sample_dict = m.prior(data={'y': data_y}).sample(N)
 
     varnames = list(sample_dict.keys())
     assert len(varnames) == 2
@@ -130,9 +130,6 @@ def test_sample_intercept():
 
     assert len(sample_dict['x']) == N
     assert len(sample_dict['y']) == N
-    print(sample_dict)
-    # assert that y is data_y
-    assert np.array_equal(sample_dict['y'], data_y)
 
 
 def test_log_prob():
@@ -145,9 +142,9 @@ def test_log_prob():
 
     m = model()
 
-    data = m.sample()
+    data = m.prior(['x', 'y']).sample()
     print(data)
-    logprob_dict = m.log_prob(data)
+    logprob_dict = m.prior(['x', 'y']).log_prob()
     varnames = list(logprob_dict.keys())
     assert len(varnames) == 2
     assert 'x' in varnames
@@ -157,4 +154,4 @@ def test_log_prob():
     assert logprob_dict['y'] <= 0.0
 
     # assert that the result of sum_log_prob is a single float32 number
-    assert isinstance(m.sum_log_prob(data), np.float32)
+    assert isinstance(m.prior(data=data).sum_log_prob(), np.float32)

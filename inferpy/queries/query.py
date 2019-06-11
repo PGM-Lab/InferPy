@@ -1,6 +1,5 @@
 import numpy as np
 import functools
-import warnings
 
 from inferpy import contextmanager
 from inferpy import util
@@ -24,14 +23,12 @@ class Query:
         if isinstance(target_names, str):
             target_names = [target_names]
 
+        # raise an error if target_names is not None and contains variable names not in variables
+        if target_names and any((name not in variables for name in target_names)):
+            raise ValueError("Target names must correspond to variable names")
+
         self.target_variables = variables if not target_names else \
             {k: v for k, v in variables.items() if k in target_names}
-
-        # warn if target variables contains observations in data (will be removed)
-        prev_len = len(self.target_variables)
-        self.target_variables = {k: v for k, v in self.target_variables.items() if k not in data}
-        if len(self.target_variables) != prev_len:
-            warnings.warn("Some target variables has been removed because targets cannot be observations.")
 
         self.observed_variables = variables
         self.data = data

@@ -73,26 +73,36 @@ class ProbModel:
         # This attribute contains the inference method used. If it is None, the `fit` function has not been used yet
         self.inference_method = None
 
+        self.observed_vars = []  # list of variables that have been observed during the inference
+
     # all the results of prior, posterior and posterior_predictive are evaluated always, because they depends on
     # tf.Variables, and therefore a tensor cannot be return because the results would depend on the value of that
     # tf.Variables
 
-    def prior(self, target_names, data={}):
+    def prior(self, target_names=None, data={}):
         return Query(self.vars, target_names, data)
 
-    def posterior(self, target_names, data={}):
+    def posterior(self, target_names=None, data={}):
         if self.inference_method is None:
             raise RuntimeError("posterior cannot be used before using the fit function.")
 
-        prior_data = self._create_hidden_observations(target_names, data)
+        if any(var in self.observed_vars for var in target_names):
+            raise ValueError("target_names must correspond to not observed variables during the inference: \
+                {}".format([v for v in self.vars.keys() if v not in self.observed_vars]))
+
+        prior_data = self._create_hidden_observations(target_names, data) if target_names else {}
 
         return Query(self.inference_method.expanded_variables["q"], target_names, {**data, **prior_data})
 
-    def posterior_predictive(self, target_names, data={}):
+    def posterior_predictive(self, target_names=None, data={}):
         if self.inference_method is None:
             raise RuntimeError("posterior_preductive cannot be used before using the fit function.")
 
-        prior_data = self._create_hidden_observations(target_names, data)
+        if any(var not in self.observed_vars for var in target_names):
+            raise ValueError("target_names must correspond to observed variables during the inference: \
+                {}".format(self.observed_vars))
+
+        prior_data = self._create_hidden_observations(target_names, data) if target_names else {}
 
         return Query(self.inference_method.expanded_variables["p"], target_names, {**data, **prior_data})
 
@@ -171,6 +181,9 @@ class ProbModel:
 
         # Run the inference method
         inference_method.run(self, sample_dict)
+
+        # If it works, set the observed variables
+        self.observed_vars = list(sample_dict.keys())
 
     def expand_model(self, size=1):
         """ Create the expanded model vars using size as plate size and return the OrderedDict """
