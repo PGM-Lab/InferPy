@@ -172,59 +172,6 @@ class ProbModel:
         # Run the inference method
         inference_method.run(self, sample_dict)
 
-    @util.tf_run_allowed
-    def log_prob(self, data):
-        """ Computes the log probabilities of a (set of) sample(s)"""
-        with contextmanager.observe(self.vars, data):
-            return {k: self.vars[k].log_prob(tf.convert_to_tensor(v)) for k, v in data.items()}
-
-    @util.tf_run_allowed
-    def sum_log_prob(self, data):
-        """ Computes the sum of the log probabilities of a (set of) sample(s)"""
-        return tf.reduce_sum([tf.reduce_mean(lp) for lp in self.log_prob(data).values()])
-
-    @util.tf_run_allowed
-    def sample(self, size=1, data={}):
-        """ Generates a sample for eache variable in the model """
-        expanded_vars, expanded_params = self.expand_model(size)
-        with ed.interception(util.interceptor.set_values(**data)):
-            expanded_vars, expanded_params = self.expand_model(size)
-        return {name: tf.convert_to_tensor(var) for name, var in expanded_vars.items()}
-
-    @util.tf_run_allowed
-    def parameters(self, names=None):
-        """ Return the parameters of the Random Variables of the model.
-        If `names` is None, then return all the parameters of all the Random Variables.
-        If `names` is a list, then return the parameters specified in the list (if exists) for all the Random Variables.
-        If `names` is a dict, then return all the parameters specified (value) for each Random Variable (key).
-
-        NOTE: If tf_run=True, but any of the returned parameters is not a Tensor *and therefore cannot be evaluated)
-            this returns a not evaluated dict (because the evaluation will raise an Exception)
-
-        Args:
-            names: A list, a dict or None. Specify the parameters for the Random Variables to be obtained.
-
-        Returns:
-            A dict, where the keys are the names of the Random Variables and the values a dict of parameters (name-value)
-        """
-        # argument type checking
-        if not(names is None or isinstance(names, (list, dict))):
-            raise TypeError("The argument 'names' must be None, a list or a dict, not {}.".format(type(names)))
-        # now we can assume that names is None, a list or a dict
-
-        # function to filter the parameters for each Random Variable
-        def filter_parameters(varname, parametes):
-            if names is None:
-                return parametes
-
-            selected_parameters = set(names if isinstance(names, list) else names[varname])
-
-            return {k: v for k, v in parametes.items() if k in selected_parameters}
-
-        return {k: filter_parameters(v.name, v.parameters) for k, v in self.vars.items()
-                # filter variables based on names attribute
-                if names is None or isinstance(names, list) or k in names}
-
     def expand_model(self, size=1):
         """ Create the expanded model vars using size as plate size and return the OrderedDict """
 
