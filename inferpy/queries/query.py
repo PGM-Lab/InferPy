@@ -37,6 +37,7 @@ class Query:
         self.data = data
 
     @flatten_result
+    @util.tf_run_ignored
     def log_prob(self):
         """ Computes the log probabilities of a (set of) sample(s)"""
         with contextmanager.observe(self.observed_variables, self.data):
@@ -50,14 +51,15 @@ class Query:
         return np.sum([np.mean(lp) for lp in self.log_prob(simplify_result=False).values()])
 
     @flatten_result
+    @util.tf_run_ignored
     def sample(self, size=1):
         """ Generates a sample for eache variable in the model """
         with contextmanager.observe(self.observed_variables, self.data):
             # each iteration for `size` run the dict in the session, so if there are dependencies among random variables
             # they are computed in the same graph operations, and reflected in the results
-            samples = [util.runtime.try_run({k: (v.sample(v.sample_shape) if v.sample_shape else v.sample())
-                                             for k, v in self.target_variables.items()})
-                       for _ in range(size)]
+            samples = util.runtime.try_run([{k: (v.sample(v.sample_shape) if v.sample_shape else v.sample())
+                                             for k, v in self.target_variables.items()}
+                                            for _ in range(size)])
 
         if size == 1:
             result = samples[0]
@@ -68,6 +70,7 @@ class Query:
         return result
 
     @flatten_result
+    @util.tf_run_ignored
     def parameters(self, names=None):
         """ Return the parameters of the Random Variables of the model.
         If `names` is None, then return all the parameters of all the Random Variables.
@@ -98,9 +101,10 @@ class Query:
                 # filter by names; if is a dict and key not in, use all the parameters
                 selected_parameters = set(names if isinstance(names, list) else names.get(varname, parameters))
 
-            return {k: util.runtime.try_run(v) for k, v in parameters.items() if k in selected_parameters}
+            return {k: v for k, v in parameters.items() if k in selected_parameters}
 
         with contextmanager.observe(self.observed_variables, self.data):
-            result = {k: filter_parameters(k, v.parameters) for k, v in self.target_variables.items()}
+            result = util.runtime.try_run({k: filter_parameters(k, v.parameters)
+                                           for k, v in self.target_variables.items()})
 
         return result
