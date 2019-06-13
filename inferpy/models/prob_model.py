@@ -87,11 +87,15 @@ class ProbModel:
         if self.inference_method is None:
             raise RuntimeError("posterior cannot be used before using the fit function.")
 
-        if any(var in self.observed_vars for var in target_names):
-            raise ValueError("target_names must correspond to not observed variables during the inference: \
-                {}".format([v for v in self.vars.keys() if v not in self.observed_vars]))
+        # only non-observed variables can be in target_names
+        if target_names is None:
+            target_names = [name for name in self.vars.keys() if name not in self.observed_vars]
+        else:
+            if any(var in self.observed_vars for var in target_names):
+                raise ValueError("target_names must correspond to not observed variables during the inference: \
+                    {}".format([v for v in self.vars.keys() if v not in self.observed_vars]))
 
-        prior_data = self._create_hidden_observations(target_names, data) if target_names else {}
+        prior_data = self._create_hidden_observations(target_names, data)
 
         return Query(self.inference_method.expanded_variables["q"], target_names, {**data, **prior_data})
 
@@ -99,11 +103,15 @@ class ProbModel:
         if self.inference_method is None:
             raise RuntimeError("posterior_preductive cannot be used before using the fit function.")
 
-        if any(var not in self.observed_vars for var in target_names):
-            raise ValueError("target_names must correspond to observed variables during the inference: \
-                {}".format(self.observed_vars))
+        # only non-observed variables can be in target_names
+        if target_names is None:
+            target_names = [name for name in self.vars.keys() if name in self.observed_vars]
+        else:
+            if any(var not in self.observed_vars for var in target_names):
+                raise ValueError("target_names must correspond to observed variables during the inference: \
+                    {}".format(self.observed_vars))
 
-        prior_data = self._create_hidden_observations(target_names, data) if target_names else {}
+        prior_data = self._create_hidden_observations(target_names, data)
 
         return Query(self.inference_method.expanded_variables["p"], target_names, {**data, **prior_data})
 
