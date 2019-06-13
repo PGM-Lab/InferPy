@@ -7,7 +7,7 @@ Features
 
 The main features of InferPy are listed below.
 
--  The models that can be defined in Inferpy are those that can be defined using Edward, whose probability distribuions
+-  The models that can be defined in InferPy are those that can be defined using Edward, whose probability distribuions
    are mainly inherited from TensorFlow Distribuitons package.
 -  Edward's drawback is that for the model definition, the user has to manage complex multidimensional arrays called
    tensors. By contrast, in InferPy all the parameters in a model can be defined using the standard Python types
