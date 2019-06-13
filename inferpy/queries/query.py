@@ -98,10 +98,10 @@ class Query:
                 # filter by names; if is a dict and key not in, use all the parameters
                 selected_parameters = set(names if isinstance(names, list) else names.get(varname, parameters))
 
-            return {k: v for k, v in parameters.items() if k in selected_parameters}
+            return {k: util.runtime.try_run(v) for k, v in parameters.items() if k in selected_parameters}
 
         with contextmanager.observe(self.observed_variables, self.data):
-            result = util.runtime.try_run({k: filter_parameters(k, v.parameters)
-                                           for k, v in self.target_variables.items()})
+            result = {k: filter_parameters(k, v.parameters)
+                      for k, v in self.target_variables.items()}
 
         return result
