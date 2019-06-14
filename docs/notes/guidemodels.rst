@@ -1,10 +1,10 @@
-Guide to Building Probabilistic Models
+Guide to Probabilistic Models
 ======================================
 
 Getting Started with Probabilistic Models
 ------------------------------------------
 
-InferPy focuses on *hirearchical probabilistic models* structured 
+InferPy focuses on *hierarchical probabilistic models* structured
 in two different layers:
 
 -  A **prior model** defining a joint distribution :math:`p(\mathbf{w})`

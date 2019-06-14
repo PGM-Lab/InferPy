@@ -1,3 +1,5 @@
+..  Note: add links to github at each one
+
 .. _inf_vs_ed:
 
 Inferpy vs Edward

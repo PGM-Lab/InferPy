@@ -5,7 +5,7 @@ Requirements
 System
 -----------------
 
-Currently, InferPy requires Python 3.4 or higher. For checking your default Python version, type:
+Currently, InferPy requires Python 3.5 or higher. For checking your default Python version, type:
 
 
 .. code:: bash

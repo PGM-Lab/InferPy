@@ -68,27 +68,28 @@ A set of examples can be found in the `Probabilistic Model Zoo <notes/probzoo.ht
    :caption: Guides
    
    notes/guidemodels
+   notes/guidedeepmodels
    notes/guideinference
+   notes/guidebayesian
 
-..   notes/guidevalidation
-..   notes/guidedata
-
-..   notes/guidebayesian
+   notes/guidevalidation
+   notes/guidedata
 
 
 .. toctree::
    :includehidden:
    :maxdepth: 1
-   :caption: Model Zoo
+   :caption: Examples
    
    notes/probzoo
+   Variational auto-encoder with MNIST <notes/vae_mnist>
 
 
-.. .. toctree::
+..  toctree::
    :maxdepth: 1
    :caption: Package Reference
 
-..    modules/inferpy
+   modules/inferpy
    modules/inferpy.contextmanager
    modules/inferpy.datasets
    modules/inferpy.exceptions
