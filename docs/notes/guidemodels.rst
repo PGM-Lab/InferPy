@@ -60,22 +60,31 @@ our data.
 Random Variables
 ----------------
 
-Any random variable in InferPy encapsulates an equivalent one in Edward (i.e., version 2), and hence it also has associated
-a distribution object from TensorFlow Probability. These can be access using the properties ``var`` and
-``dist`` respectively:
+Any random variable in InferPy encapsulates an equivalent one in Edward 2, and hence it also has associated
+a distribution object from TensorFlow Probability. These can be accessed using the properties ``var`` and
+``distribution`` respectively:
 
 .. literalinclude:: ../../examples/docs/guidemodels/2.py
    :language: python3
    :lines: 12-19
 
 
-Even more, InferPy random variables inherit all the properties and methods from Edward variables. For
-example:
+Even more, InferPy random variables inherit all the properties and methods from Edward2 variables or TensorFlow
+Probability distributions (in this order or priority). For example:
 
 
 .. literalinclude:: ../../examples/docs/guidemodels/2.py
    :language: python3
-   :lines: 25-29
+   :lines: 26-33
+
+
+In the previous code, ``value`` is inherited form the encapsulated Edward2 object while ``sample()`` and the
+parameter ``loc`` are obtained from the distribution object. Note that the method ``sample()`` returns
+an evaluated tensors. In case of desiring it not to be evaluated, simply use the input parameter ``tf_run`` as follows.
+
+.. literalinclude:: ../../examples/docs/guidemodels/2.py
+   :language: python3
+   :lines: 38-39
 
 
 
@@ -86,50 +95,61 @@ Following Edward's approach, we (conceptually) partition a random variable's sha
 - *Event shape* describes the shape of a single draw (event space) from the distribution; it may be dependent across dimensions.
 
 
-When declaring random variables, InferPy provides different ways for defining previous shapes. First,
-the batch shape could be obtained from the distribution parameter shapes or explicitly stated using the input parameter
-``batch_shape``.  With this in mind, all the definitions in the following code are equivalent.
+
+The previous attributes can be accessed by ``x.batch_shape``, ``x.sample_shape`` and ``x.event_shape``,
+respectively.  When declaring random variables, the *batch_shape* is obtained from the distribution
+parameters. For as long as possible, the parameters will be broadcasted. With this in mind, all the definitions in the
+following code are equivalent.
+
+.. literalinclude:: ../../examples/docs/guidemodels/2.py
+   :language: python3
+   :lines: 53-57
+
+
+
+The ``sample_shape`` can be explicitly stated using the input parameter
+sample_shape, but this only can be done outside a model definition.
+Inside of ``inf.probmodels``, the sample_shape is fixed by ``with inf.datamodel(size = N)`` (using the size argument
+when provided, or in runtime depending on the observed data).
+
 
 
 .. literalinclude:: ../../examples/docs/guidemodels/2.py
    :language: python3
-   :lines: 38-44
+   :lines: 66-69
 
 
-The ``with inf.datamodel(size = N)`` sintaxis is used to specify the sample shape. Alternatively,
-we might explicitly state it using the input paramenter ``sample_shape``. This is actually inherit
-from Edward.
-
-.. literalinclude:: ../../examples/docs/guidemodels/2.py
-   :language: python3
-   :lines: 50-53
-
-
-Finally, the sample shape will only be consider in some distributions. This is the case of the
+Finally, the *event shape* will only be consider in some distributions. This is the case of the
 multivariate Gaussian:
 
 
 .. literalinclude:: ../../examples/docs/guidemodels/2.py
    :language: python3
-   :lines: 59
+   :lines: 75
 
 
 .. literalinclude:: ../../examples/docs/guidemodels/2.py
    :language: python3
-   :lines: 67-74
+   :lines: 83-90
 
 
 
 
-Note that indexing is supported:
+Note that indexing over all the defined dimenensions is supported:
 
 
 .. literalinclude:: ../../examples/docs/guidemodels/2.py
    :language: python3
-   :lines: 85-95
+   :lines: 103-114
 
 
 Moreover, we may use indexation for defining new variables whose indexes may be other (discrete) variables.
+
+
+.. literalinclude:: ../../examples/docs/guidemodels/2.py
+   :language: python3
+   :lines: 123-125
+
 
 
 
