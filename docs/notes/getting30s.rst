@@ -35,14 +35,14 @@ be defined as follows,
 We start by importing the required packages and defining the constant parameters in the model.
 
 .. literalinclude:: ../../examples/docs/getting30s/1.py
-   :language: python
+   :language: python3
    :lines: 1-13
 
 A model can be defined by decorating any function with ``@inf.probmodel``. The model is fully specified by
 the variables defined inside this function:
 
 .. literalinclude:: ../../examples/docs/getting30s/1.py
-   :language: python
+   :language: python3
    :lines: 14-22
 
 
@@ -55,14 +55,14 @@ This might be defined outside the model as follows.
 
 
 .. literalinclude:: ../../examples/docs/getting30s/1.py
-   :language: python
+   :language: python3
    :lines: 27-30
 
 
 Now, we can instantiate our model and obtain samples (from the prior distributions).
 
 .. literalinclude:: ../../examples/docs/getting30s/1.py
-   :language: python
+   :language: python3
    :lines: 48-53
 
 
@@ -72,7 +72,7 @@ In variational inference, we must defined a Q-model as follows.
 
 
 .. literalinclude:: ../../examples/docs/getting30s/1.py
-   :language: python
+   :language: python3
    :lines: 36-44
 
 
@@ -82,7 +82,7 @@ Afterwards, we define the parameters of our inference algorithm and fit the data
 
 
 .. literalinclude:: ../../examples/docs/getting30s/1.py
-   :language: python
+   :language: python3
    :lines: 62-66
 
 
@@ -98,5 +98,5 @@ of our data.
 
 
 .. literalinclude:: ../../examples/docs/getting30s/1.py
-   :language: python
+   :language: python3
    :lines: 71-73

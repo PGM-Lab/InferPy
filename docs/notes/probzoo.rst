@@ -23,7 +23,7 @@ The InferPy code for this model is shown below,
 
 
 .. literalinclude:: ../../examples/probzoo/linear_regression.py
-   :language: python
+   :language: python3
 
 --------------
 
@@ -45,7 +45,7 @@ The InferPy code for this model is shown below,
 
 
 .. literalinclude:: ../../examples/probzoo/log_regression.py
-   :language: python
+   :language: python3
 
 
 --------------
@@ -67,7 +67,7 @@ A linear factor model allows to perform principal component analysis (PCA). Grap
 The InferPy code for this model is shown below,
 
 .. literalinclude:: ../../examples/probzoo/pca.py
-   :language: python
+   :language: python3
    :lines: 8-32
 
 
@@ -89,7 +89,7 @@ Similarly to the previous model, the Non-linear PCA can be graphically defined a
 Its code in InferPy is shown below,
 
 .. literalinclude:: ../../examples/probzoo/nlpca.py
-   :language: python
+   :language: python3
    :lines: 8-68
 
 

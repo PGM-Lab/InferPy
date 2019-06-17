@@ -15,7 +15,7 @@ posteriors we can uncover the hidden structure in the data. Let us consider the
 following model:
 
 .. literalinclude:: ../../examples/docs/guideinference/1.py
-   :language: python
+   :language: python3
    :lines: 6-11
 
 
@@ -48,7 +48,7 @@ with ``@inf.probmodel``:
 
 
 .. literalinclude:: ../../examples/docs/guideinference/1.py
-   :language: python
+   :language: python3
    :lines: 31-40
 
 
@@ -64,7 +64,7 @@ Finally, when defining the inference algorithm, we must specify an instance
 of the 'Q' model:
 
 .. literalinclude:: ../../examples/docs/guideinference/1.py
-   :language: python
+   :language: python3
    :lines: 44-45
 
 
@@ -72,7 +72,7 @@ Then we must instantiate our 'P' model and fit the data with the inference
 algorithm defined.
 
 .. literalinclude:: ../../examples/docs/guideinference/1.py
-   :language: python
+   :language: python3
    :lines: 46-49
 
 
@@ -86,7 +86,7 @@ The output generated will be similar to:
 Finally we can access to the dictionary with the posterior distributions:
 
 .. literalinclude:: ../../examples/docs/guideinference/1.py
-   :language: python
+   :language: python3
    :lines: 64-65
 
 Custom Loss function
@@ -98,7 +98,7 @@ an example, we define the following function taking as input parameters the inst
 of the P and Q models, and the dictionary with the observations. Note that the output of this function must be a tensor.
 
 .. literalinclude:: ../../examples/docs/guideinference/1.py
-   :language: python
+   :language: python3
    :lines: 75-100
 
 
@@ -108,7 +108,7 @@ input parameter ``loss`` in the inference method constructor. For example:
 
 
 .. literalinclude:: ../../examples/docs/guideinference/1.py
-   :language: python
+   :language: python3
    :lines: 105-108
 
 
@@ -127,14 +127,14 @@ First, we get the tensor for the ELBO, but we must first invoke the method
 ``inf.util.runtime.set_tf_run(False)`` which avoids the evaluation of such tensor.
 
 .. literalinclude:: ../../examples/docs/guideinference/1.py
-   :language: python
+   :language: python3
    :lines: 121-124
 
 
 Then we must initialize the optimizer and the session:
 
 .. literalinclude:: ../../examples/docs/guideinference/1.py
-   :language: python
+   :language: python3
    :lines: 126-133
 
 
@@ -143,12 +143,12 @@ Afterwards, we code the loop itself, where the tensor ``train`` must be evaluate
 at each iteration for performing each optimization step.
 
 .. literalinclude:: ../../examples/docs/guideinference/1.py
-   :language: python
+   :language: python3
    :lines: 139-142
 
 After the optimization, we can extract the posterior distributions:
 
 
 .. literalinclude:: ../../examples/docs/guideinference/1.py
-   :language: python
+   :language: python3
    :lines: 145-146

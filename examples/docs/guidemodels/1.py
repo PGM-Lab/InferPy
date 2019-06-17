@@ -6,7 +6,7 @@ import numpy as np
 def pca(k,d):
     w = inf.Normal(loc=np.zeros([k,d]), scale=1, name="w")      # shape = [k,d]
     with inf.datamodel():
-        z = inf.Normal(np.ones([k]),1, name="z")                # shape = [N,k]
+        z = inf.Normal(np.ones(k),1, name="z")                # shape = [N,k]
         x = inf.Normal(z @ w , 1, name="x")                     # shape = [N,d]
 
 

@@ -121,7 +121,7 @@ A set of examples can be found in the `Probabilistic Model Zoo <notes/probzoo.ht
 .. role:: bash(code)
    :language: bash
 .. role:: python(code)
-   :language: python
+   :language: python3
 
 
 

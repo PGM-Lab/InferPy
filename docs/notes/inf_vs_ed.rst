@@ -13,7 +13,7 @@ Bayesian Linear Regression
 ------------------------------------
 
 .. literalinclude:: ../../examples/inf_vs_ed/linear_regression.py
-   :language: python
+   :language: python3
    :lines: 44-62
 
 
@@ -22,7 +22,7 @@ Gaussian Mixture
 --------------------------
 
 .. literalinclude:: ../../examples/inf_vs_ed/gaussian_mixture.py
-   :language: python
+   :language: python3
    :lines: 42-74
 
 
@@ -31,7 +31,7 @@ Logistic Regression
 --------------------------
 
 .. literalinclude:: ../../examples/inf_vs_ed/log_regression.py
-   :language: python
+   :language: python3
    :lines: 14-33
 
 
@@ -41,7 +41,7 @@ Multinomial Logistic Regression
 --------------------------------------
 
 .. literalinclude:: ../../examples/inf_vs_ed/multinomial_log_regression.py
-   :language: python
+   :language: python3
    :lines: 18-37
 
 
@@ -49,7 +49,7 @@ Linear Factor Model (PCA)
 ----------------------------------
 
 .. literalinclude:: ../../examples/inf_vs_ed/pca.py
-   :language: python
+   :language: python3
    :lines: 13-30
 
 
@@ -58,7 +58,7 @@ PCA with ARD Prior (PCA)
 --------------------------
 
 .. literalinclude:: ../../examples/inf_vs_ed/pca_with_ARD_prior.py
-   :language: python
+   :language: python3
    :lines: 14-33
 
 

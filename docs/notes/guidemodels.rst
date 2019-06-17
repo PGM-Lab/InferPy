@@ -30,14 +30,16 @@ For example, a Bayesian PCA model has the following graphical structure,
    
    Bayesian PCA
 	
-	The **prior model** are the variables :math:`w_k`. The **data model** is the part of the model surrounded by the box indexed by **N**.
+The **prior model** are the variables :math:`w_k`. The **data model** is the part of the model surrounded by the box indexed by **N**.
 
 
 And this is how this Bayesian PCA model is denfined in InferPy:
 
+
 .. literalinclude:: ../../examples/docs/guidemodels/1.py
-   :language: python
-   :lines: 1-14
+   :language: python3
+   :lines: 4-14
+
 
 
 The ``with inf.datamodel()`` sintaxis is used to replicate the
@@ -63,7 +65,7 @@ a distribution object from TensorFlow Probability. These can be access using the
 ``dist`` respectively:
 
 .. literalinclude:: ../../examples/docs/guidemodels/2.py
-   :language: python
+   :language: python3
    :lines: 12-19
 
 
@@ -72,7 +74,7 @@ example:
 
 
 .. literalinclude:: ../../examples/docs/guidemodels/2.py
-   :language: python
+   :language: python3
    :lines: 25-29
 
 
@@ -90,7 +92,7 @@ the batch shape could be obtained from the distribution parameter shapes or expl
 
 
 .. literalinclude:: ../../examples/docs/guidemodels/2.py
-   :language: python
+   :language: python3
    :lines: 38-44
 
 
@@ -99,7 +101,7 @@ we might explicitly state it using the input paramenter ``sample_shape``. This i
 from Edward.
 
 .. literalinclude:: ../../examples/docs/guidemodels/2.py
-   :language: python
+   :language: python3
    :lines: 50-53
 
 
@@ -108,12 +110,12 @@ multivariate Gaussian:
 
 
 .. literalinclude:: ../../examples/docs/guidemodels/2.py
-   :language: python
+   :language: python3
    :lines: 59
 
 
 .. literalinclude:: ../../examples/docs/guidemodels/2.py
-   :language: python
+   :language: python3
    :lines: 67-74
 
 
@@ -123,7 +125,7 @@ Note that indexing is supported:
 
 
 .. literalinclude:: ../../examples/docs/guidemodels/2.py
-   :language: python
+   :language: python3
    :lines: 85-95
 
 
@@ -144,7 +146,7 @@ The model is made of any variable defined inside this function. A simple example
 below.
 
 .. literalinclude:: ../../examples/docs/guidemodels/3.py
-   :language: python
+   :language: python3
    :lines: 6-13
 
 
@@ -156,7 +158,7 @@ The model must be **instantiated** before it can be used. This is done by simple
 invoking the function (which will return a probmodel object).
 
 .. literalinclude:: ../../examples/docs/guidemodels/3.py
-   :language: python
+   :language: python3
    :lines: 20-22
 
 
@@ -164,20 +166,20 @@ Now we can use the model with the prior probabilities. For example,
 we might get a sample:
 
 .. literalinclude:: ../../examples/docs/guidemodels/3.py
-   :language: python
+   :language: python3
    :lines: 28-29
 
 or extract the variables:
 
 
 .. literalinclude:: ../../examples/docs/guidemodels/3.py
-   :language: python
+   :language: python3
    :lines: 33-34
 
 We can create new and different instances of our model:
 
 .. literalinclude:: ../../examples/docs/guidemodels/3.py
-   :language: python
+   :language: python3
    :lines: 39-41
 
 
@@ -194,7 +196,7 @@ as follows.
 
 
 .. literalinclude:: ../../examples/docs/guidemodels/3.py
-   :language: python
+   :language: python3
    :lines: 53-71
 
 Note that these are all the distributions in Edward 2 and hence in TensorFlow Probability. Their
