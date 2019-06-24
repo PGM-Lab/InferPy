@@ -12,7 +12,7 @@ def simple(mu=0):
     with inf.datamodel():
         x = inf.Normal(theta, 1, name="x")
 
-
+m = simple()
 
 #17
 
@@ -25,9 +25,23 @@ def simple(mu=0):
 # 25
 
 """
->>> m.sample()
+>>> m.prior().sample()
 {'theta': -0.074800275, 'x': array([0.07758344], dtype=float32)}
+
+>>> m.prior().parameters()
+{'theta': {'name': 'theta',
+  'allow_nan_stats': True,
+  'validate_args': False,
+  'scale': 0.1,
+  'loc': 0},
+ 'x': {'name': 'x',
+  'allow_nan_stats': True,
+  'validate_args': False,
+  'scale': 1,
+  'loc': 0.116854645}}
 """
+
+
 
 """
 >>> m.vars["theta"]
@@ -35,19 +49,28 @@ def simple(mu=0):
 """
 
 
+
+
+
+#55
+
 """
 >>> m2 = simple(mu=5)
 >>> m==m2
 False
 """
 
+
+
+
+#66
 """
->>> sess = tf.session()
+>>> sess = inf.get_session()
 >>> sess.run(m2.vars["x"].loc)
 4.849595
 """
 
-# 50
+# 73
 
 """
 >>> inf.models.random_variable.distributions_all

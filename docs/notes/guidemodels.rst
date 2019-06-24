@@ -184,24 +184,24 @@ invoking the function (which will return a probmodel object).
 
 
 Now we can use the model with the prior probabilities. For example,
-we might get a sample:
+we might get a sample or access to the distribution parameters:
 
 .. literalinclude:: ../../examples/docs/guidemodels/3.py
    :language: python3
-   :lines: 28-29
+   :lines: 28-41
 
-or extract the variables:
+or to extract the variables:
 
 
 .. literalinclude:: ../../examples/docs/guidemodels/3.py
    :language: python3
-   :lines: 33-34
+   :lines: 47-48
 
 We can create new and different instances of our model:
 
 .. literalinclude:: ../../examples/docs/guidemodels/3.py
    :language: python3
-   :lines: 39-41
+   :lines: 58-60
 
 
 
@@ -218,7 +218,7 @@ as follows.
 
 .. literalinclude:: ../../examples/docs/guidemodels/3.py
    :language: python3
-   :lines: 53-71
+   :lines: 76-94
 
 Note that these are all the distributions in Edward 2 and hence in TensorFlow Probability. Their
 input parameters will be the same.
