@@ -29,7 +29,7 @@ import inferpy.util.session
 
 
 # the list of available RandomVariables in edward2. Matches with the available distributions in tensorflow_probability
-distributions_all = generated_random_variables.rv_all
+distributions_all = [rv for rv in generated_random_variables.__all__ if rv != 'as_random_variable']
 
 
 def _make_edward_random_variable(distribution_obj):
