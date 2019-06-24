@@ -156,7 +156,7 @@ Moreover, we may use indexation for defining new variables whose indexes may be 
 Probabilistic Models
 --------------------
 A **probabilistic model** defines a joint distribution over observable
-and hidden variables, :math:`p(\mathbf{w}, \mathbf{z}, \mathbf{x})`. Note that a
+and hidden variables, i.e., :math:`p(\mathbf{w}, \mathbf{z}, \mathbf{x})`. Note that a
 variable might be observable or hidden depending on the fitted data. Thus this is
 not specified when defining the model.
 
@@ -170,8 +170,9 @@ below.
    :lines: 6-13
 
 
-Note that any variable in a model must be initialized with a name (this
-is not required when defining random variables outside the probmodel scope).
+Note that any variable in a model can be initialized with a name. If not provided, names generated
+automatically will be used. However, it is highly convenient to explicitly specify the name of a random variable because
+in this way it will be able to be referenced in some inference stages.
 
 
 The model must be **instantiated** before it can be used. This is done by simple
