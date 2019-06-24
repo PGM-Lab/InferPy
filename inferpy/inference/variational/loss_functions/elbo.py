@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 
-def ELBO(pvars, qvars, batch_weight=1):
+def ELBO(pvars, qvars, batch_weight=1, **kwargs):
     """ Compute the loss tensor from the expanded variables of p and q models.
         Args:
             pvars (`dict<inferpy.RandomVariable>`): The dict with the expanded p random variables
