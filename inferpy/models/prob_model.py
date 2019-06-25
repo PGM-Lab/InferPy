@@ -177,12 +177,12 @@ class ProbModel:
         plt.show()
 
     @util.tf_run_ignored
-    def fit(self, sample_dict, inference_method):
+    def fit(self, data, inference_method):
         # Parameter checkings
         # sample_dict must be a non empty python dict
-        if not isinstance(sample_dict, dict):
+        if not isinstance(data, dict):
             raise TypeError('The `sample_dict` type must be dict.')
-        if len(sample_dict) == 0:
+        if len(data) == 0:
             raise ValueError('The number of mapped variables must be at least 1.')
 
         # if fit was called before, warn that it restarts everything
@@ -194,14 +194,14 @@ class ProbModel:
         self.inference_method = inference_method
 
         # get the plate size
-        plate_size = util.iterables.get_plate_size(self.vars, sample_dict)
+        plate_size = util.iterables.get_plate_size(self.vars, data)
         # compile the inference method
         inference_method.compile(self, plate_size)
         # and run the update method with the data
-        inference_method.update(sample_dict)
+        inference_method.update(data)
 
         # If it works, set the observed variables
-        self.observed_vars = list(sample_dict.keys())
+        self.observed_vars = list(data.keys())
 
     @util.tf_run_ignored
     def update(self, sample_dict):
