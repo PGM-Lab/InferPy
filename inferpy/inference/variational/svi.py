@@ -3,6 +3,7 @@ import tensorflow as tf
 from inferpy import util
 from inferpy import contextmanager
 from .vi import VI
+from inferpy.data.loaders import SampleDictLoader, DataLoader
 
 
 class SVI(VI):
@@ -31,9 +32,17 @@ class SVI(VI):
         # create the train tensor
         self.train_tensor = self._generate_train_tensor(batch_weight=self.batch_weight)
 
-    def update(self, sample_dict):
+    def update(self, data):
+
         # create the input_data tensor
-        input_data = self.create_input_data_tensor(sample_dict)
+        if isinstance(data, dict):
+            data_loader = SampleDictLoader(data)
+        elif isinstance(data, DataLoader):
+            data_loader = data
+        else:
+            raise ValueError("Wrong input data type at SVI")
+
+        input_data = self.create_input_data_tensor(data_loader)
 
         t = []
         sess = util.get_session()
@@ -54,11 +63,11 @@ class SVI(VI):
         # set the protected _losses attribute for the losses property
         self.debug.losses += t
 
-    def create_input_data_tensor(self, sample_dict):
+    def create_input_data_tensor(self, data_loader):
         # NOTE: data_size, batches and batch_weight can be different in each iteration
 
         # create a tf dataset and an iterator, specifying the batch size
-        data_size = util.iterables.get_plate_size(self.pmodel.vars, sample_dict)
+        data_size = data_loader.size
         self.batches = int(data_size / self.batch_size)  # M/N
 
         # ensure that the number of batches is equal or greater than 1
@@ -68,7 +77,7 @@ class SVI(VI):
         self.batch_weight = self.batch_size / data_size  # N/M
 
         tfdataset = (
-            tf.data.Dataset.from_tensor_slices(sample_dict)
+            data_loader.tfdataset
             .shuffle(data_size)  # use the size of the complete dataset for shuffle buffer, so we use a perfect shuffle
             .batch(self.batch_size, drop_remainder=True)  # discard the remainder batch with less elements if exists
             .repeat()

@@ -38,6 +38,7 @@ class SampleDictLoader(DataLoader):
     def __init__(self, sample_dict):
         # build the dataset object
         self._tfdataset = tf.data.Dataset.from_tensor_slices(sample_dict)
+        self.sample_dict = sample_dict
 
         # compute the size (and check the consistency)
         sizes = {tf.convert_to_tensor(col)._shape_as_list()[0] for col in sample_dict.values()}
@@ -46,3 +47,7 @@ class SampleDictLoader(DataLoader):
 
         self.size = sizes.pop()
 
+
+sample_dict = {"A":1}
+
+isinstance(sample_dict,dict)
