@@ -27,6 +27,10 @@ from inferpy import contextmanager
 from inferpy.queries import Query
 from .random_variable import RandomVariable
 
+from inferpy.data.loaders import DataLoader
+
+from inferpy.inference.variational.svi import SVI
+
 
 def probmodel(builder):
     """
@@ -179,11 +183,16 @@ class ProbModel:
     @util.tf_run_ignored
     def fit(self, data, inference_method):
         # Parameter checkings
-        # sample_dict must be a non empty python dict
-        if not isinstance(data, dict):
+        # sample_dict must be a non empty python dict or dataloader
+
+        if isinstance(data, DataLoader) and isinstance(inference_method, SVI):
+            plate_size = data.size
+        elif isinstance(data, dict):
+            plate_size = util.iterables.get_plate_size(self.vars, data)
+            if len(data) == 0:
+                raise ValueError('The number of mapped variables must be at least 1.')
+        else:
             raise TypeError('The `sample_dict` type must be dict.')
-        if len(data) == 0:
-            raise ValueError('The number of mapped variables must be at least 1.')
 
         # if fit was called before, warn that it restarts everything
         if self.inference_method:
@@ -193,15 +202,17 @@ class ProbModel:
         # set the inference method
         self.inference_method = inference_method
 
-        # get the plate size
-        plate_size = util.iterables.get_plate_size(self.vars, data)
+
         # compile the inference method
         inference_method.compile(self, plate_size)
         # and run the update method with the data
         inference_method.update(data)
 
         # If it works, set the observed variables
-        self.observed_vars = list(data.keys())
+        if isinstance(data, DataLoader):
+            self.observed_vars = data.variables
+        else:
+            self.observed_vars = list(data.keys())
 
     @util.tf_run_ignored
     def update(self, sample_dict):

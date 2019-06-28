@@ -76,13 +76,14 @@ class SVI(VI):
 
         self.batch_weight = self.batch_size / data_size  # N/M
 
-        tfdataset = (
-            data_loader.tfdataset
-            .shuffle(data_size)  # use the size of the complete dataset for shuffle buffer, so we use a perfect shuffle
-            .batch(self.batch_size, drop_remainder=True)  # discard the remainder batch with less elements if exists
-            .repeat()
-        )
+
+        data_loader.batch_size = self.batch_size
+        data_loader.shuffle_buffer_size = data_size
+        tfdataset = data_loader.tfdataset
         iterator = tfdataset.make_one_shot_iterator()
-        input_data = iterator.get_next()  # each time this tensor is evaluated in a session it contains new data
+
+        # each time this tensor is evaluated in a session it contains new data
+        input_data = data_loader.map_batch_fn(iterator.get_next())
+
 
         return input_data
