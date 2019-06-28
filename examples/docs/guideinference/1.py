@@ -5,9 +5,9 @@ import tensorflow as tf
 
 @inf.probmodel
 def pca(k,d):
-    w = inf.Normal(loc=np.zeros([k,d]), scale=1, name="w")      # shape = [k,d]
+    w = inf.Normal(loc=tf.zeros([k,d]), scale=1, name="w")      # shape = [k,d]
     with inf.datamodel():
-        z = inf.Normal(np.ones([k]),1, name="z")                # shape = [N,k]
+        z = inf.Normal(tf.ones([k]),1, name="z")                # shape = [N,k]
         x = inf.Normal(z @ w , 1, name="x")                     # shape = [N,d]
 
 
@@ -57,35 +57,24 @@ m.fit({"x": x_train}, VI)
  
 """
 
-print(m.posterior['w'].sample())
-
-
+print(m.posterior("w").parameters())
 """
->>> m.posterior['w']
-<inf.RandomVariable (Normal distribution) named w_2/, shape=(1, 2), dtype=float32>
-
+>>> m.posterior("w").parameters()
+{'name': 'w',
+ 'allow_nan_stats': True,
+ 'validate_args': False,
+ 'scale': array([[0.9834974 , 0.99731755]], dtype=float32),
+ 'loc': array([[1.7543027, 1.7246702]], dtype=float32)}
 """
-
 
 # 70
 
 
 ## ELBO definition
 
-from tensorflow_probability import edward2 as ed
 
 # define custom elbo function
-def custom_elbo(pmodel, qmodel, sample_dict):
-    # create combined model
-    plate_size = pmodel._get_plate_size(sample_dict)
-
-    # expand the qmodel (just in case the q model uses data from sample_dict, use interceptor too)
-    with ed.interception(inf.util.interceptor.set_values(**sample_dict)):
-        qvars, _ = qmodel.expand_model(plate_size)
-
-    # expand de pmodel, using the intercept.set_values function, to include the sample_dict and the expanded qvars
-    with ed.interception(inf.util.interceptor.set_values(**{**qvars, **sample_dict})):
-        pvars, _ = pmodel.expand_model(plate_size)
+def custom_elbo(pvars, qvars, **kwargs):
 
     # compute energy
     energy = tf.reduce_sum([tf.reduce_sum(p.log_prob(p.value)) for p in pvars.values()])
@@ -110,7 +99,7 @@ m.fit({"x": x_train}, VI)
 
 
 
-##95
+## 102
 
 
 ### optimization loop
@@ -149,4 +138,4 @@ posterior_qvars = {name: qv.build_in_session(sess) for name, qv in q._last_expan
 
 
 
-# 134
+# 141

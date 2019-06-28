@@ -72,8 +72,8 @@ A set of examples can be found in the `Probabilistic Model Zoo <notes/probzoo.ht
    notes/guideinference
    notes/guidebayesian
 
-   notes/guidevalidation
-   notes/guidedata
+..   notes/guidevalidation
+..   notes/guidedata
 
 
 .. toctree::
