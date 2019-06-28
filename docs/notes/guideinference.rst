@@ -55,8 +55,8 @@ with ``@inf.probmodel``:
 
 
 In the 'Q' model we should include a q distribution for every non observed variable in 
-the 'P' model. These varaiables are also objects of class ```inferpy.RandomVariable```.
-However, their parameters might be of type ```inf.Parameter```, which are objects
+the 'P' model. These varaiables are also objects of class ``inferpy.RandomVariable``.
+However, their parameters might be of type ``inf.Parameter``, which are objects
 encapsulating TensorFlow trainable variables.
 
 
@@ -83,23 +83,24 @@ The output generated will be similar to:
 
 
 
-Finally we can access to the dictionary with the posterior distributions:
+Finally we can access to the parameters of the posterior distributions:
 
 .. literalinclude:: ../../examples/docs/guideinference/1.py
    :language: python3
-   :lines: 64-65
+   :lines: 62-67
 
 Custom Loss function
 ---------------------------------
 
 Following InferPy guiding principles, users can further configure the inference algorithm.
 For example, we might be interested in defining our own function to minimise. As
-an example, we define the following function taking as input parameters the instances
-of the P and Q models, and the dictionary with the observations. Note that the output of this function must be a tensor.
+an example, we define the following function taking as input parameters the random variables
+of the P and Q models (we assume that their sample sizes are consistent with the plates in the mdoel). Note that the output of
+this function must be a tensor.
 
 .. literalinclude:: ../../examples/docs/guideinference/1.py
    :language: python3
-   :lines: 75-100
+   :lines: 77-89
 
 
 
@@ -109,46 +110,10 @@ input parameter ``loss`` in the inference method constructor. For example:
 
 .. literalinclude:: ../../examples/docs/guideinference/1.py
    :language: python3
-   :lines: 105-108
+   :lines: 93-97
 
 
 After this, the rest of the code remains unchanged.
 
 
-Coding the Optimization Loop
--------------------------------------
 
-As an InferPy model encapsulates an equivalent one in Edward, we can extract the
-required tensors and explicitly code the optimization loop. However, this
-is **not** recommended for non-expert users in TensorFlow.
-
-
-First, we get the tensor for the ELBO, but we must first invoke the method
-``inf.util.runtime.set_tf_run(False)`` which avoids the evaluation of such tensor.
-
-.. literalinclude:: ../../examples/docs/guideinference/1.py
-   :language: python3
-   :lines: 121-124
-
-
-Then we must initialize the optimizer and the session:
-
-.. literalinclude:: ../../examples/docs/guideinference/1.py
-   :language: python3
-   :lines: 126-133
-
-
-
-Afterwards, we code the loop itself, where the tensor ``train`` must be evaluated
-at each iteration for performing each optimization step.
-
-.. literalinclude:: ../../examples/docs/guideinference/1.py
-   :language: python3
-   :lines: 139-142
-
-After the optimization, we can extract the posterior distributions:
-
-
-.. literalinclude:: ../../examples/docs/guideinference/1.py
-   :language: python3
-   :lines: 145-146
