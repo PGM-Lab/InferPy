@@ -54,8 +54,10 @@ The InferPy code for this model is shown below,
 Linear Factor Model (PCA)
 -------------------------
 
+
 A linear factor model allows to perform principal component analysis (PCA). Graphically,
- it can be defined as follows,
+it can be defined as follows,
+
 
 .. figure:: ../_static/img/pca.png
    :alt: Linear Factor Model (PCA)
@@ -68,7 +70,7 @@ The InferPy code for this model is shown below,
 
 .. literalinclude:: ../../examples/probzoo/pca.py
    :language: python3
-   :lines: 8-32
+   :lines: 8-57
 
 
 --------------
@@ -90,7 +92,24 @@ Its code in InferPy is shown below,
 
 .. literalinclude:: ../../examples/probzoo/nlpca.py
    :language: python3
-   :lines: 8-68
+   :lines: 9-71
+
+
+
+
+--------------
+
+Variational auto-encoder (VAE)
+--------------------------------------
+
+
+Similarly to the models PCA and NLPCA, a variational autoencoder allows to perform dimensionality
+reduction. However a VAE will contain a neural network in the P model (decoder) and another
+one in the Q (encoder). Its code in InferPy is shown below,
+
+.. literalinclude:: ../../examples/probzoo/vae.py
+   :language: python3
+   :lines: 8-67
 
 
 

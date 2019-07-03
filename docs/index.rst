@@ -82,7 +82,8 @@ A set of examples can be found in the `Probabilistic Model Zoo <notes/probzoo.ht
    :caption: Examples
    
    notes/probzoo
-   Variational auto-encoder with MNIST <notes/vae_mnist>
+
+..   Variational auto-encoder with MNIST <notes/vae_mnist>
 
 
 ..  toctree::
