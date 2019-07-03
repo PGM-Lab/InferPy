@@ -15,7 +15,7 @@ Changes:
 - Fixed some bugs.
 
 
-**Release Date**: 27/05/2019
+**Release Date**: 04/07/2019
 **Further Information**: [Documentation](http://inferpy.readthedocs.io/)
 
 
