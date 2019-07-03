@@ -139,3 +139,7 @@ posterior_qvars = {name: qv.build_in_session(sess) for name, qv in q._last_expan
 
 
 # 141
+
+
+SVI = inf.inference.SVI(qmodel(k=1,d=2), epochs=1000, batch_size=200)
+

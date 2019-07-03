@@ -60,12 +60,23 @@ However, their parameters might be of type ``inf.Parameter``, which are objects
 encapsulating TensorFlow trainable variables.
 
 
-Finally, when defining the inference algorithm, we must specify an instance
-of the 'Q' model:
+Then, we set the parameters of the inference algorithm. In case of variational inference
+(VI) we must specify an instance of the 'Q' model and the number of ``epochs`` (i.e.,
+iterations). For example:
 
 .. literalinclude:: ../../examples/docs/guideinference/1.py
    :language: python3
    :lines: 44-45
+
+VI can be further configured by setting the parameter ``optimizer`` which
+indicates the TensorFlow optimizer to be used (AdamOptimizer by default).
+
+Stochastic VI is similarly specified but has an additional input parameter for specifying
+the batch size:
+
+.. literalinclude:: ../../examples/docs/guideinference/1.py
+   :language: python3
+   :lines: 144-144
 
 
 Then we must instantiate our 'P' model and fit the data with the inference
