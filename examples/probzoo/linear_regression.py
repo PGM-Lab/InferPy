@@ -1,4 +1,3 @@
-# required pacakges
 import inferpy as inf
 import tensorflow as tf
 
@@ -6,10 +5,10 @@ import tensorflow as tf
 @inf.probmodel
 def linear_reg(d):
     w0 = inf.Normal(0, 1, name="w0")
-    w = inf.Normal(0, 1, batch_shape=[d,1], name="w")
+    w = inf.Normal(tf.zeros([d,1]), 1, name="w")
 
     with inf.datamodel():
-        x = inf.Normal(5, 2, batch_shape=d, name="x")
+        x = inf.Normal(tf.ones([d]), 2, name="x")
         y = inf.Normal(w0 + x @ w, 1.0, name="y")
 
 
@@ -29,16 +28,15 @@ m = linear_reg(d=2)
 
 ### create toy data
 N = 1000
-data = m.sample(size = N, data={"w0":0, "w":[[2],[1]]})
+data = m.prior(["x", "y"], data={"w0":0, "w":[[2],[1]]}).sample(N)
+
 x_train = data["x"]
 y_train = data["y"]
 
+# set and run the inference
 VI = inf.inference.VI(qmodel(2), epochs=10000)
 m.fit({"x": x_train, "y":y_train}, VI)
 
-sess = inf.get_session()
-print(sess.run(m.posterior["w"].loc))
 
-with tf.Session() as sess2:
-    print(sess2.run(m.posterior["w"].copy().loc))
-
+# extract the parameters of the posterior
+m.posterior(["w", "w0"]).parameters()

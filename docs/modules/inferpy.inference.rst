@@ -1,37 +1,29 @@
-inferpy\.inference package
-==========================
+inferpy.inference package
+=========================
 
 Subpackages
 -----------
 
 .. toctree::
 
-    inferpy.inference.loss_functions
+   inferpy.inference.variational
 
 Submodules
 ----------
 
-inferpy\.inference\.svi module
-------------------------------
+inferpy.inference.inference module
+----------------------------------
 
-.. automodule:: inferpy.inference.svi
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-inferpy\.inference\.vi module
------------------------------
-
-.. automodule:: inferpy.inference.vi
-    :members:
-    :undoc-members:
-    :show-inheritance:
+.. automodule:: inferpy.inference.inference
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 
 Module contents
 ---------------
 
 .. automodule:: inferpy.inference
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:

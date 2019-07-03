@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 
 #py_folder="../python_documentation/"
 py_folder="../inferpy/"

@@ -2,16 +2,12 @@ import numpy as np
 import inferpy as inf
 N=1000
 x_train = np.concatenate([inf.Normal([0.0,0.0], scale=1.).sample(int(N/2)), inf.Normal([10.0,10.0], scale=1.).sample(int(N/2))])
+x_test = np.concatenate([inf.Normal([0.0,0.0], scale=1.).sample(int(N/2)), inf.Normal([10.0,10.0], scale=1.).sample(int(N/2))])
+
 ##########
 
-
-# required pacakges
 import inferpy as inf
-import numpy as np
 import tensorflow as tf
-
-# definition of a generic model
-
 
 # number of components
 k = 1
@@ -62,12 +58,20 @@ m = vae(k,d0,dx, decoder)
 q = qmodel(k,d0,dx,encoder)
 
 # set the inference algorithm
-VI = inf.inference.VI(q, epochs=5000)
+SVI = inf.inference.SVI(q, epochs=5000)
 
 # learn the parameters
-m.fit({"x": x_train}, VI)
+m.fit({"x": x_train}, SVI)
 
+# extract the hidden encoding
+hidden_encoding = m.posterior("z").parameters()["loc"]
 
-#extract the hidden representation
-sess = inf.get_session()
-hidden_encoding = sess.run(m.posterior["z"].loc)
+# project x_test into the reduced space (encode)
+m.posterior("z", data={"x": x_test}).sample(5)
+
+# sample from the posterior predictive (i.e., simulate values for x given the learnt hidden)
+m.posterior_predictive("x").sample(5)
+
+# decode values from the hidden representation
+m.posterior_predictive("x", data={"z": [2]}).sample(5)
+
