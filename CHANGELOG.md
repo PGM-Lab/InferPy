@@ -8,7 +8,6 @@ data processing, easy-to-code probabilistic modeling, scalable inference and rob
 Changes:
 - API for prior, posterior, and posterior_predictive queries.
 - GPU support.
-- Random variable parameters are directly passed to edward objects. 
 - Small changes in code structure.
 - Fixed compatibility issue with TFP 0.7.0.
 - Documentation updated.
