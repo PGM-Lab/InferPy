@@ -20,4 +20,6 @@ formats: all
 python:
   version: 3.6
   install:
-    - requirements: docs/requirements.txt
+    - requirements: requirements/prod.txt
+    - requirements: requirements/doc.txt
+
