@@ -246,3 +246,5 @@ texinfo_documents = [
 
 print("pip freeze")
 os.system("pip freeze")
+os.system("pip uninstall protobuf")
+os.system("pip freeze")
