@@ -118,27 +118,27 @@ def test_tensor_register():
 def test_convert_random_variables_to_tensors():
     # element without RVs
     element = 1
-    element = random_variable._convert_random_variables_to_tensors(element)
+    element = random_variable._sanitize_input(element)
     assert element == element
 
     # list of elements different from RVs
     element = [1, 1]
-    element = random_variable._convert_random_variables_to_tensors(element)
+    element = random_variable._sanitize_input(element)
     assert element == element
 
     # numpy array of elements different from RVs
     element = np.ones((3, 2))
-    element = random_variable._convert_random_variables_to_tensors(element)
+    element = inf.get_session().run(random_variable._sanitize_input(element))
     assert (element == element).all()
 
     # A single Random Variable
     element = inf.Normal(0, 1)
-    result = random_variable._convert_random_variables_to_tensors(element)
+    result = random_variable._sanitize_input(element)
     assert isinstance(element, random_variable.RandomVariable) and not isinstance(result, random_variable.RandomVariable)
 
     # A list with some Random Variables
     element = [inf.Normal(0, 1), 1, inf.Normal(0, 1), 2]
-    result = random_variable._convert_random_variables_to_tensors(element)
+    result = random_variable._sanitize_input(element)
     assert all([
         isinstance(element[i], random_variable.RandomVariable) and
         not isinstance(result[i], random_variable.RandomVariable)
@@ -146,7 +146,7 @@ def test_convert_random_variables_to_tensors():
 
     # A list with some nested Random Variables
     element = [[inf.Normal(0, 1), 1, inf.Normal(0, 1), 2]]
-    result = random_variable._convert_random_variables_to_tensors(element)
+    result = random_variable._sanitize_input(element)
     assert all([
         isinstance(element[0][i], random_variable.RandomVariable) and
         not isinstance(result[0][i], random_variable.RandomVariable)
