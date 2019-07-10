@@ -1,13 +1,22 @@
+# required packages
 import numpy as np
 import inferpy as inf
-N=1000
-x_train = np.concatenate([inf.Normal([0.0,0.0], scale=1.).sample(int(N/2)), inf.Normal([10.0,10.0], scale=1.).sample(int(N/2))])
-x_test = np.concatenate([inf.Normal([0.0,0.0], scale=1.).sample(int(N/2)), inf.Normal([10.0,10.0], scale=1.).sample(int(N/2))])
-
-##########
-
-import inferpy as inf
 import tensorflow as tf
+
+
+# number of observations
+N = 1000
+
+# Generate toy data
+x_train = np.concatenate([
+    inf.Normal([0.0, 0.0], scale=1.).sample(int(N/2)),
+    inf.Normal([10.0, 10.0], scale=1.).sample(int(N/2))
+    ])
+x_test = np.concatenate([
+    inf.Normal([0.0, 0.0], scale=1.).sample(int(N/2)),
+    inf.Normal([10.0, 10.0], scale=1.).sample(int(N/2))
+    ])
+
 
 # number of components
 k = 1
@@ -23,28 +32,29 @@ N = 1000
 def vae(k, d0, dx, decoder):
 
     with inf.datamodel():
-        z = inf.Normal(tf.ones([k])*0.5, 1., name="z")    # shape = [N,k]
-        output = decoder(z,d0,dx)
-        x_loc = output[:,:dx]
-        x_scale = tf.nn.softmax(output[:,dx:])
+        z = inf.Normal(tf.ones(k) * 0.5, 1., name="z")    # shape = [N,k]
+        output = decoder(z, d0, dx)
+        x_loc = output[:, :dx]
+        x_scale = tf.nn.softmax(output[:, dx:])
         x = inf.Normal(x_loc, x_scale, name="x")   # shape = [N,d]
 
 
-def decoder(z,d0,dx):   # k -> d0 -> 2*dx
+def decoder(z, d0, dx):   # k -> d0 -> 2*dx
     h0 = tf.layers.dense(z, d0, tf.nn.relu)
     return tf.layers.dense(h0, 2 * dx)
 
 
 # Q-model  approximating P
-def encoder(x, d0, k): # dx -> d0 -> 2*k
+def encoder(x, d0, k):  # dx -> d0 -> 2*k
     h0 = tf.layers.dense(x, d0, tf.nn.relu)
-    return tf.layers.dense(h0, 2*k)
+    return tf.layers.dense(h0, 2 * k)
+
 
 @inf.probmodel
 def qmodel(k, d0, dx, encoder):
 
     with inf.datamodel():
-        x = inf.Normal(tf.ones([dx]),1,name="x")
+        x = inf.Normal(tf.ones(dx), 1, name="x")
 
         output = encoder(x, d0, k)
         qz_loc = output[:, :k]
@@ -54,8 +64,8 @@ def qmodel(k, d0, dx, encoder):
 
 
 # create an instance of the model
-m = vae(k,d0,dx, decoder)
-q = qmodel(k,d0,dx,encoder)
+m = vae(k, d0, dx, decoder)
+q = qmodel(k, d0, dx, encoder)
 
 # set the inference algorithm
 SVI = inf.inference.SVI(q, epochs=5000)
