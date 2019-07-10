@@ -54,8 +54,6 @@ class CsvLoader(DataLoader):
         if isinstance(path, str):
             path = [path]
 
-        self.variables = variables
-
 
         # get the column names
         self._colnames = pd.read_csv(path[0], index_col=0, nrows=0).columns.tolist()
@@ -70,6 +68,27 @@ class CsvLoader(DataLoader):
         self._path = path
         self._batch_size = self.size
         self._shuffle_buffer_size = 1
+
+
+        if isinstance(variables, dict):
+            self.variables = list(variables.keys())
+            self._map_batch_fn = self.__build_map_batch_fn(variables)
+        else:
+            self.variables = variables
+
+
+
+    def __build_map_batch_fn(self, var_dict):
+
+        def fn(batch):
+            out_dict = {}
+            for v, cols_idx in var_dict.items():
+                cols = list(map(list(batch.values()).__getitem__, cols_idx))
+                out_dict.update({v: tf.squeeze(tf.stack(cols, axis=1))})
+
+            return out_dict
+        return fn
+
 
     @property
     def tfdataset(self):

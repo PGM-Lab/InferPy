@@ -65,10 +65,13 @@ SVI = inf.inference.SVI(q, epochs=200, batch_size=100)
 
 # create data loader from 10 csv files
 path = [f"./playground_ignored/mnist_xtrain{i}.csv" for i in range(10)]
-data_loader = CsvLoader(path, variables=["x"])
 
-# create the mapping dataset c
-data_loader.map_batch_fn = lambda x : {"x":tf.squeeze(tf.stack(list(x.values()), axis=1))}
+data_loader = CsvLoader(path, variables={"x" : range(dx)})
+
+
+# old way
+#data_loader = CsvLoader(path, variables=["x"])
+#data_loader.map_batch_fn = lambda x : {"x":tf.squeeze(tf.stack(list(x.values()), axis=1))}
 
 
 # learn the parameters
