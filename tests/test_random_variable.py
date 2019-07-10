@@ -180,3 +180,22 @@ def test_run_in_session():
     inf.get_session()
     x = inf.Normal(1, 0)
     assert inf.get_session().run(x) == 1
+
+
+@pytest.mark.parametrize("loc_expr, scale_expr, floatx", [
+    # use other RVs as input
+    ("inf.Normal(0, 1)", "inf.Normal(0, 1)", "float16"),
+    # use one RVs and a numpy array
+    ("inf.Normal(0, 1)", "np.ones(5)", "float32"),
+    # use one RVs and a scalar
+    ("inf.Normal(0, 1)", "5", "float64"),
+    # use numpy arrays
+    ("np.ones([6, 7], dtype='float64')", "np.ones([6, 7], dtype='float16')", "float32"),
+    # use numpy array and scalar
+    ("np.ones([6, 7])", "5", "float16"),
+])
+def test_sanitize_input(loc_expr, scale_expr, floatx):
+    # set floatx
+    inf.set_floatx(floatx)
+    x = inf.Normal(eval(loc_expr), eval(scale_expr))
+    assert x.dtype == floatx
