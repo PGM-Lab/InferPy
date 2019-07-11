@@ -76,7 +76,7 @@ data_loader = CsvLoader(path, variables={"x" : range(dx)})
 
 
 # learn the parameters
-m.fit(data_loader, SVI)
+m.fit(data_loader.to_dict(), SVI)
 
 
 # Plot the evolution of the loss

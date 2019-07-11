@@ -1,5 +1,6 @@
 import tensorflow as tf
 import pandas as pd
+import numpy as np
 
 from inferpy.util.session import get_session
 
@@ -74,22 +75,22 @@ class CsvLoader(DataLoader):
         self._shuffle_buffer_size = 1
 
 
-        if var_dict is not None:
-            self._map_batch_fn = self.__build_map_batch_fn(var_dict)
-            self.variables = var_dict.keys()
-        else:
-            self._map_batch_fn = None
-            self.variables = self._colnames
+        if var_dict is None:
+            var_dict = {self._colnames[i]: [i] for i in range(len(self._colnames))}
 
+        self._map_batch_fn = self.__build_map_batch_fn(var_dict)
+        self.variables = var_dict.keys()
 
 
     def __build_map_batch_fn(self, var_dict):
-
         def fn(batch):
             out_dict = {}
             for v, cols_idx in var_dict.items():
                 cols = list(map(list(batch.values()).__getitem__, cols_idx))
-                out_dict.update({v: tf.squeeze(tf.stack(cols, axis=1))})
+                if len(cols)>1:
+                    out_dict.update({v: tf.squeeze(tf.stack(cols, axis=1))})
+                else:
+                    out_dict.update({v:tf.expand_dims(cols[0], axis=1)})
 
             return out_dict
         return fn
@@ -144,6 +145,27 @@ class SampleDictLoader(DataLoader):
     def to_dict(self):
         return self.sample_dict
 
+
+
+
+def build_data_loader(data):
+    if isinstance(data, dict):
+        data_loader = SampleDictLoader(data)
+    elif isinstance(data, DataLoader):
+        data_loader = data
+    else:
+        raise TypeError('The `data` type must be dict or DataLoader.')
+    return data_loader
+
+
+def build_sample_dict(data):
+    if isinstance(data, dict):
+        data_loader = data
+    elif isinstance(data, DataLoader):
+        data_loader = data.to_dict()
+    else:
+        raise TypeError('The `data` type must be dict or DataLoader.')
+    return data_loader
 
 
 

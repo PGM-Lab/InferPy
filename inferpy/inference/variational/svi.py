@@ -3,7 +3,7 @@ import tensorflow as tf
 from inferpy import util
 from inferpy import contextmanager
 from .vi import VI
-from inferpy.data.loaders import SampleDictLoader, DataLoader
+from inferpy.data.loaders import build_data_loader, DataLoader
 
 
 class SVI(VI):
@@ -35,13 +35,7 @@ class SVI(VI):
     def update(self, data):
 
         # create the input_data tensor
-        if isinstance(data, dict):
-            data_loader = SampleDictLoader(data)
-        elif isinstance(data, DataLoader):
-            data_loader = data
-        else:
-            raise ValueError("Wrong input data type at SVI")
-
+        data_loader = build_data_loader(data)
         input_data = self.create_input_data_tensor(data_loader)
 
         t = []
@@ -76,13 +70,11 @@ class SVI(VI):
 
         self.batch_weight = self.batch_size / data_size  # N/M
 
-
         data_loader.batch_size = self.batch_size
         data_loader.shuffle_buffer_size = data_size
         iterator = data_loader.to_tfdataset().make_one_shot_iterator()
 
         # each time this tensor is evaluated in a session it contains new data
         input_data = data_loader.map_batch_fn(iterator.get_next())
-
 
         return input_data
