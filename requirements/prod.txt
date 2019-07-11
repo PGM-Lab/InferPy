@@ -5,3 +5,5 @@ matplotlib>=2.2.3,<3.0
 Keras==2.2.4
 Keras-Applications==1.0.7
 Keras-Preprocessing==1.0.9
+pandas>=0.24.2,<1.0
+
