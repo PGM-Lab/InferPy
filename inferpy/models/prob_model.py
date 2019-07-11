@@ -185,14 +185,14 @@ class ProbModel:
         # Parameter checkings
         # sample_dict must be a non empty python dict or dataloader
 
-        if isinstance(data, DataLoader) and isinstance(inference_method, SVI):
+        if isinstance(data, DataLoader):
             plate_size = data.size
         elif isinstance(data, dict):
             plate_size = util.iterables.get_plate_size(self.vars, data)
             if len(data) == 0:
                 raise ValueError('The number of mapped variables must be at least 1.')
         else:
-            raise TypeError('The `sample_dict` type must be dict.')
+            raise TypeError('The `data` type must be dict or DataLoader.')
 
         # if fit was called before, warn that it restarts everything
         if self.inference_method:

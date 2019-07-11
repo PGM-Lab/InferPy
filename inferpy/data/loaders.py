@@ -76,8 +76,10 @@ class CsvLoader(DataLoader):
 
         if var_dict is not None:
             self._map_batch_fn = self.__build_map_batch_fn(var_dict)
+            self.variables = var_dict.keys()
         else:
             self._map_batch_fn = None
+            self.variables = self._colnames
 
 
 
@@ -125,11 +127,10 @@ class SampleDictLoader(DataLoader):
             raise ValueError("Error: all the attributes in the sample_dict must have the same length")
 
         self._size = list(sizes)[0]
-
         self._map_batch_fn = None
-
         self._batch_size = self.size
         self._shuffle_buffer_size = 1
+        self.variables = sample_dict.keys()
 
 
     def to_tfdataset(self):
