@@ -1,6 +1,8 @@
 import tensorflow as tf
 import pandas as pd
 
+from inferpy.util.session import get_session
+
 
 class DataLoader:
 
@@ -12,8 +14,10 @@ class DataLoader:
     def size(self):
         return self._size
 
-    @property
-    def tfdataset(self):
+    def to_tfdataset(self):
+        raise NotImplementedError
+
+    def to_dict(self):
         raise NotImplementedError
 
     @property
@@ -71,10 +75,11 @@ class CsvLoader(DataLoader):
 
 
         if isinstance(variables, dict):
-            self.variables = list(variables.keys())
+            self.variables = set(variables.keys())
             self._map_batch_fn = self.__build_map_batch_fn(variables)
         else:
-            self.variables = variables
+            self._map_batch_fn = None
+            self.variables = set(variables)
 
 
 
@@ -90,8 +95,7 @@ class CsvLoader(DataLoader):
         return fn
 
 
-    @property
-    def tfdataset(self):
+    def to_tfdataset(self):
 
         # build the dataset object
         return tf.data.experimental.make_csv_dataset(self._path, batch_size=self.batch_size,
@@ -100,6 +104,12 @@ class CsvLoader(DataLoader):
                                                      shuffle_buffer_size= self.shuffle_buffer_size
                                                     )
 
+    def to_dict(self):
+        return dict(get_session().run(
+            self.map_batch_fn(
+                self.to_tfdataset().make_one_shot_iterator().get_next()
+            )
+        ))
 
 
 
@@ -124,13 +134,17 @@ class SampleDictLoader(DataLoader):
         self._shuffle_buffer_size = 1
 
 
-    @property
-    def tfdataset(self):
+    def to_tfdataset(self):
         return (
             tf.data.Dataset.from_tensor_slices(self.sample_dict)
                 .shuffle(self.shuffle_buffer_size)
                 .batch(self.batch_size)
                 .repeat()
             )
+
+    def to_dict(self):
+        return self.sample_dict
+
+
 
 

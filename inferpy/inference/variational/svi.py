@@ -79,8 +79,7 @@ class SVI(VI):
 
         data_loader.batch_size = self.batch_size
         data_loader.shuffle_buffer_size = data_size
-        tfdataset = data_loader.tfdataset
-        iterator = tfdataset.make_one_shot_iterator()
+        iterator = data_loader.to_tfdataset().make_one_shot_iterator()
 
         # each time this tensor is evaluated in a session it contains new data
         input_data = data_loader.map_batch_fn(iterator.get_next())
