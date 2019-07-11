@@ -53,7 +53,7 @@ class CsvLoader(DataLoader):
     """
     This class implements a data loader for datasets in CSV format
     """
-    def __init__(self, path, variables, **kwargs):
+    def __init__(self, path, var_dict=None, **kwargs):
 
         if isinstance(path, str):
             path = [path]
@@ -74,12 +74,10 @@ class CsvLoader(DataLoader):
         self._shuffle_buffer_size = 1
 
 
-        if isinstance(variables, dict):
-            self.variables = set(variables.keys())
-            self._map_batch_fn = self.__build_map_batch_fn(variables)
+        if var_dict is not None:
+            self._map_batch_fn = self.__build_map_batch_fn(var_dict)
         else:
             self._map_batch_fn = None
-            self.variables = set(variables)
 
 
 
