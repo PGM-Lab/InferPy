@@ -4,7 +4,7 @@ import numpy as np
 import tensorflow as tf
 
 import matplotlib.pyplot as plt
-from inferpy.datasets import mnist
+from inferpy.data import mnist
 
 
 # number of components
@@ -58,7 +58,7 @@ m = vae(k, d0, dx, decoder)
 q = qmodel(k, d0, dx, encoder)
 
 # set the inference algorithm
-VI = inf.inference.VI(q, epochs=1000)
+SVI = inf.inference.SVI(q, epochs=1000, batch_size=100)
 
 (x_train, y_train), _ = mnist.load_data(num_instances=N, digits=DIG)
 
@@ -66,12 +66,12 @@ VI = inf.inference.VI(q, epochs=1000)
 mnist.plot_digits(x_train)
 
 # learn the parameters
-m.fit({"x": x_train}, VI)
+m.fit({"x": x_train}, SVI)
 
 
 # Plot the evolution of the loss
 
-L = VI.losses
+L = SVI.losses
 plt.plot(range(len(L)), L)
 
 plt.xlabel('epochs')

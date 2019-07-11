@@ -4,7 +4,7 @@ import numpy as np
 import tensorflow as tf
 
 import matplotlib.pyplot as plt
-from inferpy.datasets import mnist
+from inferpy.data import mnist
 
 
 # number of components

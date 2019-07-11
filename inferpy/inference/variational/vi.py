@@ -10,6 +10,8 @@ from inferpy import contextmanager
 
 from ..inference import Inference
 
+from inferpy.data.loaders import build_sample_dict
+
 
 class VI(Inference):
     def __init__(self, qmodel, loss='ELBO', optimizer='AdamOptimizer', epochs=1000):
@@ -75,7 +77,11 @@ class VI(Inference):
         # create the train tensor
         self.train_tensor = self._generate_train_tensor(plate_size=self.plate_size)
 
-    def update(self, sample_dict):
+    def update(self, data):
+
+        # data must be a sample dictionary
+        sample_dict = build_sample_dict(data)
+
         # ensure that the size of the data matches with the self.plate_size
         data_size = util.iterables.get_plate_size(self.pmodel.vars, sample_dict)
         if data_size != self.plate_size:
