@@ -81,7 +81,7 @@ class VI(Inference):
 
         # data must be a sample dictionary
         sample_dict = build_sample_dict(data)
-
+        sample_dict["x"].shape
         # ensure that the size of the data matches with the self.plate_size
         data_size = util.iterables.get_plate_size(self.pmodel.vars, sample_dict)
         if data_size != self.plate_size:

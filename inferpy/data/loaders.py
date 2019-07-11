@@ -41,13 +41,7 @@ class DataLoader:
     def shuffle_buffer_size(self, shuffle_buffer_size):
         self._shuffle_buffer_size = shuffle_buffer_size
 
-    @property
-    def batch_size(self):
-        return self._batch_size
 
-    @batch_size.setter
-    def batch_size(self,batch_size):
-        self._batch_size = batch_size
 
 
 class CsvLoader(DataLoader):
@@ -71,7 +65,6 @@ class CsvLoader(DataLoader):
 
 
         self._path = path
-        self._batch_size = self.size
         self._shuffle_buffer_size = 1
 
 
@@ -96,10 +89,12 @@ class CsvLoader(DataLoader):
         return fn
 
 
-    def to_tfdataset(self):
+    def to_tfdataset(self, batch_size = None):
+
+        if batch_size == None: batch_size = self.size
 
         # build the dataset object
-        return tf.data.experimental.make_csv_dataset(self._path, batch_size=self.batch_size,
+        return tf.data.experimental.make_csv_dataset(self._path, batch_size=batch_size,
                                                      select_columns=self._colnames,
                                                      sloppy=True, shuffle=self.shuffle_buffer_size>1,
                                                      shuffle_buffer_size= self.shuffle_buffer_size
@@ -129,16 +124,18 @@ class SampleDictLoader(DataLoader):
 
         self._size = list(sizes)[0]
         self._map_batch_fn = None
-        self._batch_size = self.size
         self._shuffle_buffer_size = 1
         self.variables = sample_dict.keys()
 
 
-    def to_tfdataset(self):
+    def to_tfdataset(self, batch_size = None):
+
+        if batch_size == None: batch_size = self.size
+
         return (
             tf.data.Dataset.from_tensor_slices(self.sample_dict)
                 .shuffle(self.shuffle_buffer_size)
-                .batch(self.batch_size)
+                .batch(batch_size)
                 .repeat()
             )
 
