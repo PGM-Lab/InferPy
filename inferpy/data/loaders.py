@@ -1,8 +1,6 @@
 import tensorflow as tf
-import pandas as pd
-import numpy as np
-
 from inferpy.util.session import get_session
+import csv
 
 
 class DataLoader:
@@ -42,7 +40,9 @@ class DataLoader:
         self._shuffle_buffer_size = shuffle_buffer_size
 
 
+#path = ['./playground_ignored/datalr.csv']
 
+#path = ['./playground_ignored/datalr_nh.csv']
 
 class CsvLoader(DataLoader):
     """
@@ -53,20 +53,38 @@ class CsvLoader(DataLoader):
         if isinstance(path, str):
             path = [path]
 
-
-        # get the column names
-        self._colnames = pd.read_csv(path[0], index_col=0, nrows=0).columns.tolist()
-
-        # compute the size
+        self._colnames = []
         self._size = 0
+        self.has_header = None
+
         for p in path:
             with open(p) as f:
-                self._size += sum(1 for line in f) - 1      # -1 because of the header
 
+                reader = csv.DictReader(f)
+                has_header = csv.Sniffer().has_header(f.read(2048))
+                f.seek(0)
+
+                # get the column names
+                if has_header:
+                    colnames = reader.fieldnames[1:]
+                else:
+                    colnames = [f"{i}" for i in range(len(reader.fieldnames[1:]))]
+
+                if len(self._colnames)>0 and self._colnames != colnames:
+                    raise ValueError("Error: header in csv files must be the same")
+
+                if self.has_header != None and self.has_header != has_header:
+                    raise ValueError("Error: header must either present or absent in all the csv files ")
+
+
+                self._colnames = colnames
+                self.has_header = has_header
+
+                f.seek(0)
+                self._size += sum(1 for line in f) - (1 if has_header else 0)
 
         self._path = path
         self._shuffle_buffer_size = 1
-
 
         if var_dict is None:
             var_dict = {self._colnames[i]: [i] for i in range(len(self._colnames))}
@@ -93,12 +111,21 @@ class CsvLoader(DataLoader):
 
         if batch_size == None: batch_size = self.size
 
+
+        if self.has_header:
+            col_args = {"select_columns": self._colnames}
+        else:
+            col_args = {"column_names": [""]+self._colnames,
+                        "select_columns": list(range(1,len(self._colnames)+1))}
+
+
         # build the dataset object
         return tf.data.experimental.make_csv_dataset(self._path, batch_size=batch_size,
-                                                     select_columns=self._colnames,
                                                      sloppy=True, shuffle=self.shuffle_buffer_size>1,
-                                                     shuffle_buffer_size= self.shuffle_buffer_size
+                                                     shuffle_buffer_size= self.shuffle_buffer_size,
+                                                     **col_args
                                                     )
+
 
     def to_dict(self):
         return dict(get_session().run(
