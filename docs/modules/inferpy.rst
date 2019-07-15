@@ -7,7 +7,7 @@ Subpackages
 .. toctree::
 
    inferpy.contextmanager
-   inferpy.datasets
+   inferpy.data
    inferpy.inference
    inferpy.models
    inferpy.queries
