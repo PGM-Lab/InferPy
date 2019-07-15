@@ -78,7 +78,7 @@ def test_csv_dict_keys(args, expected):
     # build the data loader object
     data_loader = CsvLoader(**args)
     # assert that it is equal to expected
-    assert list(data_loader.to_dict().keys()) == expected
+    assert set(data_loader.to_dict().keys()) == set(expected)
 
 
 
@@ -120,7 +120,7 @@ def test_csv_dict_keys(args, expected):
 def test_batches(data_loader, exp_keys):
 
     batch = dict(data_loader.to_tfdataset(batch_size=50).make_one_shot_iterator().get_next())
-    assert list(batch.keys()) == exp_keys
+    assert set(batch.keys()) == set(exp_keys)
     assert np.all([v.shape.as_list()[0] == 50 for v in batch.values()])
 
 
