@@ -68,7 +68,7 @@ class CsvLoader(DataLoader):
                 if has_header:
                     colnames = reader.fieldnames[1:]
                 else:
-                    colnames = [f"{i}" for i in range(len(reader.fieldnames[1:]))]
+                    colnames = [str(i) for i in range(len(reader.fieldnames[1:]))]
 
                 if len(self._colnames)>0 and self._colnames != colnames:
                     raise ValueError("Error: header in csv files must be the same")
