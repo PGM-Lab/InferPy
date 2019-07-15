@@ -30,6 +30,12 @@ class DataLoader:
         return self._size
 
     @property
+    def variables(self):
+        """ List of variables over which is defined the dataset"""
+        return self._variables
+
+
+    @property
     def map_batch_fn(self):
         """ Returns a function transforms each tensor batch """
         if not self._map_batch_fn:
@@ -117,7 +123,7 @@ class CsvLoader(DataLoader):
             var_dict = {self._colnames[i]: [i] for i in range(len(self._colnames))}
 
         self._map_batch_fn = self.__build_map_batch_fn(var_dict)
-        self.variables = var_dict.keys()
+        self._variables = list(var_dict.keys())
 
 
     def __build_map_batch_fn(self, var_dict):
@@ -167,6 +173,7 @@ class CsvLoader(DataLoader):
 
 
 
+
 class SampleDictLoader(DataLoader):
     """
     This class implements a data loader for datasets in memory stored as dictionaries
@@ -183,7 +190,7 @@ class SampleDictLoader(DataLoader):
         self._size = list(sizes)[0]
         self._map_batch_fn = None
         self._shuffle_buffer_size = 1
-        self.variables = sample_dict.keys()
+        self._variables = list(sample_dict.keys())
 
 
     def to_tfdataset(self, batch_size = None):
