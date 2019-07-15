@@ -1,3 +1,18 @@
+# -*- coding: utf-8 -*-
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
+
 import tensorflow as tf
 from inferpy.util.session import get_session
 import csv
@@ -11,16 +26,12 @@ class DataLoader:
 
     @property
     def size(self):
+        """ Total number of instances in the data """
         return self._size
-
-    def to_tfdataset(self):
-        raise NotImplementedError
-
-    def to_dict(self):
-        raise NotImplementedError
 
     @property
     def map_batch_fn(self):
+        """ Returns a function transforms each tensor batch """
         if not self._map_batch_fn:
             return lambda x: x
         return self._map_batch_fn
@@ -28,27 +39,43 @@ class DataLoader:
 
     @map_batch_fn.setter
     def map_batch_fn(self, fn):
+        """ Sets a function transforms each tensor batch """
         self._map_batch_fn = fn
-
 
     @property
     def shuffle_buffer_size(self):
+        """ Size of the shuffle size where 1 implies no shuffle """
         return self._shuffle_buffer_size
 
     @shuffle_buffer_size.setter
     def shuffle_buffer_size(self, shuffle_buffer_size):
+        """ Sets the size of the shuffle size where 1 implies no shuffle """
         self._shuffle_buffer_size = shuffle_buffer_size
 
+    def to_tfdataset(self):
+        """ Obtains a tensorflow dataset object"""
+        raise NotImplementedError
 
-#path = ['./playground_ignored/datalr.csv']
+    def to_dict(self):
+        """ Obtains a dictionary with data as numpy objects"""
+        raise NotImplementedError
 
-#path = ['./playground_ignored/datalr_nh.csv']
+
 
 class CsvLoader(DataLoader):
     """
     This class implements a data loader for datasets in CSV format
     """
-    def __init__(self, path, var_dict=None, **kwargs):
+    def __init__(self, path, var_dict=None):
+        """ Creates a new CsvLoader object
+
+            Args:
+                path (`str` or list of `str`): indicates the csv file(s) to load.
+                var_dict (`dict`): mapping that associates each a variable name to a list
+                    of integers indicating the columns in the file. The first column (excluding the
+                    the tuple index) corresponds to 0.
+        """
+
 
         if isinstance(path, str):
             path = [path]
@@ -94,6 +121,10 @@ class CsvLoader(DataLoader):
 
 
     def __build_map_batch_fn(self, var_dict):
+        """ This functions sets the property map_batch_fn with the
+            function transforming each batch and consistent with the desired
+            mapping.
+        """
         def fn(batch):
             out_dict = {}
             for v, cols_idx in var_dict.items():
@@ -173,6 +204,8 @@ class SampleDictLoader(DataLoader):
 
 
 def build_data_loader(data):
+    """ This functions builds a DataLoader either from a dictionary or another
+    DataLoader object """
     if isinstance(data, dict):
         data_loader = SampleDictLoader(data)
     elif isinstance(data, DataLoader):
@@ -183,6 +216,8 @@ def build_data_loader(data):
 
 
 def build_sample_dict(data):
+    """ This functions builds a dictionary either from other dictionary or from a
+        DataLoader object """
     if isinstance(data, dict):
         data_loader = data
     elif isinstance(data, DataLoader):
