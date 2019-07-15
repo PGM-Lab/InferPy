@@ -2,7 +2,7 @@ import pytest
 from inferpy.data.loaders import CsvLoader, SampleDictLoader
 import numpy as np
 
-datafolder = "./files/"
+datafolder = "./tests/files/"
 
 @pytest.mark.parametrize("args, expected", [
         # single csv with header
