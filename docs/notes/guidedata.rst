@@ -1,7 +1,7 @@
 Guide to Data Handling
 ======================
 
-The module ``inferpy.data.loaders`` provides the functionality for handling data. In particular,
+The module ``inferpy.data.loaders`` provides the basic functionality for handling data. In particular,
 all the classes for loading data will inherit from the class ``DataLoader`` defined at
 this module.
 
@@ -10,7 +10,7 @@ CSV files
 ---------------
 
 Data can be loaded from CSV files by means of the class ``CsvLoader`` whose
-object can be built as follows:
+objects can be built as follows:
 
 
 
@@ -19,8 +19,8 @@ object can be built as follows:
    :lines: 6-8
 
 
-where ``path`` can be a string indicating the location of the csv file or
-also a list of strings (i.e., for datasets distributed across multiple CSV files):
+where ``path`` can be either a string indicating the location of the csv file or
+a list of strings (i.e., for datasets distributed across multiple CSV files):
 
 
 
@@ -38,8 +38,8 @@ be consistent among all the files.
 When loading data from a CSV file, it could happen that we need to
 map the columns in the dataset to another set of variables. This can be made
 by means of the input argument ``var_dict``, which is a dictionary where the
-keys are the variable names and the values are lists of integer indicating
-the columns (starting by 0). For example, in a data set whose columns names
+keys are the variable names and the values are lists of integers indicating
+the columns (0 stands for the first data column). For example, in a data set whose columns names
 are ``"x"`` and ``"y"``, we might be interested in rename them:
 
 
@@ -49,7 +49,7 @@ are ``"x"`` and ``"y"``, we might be interested in rename them:
    :lines: 44
 
 
-This mapping functionality can be used for grouping columns into a single
+This mapping functionality can also be used for grouping columns into a single
 variable:
 
 .. literalinclude:: ../../examples/docs/guidedata/1.py
@@ -109,7 +109,7 @@ Data can be loader as a dictionary (of numpy objects) or as tensorflow dataset o
 Usage with probabilistic models
 ----------------------------------
 
-Clearly, the final goal of loading data is learning a probabilistic model.
+Clearly, making inference in a probabilistic model is the final goal of loading data.
 Thus, consider the following code of a simple linear regression:
 
 
@@ -118,7 +118,7 @@ Thus, consider the following code of a simple linear regression:
    :lines: 83-106
 
 
-We have seen so far how to make inference by invoking the method ``fit`` which
+We have seen so far that, for making inference we invoke the method ``fit`` which
 takes a dictionary of samples as input parameter:
 
 
