@@ -84,8 +84,16 @@ class ProbModel:
     # tf.Variables, and therefore a tensor cannot be return because the results would depend on the value of that
     # tf.Variables
 
-    def prior(self, target_names=None, data={}):
-        return Query(self.vars, target_names, data)
+    def prior(self, target_names=None, data={}, size_datamodel=1):
+
+        if size_datamodel > 1:
+            variables, _ = self.expand_model(size_datamodel)
+        elif size_datamodel==1:
+            variables = self.vars
+        else:
+            raise ValueError(f"size_datamodel must be greater than 0 but it is {size_datamodel}")
+
+        return Query(variables, target_names, data)
 
     def posterior(self, target_names=None, data={}):
         if self.inference_method is None:
