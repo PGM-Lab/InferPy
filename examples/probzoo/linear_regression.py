@@ -28,7 +28,7 @@ m = linear_reg(d=2)
 
 # create toy data
 N = 1000
-data = m.prior(["x", "y"], data={"w0": 0, "w": [[2], [1]]}).sample(N)
+data = m.prior(["x", "y"], data={"w0": 0, "w": [[2], [1]]}, size_datamodel=N).sample()
 
 x_train = data["x"]
 y_train = data["y"]

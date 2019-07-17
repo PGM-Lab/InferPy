@@ -71,9 +71,11 @@ A set of examples can be found in the `Probabilistic Model Zoo <notes/probzoo.ht
    notes/guidedeepmodels
    notes/guideinference
    notes/guidebayesian
+   notes/guidedata
 
 ..   notes/guidevalidation
-..   notes/guidedata
+
+
 
 
 .. toctree::
@@ -92,7 +94,7 @@ A set of examples can be found in the `Probabilistic Model Zoo <notes/probzoo.ht
 
    modules/inferpy
    modules/inferpy.contextmanager
-   modules/inferpy.datasets
+   modules/inferpy.data
    modules/inferpy.exceptions
    modules/inferpy.inference
    modules/inferpy.models

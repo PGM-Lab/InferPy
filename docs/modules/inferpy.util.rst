@@ -4,6 +4,14 @@ inferpy.util package
 Submodules
 ----------
 
+inferpy.util.common module
+--------------------------
+
+.. automodule:: inferpy.util.common
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 inferpy.util.interceptor module
 -------------------------------
 
