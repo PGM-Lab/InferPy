@@ -91,7 +91,7 @@ class ProbModel:
         elif size_datamodel==1:
             variables = self.vars
         else:
-            raise ValueError(f"size_datamodel must be greater than 0 but it is {size_datamodel}")
+            raise ValueError("size_datamodel must be greater than 0 but it is {}".format(size_datamodel))
 
         return Query(variables, target_names, data)
 
