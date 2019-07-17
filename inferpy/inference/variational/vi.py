@@ -1,3 +1,4 @@
+import numpy as np
 import tensorflow as tf
 import inspect
 import itertools
@@ -83,8 +84,9 @@ class VI(Inference):
 
         t = []
         sess = util.get_session()
-        with contextmanager.observe(self.expanded_variables["p"], sample_dict):
-            with contextmanager.observe(self.expanded_variables["q"], sample_dict):
+        clean_sample_dict = {k: np.squeeze(v) for k, v in sample_dict.items()}
+        with contextmanager.observe(self.expanded_variables["p"], clean_sample_dict):
+            with contextmanager.observe(self.expanded_variables["q"], clean_sample_dict):
                 for i in range(self.epochs):
                     sess.run(self.train_tensor)
 

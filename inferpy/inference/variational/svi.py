@@ -1,3 +1,4 @@
+import numpy as np
 import tensorflow as tf
 
 from inferpy import util
@@ -41,8 +42,9 @@ class SVI(VI):
             for j in range(self.batches):
                 # evaluate the data tensor to get an evaluated one which can be used to observe varoables
                 local_input_data = sess.run(input_data)
-                with contextmanager.observe(self.expanded_variables["p"], local_input_data):
-                    with contextmanager.observe(self.expanded_variables["q"], local_input_data):
+                clean_local_input_data = {k: np.squeeze(v) for k, v in local_input_data.items()}
+                with contextmanager.observe(self.expanded_variables["p"], clean_local_input_data):
+                    with contextmanager.observe(self.expanded_variables["q"], clean_local_input_data):
                         sess.run(self.train_tensor)
 
                         t.append(sess.run(self.debug.loss_tensor))

@@ -62,7 +62,7 @@ class Query:
             result = samples[0]
         else:
             # compact all samples in one single dict
-            result = {k: np.concatenate([sample[k] for sample in samples]) for k in self.target_variables.keys()}
+            result = {k: np.array([sample[k] for sample in samples]) for k in self.target_variables.keys()}
 
         return result
 
