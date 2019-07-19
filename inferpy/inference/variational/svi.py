@@ -70,7 +70,6 @@ class SVI(VI):
         if self.batches < 1:
             raise ValueError("The size of the data must be equal or greater than the batch size")
 
-        self.batch_weight = self.batch_size / data_size  # N/M
         data_loader.shuffle_buffer_size = data_size
         iterator = data_loader.to_tfdataset(self.batch_size).make_one_shot_iterator()
 
