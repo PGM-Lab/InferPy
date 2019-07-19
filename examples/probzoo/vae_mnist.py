@@ -15,6 +15,7 @@ d0 = 100
 dx = 28 * 28
 # number of observations (dataset size)
 N = 1000
+M = 100
 
 # digits considered
 DIG = [0, 1, 2]
@@ -37,7 +38,6 @@ def decoder(z, d0, dx):  # k -> d0 -> 2*dx
     return tf.layers.dense(h0, 2 * dx)
 
 
-# Q-model  approximating P
 def encoder(x, d0, k):  # dx -> d0 -> 2*k
     h0 = tf.layers.dense(x, d0, tf.nn.relu)
     return tf.layers.dense(h0, 2 * k)
@@ -58,7 +58,7 @@ m = vae(k, d0, dx, decoder)
 q = qmodel(k, d0, dx, encoder)
 
 # set the inference algorithm
-SVI = inf.inference.SVI(q, epochs=1000, batch_size=100)
+SVI = inf.inference.SVI(q, epochs=1000, batch_size=M)
 
 (x_train, y_train), _ = mnist.load_data(num_instances=N, digits=DIG)
 

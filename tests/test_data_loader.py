@@ -2,7 +2,12 @@ import pytest
 from inferpy.data.loaders import CsvLoader, SampleDictLoader
 import numpy as np
 
+import tensorflow as tf
+import inferpy as inf
+
 datafolder = "./tests/files/"
+datafolder = "./files/"
+
 
 @pytest.mark.parametrize("args, expected", [
         # single csv with header
@@ -122,6 +127,62 @@ def test_batches(data_loader, exp_keys):
     batch = dict(data_loader.to_tfdataset(batch_size=50).make_one_shot_iterator().get_next())
     assert set(batch.keys()) == set(exp_keys)
     assert np.all([v.shape.as_list()[0] == 50 for v in batch.values()])
+
+
+
+
+
+
+
+@pytest.mark.parametrize("data_loader, inf_method_name", [
+        # single csv with header
+    (
+        CsvLoader(path=datafolder+"dataxy_with_header.csv"), "VI"
+    ),
+        # single csv with header and simple mapping
+    (
+        CsvLoader(path=datafolder + "dataxy_no_header.csv", var_dict={"x":[0], "y":[1]}), "VI"
+    ),
+    (
+        CsvLoader(path=datafolder + "dataxy_with_header.csv"), "SVI"
+    ),
+    # single csv with header and simple mapping
+    (
+        CsvLoader(path=datafolder + "dataxy_no_header.csv", var_dict={"x": [0], "y": [1]}), "SVI"
+    ),
+
+])
+
+
+
+def test_fit(data_loader, inf_method_name):
+    @inf.probmodel
+    def linear_reg(d):
+        w0 = inf.Normal(0, 1, name="w0")
+        w = inf.Normal(tf.zeros([d, 1]), 1, name="w")
+
+        with inf.datamodel():
+            x = inf.Normal(tf.ones([d]), 2, name="x")
+            y = inf.Normal(w0 + x @ w, 1.0, name="y")
+
+    @inf.probmodel
+    def qmodel(d):
+        qw0_loc = inf.Parameter(0., name="qw0_loc")
+        qw0_scale = tf.math.softplus(inf.Parameter(1., name="qw0_scale"))
+        qw0 = inf.Normal(qw0_loc, qw0_scale, name="w0")
+
+        qw_loc = inf.Parameter(tf.zeros([d, 1]), name="qw_loc")
+        qw_scale = tf.math.softplus(inf.Parameter(tf.ones([d, 1]), name="qw_scale"))
+        qw = inf.Normal(qw_loc, qw_scale, name="w")
+
+    # create an instance of the model
+    m = linear_reg(d=1)
+
+    vi = inf.inference.VI(qmodel(1), epochs=100)
+
+    inf_method = getattr(inf.inference, inf_method_name)(qmodel(1), epochs=100)
+    m.fit(data_loader, inf_method)
+
 
 
 
