@@ -17,10 +17,16 @@ def ELBO(pvars, qvars, batch_weight=1, **kwargs):
         [(batch_weight if p.is_datamodel else 1) * tf.reduce_sum(p.log_prob(p.value))
          for p in pvars.values()])
 
+    q_mask = tf.stack([tf.math.logical_not(q.is_observed) for q in qvars.values()], name="q_mask")
+
     # compute entropy
     entropy = - tf.reduce_sum(
-        [(batch_weight if q.is_datamodel else 1) * tf.reduce_sum(q.log_prob(q.value))
-         for q in qvars.values()])
+        tf.boolean_mask(
+            tf.stack(
+                [(batch_weight if q.is_datamodel else 1) * tf.reduce_sum(q.log_prob(q.value)) for q in qvars.values()]
+                )
+            , q_mask)
+    )
 
     # compute ELBO
     ELBO = energy + entropy
