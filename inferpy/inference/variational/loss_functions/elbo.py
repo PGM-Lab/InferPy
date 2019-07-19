@@ -20,7 +20,7 @@ def ELBO(pvars, qvars, batch_weight=1, **kwargs):
     # compute entropy
     entropy = - tf.reduce_sum(
         [(batch_weight if q.is_datamodel else 1) * tf.reduce_sum(q.log_prob(q.value))
-         for q in qvars.values() if not q.is_datamodel])
+         for q in qvars.values()])
 
     # compute ELBO
     ELBO = energy + entropy
