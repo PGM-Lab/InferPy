@@ -90,7 +90,10 @@ class VI(Inference):
 
         t = []
         sess = util.get_session()
-        clean_sample_dict = {k: np.squeeze(v) for k, v in sample_dict.items()}
+        # reshape data in case it does not match exactly with the shape used when building the random variable
+        # i.e.: (..., 1) dimension
+        clean_sample_dict = {k: np.reshape(v, self.expanded_variables["p"][k].observed_value.shape.as_list())
+                             for k, v in sample_dict.items()}
         with contextmanager.observe(self.expanded_variables["p"], clean_sample_dict):
             with contextmanager.observe(self.expanded_variables["q"], clean_sample_dict):
                 for i in range(self.epochs):
