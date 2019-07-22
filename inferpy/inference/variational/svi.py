@@ -45,7 +45,10 @@ class SVI(VI):
             for j in range(self.batches):
                 # evaluate the data tensor to get an evaluated one which can be used to observe varoables
                 local_input_data = sess.run(input_data)
-                clean_local_input_data = {k: np.squeeze(v) for k, v in local_input_data.items()}
+                # reshape data in case it does not match exactly with the shape used when building the random variable
+                # i.e.: (..., 1) dimension
+                clean_local_input_data = {k: np.reshape(v, self.expanded_variables["p"][k].observed_value.shape.as_list())
+                                          for k, v in local_input_data.items()}
                 with contextmanager.observe(self.expanded_variables["p"], clean_local_input_data):
                     with contextmanager.observe(self.expanded_variables["q"], clean_local_input_data):
                         sess.run(self.train_tensor)
