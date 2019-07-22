@@ -1,11 +1,7 @@
-# required pacakges
-import inferpy as inf
-import numpy as np
 import tensorflow as tf
-
 import matplotlib.pyplot as plt
-from inferpy.data import mnist
-
+import numpy as np
+import inferpy as inf
 
 # number of components
 k = 2
@@ -15,13 +11,32 @@ d0 = 100
 dx = 28 * 28
 # number of observations (dataset size)
 N = 1000
+# batch size
 M = 100
-
 # digits considered
 DIG = [0, 1, 2]
-
+# minimum scale
 scale_epsilon = 0.01
+# inference parameters
+num_epochs = 1000
+learning_rate = 0.01
 
+# reset tensorflow
+tf.reset_default_graph()
+tf.set_random_seed(1234)
+
+
+
+from inferpy.data import mnist
+
+# load the data
+(x_train, y_train), _ = mnist.load_data(num_instances=N, digits=DIG)
+
+mnist.plot_digits(x_train, grid=[5,5])
+
+
+
+############## Inferpy ##############
 
 @inf.probmodel
 def vae(k, d0, dx, decoder):
@@ -32,27 +47,33 @@ def vae(k, d0, dx, decoder):
         x_scale = tf.nn.softmax(output[:, dx:]) + scale_epsilon
         x = inf.Normal(x_loc, x_scale, name="x")  # shape = [N,d]
 
+# Neural networks for decoding and encoding
 
 def decoder(z, d0, dx):  # k -> d0 -> 2*dx
     h0 = tf.layers.dense(z, d0, tf.nn.relu)
     return tf.layers.dense(h0, 2 * dx)
 
-
 def encoder(x, d0, k):  # dx -> d0 -> 2*k
     h0 = tf.layers.dense(x, d0, tf.nn.relu)
     return tf.layers.dense(h0, 2 * k)
 
+# Q model for making inference
 
 @inf.probmodel
 def qmodel(k, d0, dx, encoder):
     with inf.datamodel():
         x = inf.Normal(tf.ones(dx) * 0.5, 1, name="x")
-
         output = encoder(x, d0, k)
         qz_loc = output[:, :k]
-        qz_scale = tf.nn.softmax(output[:, k:])
+        qz_scale = tf.nn.softmax(output[:, k:]) + scale_epsilon
         qz = inf.Normal(qz_loc, qz_scale, name="z")
 
+
+
+# Inference
+############################
+
+############## Inferpy ##############
 
 m = vae(k, d0, dx, decoder)
 q = qmodel(k, d0, dx, encoder)
@@ -60,28 +81,17 @@ q = qmodel(k, d0, dx, encoder)
 # set the inference algorithm
 SVI = inf.inference.SVI(q, epochs=1000, batch_size=M)
 
-(x_train, y_train), _ = mnist.load_data(num_instances=N, digits=DIG)
-
-# plot the digits
-mnist.plot_digits(x_train)
+############################
+############## Inferpy ##############
 
 # learn the parameters
 m.fit({"x": x_train}, SVI)
 
+# Usage of the model with the inferred parameters
+####################################################
 
-# Plot the evolution of the loss
+############## Inferpy ##############
 
-L = SVI.losses
-plt.plot(range(len(L)), L)
-
-plt.xlabel('epochs')
-plt.ylabel('Loss')
-plt.title('Loss evolution')
-plt.grid(True)
-plt.show()
-
-
-# posterior sample from the hidden variable z, given the training data
 sess = inf.get_session()
 postz = m.posterior("z", data={"x": x_train}).sample()
 
@@ -103,15 +113,18 @@ for c in range(0, len(DIG)):
 
 plt.show()
 
+##################
+############## Inferpy ##############
 
-# Generate new images
 x_gen = m.posterior_predictive('x').sample()
 mnist.plot_digits(x_gen)
 
 
-# Generate new images for a specific number
-NUM = 0
-postz_0 = postz[y_train == DIG[NUM]]
+##################
+
+### Generate new images for a specific digit dig
+dig = 0
+postz_0 = postz[y_train == DIG[dig]]
 # Less than plaze size, so we need to tile this up to 1000 instances
 postz_0 = np.tile(postz_0, [int(np.ceil(N / postz_0.shape[0])), 1])[:N]
 x_gen = m.posterior_predictive('x', data={"z": postz_0}).sample()
