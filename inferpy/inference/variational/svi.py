@@ -29,7 +29,7 @@ class SVI(VI):
         # set the used pmodel
         self.pmodel = pmodel
         # compute the batch_weight depending on the data_size and the batch_size
-        self.batch_weight = self.batch_size / data_size  # N/M
+        self.batch_weight = data_size / self.batch_size  # N/M
         # create the train tensor
         self.train_tensor = self._generate_train_tensor(batch_weight=self.batch_weight)
 
