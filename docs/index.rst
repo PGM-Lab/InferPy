@@ -72,6 +72,7 @@ A set of examples can be found in the `Probabilistic Model Zoo <notes/probzoo.ht
    notes/guideinference
    notes/guidebayesian
    notes/guidedata
+   notes/advancedsetup
 
 ..   notes/guidevalidation
 

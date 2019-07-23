@@ -100,6 +100,87 @@ Finally we can access to the parameters of the posterior distributions:
    :language: python3
    :lines: 62-67
 
+
+
+
+Queries
+---------
+
+The queries syntax allows to use the probabilistic models specifying a type of knowlege: prior, posterior or posterior
+predictive. That means that, for example, we can generate new instances from the prior knowledge (using the initial
+model definition), or the posterior/posterior predictive knowlede (once the model has been trained using input data).
+There are two well differentiated parts: the query definition and the action function. The former is used to define
+the environment that we desire as input in order to use the model afterwards. The action functions can be applied
+on ``Query`` objects to:
+
+- ``sample``: samples new data.
+
+- ``log_prob``: computes the log prob given an evicende (observed variables).
+
+- ``sum_log_prob``: the same as `log_prob`, but computes the sum of the log prob for all the variables in the probabilistic model.
+
+- ``parameters``: returns the parameters of the Random Variables (i.e.: loc and scale for Normal distributions).
+
+
+Building Query objects
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Given a probabilistic model object, i.e.: model, we can build ``Query`` objects by calling the ``prior()``,
+``posterior()`` or ``posterior_predictive()`` methods of the ``probmodel`` class. All these accepts the same two
+arguments:
+
+- ``target_names``: A string or list of strings that correspond to random variable names. These random variables
+  are the targets of our queries (in other words, the random variables that we want to use when calling an action).
+
+- ``data``: A dict that contains as keys the name of random variables, and the values the observed data for that
+  random variables. By default it is an empty dict.
+
+Let's define each function:
+
+
+- ``prior()``: This function returns ``Query`` objects that uses the random variables initially defined in the model
+  when applying the actions. It just uses the prior knowledge, and can be used once the model object is created.
+
+- ``posterior()``: This function returns ``Query`` objects that uses the expanded random variables defined and
+  fitted after the training process. It uses the posterior knowledge and can be used only after calling the ``fit``
+  function. The target variables allowed are those not observed during the training process.
+
+- ``posterior_predictive()``: This function is similar to the ``posterior``, but he target variables allowed
+  in this function are those observed during the training process.
+
+
+Action functions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Action functions allow to get the desired information from the ``Query`` objects. As described before, actually
+there are four functions:
+
+- ``sample(size)``: Generates _size_ instances (by default ``size=1``). It returns a dict, where the keys are the random variable names and the values are the sample data. If there is only one target name, then only the sample data is returned.
+
+- ``log_prob()``: computes the log prob given the evicende specified in the ``Query`` object. It returns a dict,
+  where the keys are the random variable names and the values are the log probs. If there is only one target name,
+  then only the log prob is returned.
+
+- ``sum_log_prob()``: the same as ``log_prob``, but computes the sum of the log prob for all the variables
+  in the probabilistic model.
+
+- ``parameters(names)``: returns the parameters of the Random Variables. If ``names`` is ``None`` (by default)
+  it returns all the parameters of all the random variables. If ``names`` is a string or a list of strings,
+  that corresponds to parameter names, then it returns the parameters of the random variables that matches with any
+  name provided in the _names_ argument. It returns a dict, where the keys are the random variable names and
+  the values are the dict of parameters (name of parameter: parameter value). If there is only one target name,
+  then only the dict of parameters for such random variable is returned.
+
+Example
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+As a full example of the usage of the queries, we might consider the following code.
+
+.. literalinclude:: ../../examples/docs/guideinference/2.py
+   :language: python3
+
+
+
 Custom Loss function
 ---------------------------------
 
