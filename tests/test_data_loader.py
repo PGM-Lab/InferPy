@@ -6,7 +6,6 @@ import tensorflow as tf
 import inferpy as inf
 
 datafolder = "./tests/files/"
-datafolder = "./files/"
 
 
 @pytest.mark.parametrize("args, expected", [
