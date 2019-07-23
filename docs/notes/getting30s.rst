@@ -12,8 +12,6 @@ Install InferPy from PyPI:
 
 
 
-
-
 30 seconds to InferPy
 --------------------------
 

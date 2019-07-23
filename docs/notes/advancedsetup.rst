@@ -47,7 +47,7 @@ As well as it is done in `Keras <https://www.tensorflow.org/api_docs/python/tf/k
 to specify the defaut float type: e.g. float16, float32, float64.
 
 
-The function ``set_floatx(value)` sets the default float type to ``value``, being one of the previously described
+The function ``set_floatx(value)`` sets the default float type to ``value``, being one of the previously described
 three options. The effect is that in the creation of Random Variables, the arguments are casted to the default
 float type if they are of float type.
 
