@@ -81,6 +81,7 @@ q = qmodel(k, d0, dx, encoder)
 # set the inference algorithm
 SVI = inf.inference.SVI(q, epochs=1000, batch_size=M)
 
+
 ############################
 ############## Inferpy ##############
 
@@ -92,9 +93,9 @@ m.fit({"x": x_train}, SVI)
 
 ############## Inferpy ##############
 
-sess = inf.get_session()
-postz = m.posterior("z", data={"x": x_train}).sample()
-
+postz = np.concatenate([
+    m.posterior("z", data={"x": x_train[i:i+M,:]}).sample()
+    for i in range(0,N,M)])
 
 # for each input instance, plot the hidden encoding coloured by the number that it represents
 markers = ["x", "+", "o"]
@@ -116,8 +117,8 @@ plt.show()
 ##################
 ############## Inferpy ##############
 
-x_gen = m.posterior_predictive('x').sample()
-mnist.plot_digits(x_gen)
+x_gen = m.posterior_predictive('x', data={"z": postz[:M,:]}).sample()
+mnist.plot_digits(x_gen, grid=[5,5])
 
 
 ##################

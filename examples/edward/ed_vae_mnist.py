@@ -118,7 +118,7 @@ sess.run(init)
 t = []
 for i in range(num_epochs + 1):
     for j in range(N // M):
-        elbo_ij, eng, ent, _ = sess.run([elbo,energy,entropy, train])
+        elbo_ij, eng, ent, _ = sess.run([elbo, train])
 
         t.append(elbo_ij)
         if j == 0 and i % 200 == 0:
