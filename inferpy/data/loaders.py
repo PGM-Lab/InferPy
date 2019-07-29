@@ -72,7 +72,7 @@ class CsvLoader(DataLoader):
     """
     This class implements a data loader for datasets in CSV format
     """
-    def __init__(self, path, var_dict=None):
+    def __init__(self, path, var_dict=None, force_eager=False):
         """ Creates a new CsvLoader object
 
             Args:
@@ -80,8 +80,9 @@ class CsvLoader(DataLoader):
                 var_dict (`dict`): mapping that associates each a variable name to a list
                     of integers indicating the columns in the file. The first column (excluding the
                     the tuple index) corresponds to 0.
+                force_eager (`bool`): indicates if the data should always be loaded before the optimization
+                    loop, regardless of the inference method.
         """
-
 
         if isinstance(path, str):
             path = [path]
@@ -89,6 +90,7 @@ class CsvLoader(DataLoader):
         self._colnames = []
         self._size = 0
         self.has_header = None
+        self._force_eager = force_eager
 
         for p in path:
             with open(p) as f:
@@ -215,8 +217,13 @@ def build_data_loader(data):
     DataLoader object """
     if isinstance(data, dict):
         data_loader = SampleDictLoader(data)
-    elif isinstance(data, DataLoader):
+    elif isinstance(data, SampleDictLoader):
         data_loader = data
+    elif isinstance(data, CsvLoader):
+        if data._force_eager == False:
+            data_loader = data
+        else:
+            data_loader = SampleDictLoader(data.to_dict())
     else:
         raise TypeError('The `data` type must be dict or DataLoader.')
     return data_loader

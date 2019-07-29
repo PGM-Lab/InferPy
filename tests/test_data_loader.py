@@ -1,5 +1,5 @@
 import pytest
-from inferpy.data.loaders import CsvLoader, SampleDictLoader
+from inferpy.data.loaders import CsvLoader, SampleDictLoader, build_data_loader
 import numpy as np
 
 import tensorflow as tf
@@ -182,6 +182,47 @@ def test_fit(data_loader, inf_method_name):
     inf_method = getattr(inf.inference, inf_method_name)(qmodel(1), epochs=100)
     m.fit(data_loader, inf_method)
 
+
+
+
+@pytest.mark.parametrize("data, expected_size, expected_type, exp_keys", [
+        # single csv with header
+    (
+        CsvLoader([datafolder+"dataxy_with_header.csv"]),
+        1000,
+        "CsvLoader",
+        ["x", "y"]
+
+    ),
+    # multiple csv with header
+    (
+            CsvLoader(3*[datafolder + "dataxy_with_header.csv"]),
+            3*1000,
+            "CsvLoader",
+            ["x", "y"]
+    ),
+    # single csv with header - eager
+    (
+            CsvLoader([datafolder + "dataxy_with_header.csv"], force_eager=True),
+            1000,
+            "SampleDictLoader",
+            ["x", "y"]
+    ),
+    # multiple csv with header - eager
+    (
+            CsvLoader(3 * [datafolder + "dataxy_with_header.csv"], force_eager=True),
+            3 * 1000,
+            "SampleDictLoader",
+            ["x", "y"],
+    ),
+    ])
+def test_build_data_loader(data, expected_size, expected_type, exp_keys):
+    # build the data loader object
+    data_loader = build_data_loader(data)
+
+    assert data_loader.size == expected_size
+    assert type(data_loader).__name__ == expected_type
+    assert set(data_loader.variables) == set(exp_keys)
 
 
 
