@@ -72,7 +72,7 @@ class CsvLoader(DataLoader):
     """
     This class implements a data loader for datasets in CSV format
     """
-    def __init__(self, path, var_dict=None, force_eager=False):
+    def __init__(self, path, var_dict=None, has_header=None, force_eager=False):
         """ Creates a new CsvLoader object
 
             Args:
@@ -80,6 +80,7 @@ class CsvLoader(DataLoader):
                 var_dict (`dict`): mapping that associates each a variable name to a list
                     of integers indicating the columns in the file. The first column (excluding the
                     the tuple index) corresponds to 0.
+                has_header (bool): indicates if the file has a header. If None, it will check it automatically.
                 force_eager (`bool`): indicates if the data should always be loaded before the optimization
                     loop, regardless of the inference method.
         """
@@ -96,8 +97,10 @@ class CsvLoader(DataLoader):
             with open(p) as f:
 
                 reader = csv.DictReader(f)
-                has_header = csv.Sniffer().has_header(f.read(2048))
-                f.seek(0)
+
+                if has_header is None:
+                    has_header = csv.Sniffer().has_header(f.read(2048))
+                    f.seek(0)
 
                 # get the column names
                 if has_header:
