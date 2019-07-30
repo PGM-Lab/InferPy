@@ -9,10 +9,10 @@ The main features of InferPy are listed below.
 
 -  Allows a simple definition and inference of probabilistic models containing deep neural networks.
 
--  The models that can be defined in InferPy are those that can be defined using Edward2 (i.e., ``tfp.edward2``, whose probability distribuions
+-  The models that can be defined in InferPy are those that can be defined using Edward2 (i.e., ``tfp.edward2``, whose probability distributions
    are mainly inherited from the module ``distributions`` in the tensorflow-probability package.
 
--  Edward's drawback is that for the model definition, the user has to manage complex multidimensional arrays called
+-  Edward's drawback is that for the model definition, the user has to manage complex multi-dimensional arrays called
    tensors. By contrast, in InferPy all the parameters in a model can be defined using the standard Python types
    (compatibility with Numpy is available as well).
 
@@ -48,6 +48,6 @@ over tensors. Most of the interaction is done with Edward:  the definitions of t
 inference. However, InferPy also interacts directly with TensorFlow in some operations that are hidden to
 the user, e.g., the manipulation of the tensors representing the parameters of the distributions.
 
-An additional advantage of using Edward and TensorFlow as inference engine, is that all the paralelisation details
+An additional advantage of using Edward and TensorFlow as inference engine is that all the parallelization details
 are hidden to the user. Moreover, the same code will run either in CPUs or GPUs.
 

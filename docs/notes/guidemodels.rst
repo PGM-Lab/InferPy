@@ -8,32 +8,31 @@ InferPy focuses on *hierarchical probabilistic models* structured
 in two different layers:
 
 -  A **prior model** defining a joint distribution :math:`p(\mathbf{w})`
-   over the global parameters of the model. :math:`\mathbf{w}` can be a single random
-   variable or a bunch of random variables with any given dependency structure. 
+   over the global parameters of the model. :math:`\mathbf{w}` can be a single random variable or a bunch of random variables with any given dependency structure.
 -  A **data or observation model** defining a joint conditional
    distribution :math:`p(\mathbf{x},\mathbf{z}|\mathbf{w})` over the observed quantities
    :math:`\mathbf{x}` and the the local hidden variables :math:`\mathbf{z}` governing the
    observation :math:`\mathbf{x}`. This data model is specified in a
    single-sample basis. There are many models of interest without local
    hidden variables, in that case, we simply specify the conditional
-   :math:`p(\mathbf{x}|\mathbf{w})`. Similarly, either :math:`\mathbf{x}` or 
-   :math:`\mathbf{z}` can be a single random variable or a bunch of random variables 
+   :math:`p(\mathbf{x}|\mathbf{w})`. Similarly, either :math:`\mathbf{x}` or
+   :math:`\mathbf{z}` can be a single random variable or a bunch of random variables
    with any given dependency structure.
 
 
-For example, a Bayesian PCA model has the following graphical structure, 
+For example, a Bayesian PCA model has the following graphical structure,
 
 .. figure:: ../_static/imgs/LinearFactor.png
    :alt: Linear Factor Model
    :scale: 35 %
    :align: center
-   
+
    Bayesian PCA
-	
+
 The **prior model** are the variables :math:`w_k`. The **data model** is the part of the model surrounded by the box indexed by **N**.
 
 
-And this is how this Bayesian PCA model is denfined in InferPy:
+And this is how this Bayesian PCA model is defined in InferPy:
 
 
 .. literalinclude:: ../../examples/docs/guidemodels/1.py
@@ -42,13 +41,13 @@ And this is how this Bayesian PCA model is denfined in InferPy:
 
 
 
-The ``with inf.datamodel()`` sintaxis is used to replicate the
+The ``with inf.datamodel()`` syntaxis is used to replicate the
 random variables contained within this construct. It follows from the
 so-called *plateau notation* to define the data generation part of a
 probabilistic model. Every replicated variable is **conditionally
-idependent** given the previous random variables (if any) defined
+independent** given the previous random variables (if any) defined
 outside the **with** statement. The plateau size will be later automatically calculated,
-so there is not need to specify it. Yet, this construct has an optional input parameter for specifying
+so there is no need to specify it. Yet, this construct has an optional input parameter for specifying
 its size, e.g., ``with inf.datamodel(size=N)``. This should be consistent with the size of
 our data.
 
@@ -80,7 +79,7 @@ Probability distributions (in this order or priority). For example:
 
 In the previous code, ``value`` is inherited form the encapsulated Edward2 object while ``sample()`` and the
 parameter ``loc`` are obtained from the distribution object. Note that the method ``sample()`` returns
-an evaluated tensors. In case of desiring it not to be evaluated, simply use the input parameter ``tf_run`` as follows.
+evaluated tensors. In case of desiring it not to be evaluated, simply use the input parameter ``tf_run`` as follows.
 
 .. literalinclude:: ../../examples/docs/guidemodels/2.py
    :language: python3
@@ -119,7 +118,7 @@ when provided, or in runtime depending on the observed data).
    :lines: 66-69
 
 
-Finally, the *event shape* will only be consider in some distributions. This is the case of the
+Finally, the *event shape* will only be considered in some distributions. This is the case of the
 multivariate Gaussian:
 
 
@@ -135,7 +134,7 @@ multivariate Gaussian:
 
 
 
-Note that indexing over all the defined dimenensions is supported:
+Note that indexing over all the defined dimensions is supported:
 
 
 .. literalinclude:: ../../examples/docs/guidemodels/2.py
@@ -175,8 +174,7 @@ automatically will be used. However, it is highly convenient to explicitly speci
 in this way it will be able to be referenced in some inference stages.
 
 
-The model must be **instantiated** before it can be used. This is done by simple
-invoking the function (which will return a probmodel object).
+The model must be **instantiated** before it can be used. This is done by simply invoking the function (which will return a probmodel object).
 
 .. literalinclude:: ../../examples/docs/guidemodels/3.py
    :language: python3
@@ -212,8 +210,8 @@ Supported Probability Distributions
 
 
 Supported probability distributions are located in the package ``inferpy.models``. All of them
-have ``inferpy.models.RandomVariable`` as superclass. A list with all the supported distributions can be obtained as
-as follows.
+have ``inferpy.models.RandomVariable`` as the superclass. A list with all the supported distributions can be obtained as
+ follows.
 
 
 .. literalinclude:: ../../examples/docs/guidemodels/3.py
