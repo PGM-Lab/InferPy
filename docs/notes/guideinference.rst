@@ -42,7 +42,7 @@ in which the task is to approximate the posterior
 
 
 
-For making inference, we must define a model 'Q' for approximating the
+For making the inference, we must define a model 'Q' for approximating the
 posterior distribution. This is also done by defining a function decorated
 with ``@inf.probmodel``:
 
@@ -54,7 +54,7 @@ with ``@inf.probmodel``:
 
 
 
-In the 'Q' model we should include a q distribution for every non observed variable in 
+In the 'Q' model we should include a q distribution for every non-observed variable in
 the 'P' model. These varaiables are also objects of class ``inferpy.RandomVariable``.
 However, their parameters might be of type ``inf.Parameter``, which are objects
 encapsulating TensorFlow trainable variables.
@@ -94,7 +94,7 @@ The output generated will be similar to:
 
 
 
-Finally we can access to the parameters of the posterior distributions:
+Finally, we can access to the parameters of the posterior distributions:
 
 .. literalinclude:: ../../examples/docs/guideinference/1.py
    :language: python3
@@ -106,16 +106,15 @@ Finally we can access to the parameters of the posterior distributions:
 Queries
 ---------
 
-The queries syntax allows to use the probabilistic models specifying a type of knowlege: prior, posterior or posterior
+The queries syntax allows using the probabilistic models specifying a type of knowledge: prior, posterior or posterior
 predictive. That means that, for example, we can generate new instances from the prior knowledge (using the initial
-model definition), or the posterior/posterior predictive knowlede (once the model has been trained using input data).
-There are two well differentiated parts: the query definition and the action function. The former is used to define
-the environment that we desire as input in order to use the model afterwards. The action functions can be applied
+model definition), or the posterior/posterior predictive knowledge (once the model has been trained using input data).
+There are two well-differentiated parts: the query definition and the action function. The action functions can be applied
 on ``Query`` objects to:
 
 - ``sample``: samples new data.
 
-- ``log_prob``: computes the log prob given an evicende (observed variables).
+- ``log_prob``: computes the log prob given some evidence (observed variables).
 
 - ``sum_log_prob``: the same as `log_prob`, but computes the sum of the log prob for all the variables in the probabilistic model.
 
@@ -133,15 +132,15 @@ arguments:
   are the targets of our queries (in other words, the random variables that we want to use when calling an action).
 
 - ``data``: A dict that contains as keys the name of random variables, and the values the observed data for that
-  random variables. By default it is an empty dict.
+  random variables. By default, it is an empty dict.
 
 Let's define each function:
 
 
-- ``prior()``: This function returns ``Query`` objects that uses the random variables initially defined in the model
-  when applying the actions. It just uses the prior knowledge, and can be used once the model object is created.
+- ``prior()``: This function returns ``Query`` objects that use the random variables initially defined in the model
+  when applying the actions. It just uses prior knowledge and can be used once the model object is created.
 
-- ``posterior()``: This function returns ``Query`` objects that uses the expanded random variables defined and
+- ``posterior()``: This function returns ``Query`` objects that use the expanded random variables defined and
   fitted after the training process. It uses the posterior knowledge and can be used only after calling the ``fit``
   function. The target variables allowed are those not observed during the training process.
 
@@ -152,12 +151,12 @@ Let's define each function:
 Action functions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Action functions allow to get the desired information from the ``Query`` objects. As described before, actually
+Action functions allow getting the desired information from the ``Query`` objects. As described before, actually
 there are four functions:
 
 - ``sample(size)``: Generates _size_ instances (by default ``size=1``). It returns a dict, where the keys are the random variable names and the values are the sample data. If there is only one target name, then only the sample data is returned.
 
-- ``log_prob()``: computes the log prob given the evicende specified in the ``Query`` object. It returns a dict,
+- ``log_prob()``: computes the log prob given the evidence specified in the ``Query`` object. It returns a dict,
   where the keys are the random variable names and the values are the log probs. If there is only one target name,
   then only the log prob is returned.
 
@@ -166,10 +165,9 @@ there are four functions:
 
 - ``parameters(names)``: returns the parameters of the Random Variables. If ``names`` is ``None`` (by default)
   it returns all the parameters of all the random variables. If ``names`` is a string or a list of strings,
-  that corresponds to parameter names, then it returns the parameters of the random variables that matches with any
-  name provided in the _names_ argument. It returns a dict, where the keys are the random variable names and
+  that corresponds to parameter names, then it returns the parameters of the random variables that match with any name provided in the _names_ argument. It returns a dict, where the keys are the random variable names and
   the values are the dict of parameters (name of parameter: parameter value). If there is only one target name,
-  then only the dict of parameters for such random variable is returned.
+  then only the dict of parameters for such a random variable is returned.
 
 Example
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -185,9 +183,9 @@ Custom Loss function
 ---------------------------------
 
 Following InferPy guiding principles, users can further configure the inference algorithm.
-For example, we might be interested in defining our own function to minimise. As
+For example, we might be interested in defining our own function to minimize. As
 an example, we define the following function taking as input parameters the random variables
-of the P and Q models (we assume that their sample sizes are consistent with the plates in the mdoel). Note that the output of
+of the P and Q models (we assume that their sample sizes are consistent with the plates in the model). Note that the output of
 this function must be a tensor.
 
 .. literalinclude:: ../../examples/docs/guideinference/1.py
@@ -196,7 +194,7 @@ this function must be a tensor.
 
 
 
-For using our own loss function, we simply have to pass this function to the
+For using our defined loss function, we simply have to pass this function to the
 input parameter ``loss`` in the inference method constructor. For example:
 
 

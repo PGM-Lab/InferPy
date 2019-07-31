@@ -1,11 +1,11 @@
 import inferpy as inf
 import tensorflow as tf
-
+import numpy as np
 
 @inf.probmodel
 def linear_reg(d):
     w0 = inf.Normal(0, 1, name="w0")
-    w = inf.Normal(tf.zeros([d, 1]), 1, name="w")
+    w = inf.Normal(np.zeros([d, 1]), 1, name="w")
 
     with inf.datamodel():
         x = inf.Normal(tf.ones(d), 2, name="x")
@@ -18,14 +18,14 @@ def qmodel(d):
     qw0_scale = tf.math.softplus(inf.Parameter(1., name="qw0_scale"))
     qw0 = inf.Normal(qw0_loc, qw0_scale, name="w0")
 
-    qw_loc = inf.Parameter(tf.zeros([d, 1]), name="qw_loc")
+    qw_loc = inf.Parameter(np.zeros([d, 1]), name="qw_loc")
     qw_scale = tf.math.softplus(inf.Parameter(tf.ones([d, 1]), name="qw_scale"))
     qw = inf.Normal(qw_loc, qw_scale, name="w")
 
 
 # create an instance of the model
 m = linear_reg(d=2)
-
+q = qmodel(2)
 # create toy data
 N = 1000
 data = m.prior(["x", "y"], data={"w0": 0, "w": [[2], [1]]}, size_datamodel=N).sample()

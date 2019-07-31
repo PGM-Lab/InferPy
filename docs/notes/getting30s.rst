@@ -17,17 +17,17 @@ Install InferPy from PyPI:
 
 The core data structures of InferPy is a **probabilistic model**,
 defined as a set of **random variables** with a conditional dependency
-structure. A **random varible** is an object
+structure. A **random variable** is an object
 parameterized by a set of tensors.
 
 Let's look at a simple non-linear **probabilistic component analysis** model (NLPCA). Graphically the model can
-be defined as follows, 
+be defined as follows,
 
 .. figure:: ../_static/img/nlpca.png
    :alt: Non-linear PCA
    :scale: 60 %
    :align: center
-   
+
    Non-linear PCA
 
 We start by importing the required packages and defining the constant parameters in the model.
@@ -66,7 +66,7 @@ Now, we can instantiate our model and obtain samples (from the prior distributio
 
 
 
-In variational inference, we must defined a Q-model as follows.
+In variational inference, we need to define a Q-model as follows.
 
 
 .. literalinclude:: ../../examples/docs/getting30s/1.py
@@ -75,7 +75,7 @@ In variational inference, we must defined a Q-model as follows.
 
 
 
-Afterwards, we define the parameters of our inference algorithm and fit the data to the model.
+Afterward, we define the parameters of our inference algorithm and fit the data to the model.
 
 
 
@@ -84,8 +84,8 @@ Afterwards, we define the parameters of our inference algorithm and fit the data
    :lines: 62-66
 
 
-The inference method can be further configure. But, as in Keras, a core
-principle is to try make things reasonably simple, while allowing the
+The inference method can be further configured. But, as in Keras, a core
+principle is to try to make things reasonably simple, while allowing the
 user the full control if needed.
 
 

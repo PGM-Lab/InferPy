@@ -9,7 +9,7 @@ will be used.
 Setting up
 -------------
 
-First, we import the requried packages and set the global variables. This code is common for both, Edward and InferPy:
+First, we import the required packages and set the global variables. This code is common for both, Edward and InferPy:
 
 .. literalinclude:: ../../examples/edward/ed_vae_mnist.py
    :language: python3
@@ -21,7 +21,7 @@ Then, we can load and plot the MNIST dataset using the functionality provided at
    :language: python3
    :lines: 30-35
 
-The generated plot is shown in the figure bellow.
+The generated plot is shown in the figure below.
 
 .. figure:: ../_static/img/mnist_train.png
    :alt: MNIST training data.
@@ -56,9 +56,9 @@ The most relevant difference is that with InferPy we do not need to specify whic
 datamodel construct). Instead, this will be automatically obtained at inference time.
 
 
-In both cases, models are defined as functions, though InferPy require to use the decorator ``@inf.probmodel``. On the
+In both cases, models are defined as functions, though InferPy requires to use the decorator ``@inf.probmodel``. On the
 other, even though  neural networks can be the same, in the Edward code these are defined with a name as this
-will be later used for accessing to the learnt weights.
+will be later used for access to the learned weights.
 
 Inference
 ---------------
@@ -66,8 +66,8 @@ Inference
 Setting up the inference and batched data
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Before optimising the variational parameters, we must: split the data into batches; create the instances of the P and Q
-models; and finally build tensor for computing **ELBO**, which basically represents the the function that will be optimised.
+Before optimizing the variational parameters, we must: split the data into batches; create the instances of the P and Q
+models; and finally build tensor for computing **ELBO**, which represents the function that will be optimized.
 
 
 .. literalinclude:: ../../examples/edward/ed_vae_mnist.py
@@ -90,7 +90,7 @@ done as follows.
 Optimization loop
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-In variational inference, parameters are iteratively optimised. When using Edward, we must first specify TensorFlow optimisers
+In variational inference, parameters are iteratively optimized. When using Edward, we must first specify TensorFlow optimizers
 and training objects. Then the loop is explicitly coded as follows.
 
 
@@ -113,9 +113,9 @@ algorithm object previously defined.
 Usage of the inferred model
 ----------------------------------
 
-Once optimisation is finished, we might consider to use the model with the inferred parameters. For example, we
+Once optimization is finished, we might consider using the model with the inferred parameters. For example, we
 might obtain the hidden representation of the original data, which is done by passing such data through the decoder.
-Edward does not provides any functionality for this purpose, so we will use TensorFlow code:
+Edward does not provide any functionality for this purpose, so we will use TensorFlow code:
 
 
 .. literalinclude:: ../../examples/edward/ed_vae_mnist.py
@@ -142,7 +142,7 @@ The result of plotting the hidden representation is:
 
 
 We might be also interested in generating new digits, which implies passing some data in the hidden space
-through the decoder. With Edward this will be done as follows.
+through the decoder. With Edward, this will be done as follows.
 
 
 .. literalinclude:: ../../examples/edward/ed_vae_mnist.py
@@ -157,7 +157,7 @@ Analogously, using InferPy we must just invoke the method ``probmodel.posterior_
    :lines: 120-121
    :caption: Inferpy
 
-Some of the resuting images are shown below.
+Some of the resulting images are shown below.
 
 .. figure:: ../_static/img/mnist_gen.png
    :alt: MNIST generated data.
