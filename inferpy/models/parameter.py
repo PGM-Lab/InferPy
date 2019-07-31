@@ -15,6 +15,7 @@
 import tensorflow as tf
 from tensorflow.python.client import session as tf_session
 
+from . import sanitize_input_arg
 from inferpy import contextmanager
 from inferpy import util
 
@@ -30,25 +31,25 @@ class Parameter:
         # the parameter must have a name
         self.name = name if name else util.name.generate('parameter')
 
+        # convert parameter to tensor if it is not
+        sanitized_initial_value = sanitize_input_arg(initial_value)
+
         # check if Parameter is created inside a datamodel context or not.
         if contextmanager.data_model.is_active():
             # In this case, the parameter is in datamodel
             self.is_datamodel = True
 
-            # convert parameter to tensor if it is not
-            initial_value = tf.cast(initial_value, tf.float32)
-
-            input_varname = initial_value.op.name if contextmanager.randvar_registry.is_building_graph() else name
-            # check the sample_shape. If not empty, expand the initial_value
+            input_varname = sanitized_initial_value.op.name if contextmanager.randvar_registry.is_building_graph() else name
+            # check the sample_shape. If not empty, expand the sanitized_initial_value
             contextmanager.randvar_registry.update_graph(input_varname)
 
             sample_shape = contextmanager.data_model.get_sample_shape(input_varname)
             if sample_shape is not ():
-                initial_value = \
-                    tf.broadcast_to(initial_value, tf.TensorShape(sample_shape).concatenate(initial_value.shape))
+                sanitized_initial_value = \
+                    tf.broadcast_to(sanitized_initial_value, tf.TensorShape(sample_shape).concatenate(sanitized_initial_value.shape))
 
         # Build the tf variable
-        self.var = tf.Variable(initial_value, name=self.name)
+        self.var = tf.Variable(sanitized_initial_value, name=self.name)
         util.session.get_session().run(tf.variables_initializer([self.var]))
 
         # register the variable, which is used to detect dependencies
