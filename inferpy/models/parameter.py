@@ -32,7 +32,7 @@ class Parameter:
         self.name = name if name else util.name.generate('parameter')
 
         # convert parameter to tensor if it is not
-        sanitized_initial_value = sanitize_input_arg(initial_value)
+        sanitized_initial_value = tf.convert_to_tensor(sanitize_input_arg(initial_value))
 
         # check if Parameter is created inside a datamodel context or not.
         if contextmanager.data_model.is_active():
@@ -40,9 +40,9 @@ class Parameter:
             self.is_datamodel = True
 
             input_varname = sanitized_initial_value.op.name if contextmanager.randvar_registry.is_building_graph() else name
-            # check the sample_shape. If not empty, expand the sanitized_initial_value
             contextmanager.randvar_registry.update_graph(input_varname)
 
+            # check the sample_shape. If not empty, expand the sanitized_initial_value
             sample_shape = contextmanager.data_model.get_sample_shape(input_varname)
             if sample_shape is not ():
                 sanitized_initial_value = \
