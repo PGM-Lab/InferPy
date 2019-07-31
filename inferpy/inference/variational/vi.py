@@ -82,7 +82,6 @@ class VI(Inference):
 
         # data must be a sample dictionary
         sample_dict = build_sample_dict(data)
-        sample_dict["x"].shape
         # ensure that the size of the data matches with the self.plate_size
         data_size = util.iterables.get_plate_size(self.pmodel.vars, sample_dict)
         if data_size != self.plate_size:
@@ -111,15 +110,6 @@ class VI(Inference):
     @property
     def losses(self):
         return self.debug.losses
-
-    def sample(self, size=1, data={}):
-        raise NotImplementedError
-
-    def log_prob(self, data):
-        raise NotImplementedError
-
-    def parameters(names=None):
-        raise NotImplementedError
 
     def _generate_train_tensor(self, **kwargs):
         """ This function expand the p and q models. Then, it uses the  loss function to create the loss tensor
