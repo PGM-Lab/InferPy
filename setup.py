@@ -65,7 +65,8 @@ setup(
     install_requires=get_requirements('requirements/prod.txt'),
     extras_require={
         'gpu': get_requirements('requirements/gpu.txt'),
-        'visualization': get_requirements('requirements/visualization.txt')
+        'visualization': get_requirements('requirements/visualization.txt'),
+        'datasets': get_requirements('requirements/datasets.txt')
     },
     tests_require=get_requirements('requirements/test.txt'),
     include_package_data=True,

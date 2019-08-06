@@ -2,7 +2,6 @@
 
 from keras.datasets import mnist
 import numpy as np
-import matplotlib.pyplot as plt
 
 
 def load_data(vectorize=True, num_instances=None, num_instances_test=None, digits=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]):
@@ -41,6 +40,11 @@ def _preprocess_data(x_data, y_data, vectorize=True, num_instances=None, digits=
 
 
 def plot_digits(data, grid=[3, 3]):
+    try:
+        import matplotlib.pyplot as plt
+    except ImportError:
+        print("The function plot_digits requires to install inferpy[visualization]")
+        raise
     nx, ny = grid
     fig, ax = plt.subplots(nx, ny, figsize=(12, 12))
     fig.tight_layout(pad=0.3, rect=[0, 0, 0.9, 0.9])
