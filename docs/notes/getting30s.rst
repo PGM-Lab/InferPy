@@ -11,7 +11,7 @@ Install InferPy from PyPI:
    $ python -m pip install inferpy
 
 
-For further details, check the `Installation <notes/installation.html>`_ section.
+For further details, check the `Installation <installation.html>`_ section.
 
 
 
