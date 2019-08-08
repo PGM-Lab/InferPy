@@ -33,11 +33,14 @@ with open(os.path.join(here, 'docs/project_description.md')) as f:
 
 
 # function to read requirements, and include them as package dependencies
-def get_requirements(file):
+def get_requirements(*files):
     # read requirements.txt file and return them as a list of strings
-    with open(file) as f:
-        req = f.readlines()
-    return [r.strip() for r in req]  # clean lines from blank spaces and line breaks
+    reqs = []
+    for file in files:
+        with open(file) as f:
+            req = f.readlines()
+        reqs += [r.strip() for r in req] 
+    return reqs  # clean lines from blank spaces and line breaks
 
 
 setup(
@@ -65,7 +68,9 @@ setup(
     install_requires=get_requirements('requirements/prod.txt'),
     extras_require={
         'gpu': get_requirements('requirements/gpu.txt'),
-        'visualization': get_requirements('requirements/visualization.txt')
+        'visualization': get_requirements('requirements/visualization.txt'),
+        'datasets': get_requirements('requirements/datasets.txt'),
+        'all': get_requirements('requirements/gpu.txt', 'requirements/visualization.txt', 'requirements/datasets.txt'),
     },
     tests_require=get_requirements('requirements/test.txt'),
     include_package_data=True,

@@ -19,7 +19,6 @@ from collections import OrderedDict
 from tensorflow_probability import edward2 as ed
 import tensorflow as tf
 import networkx as nx
-from matplotlib import pyplot as plt
 import warnings
 
 from inferpy import util
@@ -185,6 +184,11 @@ class ProbModel:
         return model_vars, var_parameters
 
     def plot_graph(self):
+        try:
+            import matplotlib.pyplot as plt
+        except ImportError:
+            print("The function plot_graph requires to install inferpy[visualization]")
+            raise
         nx.draw(self.graph, cmap=plt.get_cmap('jet'), with_labels=True)
         plt.show()
 
