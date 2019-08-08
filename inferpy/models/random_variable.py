@@ -23,6 +23,7 @@ from tensorflow_probability.python.edward2 import generated_random_variables
 from tensorflow.python.client import session as tf_session
 import warnings
 
+from . import sanitize_input_arg
 from inferpy import contextmanager
 from inferpy import util
 import inferpy.util.session
@@ -295,28 +296,6 @@ class RandomVariable:
         return self.var.__nonzero__()
 
 
-def _sanitize_input(arg):
-    # This function sanitize the input arguments to create Random Variables. It does:
-    # - convert Random Variables (from inferpy or edward2) to tensors, even if there
-    # are in a list or nested list, in order to allow to use them as arguments for other Random Variables
-    # - if hasattr dtype and is float64, cast to float32
-    if isinstance(arg, list):
-        return [_sanitize_input(nested_arg) for nested_arg in arg]
-
-    # if not a list, sanitize the arg
-    sanitized_arg = arg
-
-    # if it is a random variable, convert it to tensor so it can be used as input arg by new random variable
-    if isinstance(arg, (ed.RandomVariable, RandomVariable)):
-        sanitized_arg = tf.convert_to_tensor(sanitized_arg)
-
-    # if it has dtype arg, is float, and different from default float type (floatx), cast it
-    if hasattr(sanitized_arg, "dtype") and util.common.is_float(sanitized_arg.dtype) and sanitized_arg.dtype != util.floatx():
-        sanitized_arg = tf.cast(sanitized_arg, util.floatx())
-
-    return sanitized_arg
-
-
 def _make_random_variable(distribution_name):
     """Factory function to make random variable given distribution name."""
 
@@ -344,8 +323,8 @@ def _make_random_variable(distribution_name):
             sample_shape = kwargs.pop('sample_shape', ())
 
         # convert any Random Variable in a list or nested list in arguments to tensors, allowing to use RV's as arguments
-        sanitized_args = [_sanitize_input(arg) for arg in args]
-        sanitized_kwargs = {k: _sanitize_input(v) for k, v in kwargs.items()}
+        sanitized_args = [sanitize_input_arg(arg) for arg in args]
+        sanitized_kwargs = {k: sanitize_input_arg(v) for k, v in kwargs.items()}
 
         # If it is inside a data model, ommit the sample_shape in kwargs if exist and use size from data_model
         # NOTE: Needed here because we need to know the shape of the distribution, as well as its dtype
