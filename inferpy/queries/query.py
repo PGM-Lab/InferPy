@@ -54,9 +54,7 @@ class Query:
         with contextmanager.observe(self.observed_variables, self.data):
             # each iteration for `size` run the dict in the session, so if there are dependencies among random variables
             # they are computed in the same graph operations, and reflected in the results
-            samples = util.runtime.try_run([{k: (v.sample(v.sample_shape) if v.sample_shape else v.sample())
-                                             for k, v in self.target_variables.items()}
-                                            for _ in range(size)])
+            samples = [util.runtime.try_run(self.target_variables) for _ in range(size)]
 
         if size == 1:
             result = samples[0]

@@ -200,26 +200,15 @@ class ProbModel:
         # get the plate size
         plate_size = util.iterables.get_plate_size(self.vars, sample_dict)
         # compile the inference method
-        inference_method.compile(self, plate_size)
-        # and run the update method with the data
-        inference_method.update(sample_dict)
+        # if the inference method needs to intercept random variables, enable this context using a boolean
+        # tf.Variable defined in this inference method object
+        with util.interceptor.enable_interceptor(self.inference_method.get_interceptable_condition_variable()):
+            inference_method.compile(self, plate_size)
+            # and run the update method with the data
+            inference_method.update(sample_dict)
 
         # If it works, set the observed variables
         self.observed_vars = list(sample_dict.keys())
-
-    @util.tf_run_ignored
-    def update(self, sample_dict):
-        # Check that fit was called first
-        if self.inference_method is None:
-            raise RuntimeError("The fit method must be called before update")
-
-        # check that the observed_vars are the same
-        if set(self.observed_vars) != sample_dict.keys():
-            raise ValueError("The data in sample dict must contain only data from observed variables: \
-                {}.".format(self.observed_vars))
-
-        # Run the inference method
-        self.inference_method.update(sample_dict)
 
     def expand_model(self, size=1):
         """ Create the expanded model vars using size as plate size and return the OrderedDict """
