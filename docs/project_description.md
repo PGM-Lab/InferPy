@@ -32,5 +32,4 @@ no so general like Edward\'s API but still covers a wide range of
 powerful and widely used probabilistic models, which can contain complex
 probability constructs containing deep neural networks.
 
-For more details about InferPy, check the online [documentation
-documentation](https://inferpy.readthedocs.io).
+For more details about InferPy, check the online [documentation](https://inferpy.readthedocs.io).
