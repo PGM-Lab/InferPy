@@ -39,5 +39,8 @@ class Inference:
         """ Computes the sum of the log probabilities of a (set of) sample(s)"""
         return tf.reduce_sum([tf.reduce_mean(lp) for lp in self.log_prob(data).values()])
 
-    def parameters(names=None):
+    def parameters(self, names=None):
         raise NotImplementedError
+
+    def get_interceptable_condition_variable(self):
+        return None

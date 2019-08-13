@@ -58,8 +58,7 @@ A set of examples can be found in the `Probabilistic Model Zoo <notes/probzoo.ht
    notes/getting30s
    notes/gettingGuiding
    notes/requirements
-   
-.. notes/gettingInstallation
+   notes/installation
 
 
 .. toctree::
