@@ -94,9 +94,7 @@ class ProbModel:
                 raise ValueError("target_names must correspond to not observed variables during the inference: \
                     {}".format([v for v in self.vars.keys() if v not in self.observed_vars]))
 
-        prior_data = self._create_hidden_observations(target_names, data)
-
-        return Query(self.inference_method.expanded_variables["q"], target_names, {**data, **prior_data})
+        return Query(self.inference_method.expanded_variables["q"], target_names, {**data})
 
     def posterior_predictive(self, target_names=None, data={}):
         if self.inference_method is None:
@@ -110,26 +108,12 @@ class ProbModel:
                 raise ValueError("target_names must correspond to observed variables during the inference: \
                     {}".format(self.observed_vars))
 
-        prior_data = self._create_hidden_observations(target_names, data)
+        # posterior_predictive uses pmodel variables, but intercepted with qmodel variables.
+        # TODO: local hidden variables should not be intercepted. See issue #185
+        return Query(self.inference_method.expanded_variables["p"], target_names, {**data},
+                     enable_interceptor_variable=self.inference_method.get_interceptable_condition_variable())
 
-        return Query(self.inference_method.expanded_variables["p"], target_names, {**data, **prior_data})
-
-    def _create_hidden_observations(self, target_names, data={}):
-        # TODO: This code must be implemented independent of the inference method. Right now we are using the p and q
-        # expanded variables, which belongs only to variational inference methods. When a different VI is implemented
-        # think about a better way to implement this function and access to the correct dict of random variables
-
-        # NOTE: implementation trick. As p model variables are intercepted with q model variables,
-        # compute prior observations for local hidden variables which are not targets,
-        # expanding a new model using plate_size and then sampling
-        hidden_variable_names = [k for k in self.vars.keys() if k not in target_names and k not in data]
-        if hidden_variable_names:
-            expanded_vars, _ = self.expand_model(self.inference_method.plate_size)
-            prior_data = Query(expanded_vars, hidden_variable_names, data).sample(simplify_result=False)
-        else:
-            prior_data = {}
-
-        return prior_data
+        return result
 
     def _build_graph(self):
         with contextmanager.randvar_registry.init():
