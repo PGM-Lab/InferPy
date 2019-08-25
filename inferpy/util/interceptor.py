@@ -1,5 +1,28 @@
 import tensorflow as tf
 from tensorflow_probability import edward2 as ed
+from contextlib import contextmanager
+from inferpy import util
+
+
+# Global variable to access when enable_interceptor is used. However, the vaiable will be None in the finally clause,
+# so a local variable needs to be used in the set_value function, and the real enable_variable should never be deleted
+# so the local variable always point to the good one.
+CURRENT_ENABLE_INTERCEPTOR = None
+
+
+@contextmanager
+def enable_interceptor(enable_variable):
+    global CURRENT_ENABLE_INTERCEPTOR
+    sess = util.session.get_session()
+    try:
+        if enable_variable:
+            enable_variable.load(True, session=sess)
+            CURRENT_ENABLE_INTERCEPTOR = enable_variable
+        yield
+    finally:
+        if enable_variable:
+            enable_variable.load(False, session=sess)
+            CURRENT_ENABLE_INTERCEPTOR = None
 
 
 # this function is used to intercept the value property of edward2 random variables
@@ -18,19 +41,32 @@ def set_values(**model_kwargs):
 
         # if name in model_kwargs, include the value as a new argument using model_kwargs[name]
         if name in model_kwargs:
-            kwargs["value"] = model_kwargs[name]
+            interception_value = model_kwargs[name]
 
-        randvar = ed.interceptable(f)(*args, **kwargs)
+            if CURRENT_ENABLE_INTERCEPTOR:
+                # local variable points to the real condition variable (created in the inference method object)
+                # this way, even if CURRENT_ENABLE_INTERCEPTOR is set to None, this local variable points to the real one
+                condition_variable = CURRENT_ENABLE_INTERCEPTOR
 
-        # if the value used to intercept is an inferpy RandomVariable, assign to the object
-        # the tf.Variables to observe the Random Variable as well
-        if name in model_kwargs and \
-                hasattr(model_kwargs[name], 'is_observed') and hasattr(model_kwargs[name], 'observed_value'):
-            randvar.is_observed = model_kwargs[name].is_observed
-            randvar.observed_value = model_kwargs[name].observed_value
 
-        # finally return the built random variable
-        return randvar
+
+                # need to create the variable to obtain its value, and use it in the fn_false condition
+                _value = ed.interceptable(f)(*args, **kwargs).value
+
+                conditional_value = tf.cond(
+                    condition_variable,
+                    lambda: interception_value,
+                    lambda: _value
+                )
+
+                # need to broadcast to fix the shape of the tensor (which always be _value.shape)
+                kwargs['value'] = tf.broadcast_to(conditional_value, _value.shape)
+            else:
+                kwargs['value'] = interception_value
+
+            return ed.interceptable(f)(*args, **kwargs)
+        else:
+            return ed.interceptable(f)(*args, **kwargs)
 
     return interceptor
 

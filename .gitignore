@@ -27,6 +27,5 @@ eggs
 build
 .pytest_cache
 .ipynb_checkpoints
-*.ipynb
 _build/
 venv

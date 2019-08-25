@@ -19,7 +19,6 @@ from collections import OrderedDict
 from tensorflow_probability import edward2 as ed
 import tensorflow as tf
 import networkx as nx
-from matplotlib import pyplot as plt
 import warnings
 
 from inferpy import util
@@ -107,9 +106,7 @@ class ProbModel:
                 raise ValueError("target_names must correspond to not observed variables during the inference: \
                     {}".format([v for v in self.vars.keys() if v not in self.observed_vars]))
 
-        prior_data = self._create_hidden_observations(target_names, data)
-
-        return Query(self.inference_method.expanded_variables["q"], target_names, {**data, **prior_data})
+        return Query(self.inference_method.expanded_variables["q"], target_names, {**data})
 
     def posterior_predictive(self, target_names=None, data={}):
         if self.inference_method is None:
@@ -123,26 +120,12 @@ class ProbModel:
                 raise ValueError("target_names must correspond to observed variables during the inference: \
                     {}".format(self.observed_vars))
 
-        prior_data = self._create_hidden_observations(target_names, data)
+        # posterior_predictive uses pmodel variables, but intercepted with qmodel variables.
+        # TODO: local hidden variables should not be intercepted. See issue #185
+        return Query(self.inference_method.expanded_variables["p"], target_names, {**data},
+                     enable_interceptor_variable=self.inference_method.get_interceptable_condition_variable())
 
-        return Query(self.inference_method.expanded_variables["p"], target_names, {**data, **prior_data})
-
-    def _create_hidden_observations(self, target_names, data={}):
-        # TODO: This code must be implemented independent of the inference method. Right now we are using the p and q
-        # expanded variables, which belongs only to variational inference methods. When a different VI is implemented
-        # think about a better way to implement this function and access to the correct dict of random variables
-
-        # NOTE: implementation trick. As p model variables are intercepted with q model variables,
-        # compute prior observations for local hidden variables which are not targets,
-        # expanding a new model using plate_size and then sampling
-        hidden_variable_names = [k for k in self.vars.keys() if k not in target_names and k not in data]
-        if hidden_variable_names:
-            expanded_vars, _ = self.expand_model(self.inference_method.plate_size)
-            prior_data = Query(expanded_vars, hidden_variable_names, data).sample(simplify_result=False)
-        else:
-            prior_data = {}
-
-        return prior_data
+        return result
 
     def _build_graph(self):
         with contextmanager.randvar_registry.init():
@@ -185,6 +168,11 @@ class ProbModel:
         return model_vars, var_parameters
 
     def plot_graph(self):
+        try:
+            import matplotlib.pyplot as plt
+        except ImportError:
+            print("The function plot_graph requires to install inferpy[visualization]")
+            raise
         nx.draw(self.graph, cmap=plt.get_cmap('jet'), with_labels=True)
         plt.show()
 
@@ -208,26 +196,15 @@ class ProbModel:
         self.inference_method = inference_method
 
         # compile the inference method
-        inference_method.compile(self, plate_size)
-        # and run the update method with the data
-        inference_method.update(data_loader)
+        # if the inference method needs to intercept random variables, enable this context using a boolean
+        # tf.Variable defined in this inference method object
+        with util.interceptor.enable_interceptor(self.inference_method.get_interceptable_condition_variable()):
+            inference_method.compile(self, plate_size)
+            # and run the update method with the data
+            inference_method.update(data_loader)
 
         # If it works, set the observed variables
         self.observed_vars = data_loader.variables
-
-    @util.tf_run_ignored
-    def update(self, sample_dict):
-        # Check that fit was called first
-        if self.inference_method is None:
-            raise RuntimeError("The fit method must be called before update")
-
-        # check that the observed_vars are the same
-        if set(self.observed_vars) != sample_dict.keys():
-            raise ValueError("The data in sample dict must contain only data from observed variables: \
-                {}.".format(self.observed_vars))
-
-        # Run the inference method
-        self.inference_method.update(sample_dict)
 
     def expand_model(self, size=1):
         """ Create the expanded model vars using size as plate size and return the OrderedDict """

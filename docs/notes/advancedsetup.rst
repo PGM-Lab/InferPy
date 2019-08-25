@@ -6,10 +6,10 @@ Using GPUs with InferPy
 --------------------------------
 
 InferPy offers a method, called ``new_session(gpu_memory_fraction)``,
-that creates a new tensorflow session. The argument
+that creates a new TensorFlow session. The argument
 ``gpu_memory_fraction`` is a float number between 0 and 1, that
 specifies the percentage of GPU memory to use. If this argument is set
-to 0 (default behaviour), then only the CPU is used. Otherwise, the GPU
+to 0 (default behavior), then only the CPU is used. Otherwise, the GPU
 is configured to be used for the new default session.
 
 
@@ -44,11 +44,11 @@ Configure default float type
 --------------------------------
 
 As well as it is done in `Keras <https://www.tensorflow.org/api_docs/python/tf/keras/backend/floatx>`_, InferPy allows
-to specify the defaut float type: e.g. float16, float32, float64.
+to specify the default float type: e.g. float16, float32, float64.
 
 
 The function ``set_floatx(value)`` sets the default float type to ``value``, being one of the previously described
-three options. The effect is that in the creation of Random Variables, the arguments are casted to the default
+three options. The effect is that in the creation of Random Variables, the arguments are cast to the default
 float type if they are of float type.
 
 

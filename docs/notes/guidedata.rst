@@ -9,7 +9,7 @@ this module.
 CSV files
 ---------------
 
-Data can be loaded from CSV files by means of the class ``CsvLoader`` whose
+Data can be loaded from CSV files through the class ``CsvLoader`` whose
 objects can be built as follows:
 
 
@@ -30,17 +30,17 @@ a list of strings (i.e., for datasets distributed across multiple CSV files):
 
 
 
-A data loader can be built indistinctly from  CSV files with or without header.
+A data loader can be built indistinctly from  CSV files with or without a header.
 However, in case of a list of files,  the presence of the header and column names must
 be consistent among all the files.
 
 
-When loading data from a CSV file, it could happen that we need to
+When loading data from a CSV file, we might need to
 map the columns in the dataset to another set of variables. This can be made
-by means of the input argument ``var_dict``, which is a dictionary where the
+using the input argument ``var_dict``, which is a dictionary where the
 keys are the variable names and the values are lists of integers indicating
 the columns (0 stands for the first data column). For example, in a data set whose columns names
-are ``"x"`` and ``"y"``, we might be interested in rename them:
+are ``"x"`` and ``"y"``, we might be interested in renaming them:
 
 
 
@@ -76,7 +76,7 @@ instantiated as follows.
 Properties
 ---------------
 
-From any object of class ``DataLoader`` we might obain the size, (i.e., number of instances)
+From any object of class ``DataLoader`` we might obtain the size, (i.e., number of instances)
 of the list of variable names:
 
 
@@ -98,7 +98,7 @@ a header:
 Extracting data
 -------------------
 
-Data can be loader as a dictionary (of numpy objects) or as tensorflow dataset object:
+Data can be loaded as a dictionary (of numpy objects) or as TensorFlow dataset object:
 
 
 .. literalinclude:: ../../examples/docs/guidedata/1.py
@@ -119,7 +119,7 @@ Thus, consider the following code of a simple linear regression:
 
 
 We have seen so far that, for making inference we invoke the method ``fit`` which
-takes a dictionary of samples as input parameter:
+takes a dictionary of samples as an input parameter:
 
 
 .. literalinclude:: ../../examples/docs/guidedata/1.py

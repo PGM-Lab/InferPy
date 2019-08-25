@@ -63,6 +63,11 @@ class VI(Inference):
         self.expanded_variables = {"p": None, "q": None}
         self.expanded_parameters = {"p": None, "q": None}
 
+        # tf variable to enable the interception of Random Variables by edward2
+        self.enable_interceptor = tf.Variable(False, trainable=False, name="inferpy-interceptor-enabled")
+        # and initialize it in the default session
+        util.session.get_session().run(tf.variables_initializer([self.enable_interceptor]))
+
         # list for storing the loss evolution
         class Debug:
             pass
@@ -110,6 +115,9 @@ class VI(Inference):
     @property
     def losses(self):
         return self.debug.losses
+
+    def get_interceptable_condition_variable(self):
+        return self.enable_interceptor
 
     def _generate_train_tensor(self, **kwargs):
         """ This function expand the p and q models. Then, it uses the  loss function to create the loss tensor

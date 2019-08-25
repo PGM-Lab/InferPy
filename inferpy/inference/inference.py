@@ -28,3 +28,6 @@ class Inference:
 
     def update(self, sample_dict):
         raise NotImplementedError
+
+    def get_interceptable_condition_variable(self):
+        return None
