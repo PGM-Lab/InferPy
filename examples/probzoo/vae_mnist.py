@@ -29,7 +29,7 @@ def vae(k, d0, dx, decoder):
         z = inf.Normal(tf.ones([k]) * 0.5, 1., name="z")  # shape = [N,k]
         output = decoder(z, d0, dx)
         x_loc = output[:, :dx]
-        x_scale = tf.nn.softmax(output[:, dx:]) + scale_epsilon
+        x_scale = tf.nn.softplus(output[:, dx:]) + scale_epsilon
         x = inf.Normal(x_loc, x_scale, name="x")  # shape = [N,d]
 
 
@@ -51,7 +51,7 @@ def qmodel(k, d0, dx, encoder):
 
         output = encoder(x, d0, k)
         qz_loc = output[:, :k]
-        qz_scale = tf.nn.softmax(output[:, k:])
+        qz_scale = tf.nn.softplus(output[:, k:]) + scale_epsilon
         qz = inf.Normal(qz_loc, qz_scale, name="z")
 
 
@@ -82,9 +82,8 @@ plt.grid(True)
 plt.show()
 
 
-#extract the hidden encoding
-sess = inf.get_session()
-post = {"z":sess.run(m.posterior["z"].loc)}
+# extract the posterior and generate new digits
+post = {"z":m.posterior("z", data={"x": x_train[:N,:]}).sample()}
 
 
 # plot
