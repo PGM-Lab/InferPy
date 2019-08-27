@@ -18,7 +18,8 @@ def flatten_result(f):
 
 
 class Query:
-    def __init__(self, variables, target_names=None, data={}, enable_interceptor_variable=None):
+    def __init__(self, variables, target_names=None, data={}, enable_interceptor_variables=(None, None)):
+        # enable_interceptor_variables is a tuple to intercept global and local hidden variables independently
         # if provided a single name, create a list with only one item
         if isinstance(target_names, str):
             target_names = [target_names]
@@ -32,13 +33,13 @@ class Query:
 
         self.observed_variables = variables
         self.data = data
-        self.enable_interceptor_variable = enable_interceptor_variable
+        self.enable_interceptor_variables = enable_interceptor_variables
 
     @flatten_result
     @util.tf_run_ignored
     def log_prob(self):
         """ Computes the log probabilities of a (set of) sample(s)"""
-        with util.interceptor.enable_interceptor(self.enable_interceptor_variable):
+        with util.interceptor.enable_interceptor(*self.enable_interceptor_variables):
             with contextmanager.observe(self.observed_variables, self.data):
                 result = util.runtime.try_run({k: v.log_prob(v.value) for k, v in self.target_variables.items()})
 
@@ -53,9 +54,9 @@ class Query:
     @util.tf_run_ignored
     def sample(self, size=1):
         """ Generates a sample for eache variable in the model """
-        with util.interceptor.enable_interceptor(self.enable_interceptor_variable):
+        with util.interceptor.enable_interceptor(*self.enable_interceptor_variables):
             with contextmanager.observe(self.observed_variables, self.data):
-                # each iteration for `size` run the dict in the session, so if there are dependencies among random variables
+                # each iteration for `size` run the dict in the session, so if there are dependencies among random vars
                 # they are computed in the same graph operations, and reflected in the results
                 samples = [util.runtime.try_run(self.target_variables) for _ in range(size)]
 

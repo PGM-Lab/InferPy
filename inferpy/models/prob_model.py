@@ -25,10 +25,7 @@ from inferpy import util
 from inferpy import contextmanager
 from inferpy.queries import Query
 from .random_variable import RandomVariable
-
-from inferpy.data.loaders import DataLoader, build_data_loader
-
-from inferpy.inference.variational.svi import SVI
+from inferpy.data.loaders import build_data_loader
 
 
 def probmodel(builder):
@@ -87,7 +84,7 @@ class ProbModel:
 
         if size_datamodel > 1:
             variables, _ = self.expand_model(size_datamodel)
-        elif size_datamodel==1:
+        elif size_datamodel == 1:
             variables = self.vars
         else:
             raise ValueError("size_datamodel must be greater than 0 but it is {}".format(size_datamodel))
@@ -106,7 +103,7 @@ class ProbModel:
                 raise ValueError("target_names must correspond to not observed variables during the inference: \
                     {}".format([v for v in self.vars.keys() if v not in self.observed_vars]))
 
-        return Query(self.inference_method.expanded_variables["q"], target_names, {**data})
+        return Query(self.inference_method.expanded_variables["q"], target_names, data)
 
     def posterior_predictive(self, target_names=None, data={}):
         if self.inference_method is None:
@@ -120,10 +117,11 @@ class ProbModel:
                 raise ValueError("target_names must correspond to observed variables during the inference: \
                     {}".format(self.observed_vars))
 
-        # posterior_predictive uses pmodel variables, but intercepted with qmodel variables.
-        # TODO: local hidden variables should not be intercepted. See issue #185
-        return Query(self.inference_method.expanded_variables["p"], target_names, {**data},
-                     enable_interceptor_variable=self.inference_method.get_interceptable_condition_variable())
+        # posterior_predictive uses pmodel variables, but global hidden (parameters) intercepted with qmodel variables.
+        return Query(self.inference_method.expanded_variables["p"], target_names, data,
+                     enable_interceptor_variables=(
+                         # just interested in intercept the global parameters, not the local hidden
+                         self.inference_method.get_interceptable_condition_variables()[0], None))
 
     def _build_graph(self):
         with contextmanager.randvar_registry.init():
@@ -184,7 +182,6 @@ class ProbModel:
         if len(data_loader.variables) == 0:
             raise ValueError('The number of mapped variables must be at least 1.')
 
-
         # if fit was called before, warn that it restarts everything
         if self.inference_method:
             warnings.warn("Fit was called before. This will restart the inference method and \
@@ -196,7 +193,7 @@ class ProbModel:
         # compile the inference method
         # if the inference method needs to intercept random variables, enable this context using a boolean
         # tf.Variable defined in this inference method object
-        with util.interceptor.enable_interceptor(self.inference_method.get_interceptable_condition_variable()):
+        with util.interceptor.enable_interceptor(*self.inference_method.get_interceptable_condition_variables()):
             inference_method.compile(self, plate_size)
             # and run the update method with the data
             inference_method.update(data_loader)

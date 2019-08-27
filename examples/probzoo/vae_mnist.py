@@ -92,7 +92,16 @@ m.fit({"x": x_train}, SVI)
 ####################################################
 
 ############## Inferpy ##############
+L = SVI.losses
+plt.plot(range(len(L)), L)
+plt.xlabel('epochs')
+plt.ylabel('Loss')
+plt.title('Loss evolution')
+plt.grid(True)
+plt.show()
 
+
+# extract the posterior and generate new digits
 postz = np.concatenate([
     m.posterior("z", data={"x": x_train[i:i+M,:]}).sample()
     for i in range(0,N,M)])

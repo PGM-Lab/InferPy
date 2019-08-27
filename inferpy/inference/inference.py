@@ -13,8 +13,6 @@
 # limitations under the License.
 # ==============================================================================
 
-import tensorflow as tf
-
 
 class Inference:
     """This class implements the functionality of any Inference class.
@@ -29,5 +27,6 @@ class Inference:
     def update(self, sample_dict):
         raise NotImplementedError
 
-    def get_interceptable_condition_variable(self):
-        return None
+    def get_interceptable_condition_variables(self):
+        # to intercept global and local hidden variables
+        return None, None
