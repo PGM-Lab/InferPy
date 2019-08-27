@@ -125,7 +125,7 @@ class RandomVariable:
                                      sample_shape=self._sample_shape)
 
         initial_value = util.get_session().run(self.observed_value_var)
-        is_observed, observed_value = _make_predictable_variables(initial_value, self.name)
+        is_observed, observed_value = util.interceptor.make_predictable_variables(initial_value, self.name)
         # build the random variable by using the ed random var
         rv = RandomVariable(
             var=ed_random_var,
@@ -346,7 +346,7 @@ def _make_random_variable(distribution_name):
             initial_value = tf.zeros(shape, dtype=tfp_dist.dtype) if shape else tf.constant(0,  dtype=tfp_dist.dtype)
 
             # build the respective boolean and tf.Variables
-            is_observed, observed_value = _make_predictable_variables(initial_value, rv_name)
+            is_observed, observed_value = util.interceptor.make_predictable_variables(initial_value, rv_name)
 
             # use this context to intercept the value using the tf.cond dependent on the previous tf.Variables
             with ed.interception(util.interceptor.set_values_condition(is_observed, observed_value)):
@@ -367,7 +367,7 @@ def _make_random_variable(distribution_name):
             initial_value = tf.zeros(shape, dtype=tfp_dist.dtype) if shape else tf.constant(0,  dtype=tfp_dist.dtype)
 
             # build the respective boolean and tf.Variables
-            is_observed, observed_value = _make_predictable_variables(initial_value, rv_name)
+            is_observed, observed_value = util.interceptor.make_predictable_variables(initial_value, rv_name)
 
             # use this context to intercept the value using the tf.cond dependent on the previous tf.Variables
             with ed.interception(util.interceptor.set_values_condition(is_observed, observed_value)):
@@ -410,18 +410,6 @@ def _make_random_variable(distribution_name):
     return func
 
 
-def _make_predictable_variables(initial_value, rv_name):
-    is_observed = tf.Variable(False, trainable=False,
-                              name="inferpy-predict-enabled-{name}".format(name=rv_name or "default"))
-
-    observed_value = tf.Variable(initial_value, trainable=False,
-                                 name="inferpy-predict-{name}".format(name=rv_name or "default"))
-
-    util.session.get_session().run(tf.variables_initializer([is_observed, observed_value]))
-
-    return is_observed, observed_value
-
-
 def _operator(var, other, operator_name):
     """
     Function to apply the operation called `operator_name` by using a RandomVariable
@@ -446,7 +434,10 @@ def _tensor_conversion_function(rv, dtype=None, name=None, as_ref=False):
         If the variable needs to be broadcast_to, do it right now
     """
     # return the tf.Variable last snapshot if it is observed, and the ed2 evaluation (ed2.value) otherwise
-    return tf.convert_to_tensor(rv.observed_value.value() if util.get_session().run(rv.is_observed) else rv.var)
+    return tf.convert_to_tensor(
+        rv.observed_value.value()
+        if rv.is_observed is not None and util.get_session().run(rv.is_observed)
+        else rv.var)
 
 
 # register the conversion function into a tensor

@@ -135,6 +135,7 @@ class VI(Inference):
         qvars, qparams = self.qmodel.expand_model(self.plate_size)
 
         # expand de pmodel, using the intercept.set_values function, to include the sample_dict and the expanded qvars
+        # the True first value enable to use tf.condition and observe RandomVariables modifying a tf.Variable value
         with ed.interception(util.interceptor.set_values(**qvars)):
             pvars, pparams = self.pmodel.expand_model(self.plate_size)
 

@@ -125,8 +125,6 @@ class ProbModel:
         return Query(self.inference_method.expanded_variables["p"], target_names, {**data},
                      enable_interceptor_variable=self.inference_method.get_interceptable_condition_variable())
 
-        return result
-
     def _build_graph(self):
         with contextmanager.randvar_registry.init():
             self.builder()
