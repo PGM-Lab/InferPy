@@ -44,7 +44,7 @@ def vae(k, d0, dx, decoder):
         z = inf.Normal(tf.ones(k) * 0.5, 1, name="z")  # shape = [N,k]
         output = decoder(z, d0, dx)
         x_loc = output[:, :dx]
-        x_scale = tf.nn.softplus(output[:, dx:]) + scale_epsilon
+        x_scale = tf.nn.softmax(output[:, dx:]) + scale_epsilon
         x = inf.Normal(x_loc, x_scale, name="x")  # shape = [N,d]
 
 # Neural networks for decoding and encoding
@@ -65,7 +65,7 @@ def qmodel(k, d0, dx, encoder):
         x = inf.Normal(tf.ones(dx) * 0.5, 1, name="x")
         output = encoder(x, d0, k)
         qz_loc = output[:, :k]
-        qz_scale = tf.nn.softplus(output[:, k:]) + scale_epsilon
+        qz_scale = tf.nn.softmax(output[:, k:]) + scale_epsilon
         qz = inf.Normal(qz_loc, qz_scale, name="z")
 
 
@@ -92,7 +92,8 @@ m.fit({"x": x_train}, SVI)
 ####################################################
 
 ############## Inferpy ##############
-
+L = SVI.losses
+plt.plot(range(len(L)), L)
 plt.xlabel('epochs')
 plt.ylabel('Loss')
 plt.title('Loss evolution')
@@ -101,7 +102,9 @@ plt.show()
 
 
 # extract the posterior and generate new digits
-post = {"z":m.posterior("z", data={"x": x_train[:N,:]}).sample()}
+postz = np.concatenate([
+    m.posterior("z", data={"x": x_train[i:i+M,:]}).sample()
+    for i in range(0,N,M)])
 
 # for each input instance, plot the hidden encoding coloured by the number that it represents
 markers = ["x", "+", "o"]
