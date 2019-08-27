@@ -132,8 +132,6 @@ class ProbModel:
         return nx_graph
 
     def _build_model(self):
-        # get the global variables defined before building the model
-        _before_global_variables = tf.global_variables()
 
         with contextmanager.randvar_registry.init(self.graph):
             # use edward2 model tape to capture RandomVariable declarations
@@ -154,12 +152,6 @@ class ProbModel:
                                                    var_args=None, var_kwargs=None, sample_shape=())
                 else:
                     model_vars[k] = registered_rv
-
-        # get the global variables defined after building the model
-        _after_global_variables = tf.global_variables()
-        # compute the new global variables defined when building the model
-        created_vars = [v for v in _after_global_variables if v not in _before_global_variables]
-        util.get_session().run(tf.variables_initializer(created_vars))
 
         return model_vars, var_parameters
 
