@@ -2,6 +2,7 @@ import tensorflow as tf
 from tensorflow_probability import edward2 as ed
 from contextlib import contextmanager
 from inferpy import util
+from inferpy.contextmanager import data_model
 
 
 # Global variable to access when enable_interceptor is used. However, the vaiable will be None in the finally clause,
@@ -11,18 +12,24 @@ CURRENT_ENABLE_INTERCEPTOR = None
 
 
 @contextmanager
-def enable_interceptor(enable_variable):
+def enable_interceptor(enable_globals, enable_locals):
+    # enable interception of global and local hidden variables independently using two different boolean tf variables
     global CURRENT_ENABLE_INTERCEPTOR
     sess = util.session.get_session()
     try:
-        if enable_variable:
-            enable_variable.load(True, session=sess)
-            CURRENT_ENABLE_INTERCEPTOR = enable_variable
+        if enable_globals:
+            enable_globals.load(True, session=sess)
+        if enable_locals:
+            enable_locals.load(True, session=sess)
+
+        CURRENT_ENABLE_INTERCEPTOR = (enable_globals, enable_locals)
         yield
     finally:
-        if enable_variable:
-            enable_variable.load(False, session=sess)
-            CURRENT_ENABLE_INTERCEPTOR = None
+        if enable_globals:
+            enable_globals.load(False, session=sess)
+        if enable_locals:
+            enable_locals.load(False, session=sess)
+        CURRENT_ENABLE_INTERCEPTOR = None
 
 
 # this function is used to intercept the value property of edward2 random variables
@@ -46,15 +53,24 @@ def set_values(**model_kwargs):
             if CURRENT_ENABLE_INTERCEPTOR:
                 # local variable points to the real condition variable (created in the inference method object)
                 # this way, even if CURRENT_ENABLE_INTERCEPTOR is set to None, this local variable points to the real one
-                condition_variable = CURRENT_ENABLE_INTERCEPTOR
-
-
+                enable_globals, enable_locals = CURRENT_ENABLE_INTERCEPTOR
+                # if any of them are None, set to constant False to work with the following tf.logical_and's
+                if enable_globals is None:
+                    enable_globals = tf.constant(False)
+                if enable_locals is None:
+                    enable_locals = tf.constant(False)
 
                 # need to create the variable to obtain its value, and use it in the fn_false condition
                 _value = ed.interceptable(f)(*args, **kwargs).value
 
+                # Need to know if this variable is global hidden or local hidden. Can do it using the contextmanager
+                is_local_hidden = data_model.is_active()
+
                 conditional_value = tf.cond(
-                    condition_variable,
+                    tf.logical_or(
+                        tf.logical_and(enable_globals, tf.constant(not is_local_hidden)),
+                        tf.logical_and(enable_locals, tf.constant(is_local_hidden))
+                        ),
                     lambda: interception_value,
                     lambda: _value
                 )
@@ -64,9 +80,7 @@ def set_values(**model_kwargs):
             else:
                 kwargs['value'] = interception_value
 
-            return ed.interceptable(f)(*args, **kwargs)
-        else:
-            return ed.interceptable(f)(*args, **kwargs)
+        return ed.interceptable(f)(*args, **kwargs)
 
     return interceptor
 

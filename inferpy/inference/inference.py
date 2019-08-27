@@ -42,5 +42,6 @@ class Inference:
     def parameters(self, names=None):
         raise NotImplementedError
 
-    def get_interceptable_condition_variable(self):
-        return None
+    def get_interceptable_condition_variables(self):
+        # to intercept global and local hidden variables
+        return None, None
