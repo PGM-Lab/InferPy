@@ -55,7 +55,7 @@ class Query:
         """ Generates a sample for eache variable in the model """
         with util.interceptor.enable_interceptor(self.enable_interceptor_variable):
             with contextmanager.observe(self.observed_variables, self.data):
-                # each iteration for `size` run the dict in the session, so if there are dependencies among random variables
+                # each iteration for `size` run the dict in the session, so if there are dependencies among random vars
                 # they are computed in the same graph operations, and reflected in the results
                 samples = [util.runtime.try_run(self.target_variables) for _ in range(size)]
 

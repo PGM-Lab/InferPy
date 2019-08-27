@@ -87,7 +87,7 @@ class ProbModel:
 
         if size_datamodel > 1:
             variables, _ = self.expand_model(size_datamodel)
-        elif size_datamodel==1:
+        elif size_datamodel == 1:
             variables = self.vars
         else:
             raise ValueError("size_datamodel must be greater than 0 but it is {}".format(size_datamodel))
@@ -106,7 +106,7 @@ class ProbModel:
                 raise ValueError("target_names must correspond to not observed variables during the inference: \
                     {}".format([v for v in self.vars.keys() if v not in self.observed_vars]))
 
-        return Query(self.inference_method.expanded_variables["q"], target_names, {**data})
+        return Query(self.inference_method.expanded_variables["q"], target_names, data)
 
     def posterior_predictive(self, target_names=None, data={}):
         if self.inference_method is None:
@@ -122,10 +122,8 @@ class ProbModel:
 
         # posterior_predictive uses pmodel variables, but intercepted with qmodel variables.
         # TODO: local hidden variables should not be intercepted. See issue #185
-        return Query(self.inference_method.expanded_variables["p"], target_names, {**data},
+        return Query(self.inference_method.expanded_variables["p"], target_names, data,
                      enable_interceptor_variable=self.inference_method.get_interceptable_condition_variable())
-
-        return result
 
     def _build_graph(self):
         with contextmanager.randvar_registry.init():
@@ -185,7 +183,6 @@ class ProbModel:
 
         if len(data_loader.variables) == 0:
             raise ValueError('The number of mapped variables must be at least 1.')
-
 
         # if fit was called before, warn that it restarts everything
         if self.inference_method:
