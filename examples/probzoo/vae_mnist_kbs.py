@@ -86,3 +86,7 @@ for c in range(0, len(DIG)):
     plt.legend()
 
 plt.show()
+
+
+mnist.plot_digits(x_gen, grid=[5,5])
+

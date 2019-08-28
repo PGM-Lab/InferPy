@@ -39,7 +39,7 @@ definition using Edward is shown below.
 
 .. literalinclude:: ../../examples/edward/ed_vae_mnist.py
    :language: python3
-   :lines: 41-67
+   :lines: 41-63
    :caption: Edward
 
 
@@ -48,7 +48,7 @@ Whereas the equivalent code using InferPy is:
 
 .. literalinclude:: ../../examples/probzoo/vae_mnist.py
    :language: python3
-   :lines: 41-69
+   :lines: 41-66
    :caption: Inferpy
 
 
@@ -128,7 +128,7 @@ With Inferpy, this is done by simply using the method ``probmodel.posterior()`` 
 
 .. literalinclude:: ../../examples/probzoo/vae_mnist.py
    :language: python3
-   :lines: 96-98
+   :lines: 95-98
    :caption: Inferpy
 
 The result of plotting the hidden representation is:

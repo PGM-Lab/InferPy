@@ -44,9 +44,6 @@ def vae(k, d0, dx, decoder):
         z = inf.Normal(tf.ones(k), 1,name="z")
         x = inf.Normal(decoder(z, d0, dx), 1, name="x")
 
-
-
-
 # Neural networks for decoding and encoding
 def decoder(z, d0, dx):
     h0 = tf.keras.layers.Dense(d0, activation=tf.nn.relu)
@@ -57,16 +54,19 @@ def encoder(x, d0, k):
     h0 = tf.keras.layers.Dense(d0, activation=tf.nn.relu)
     h1 = tf.keras.layers.Dense(2*k)
     return h1(h0(x))
-# Q model for making inference
 
+# Q model for making inference
 @inf.probmodel
 def qmodel(k, d0, dx, encoder):
     with inf.datamodel():
         x = inf.Normal(tf.ones(dx), 1, name="x")
         output = encoder(x, d0, k)
         qz_loc = output[:, :k]
-        qz_scale = tf.nn.softplus(output[:, k:])+0.01
+        qz_scale = tf.nn.softplus(output[:, k:]) + scale_epsilon
         qz = inf.Normal(qz_loc, qz_scale, name="z")
+
+
+
 
 
 
@@ -92,15 +92,6 @@ m.fit({"x": x_train}, SVI)
 ####################################################
 
 ############## Inferpy ##############
-L = SVI.losses
-plt.plot(range(len(L)), L)
-plt.xlabel('epochs')
-plt.ylabel('Loss')
-plt.title('Loss evolution')
-plt.grid(True)
-plt.show()
-
-
 # extract the posterior and generate new digits
 postz = np.concatenate([
     m.posterior("z", data={"x": x_train[i:i+M,:]}).sample()
