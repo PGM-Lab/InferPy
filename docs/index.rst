@@ -84,7 +84,8 @@ A set of examples can be found in the `Probabilistic Model Zoo <notes/probzoo.ht
    
    notes/probzoo
    VAE with MNIST in Edward and Inferpy <notes/vae_mnist>
-
+   notes/bayesianNN
+   notes/mixture
 
 
 
