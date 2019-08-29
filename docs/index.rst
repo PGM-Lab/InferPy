@@ -50,6 +50,12 @@ A set of examples can be found in the `Probabilistic Model Zoo <notes/probzoo.ht
 
 
 .. toctree::
+   :hidden:
+
+   Home <self>
+
+
+.. toctree::
    :includehidden:
    :maxdepth: 1
    :caption: Quick Start
