@@ -13,14 +13,10 @@ def vae(k, d0, d, decoder):
     with inf.datamodel():
         z = inf.Normal(tf.ones(k), 1,name="z")
         x = inf.Normal(decoder(z, d0, d), 1, name="x")
-
 def decoder(z, d0, d):
     h0 = tf.keras.layers.Dense(d0, activation=tf.nn.relu)
     h1 = tf.keras.layers.Dense(d)
     return h1(h0(z))
-
-
-
 p = vae(k=2, d0=100, d=28*28, decoder=decoder)
 
 
@@ -33,12 +29,10 @@ def qmodel(k, d0, d, encoder):
         qz_loc = output[:, :k]
         qz_scale = tf.nn.softplus(output[:, k:])+0.01
         qz = inf.Normal(qz_loc, qz_scale, name="z")
-
 def encoder(x, d0, k):
     h0 = tf.keras.layers.Dense(d0, activation=tf.nn.relu)
     h1 = tf.keras.layers.Dense(2*k)
     return h1(h0(x))
-
 q = qmodel(k=2, d0=100, d=28*28, encoder=encoder)
 
 # set the inference algorithm
