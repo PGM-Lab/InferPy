@@ -49,7 +49,7 @@ def qmodel(k):
 m = nlpca(k,d0,dx, decoder)
 
 # Sample from priors
-samples = m.sample()
+samples = m.prior().sample()
 
 
 #### NOT showing  55
@@ -69,7 +69,7 @@ m.fit({"x": x_train}, VI)
 #### 69
 
 #extract the hidden representation
-hidden_encoding = m.posterior["z"]
+hidden_encoding = m.posterior("z", data={"x":x_train})
 print(hidden_encoding.sample())
 
 

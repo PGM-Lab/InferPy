@@ -101,8 +101,6 @@ We start by importing the required packages and defining the constant parameters
     # number of observations (dataset size)
     N = 1000
 
-
-
 A model can be defined by decorating any function with ``@inf.probmodel``. The model is fully specified by
 the variables defined inside this function:
 
@@ -113,14 +111,11 @@ the variables defined inside this function:
     def nlpca(k, d0, dx, decoder):
 
         with inf.datamodel():
-            z = inf.Normal(tf.ones([k])*0.5, 1., name="z")    # shape = [N,k]
+            z = inf.Normal(tf.ones([k])*0.5, 1, name="z")    # shape = [N,k]
             output = decoder(z,d0,dx)
             x_loc = output[:,:dx]
             x_scale = tf.nn.softmax(output[:,dx:])
             x = inf.Normal(x_loc, x_scale, name="x")   # shape = [N,d]
-
-
-
 
 The construct ``with inf.datamodel()``, which resembles to the **plateau notation**, will replicate
 N times the variables enclosed, where N is the size of our data.
@@ -138,8 +133,6 @@ This might be defined outside the model as follows.
         h0 = tf.layers.dense(z, d0, tf.nn.relu)
         return tf.layers.dense(h0, 2 * dx)
 
-
-
 Now, we can instantiate our model and obtain samples (from the prior distributions).
 
 
@@ -151,9 +144,7 @@ Now, we can instantiate our model and obtain samples (from the prior distributio
     m = nlpca(k,d0,dx, decoder)
 
     # Sample from priors
-    samples = m.sample()
-
-
+    samples = m.prior().sample()
 In variational inference, we must defined a Q-model as follows.
 
 
@@ -169,9 +160,6 @@ In variational inference, we must defined a Q-model as follows.
 
             qz = inf.Normal(qz_loc, qz_scale, name="z")
 
-
-
-
 Afterwards, we define the parameters of our inference algorithm and fit the data to the model.
 
 
@@ -185,9 +173,7 @@ Afterwards, we define the parameters of our inference algorithm and fit the data
     # learn the parameters
     m.fit({"x": x_train}, VI)
 
-
-
-The inference method can be further configure. But, as in Keras, a core
+The inference method can be further configured. But, as in Keras, a core
 principle is to try make things reasonably simple, while allowing the
 user the full control if needed.
 
@@ -200,6 +186,6 @@ of our data.
 
 .. code-block:: python
 
-    #extract the hidden representation
-    hidden_encoding = m.posterior["z"]
-    print(hidden_encoding.sample())
+   #extract the hidden representation
+   hidden_encoding = m.posterior("z", data={"x":x_train})
+   print(hidden_encoding.sample())
