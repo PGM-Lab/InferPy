@@ -105,41 +105,41 @@ m.fit({"x": x_train}, VI)
 ### optimization loop
 
 # instance
-q = qmodel(k=1,d=2)
-
-# for not evaluating ELBO tensor
-inf.util.runtime.set_tf_run(False)
-# extract the computational graph of the ELBO
-loss_tensor = inf.inference.loss_functions.elbo.ELBO(m,q, {"x": x_train})
-
-# build an optimizer to minimize the ELBO
-optimizer = tf.train.AdamOptimizer(learning_rate=0.1)
-train = optimizer.minimize(loss_tensor)
-
-# start a session
-sess = tf.Session()
-# intialize the TF variables
-sess.run(tf.global_variables_initializer())
-
-
-
-# optimization loop
-t = []
-for i in range(0,100):
-    sess.run(train)
-    t += [sess.run(loss_tensor)]
-    print(t[-1])
-
-
-# extract the posterior distributions
-posterior_qvars = {name: qv.build_in_session(sess) for name, qv in q._last_expanded_vars.items()}
-
-
-
-
-
-# 141
-
-
-SVI = inf.inference.SVI(qmodel(k=1,d=2), epochs=1000, batch_size=200)
-
+# q = qmodel(k=1,d=2)
+#
+# # for not evaluating ELBO tensor
+# inf.util.runtime.set_tf_run(False)
+# # extract the computational graph of the ELBO
+# loss_tensor = inf.inference.variational.loss_functions.elbo.ELBO(m,q, {"x": x_train})
+#
+# # build an optimizer to minimize the ELBO
+# optimizer = tf.train.AdamOptimizer(learning_rate=0.1)
+# train = optimizer.minimize(loss_tensor)
+#
+# # start a session
+# sess = tf.Session()
+# # intialize the TF variables
+# sess.run(tf.global_variables_initializer())
+#
+#
+#
+# # optimization loop
+# t = []
+# for i in range(0,100):
+#     sess.run(train)
+#     t += [sess.run(loss_tensor)]
+#     print(t[-1])
+#
+#
+# # extract the posterior distributions
+# posterior_qvars = {name: qv.build_in_session(sess) for name, qv in q._last_expanded_vars.items()}
+#
+#
+#
+#
+#
+# # 141
+#
+#
+# SVI = inf.inference.SVI(qmodel(k=1,d=2), epochs=1000, batch_size=200)
+#
