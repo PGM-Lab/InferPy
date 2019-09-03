@@ -103,7 +103,7 @@ class ProbModel:
                 raise ValueError("target_names must correspond to not observed variables during the inference: \
                     {}".format([v for v in self.vars.keys() if v not in self.observed_vars]))
 
-        return Query(self.inference_method.expanded_variables["q"], target_names, data)
+        return self.inference_method.posterior(target_names, data)
 
     def posterior_predictive(self, target_names=None, data={}):
         if self.inference_method is None:
@@ -117,11 +117,7 @@ class ProbModel:
                 raise ValueError("target_names must correspond to observed variables during the inference: \
                     {}".format(self.observed_vars))
 
-        # posterior_predictive uses pmodel variables, but global hidden (parameters) intercepted with qmodel variables.
-        return Query(self.inference_method.expanded_variables["p"], target_names, data,
-                     enable_interceptor_variables=(
-                         # just interested in intercept the global parameters, not the local hidden
-                         self.inference_method.get_interceptable_condition_variables()[0], None))
+        return self.inference_method.posterior_predictive(target_names, data)
 
     def _build_graph(self):
         with contextmanager.randvar_registry.init():

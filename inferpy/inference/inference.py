@@ -30,3 +30,9 @@ class Inference:
     def get_interceptable_condition_variables(self):
         # to intercept global and local hidden variables
         return None, None
+
+    def posterior(self, target_names=None, data={}):
+        raise NotImplementedError
+
+    def posterior_predictive(self, target_names=None, data={}):
+        raise NotImplementedError

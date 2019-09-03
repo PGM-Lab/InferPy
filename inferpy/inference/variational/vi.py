@@ -6,6 +6,7 @@ from tensorflow_probability.python import edward2 as ed
 
 from . import loss_functions
 import inferpy as inf
+from inferpy.queries import Query
 from inferpy import util
 from inferpy import contextmanager
 
@@ -120,6 +121,19 @@ class VI(Inference):
 
     def get_interceptable_condition_variables(self):
         return (self.enable_interceptor_global, self.enable_interceptor_local)
+
+    def posterior(self, target_names=None, data={}):
+        return Query(self.expanded_variables["q"], target_names, data)
+
+    def posterior_predictive(self, target_names=None, data={}):
+        # posterior_predictive uses pmodel variables, but global hidden (parameters) intercepted with qmodel variables.
+        return Query(self.expanded_variables["p"], target_names, data,
+                     # just interested in intercept the global parameters, not the local hidden
+                     enable_interceptor_variables=(self.enable_interceptor_global, None))
+
+    ########################
+    # Auxiliar functions
+    ########################
 
     def _generate_train_tensor(self, **kwargs):
         """ This function expand the p and q models. Then, it uses the  loss function to create the loss tensor
