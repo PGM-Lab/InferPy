@@ -6,7 +6,7 @@ Neural networks are powerful approximators. However, standard approaches
 for learning this approximators does not take into account the inherent
 uncertainty we may have when fitting a model.
 
-.. code:: ipython3
+.. code:: python3
 
     import matplotlib.pyplot as plt
     import numpy as np
@@ -23,7 +23,7 @@ We use some fake data. As neural nets of even one hidden layer can be
 universal function approximators, we can see if we can train a simple
 neural network to fit a noisy sinusoidal data, like this:
 
-.. code:: ipython3
+.. code:: python3
 
     NSAMPLE = 100
     x_train = np.float32(np.random.uniform(-10.5, 10.5, (1, NSAMPLE))).T
@@ -45,7 +45,7 @@ Training a neural network
 We employ a simple feedforward network with 20 hidden units to try to
 fit the data.
 
-.. code:: ipython3
+.. code:: python3
 
     x = tf.placeholder(dtype=tf.float32, shape=[None,1])
     y = tf.placeholder(dtype=tf.float32, shape=[None,1])
@@ -94,7 +94,7 @@ fit the data.
 We see that the neural network can fit this sinusoidal data quite well,
 as expected.
 
-.. code:: ipython3
+.. code:: python3
 
     x_test = np.float32(np.arange(-10.5,10.5,0.1))
     x_test = x_test.reshape(x_test.size,1)
@@ -145,7 +145,7 @@ variables. More precisely, the output ``y`` is defined as a Gaussian
 random varible. The mean of the Gaussian is the output of the neural
 network.
 
-.. code:: ipython3
+.. code:: python3
 
     @inf.probmodel
     def model(NHIDDEN):
@@ -168,7 +168,7 @@ Inferpy <https://inferpy.readthedocs.io/projects/develop/en/develop/notes/guidei
 For a deeper theoretical despcription, read this
 `paper <https://arxiv.org/abs/1908.03442>`__.
 
-.. code:: ipython3
+.. code:: python3
 
     @inf.probmodel
     def qmodel(NHIDDEN):
@@ -188,7 +188,7 @@ For a deeper theoretical despcription, read this
         qW_out = inf.Normal(W_out_loc, scale = W_out_scale, name="W_out")
         qb_out = inf.Normal(b_out_loc, scale = b_out_scale, name="b_out")
 
-.. code:: ipython3
+.. code:: python3
 
     NHIDDEN=20
     
@@ -253,7 +253,7 @@ deterministic. So, we can caputure the uncertainty in the data. See for
 example what happens now with the predictions at the point ``x=2.0``.
 See also what happens with the uncertainty in out-of-range predictions.
 
-.. code:: ipython3
+.. code:: python3
 
     x_test = np.linspace(-20.5, 20.5, NSAMPLE).reshape(-1, 1)
     

@@ -6,7 +6,7 @@ Mixture density networks (MDN) (Bishop, 1994) are a class of models
 obtained by combining a conventional neural network with a mixture
 density model.
 
-.. code:: ipython3
+.. code:: python3
 
     from __future__ import absolute_import
     from __future__ import division
@@ -23,7 +23,7 @@ density model.
     from scipy import stats
     from sklearn.model_selection import train_test_split
 
-.. code:: ipython3
+.. code:: python3
 
     def plot_normal_mix(pis, mus, sigmas, ax, label='', comp=True):
       """Plots the mixture of Normal models to axis=ax comp=True plots all
@@ -65,7 +65,7 @@ post <http://blog.otoro.net/2015/11/24/mixture-density-networks-with-tensorflow/
 where he explains MDNs. It is an inverse problem where for every input
 :math:`x_n` there are multiple outputs :math:`y_n`.
 
-.. code:: ipython3
+.. code:: python3
 
     def build_toy_dataset(N):
       y_data = np.random.uniform(-10.5, 10.5, N).astype(np.float32)
@@ -119,7 +119,7 @@ Let’s define first the neural network. We use ``tf.layers`` to construct
 neural networks. We specify a three-layer network with 15 hidden units
 for each hidden layer.
 
-.. code:: ipython3
+.. code:: python3
 
     def neural_network(X):
       # 2 hidden layers with 15 hidden units
@@ -130,7 +130,7 @@ for each hidden layer.
 
 Let’s now try to fit the neural network to the data
 
-.. code:: ipython3
+.. code:: python3
 
     x = tf.placeholder(dtype=tf.float32, shape=[None,1])
     y = tf.placeholder(dtype=tf.float32, shape=[None])
@@ -205,7 +205,7 @@ We define our probabilistic model using ``Inferpy`` constructs.
 Specifically, we use the ``MixtureSameFamily`` distribution, where the
 the parameters of this network are provided by our feedforwrad network.
 
-.. code:: ipython3
+.. code:: python3
 
     def neural_network(X):
       """loc, scale, logits = NN(x; theta)"""
@@ -260,7 +260,7 @@ We train the MDN model. For details, see the documentation about
 `Inference in
 Inferpy <https://inferpy.readthedocs.io/projects/develop/en/develop/notes/guideinference.html>`__
 
-.. code:: ipython3
+.. code:: python3
 
     @inf.probmodel
     def qmodel():
@@ -293,7 +293,7 @@ Inferpy <https://inferpy.readthedocs.io/projects/develop/en/develop/notes/guidei
 After training, we can now see how the same network embbeded in a
 mixture model is able to perfectly capture the training data.
 
-.. code:: ipython3
+.. code:: python3
 
     X_test, y_test = build_toy_dataset(N)
     
