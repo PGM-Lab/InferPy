@@ -17,6 +17,7 @@ htmlcov
 .vscode
 .vimrc
 *_ignored*
+*_ig*
 /docs/_build/
 /env*/
 *_old.py

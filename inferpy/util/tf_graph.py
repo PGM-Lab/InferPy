@@ -34,7 +34,7 @@ def _clean_graph(G, varnames):
                 predecesors = list(G.predecessors(n))
                 n_name = n[n.rfind('/')]  # real name of the tf.variable
 
-                assert len(predecesors) <= 2  # At most, it should have two predecessors
+                # assert len(predecesors) <= 2  # At most, it should have two predecessors
 
                 if len(predecesors) == 2:
                     if predecesors[0] == n_name:
