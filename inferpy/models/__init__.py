@@ -38,4 +38,4 @@ __all__ = [
             'inference',
             'Parameter',
             'probmodel',
-        ] + distributions_all  # noqa: F405
+        ] + distributions_all + CUSTOM_RANDOM_VARIABLES  # noqa: F405
