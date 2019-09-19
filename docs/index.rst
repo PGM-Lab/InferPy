@@ -56,7 +56,7 @@ There are several articles to cite for InferPy. The following one correspond to 
 the use of InferPy for probabilistic modelling with neural networks. This InferPy version relies on Tensorflow
 Probability (TFP) and Edward2.
 
-.. code::
+.. code:: TeX
 
    @Article{cozar2019inferpy,
         author  = {C{\'o}zar, Javier and Caba{\~n}as, Rafael and Salmer{\'o}n, Antonio and  Masegosa, Andr{\'e}s R},
@@ -70,7 +70,7 @@ On the other hand, the article whose reference is shown bellow corresponds to th
 on the first version of Edward, which is no longer under development:
 
 
-.. code::
+.. code:: TeX
 
    @article{cabanasInferPy,
         Author = {Caba{\~n}as, Rafael and Salmer{\'o}n, Antonio and Masegosa, Andr{\'e}s R},
