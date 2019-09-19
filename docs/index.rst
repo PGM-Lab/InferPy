@@ -66,7 +66,7 @@ Probability (TFP) and Edward2.
    }
 
 
-On the other hand, the article whose reference is shown bellow corresponds to the API in verions 0.x which relies
+On the other hand, the article whose reference is shown below corresponds to the API in verions 0.x which relies
 on the first version of Edward, which is no longer under development:
 
 
