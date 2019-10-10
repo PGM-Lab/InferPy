@@ -72,7 +72,7 @@ models; and finally build tensor for computing **ELBO**, which represents the fu
 
 .. literalinclude:: ../../examples/edward/ed_vae_mnist.py
    :language: python3
-   :lines: 77-104
+   :lines: 89-104
    :caption: Edward
 
 

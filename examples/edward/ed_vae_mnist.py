@@ -72,6 +72,18 @@ def qmodel(k, d0, x, encoder):
 
 ### preparing inference and batched data
 
+
+
+
+
+
+
+
+
+
+
+
+
 ############## Edward ##############
 
 batch = tf.data.Dataset.from_tensor_slices(x_train)\
@@ -80,21 +92,9 @@ batch = tf.data.Dataset.from_tensor_slices(x_train)\
         .repeat()\
         .make_one_shot_iterator().get_next()
 
-def set_values(**model_kwargs):
-    """Creates a value-setting interceptor."""
-    def interceptor(f, *args, **kwargs):
-        """Sets random variable values to its aligned value."""
-        name = kwargs.get("name")
-        if name in model_kwargs:
-            kwargs["value"] = model_kwargs[name]
-        else:
-            print(f"set_values not interested in {name}.")
-        return ed.interceptable(f)(*args, **kwargs)
-    return interceptor
-
 qz = qmodel(k, d0, batch, encoder)
 
-with ed.interception(set_values(z=qz, x=batch)):
+with ed.interception(ed.make_value_setter(z=qz, x=batch)):
     pz, px = vae(k, d0, dx, M, decoder)
 
 energy = N/M*tf.reduce_sum(pz.distribution.log_prob(pz.value)) + \

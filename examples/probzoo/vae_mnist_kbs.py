@@ -1,7 +1,6 @@
 import tensorflow as tf
 import inferpy as inf
 from inferpy.data import mnist
-import tensorflow_probability as tfp
 
 N, M = 1000, 100 # data and batch size
 (x_train, _), _ = mnist.load_data(num_instances=N,
@@ -17,8 +16,7 @@ def vae(k, d0, d, decoder):
 def decoder(z, d0, d):
     h0 = tf.keras.layers.Dense(d0, activation=tf.nn.relu)
     h1 = tf.keras.layers.Dense(d)
-    h2 = tfp.layers.DistributionLambda(lambda t: tfp.distributions.Normal(loc=t, scale=1.))
-    return h2(h1(h0(z)))
+    return h1(h0(z))
 p = vae(k=2, d0=100, d=28*28, decoder=decoder)
 
 
@@ -34,8 +32,7 @@ def qmodel(k, d0, d, encoder):
 def encoder(x, d0, k):
     h0 = tf.keras.layers.Dense(d0, activation=tf.nn.relu)
     h1 = tf.keras.layers.Dense(2*k)
-    h2 = tfp.layers.DistributionLambda(lambda t: tfp.distributions.Normal(loc=t, scale=1.))
-    return h2(h1(h0(x)))
+    return h1(h0(x))
 q = qmodel(k=2, d0=100, d=28*28, encoder=encoder)
 
 # set the inference algorithm
