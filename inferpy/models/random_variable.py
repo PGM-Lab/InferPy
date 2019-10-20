@@ -28,9 +28,14 @@ from inferpy import contextmanager
 from inferpy import util
 import inferpy.util.session
 
+# not allowed RandomVariables from edward2
+NOT_ALLOWED_RANDOM_VARIABLES_FROM_EDWARD2 = ["Mixture", "MixtureSameFamily"]
+# custom random variables declared in the end of this file
+CUSTOM_RANDOM_VARIABLES = ["MixtureGaussian"]
 
 # the list of available RandomVariables in edward2. Matches with the available distributions in tensorflow_probability
-distributions_all = [rv for rv in generated_random_variables.__all__ if rv != 'as_random_variable']
+distributions_all = [rv for rv in generated_random_variables.__all__
+                     if rv != 'as_random_variable' and rv not in NOT_ALLOWED_RANDOM_VARIABLES_FROM_EDWARD2]
 
 
 def _make_edward_random_variable(distribution_obj):
@@ -421,11 +426,6 @@ def _operator(var, other, operator_name):
     return getattr(var, operator_name)(other.var if isinstance(other, RandomVariable) else other)
 
 
-# Define all Random Variables existing in edward2
-for d in distributions_all:
-    globals()[d] = _make_random_variable(d)
-
-
 def _tensor_conversion_function(rv, dtype=None, name=None, as_ref=False):
     """
         Function that converts the inferpy variable into a Tensor.
@@ -455,3 +455,21 @@ def _session_run_conversion_fetch_function(rv):
 tf_session.register_session_run_conversion_functions(  # enable sess.run, eval
     RandomVariable,
     _session_run_conversion_fetch_function)
+
+
+# Define all Random Variables existing in edward2
+for d in distributions_all:
+    globals()[d] = _make_random_variable(d)
+
+
+# Define custom inferpy Random Variables
+def MixtureGaussian(locs, scales, logits=None, probs=None, *args, **kwargs):
+    MixtureSameFamily = _make_random_variable("MixtureSameFamily")
+    categorical = tfp.distributions.Categorical(logits=logits, probs=probs)
+    normals = tfp.distributions.Normal(loc=locs, scale=scales)
+    # build inferpy random variable
+    rv = MixtureSameFamily(mixture_distribution=categorical, components_distribution=normals, *args, **kwargs)
+
+    rv.__name__ = 'MixtureGaussian'
+
+    return rv

@@ -41,32 +41,32 @@ mnist.plot_digits(x_train, grid=[5,5])
 @inf.probmodel
 def vae(k, d0, dx, decoder):
     with inf.datamodel():
-        z = inf.Normal(tf.ones(k) * 0.5, 1, name="z")  # shape = [N,k]
-        output = decoder(z, d0, dx)
-        x_loc = output[:, :dx]
-        x_scale = tf.nn.softmax(output[:, dx:]) + scale_epsilon
-        x = inf.Normal(x_loc, x_scale, name="x")  # shape = [N,d]
+        z = inf.Normal(tf.ones(k), 1,name="z")
+        x = inf.Normal(decoder(z, d0, dx), 1, name="x")
 
 # Neural networks for decoding and encoding
+def decoder(z, d0, dx):
+    h0 = tf.keras.layers.Dense(d0, activation=tf.nn.relu)
+    h1 = tf.keras.layers.Dense(dx)
+    return h1(h0(z))
 
-def decoder(z, d0, dx):  # k -> d0 -> 2*dx
-    h0 = tf.layers.dense(z, d0, tf.nn.relu)
-    return tf.layers.dense(h0, 2 * dx)
-
-def encoder(x, d0, k):  # dx -> d0 -> 2*k
-    h0 = tf.layers.dense(x, d0, tf.nn.relu)
-    return tf.layers.dense(h0, 2 * k)
+def encoder(x, d0, k):
+    h0 = tf.keras.layers.Dense(d0, activation=tf.nn.relu)
+    h1 = tf.keras.layers.Dense(2*k)
+    return h1(h0(x))
 
 # Q model for making inference
-
 @inf.probmodel
 def qmodel(k, d0, dx, encoder):
     with inf.datamodel():
-        x = inf.Normal(tf.ones(dx) * 0.5, 1, name="x")
+        x = inf.Normal(tf.ones(dx), 1, name="x")
         output = encoder(x, d0, k)
         qz_loc = output[:, :k]
-        qz_scale = tf.nn.softmax(output[:, k:]) + scale_epsilon
+        qz_scale = tf.nn.softplus(output[:, k:]) + scale_epsilon
         qz = inf.Normal(qz_loc, qz_scale, name="z")
+
+
+
 
 
 
@@ -92,15 +92,6 @@ m.fit({"x": x_train}, SVI)
 ####################################################
 
 ############## Inferpy ##############
-L = SVI.losses
-plt.plot(range(len(L)), L)
-plt.xlabel('epochs')
-plt.ylabel('Loss')
-plt.title('Loss evolution')
-plt.grid(True)
-plt.show()
-
-
 # extract the posterior and generate new digits
 postz = np.concatenate([
     m.posterior("z", data={"x": x_train[i:i+M,:]}).sample()
@@ -128,16 +119,16 @@ plt.show()
 
 x_gen = m.posterior_predictive('x', data={"z": postz[:M,:]}).sample()
 mnist.plot_digits(x_gen, grid=[5,5])
-
-
-##################
-
+#
+#
+# ##################
+#
 ### Generate new images for a specific digit dig
 dig = 0
 postz_0 = postz[y_train == DIG[dig]]
 # Less than plaze size, so we need to tile this up to 1000 instances
 postz_0 = np.tile(postz_0, [int(np.ceil(N / postz_0.shape[0])), 1])[:N]
-x_gen = m.posterior_predictive('x', data={"z": postz_0}).sample()
+x_gen = m.posterior_predictive('x', data={"z": postz_0[:M]}).sample()
 mnist.plot_digits(x_gen)
 
 
@@ -145,7 +136,7 @@ mnist.plot_digits(x_gen)
 # First define the range of the z domain
 xaxis_min, yaxis_min = np.min(postz, axis=0)
 xaxis_max, yaxis_max = np.max(postz, axis=0)
-
+#
 # generate 10x10 samples uniformly distributed, and get the first 1000
 x = np.linspace(xaxis_min, xaxis_max, int(np.ceil(np.sqrt(N))))
 y = np.linspace(yaxis_min, yaxis_max, int(np.ceil(np.sqrt(N))))
@@ -153,6 +144,8 @@ xx, yy = np.meshgrid(x, y)
 postz = np.concatenate([np.expand_dims(xx.flatten(), 1), np.expand_dims(yy.flatten(), 1)], axis=1)[:N]
 
 # Generate images for each point in the z variable domain
-postx = m.posterior_predictive('x', {"z": postz}).sample()
+postx = np.concatenate([
+    m.posterior_predictive('x', {"z": postz[i:i+M]}).sample()
+    for i in range(0, N, M)])
 # Get just 100 images, by steps of 10, so we can show 10x10 images
 mnist.plot_digits(postx[::10], grid=[10, 10])

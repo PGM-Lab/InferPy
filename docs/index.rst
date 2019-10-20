@@ -49,6 +49,44 @@ Use InferPy if you need a probabilistic programming language that:
 A set of examples can be found in the `Probabilistic Model Zoo <notes/probzoo.html>`_ section.
 
 
+Citation
+------------
+
+There are several articles to cite for InferPy. The following one correspond to versions 1.x and describes
+the use of InferPy for probabilistic modelling with neural networks. This InferPy version relies on Tensorflow
+Probability (TFP) and Edward2.
+
+.. code:: TeX
+
+   @Article{cozar2019inferpy,
+        author  = {C{\'o}zar, Javier and Caba{\~n}as, Rafael and Salmer{\'o}n, Antonio and  Masegosa, Andr{\'e}s R},
+        title   = {InferPy: Probabilistic Modeling with Deep Neural Networks Made Easy},
+        journal = {arXiv preprint arXiv:1908.11161},
+        year    = {2019},
+   }
+
+
+On the other hand, the article whose reference is shown below corresponds to the API in verions 0.x which relies
+on the first version of Edward, which is no longer under development:
+
+
+.. code:: TeX
+
+   @article{cabanasInferPy,
+        Author = {Caba{\~n}as, Rafael and Salmer{\'o}n, Antonio and Masegosa, Andr{\'e}s R},
+        Journal = {Knowledge-Based Systems},
+        Publisher = {Elsevier},
+        Title = {InferPy: Probabilistic Modeling with Tensorflow Made Easy},
+        Year = {2019}
+   }
+
+
+.. .. toctree::
+.. :hidden:
+
+.. Home <self>
+
+
 .. toctree::
    :includehidden:
    :maxdepth: 1
@@ -84,7 +122,8 @@ A set of examples can be found in the `Probabilistic Model Zoo <notes/probzoo.ht
    
    notes/probzoo
    VAE with MNIST in Edward and Inferpy <notes/vae_mnist>
-
+   notes/bayesianNN
+   notes/mixture
 
 
 

@@ -26,7 +26,7 @@ data_loader.size
 
 data_loader.variables
 
-data_loader.has_header
+# data_loader.has_header
 
 
 """

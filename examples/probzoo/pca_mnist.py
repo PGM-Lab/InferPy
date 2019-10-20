@@ -26,15 +26,11 @@ learning_rate = 0.01
 def pca(k,d):
     w = inf.Normal(loc=tf.zeros([k,d]),
                    scale=1, name="w")               # shape = [k,d]
-
     w0 = inf.Normal(loc=tf.zeros([d]),
                     scale=1, name="w0")  # shape = [d]
-
     with inf.datamodel():
-
         z = inf.Normal(tf.zeros([k]),1, name="z")       # shape = [N,k]
         x = inf.Normal( z @ w + w0, 1, name="x")         # shape = [N,d]
-
 
 
 @inf.probmodel
@@ -70,9 +66,7 @@ VI = inf.inference.VI(q, optimizer=optimizer, epochs=2000)
 m.fit({"x": x_train}, VI)
 
 
-
 # Plot the evolution of the loss
-
 L = VI.losses
 plt.plot(range(len(L)), L)
 
@@ -83,12 +77,9 @@ plt.grid(True)
 plt.show()
 
 
-#extract the hidden encoding
-sess = inf.get_session()
-post = {v:sess.run(m.posterior[v].loc) for v in ["z", "w", "w0"] }
+# extract the posterior
+post = {"z": m.posterior("z", data={"x": x_train}).sample()}
 
-
-m.posterior["z"].copy()
 
 # plot
 markers = ["x", "+", "o"]
@@ -108,11 +99,9 @@ for c in range(0, len(DIG)):
 plt.show()
 
 
-
-with inf.contextmanager.observe(m.posterior, {"z": post["z"]}):
-    x_gen = m._last_expanded_vars['x'].sample()
-
-mnist.plot_digits(x_gen, grid=[10,5])
+# generate new digits
+x_gen = m.posterior_predictive('x', data=post).sample()
+mnist.plot_digits(x_gen, grid=[5,5])
 
 
 

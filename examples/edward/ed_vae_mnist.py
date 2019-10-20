@@ -39,38 +39,50 @@ from inferpy.data import mnist
 ############## Edward ##############
 
 def vae(k, d0, dx, N, decoder):
-    z = ed.Normal(loc=tf.ones(k)*0.5, scale=1., sample_shape=N, name="z")
-    output = decoder(z, d0, dx)
-    x_loc = output[:, :dx]
-    x_scale = tf.nn.softmax(output[:, dx:]) + scale_epsilon
-    x = ed.Normal(loc=x_loc, scale=x_scale, name="x")
+    z = ed.Normal(loc=tf.ones(k), scale=1., sample_shape=N, name="z")
+    x = ed.Normal(loc=decoder(z, d0, dx), scale=1., name="x")
     return z, x
 
-
 # Neural networks for decoding and encoding
+def decoder(z, d0, dx):
+    h0 = tf.keras.layers.Dense(d0, activation=tf.nn.relu, name="decoder_h0")
+    h1 = tf.keras.layers.Dense(dx, name="decoder_h1")
+    return h1(h0(z))
 
-def decoder(z, d0, dx):  # k -> d0 -> 2*dx
-    h0 = tf.layers.dense(z, d0, tf.nn.relu, name="decoder_h0")
-    return tf.layers.dense(h0, 2 * dx, name="decoder_h1")
-
-def encoder(x, d0, k):  # dx -> d0 -> 2*k
-    h0 = tf.layers.dense(x, d0, tf.nn.relu, name="encoder_h0")
-    return tf.layers.dense(h0, 2 * k, name="encoder_h1")
+def encoder(x, d0, k):
+    h0 = tf.keras.layers.Dense(d0, activation=tf.nn.relu, name="encoder_h0")
+    h1 = tf.keras.layers.Dense(2*k, name="encoder_h1")
+    return h1(h0(x))
 
 # Q model for making inference which is parametrized by the data x.
-
 def qmodel(k, d0, x, encoder):
     output = encoder(x, d0, k)
     qz_loc = output[:, :k]
-    qz_scale = tf.nn.softmax(output[:, k:]) + scale_epsilon
+    qz_scale = tf.nn.softplus(output[:, k:]) + scale_epsilon
     qz = ed.Normal(loc=qz_loc, scale=qz_scale, name="qz")
     return qz
+
+
+
+
 
 
 # Inference
 ############################
 
 ### preparing inference and batched data
+
+
+
+
+
+
+
+
+
+
+
+
 
 ############## Edward ##############
 
@@ -80,21 +92,9 @@ batch = tf.data.Dataset.from_tensor_slices(x_train)\
         .repeat()\
         .make_one_shot_iterator().get_next()
 
-def set_values(**model_kwargs):
-    """Creates a value-setting interceptor."""
-    def interceptor(f, *args, **kwargs):
-        """Sets random variable values to its aligned value."""
-        name = kwargs.get("name")
-        if name in model_kwargs:
-            kwargs["value"] = model_kwargs[name]
-        else:
-            print(f"set_values not interested in {name}.")
-        return ed.interceptable(f)(*args, **kwargs)
-    return interceptor
-
 qz = qmodel(k, d0, batch, encoder)
 
-with ed.interception(set_values(z=qz, x=batch)):
+with ed.interception(ed.make_value_setter(z=qz, x=batch)):
     pz, px = vae(k, d0, dx, M, decoder)
 
 energy = N/M*tf.reduce_sum(pz.distribution.log_prob(pz.value)) + \
@@ -118,7 +118,7 @@ sess.run(init)
 t = []
 for i in range(num_epochs + 1):
     for j in range(N // M):
-        elbo_ij, eng, ent, _ = sess.run([elbo, train])
+        elbo_ij, _ = sess.run([elbo, train])
 
         t.append(elbo_ij)
         if j == 0 and i % 200 == 0:
@@ -187,3 +187,7 @@ for x, y in [(i, j) for i in list(range(nx)) for j in list(range(ny))]:
 plt.show()
 
 
+
+
+
+tf.trainable_variables()

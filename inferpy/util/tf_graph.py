@@ -30,9 +30,9 @@ def _clean_graph(G, varnames):
     g_nodes = list(G.nodes)
     for n in g_nodes:
         if n not in varnames:
-            if '/Assign' in n:  # Special case for tf.Variables
+            n_name = n[:n.rfind('/')]  # real name of the tf.variable
+            if n_name in varnames and '/Assign' in n:  # Special case for tf.Variables used by inf.Parameters
                 predecesors = list(G.predecessors(n))
-                n_name = n[n.rfind('/')]  # real name of the tf.variable
 
                 assert len(predecesors) <= 2  # At most, it should have two predecessors
 

@@ -1,4 +1,5 @@
-__version__ = '1.1.3'
+__version__ = '1.2.3'
+
 
 
 from .models import *  # noqa F401, F403

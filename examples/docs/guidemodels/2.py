@@ -48,7 +48,7 @@ x.distribution
 
 # batch shape
 
-x = inf.Normal(0,1, batch_shape=[3,2])                    # x.shape = [3,2]
+# x = inf.Normal(0,1, batch_shape=[3,2])  batch_shape att. not longer supported                  # x.shape = [3,2]
 
 x = inf.Normal(loc = [[0.,0.],[0.,0.],[0.,0.]], scale=1)  # x.shape = [3,2]
 
