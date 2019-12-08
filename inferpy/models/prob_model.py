@@ -136,9 +136,14 @@ class ProbModel:
         _before_global_variables = tf.global_variables()
 
         with contextmanager.randvar_registry.init(self.graph):
-            # use edward2 model tape to capture RandomVariable declarations
-            with ed.tape() as model_tape:
-                self.builder()
+            with contextmanager.layer_registry.init():
+                # use edward2 model tape to capture RandomVariable declarations
+                with ed.tape() as model_tape:
+                    self.builder()
+
+                # store the losses from the build layers through layers.sequential.Sequential
+                # NOTE: this must be done inside the layer_registry context, where the sequentials are stored
+                self.losses = contextmanager.layer_registry.get_losses()
 
             # get variables from parameters
             var_parameters = contextmanager.randvar_registry.get_var_parameters()
