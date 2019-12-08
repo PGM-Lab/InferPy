@@ -5,8 +5,11 @@ and returns a dict of posterior objects (random distributions, list of samples, 
 
 from .variational.vi import VI
 from .variational.svi import SVI
+from .mcmc import MCMC
+
 
 __all__ = [
+    'MCMC',
     'SVI',
     'VI'
 ]

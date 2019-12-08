@@ -6,6 +6,7 @@ from tensorflow_probability.python import edward2 as ed
 
 from . import loss_functions
 import inferpy as inf
+from inferpy.queries import Query
 from inferpy import util
 from inferpy import contextmanager
 
@@ -89,7 +90,6 @@ class VI(Inference):
 
         # data must be a sample dictionary
         sample_dict = build_sample_dict(data)
-        sample_dict["x"].shape
         # ensure that the size of the data matches with the self.plate_size
         data_size = util.iterables.get_plate_size(self.pmodel.vars, sample_dict)
         if data_size != self.plate_size:
@@ -119,17 +119,21 @@ class VI(Inference):
     def losses(self):
         return self.debug.losses
 
-    def sample(self, size=1, data={}):
-        raise NotImplementedError
-
-    def log_prob(self, data):
-        raise NotImplementedError
-
-    def parameters(self, names=None):
-        raise NotImplementedError
-
     def get_interceptable_condition_variables(self):
         return (self.enable_interceptor_global, self.enable_interceptor_local)
+
+    def posterior(self, target_names=None, data={}):
+        return Query(self.expanded_variables["q"], target_names, data)
+
+    def posterior_predictive(self, target_names=None, data={}):
+        # posterior_predictive uses pmodel variables, but global hidden (parameters) intercepted with qmodel variables.
+        return Query(self.expanded_variables["p"], target_names, data,
+                     # just interested in intercept the global parameters, not the local hidden
+                     enable_interceptor_variables=(self.enable_interceptor_global, None))
+
+    ########################
+    # Auxiliar functions
+    ########################
 
     def _generate_train_tensor(self, **kwargs):
         """ This function expand the p and q models. Then, it uses the  loss function to create the loss tensor
@@ -147,6 +151,7 @@ class VI(Inference):
         qvars, qparams = self.qmodel.expand_model(self.plate_size)
 
         # expand de pmodel, using the intercept.set_values function, to include the sample_dict and the expanded qvars
+        # the True first value enable to use tf.condition and observe RandomVariables modifying a tf.Variable value
         with ed.interception(util.interceptor.set_values(**qvars)):
             pvars, pparams = self.pmodel.expand_model(self.plate_size)
 
