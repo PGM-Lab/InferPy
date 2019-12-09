@@ -53,11 +53,14 @@ class MCMC(Inference):
         # not observed vars
         self.hiddenvars_name = None
 
-    def compile(self, pmodel, data_size):
+    def compile(self, pmodel, data_size, extra_loss_tensor=None):
         # set the used pmodel
         self.pmodel = pmodel
         # and the plate size, which matches the data size
         self.plate_size = data_size
+        # extra_loss_tensor comes from inf.layers.Sequential losses, which cannot be used with this inference method
+        if self.extra_loss_tensor is not None:
+            raise RuntimeError("The MCMC inference method cannot be used with models containing layers from tf, keras or inferpy.")
 
     def update(self, data):
         # data must be a sample dictionary

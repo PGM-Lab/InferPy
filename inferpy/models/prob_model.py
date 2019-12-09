@@ -76,6 +76,9 @@ class ProbModel:
 
         self.observed_vars = []  # list of variables that have been observed during the inference
 
+        # losses tensor if model contains any inferpy layers Sequential object
+        self.layer_losses = None
+
     # all the results of prior, posterior and posterior_predictive are evaluated always, because they depends on
     # tf.Variables, and therefore a tensor cannot be return because the results would depend on the value of that
     # tf.Variables
@@ -137,7 +140,7 @@ class ProbModel:
 
                 # store the losses from the build layers through layers.sequential.Sequential
                 # NOTE: this must be done inside the layer_registry context, where the sequentials are stored
-                self.losses = contextmanager.layer_registry.get_losses()
+                self.layer_losses = contextmanager.layer_registry.get_losses()
 
             # get variables from parameters
             var_parameters = contextmanager.randvar_registry.get_var_parameters()
@@ -187,7 +190,7 @@ class ProbModel:
         # if the inference method needs to intercept random variables, enable this context using a boolean
         # tf.Variable defined in this inference method object
         with util.interceptor.enable_interceptor(*self.inference_method.get_interceptable_condition_variables()):
-            inference_method.compile(self, plate_size)
+            inference_method.compile(self, plate_size, self.layer_losses)
             # and run the update method with the data
             inference_method.update(data_loader)
 

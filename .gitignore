@@ -29,4 +29,5 @@ build
 .pytest_cache
 .ipynb_checkpoints
 _build/
+/*.ipynb
 venv

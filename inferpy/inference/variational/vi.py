@@ -78,13 +78,13 @@ class VI(Inference):
 
         self.debug.losses = []
 
-    def compile(self, pmodel, data_size):
+    def compile(self, pmodel, data_size, extra_loss_tensor=None):
         # set the used pmodel
         self.pmodel = pmodel
         # and the plate size, which matches the data size
         self.plate_size = data_size
         # create the train tensor
-        self.train_tensor = self._generate_train_tensor(plate_size=self.plate_size)
+        self.train_tensor = self._generate_train_tensor(extra_loss_tensor, plate_size=self.plate_size)
 
     def update(self, data):
 
@@ -135,7 +135,7 @@ class VI(Inference):
     # Auxiliar functions
     ########################
 
-    def _generate_train_tensor(self, **kwargs):
+    def _generate_train_tensor(self, extra_loss_tensor, **kwargs):
         """ This function expand the p and q models. Then, it uses the  loss function to create the loss tensor
             and store it into the debug object as a new attribute.
             Then, uses the optimizer to create the train tensor used in the gradient descent iterative process.
@@ -157,6 +157,10 @@ class VI(Inference):
 
         # create the loss tensor and trainable tensor for the gradient descent process
         loss_tensor = self.loss_fn(pvars, qvars, **kwargs)
+        # if extra_loss_tensor is not None, it must be a tensor with the inf.layers.Sequential losses
+        if extra_loss_tensor is not None:
+            loss_tensor += extra_loss_tensor
+        # use the optimizer to create the train tensor
         train = self.optimizer.minimize(loss_tensor)
 
         # save the expanded variables and parameters
