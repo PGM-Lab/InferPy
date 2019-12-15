@@ -21,7 +21,7 @@ class Inference:
     def __init__(self):
         raise NotImplementedError
 
-    def compile(self, pmodel, data_size):
+    def compile(self, pmodel, data_size, extra_loss_tensor=None):
         raise NotImplementedError
 
     def update(self, sample_dict):
