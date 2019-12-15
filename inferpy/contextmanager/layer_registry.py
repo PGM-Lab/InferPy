@@ -26,7 +26,8 @@ def add_sequential(sequential):
 
 def get_losses():
     assert _properties["enabled"]
-    return sum([loss for sequential in _properties["_sequentials"] for loss in sequential.losses])
+    losses = [loss for sequential in _properties["_sequentials"] for loss in sequential.losses]
+    return sum(losses) if len(losses) > 0 else None
 
 
 @contextmanager
