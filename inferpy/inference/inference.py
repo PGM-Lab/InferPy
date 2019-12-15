@@ -13,8 +13,6 @@
 # limitations under the License.
 # ==============================================================================
 
-import tensorflow as tf
-
 
 class Inference:
     """This class implements the functionality of any Inference class.
@@ -29,19 +27,12 @@ class Inference:
     def update(self, sample_dict):
         raise NotImplementedError
 
-    def sample(self, size=1, data={}):
-        raise NotImplementedError
-
-    def log_prob(self, data):
-        raise NotImplementedError
-
-    def sum_log_prob(self, data):
-        """ Computes the sum of the log probabilities of a (set of) sample(s)"""
-        return tf.reduce_sum([tf.reduce_mean(lp) for lp in self.log_prob(data).values()])
-
-    def parameters(self, names=None):
-        raise NotImplementedError
-
     def get_interceptable_condition_variables(self):
         # to intercept global and local hidden variables
         return None, None
+
+    def posterior(self, target_names=None, data={}):
+        raise NotImplementedError
+
+    def posterior_predictive(self, target_names=None, data={}):
+        raise NotImplementedError
