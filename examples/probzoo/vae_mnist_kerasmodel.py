@@ -92,3 +92,4 @@ plt.show()
 
 mnist.plot_digits(x_gen, grid=[5,5])
 
+p.prior().sample()

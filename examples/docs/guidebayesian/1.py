@@ -66,13 +66,13 @@ print(hidden_encoding.sample())
 
 
 def decoder_keras(z,d0,dx):
-    h0 = tf.keras.layers.Dense(d0, activation=tf.nn.relu, name="encoder_h0")
-    h1 = tf.keras.layers.Dense(2*dx, name="encoder_h1")
+    h0 = tf.keras.layers.Dense(d0, activation=tf.nn.relu)
+    h1 = tf.keras.layers.Dense(2*dx)
     return h1(h0(z))
-
 
 # create an instance of the model
 m = nlpca(k,d0,dx, decoder_keras)
+m.fit({"x": x_train}, VI)
 
 
 
@@ -82,11 +82,30 @@ m = nlpca(k,d0,dx, decoder_keras)
 
 def decoder_seq(z,d0,dx):
     return tf.keras.Sequential([
-        tf.keras.layers.Dense(d0, activation=tf.nn.relu, name="encoder_h0"),
-        tf.keras.layers.Dense(2 * dx, name="encoder_h1")
+        tf.keras.layers.Dense(d0, activation=tf.nn.relu),
+        tf.keras.layers.Dense(2 * dx)
+    ])(z)
+
+# create an instance of the model and fit the data
+m = nlpca(k,d0,dx, decoder_seq)
+m.fit({"x": x_train}, VI)
+
+
+
+# 95
+
+import tensorflow_probability as tfp
+
+def decoder_bayesian(z,d0,dx):
+    return inf.layers.Sequential([
+        tfp.layers.DenseFlipout(d0, activation=tf.nn.relu),
+        tfp.layers.DenseLocalReparameterization(d0, activation=tf.nn.relu),
+        tfp.layers.DenseReparameterization(d0, activation=tf.nn.relu),
+        tf.keras.layers.Dense(2 * dx)
     ])(z)
 
 
 # create an instance of the model
-m = nlpca(k,d0,dx, decoder_seq)
+m = nlpca(k,d0,dx, decoder_bayesian)
+m.fit({"x": x_train}, VI)
 

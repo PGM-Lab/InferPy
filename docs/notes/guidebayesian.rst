@@ -1,6 +1,10 @@
 Guide to Bayesian Deep Learning
 ===============================
 
+
+Models Containing Neural Networks
+-----------------------------------
+
 InferPy inherits Edward's approach for representing probabilistic models
 as (stochastic) computational graphs. As described above, a random
 variable :math:`x` is associated to a tensor :math:`x^*` in the
@@ -14,15 +18,14 @@ compatible with Tensorflow (such as Keras).
 Bayesian deep learning or deep probabilistic programming embraces the
 idea of employing deep neural networks within a probabilistic model in
 order to capture complex non-linear dependencies between variables.
+This can be done by combining InferPy with ``tf.layers``, ``tf.keras`` or ``tfp.layers``.
 
 InferPy's API gives support to this powerful and flexible modeling
-framework. Let us start by showing how a non-linear PCA can be defined by mixing ``tf.layers`` and InferPy code.
+framework. Let us start by showing how a non-linear PCA.
 
 .. literalinclude:: ../../examples/docs/guidebayesian/1.py
    :language: python3
    :lines: 9-62
-
-
 
 
 
@@ -39,4 +42,38 @@ decoder function as follows.
 .. literalinclude:: ../../examples/docs/guidebayesian/1.py
    :language: python3
    :lines: 68-75
+
+InferPy is also compatible with keras models such as `tf.keras.Sequential``:
+
+.. literalinclude:: ../../examples/docs/guidebayesian/1.py
+   :language: python3
+   :lines: 83-91
+
+
+Bayesian Neural Networks
+-----------------------------------
+
+InferPy allows the definition of Bayesian NN using the same dense variational layers
+that are available at ``tfp.layers``, i.e.:
+
+- DenseFlipout: Densely-connected layer class with Flipout estimator.
+
+- DenseLocalReparameterization: Densely-connected layer class with local reparameterization estimator.
+
+- DenseReparameterization: Densely-connected layer class with reparameterization estimator.
+
+
+The weights of these layers are drawn from distributions whose posteriors are calculated
+using variational inference. For more details, check the official `tfp documentation<https://www.tensorflow.org/probability/api_docs/python/tfp/layers/dense_variational>`_.
+For its usage, we simply need to include the in a InferPy
+Sequential model ``inf.layers.Sequential`` as follows.
+
+
+.. literalinclude:: ../../examples/docs/guidebayesian/1.py
+   :language: python3
+   :lines: 97-110
+
+Note that this model differs from the one provided by keras. A more detailed example
+with Bayesian layers is given `here <../notes/bayesianNN.html>`_.
+
 

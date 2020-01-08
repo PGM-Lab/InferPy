@@ -25,9 +25,9 @@ def nlpca(k, d0, dx, decoder):
 ###########  25
 
 def decoder(z,d0,dx):
-    h0 = tf.layers.dense(z, d0, tf.nn.relu)
-    return tf.layers.dense(h0, 2 * dx)
-
+    h0 = tf.keras.layers.Dense(d0, activation=tf.nn.relu)
+    h1 = tf.keras.layers.Dense(2 * dx)
+    return h1(h0(z))
 
 ######### 32
 
@@ -38,8 +38,8 @@ def qmodel(k):
     with inf.datamodel():
         qz_loc = inf.Parameter(tf.ones([k])*0.5, name="qz_loc")
         qz_scale = tf.math.softplus(inf.Parameter(tf.ones([k]),name="qz_scale"))
-
         qz = inf.Normal(qz_loc, qz_scale, name="z")
+
 
 
 

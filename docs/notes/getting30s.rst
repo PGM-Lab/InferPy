@@ -57,7 +57,7 @@ This might be defined outside the model as follows.
 
 .. literalinclude:: ../../examples/docs/getting30s/1.py
    :language: python3
-   :lines: 27-29
+   :lines: 27-30
 
 
 Now, we can instantiate our model and obtain samples (from the prior distributions).
