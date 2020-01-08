@@ -85,12 +85,15 @@ class ProbModel:
 
     def prior(self, target_names=None, data={}, size_datamodel=1):
 
+
         if size_datamodel > 1:
             variables, _ = self.expand_model(size_datamodel)
         elif size_datamodel == 1:
             variables = self.vars
         else:
             raise ValueError("size_datamodel must be greater than 0 but it is {}".format(size_datamodel))
+
+        util.init_uninit_vars()
 
         return Query(variables, target_names, data)
 

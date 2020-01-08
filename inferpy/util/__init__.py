@@ -12,7 +12,7 @@ from .runtime import tf_run_allowed, tf_run_ignored, set_tf_run
 from . import iterables
 from . import interceptor
 from . import name
-from .session import get_session, set_session, clear_session, new_session
+from .session import get_session, set_session, clear_session, new_session, init_uninit_vars
 
 
 __all__ = [
@@ -27,5 +27,6 @@ __all__ = [
     'get_session',
     'set_session',
     'clear_session',
-    'new_session'
+    'new_session',
+    'init_uninit_vars'
 ]

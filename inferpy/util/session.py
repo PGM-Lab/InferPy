@@ -47,3 +47,14 @@ def clear_session():
     if __session:
         __session.close()
     __session = tf.Session()
+
+
+def init_uninit_vars():
+    uninit_vars = set(get_session().run(tf.report_uninitialized_variables()))
+
+    if len(uninit_vars) > 0:
+        get_session().run(tf.variables_initializer(
+            [v for v in tf.global_variables() if
+             v.name.split(':')[0].encode('UTF-8') in uninit_vars]
+        ))
+
