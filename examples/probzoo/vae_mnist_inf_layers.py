@@ -14,7 +14,7 @@ def vae(k, d0, d, decoder):
         x = inf.Normal(decoder(d0, d, z), 1, name="x")
 
 def decoder(d0, d, z):
-    return inf.keras.Sequential([
+    return inf.layers.Sequential([
         tf.keras.layers.Dense(d0, activation=tf.nn.relu),
         tf.keras.layers.Dense(d),
     ])(z)
@@ -34,7 +34,7 @@ def qmodel(k, d0, d, encoder):
         qz_scale = tf.nn.softplus(output[:, k:])+0.01
         qz = inf.Normal(qz_loc, qz_scale, name="z")
 def encoder(x, d0, k):
-    return inf.keras.Sequential([
+    return inf.layers.Sequential([
         tf.keras.layers.Dense(d0, activation=tf.nn.relu),
         tf.keras.layers.Dense(2 * k)
     ])(x)

@@ -78,3 +78,15 @@ m = nlpca(k,d0,dx, decoder_keras)
 
 
 #80
+
+
+def decoder_seq(z,d0,dx):
+    return tf.keras.Sequential([
+        tf.keras.layers.Dense(d0, activation=tf.nn.relu, name="encoder_h0"),
+        tf.keras.layers.Dense(2 * dx, name="encoder_h1")
+    ])(z)
+
+
+# create an instance of the model
+m = nlpca(k,d0,dx, decoder_seq)
+
