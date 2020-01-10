@@ -73,7 +73,7 @@ Sequential model ``inf.layers.Sequential`` as follows.
    :language: python3
    :lines: 97-110
 
-Note that this model differs from the one provided by keras. A more detailed example
+Note that this model differs from the one provided by Keras. A more detailed example
 with Bayesian layers is given `here <../notes/bayesianNN.html>`_.
 
 

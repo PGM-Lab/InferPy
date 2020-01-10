@@ -2,8 +2,8 @@
 Bayesian Neural Networks
 ========================
 
-Neural networks are powerful aproximators. However, standard approaches
-for learning this aproximators does not take into account the inherent
+Neural networks are powerful approximators. However, standard approaches
+for learning this approximators does not take into account the inherent
 uncertainty we may have when fitting a model.
 
 .. code:: python3
@@ -23,7 +23,7 @@ Data
 ----
 
 We use some fake data. As neural nets of even one hidden layer can be
-universal function aproximators, we can see if we can train a simple
+universal function approximators, we can see if we can train a simple
 neural network to fit a noisy sinusoidal data, like this:
 
 .. code:: python3
@@ -112,9 +112,9 @@ as expected.
 
 However this model is unable to capture the uncertainty in the model.
 For example, when making predictions about a single point (e.g. around
-x=2.0) we can see we do not account aobut the inherent noise there is in
+x=2.0) we can see we do not account about the inherent noise there is in
 this predictions. In next section, we will what happen when we introduce
-a Bayesian approach using Inferpy.
+a Bayesian approach using InferPy.
 
 Bayesian Learning of Neural Networks
 ------------------------------------
@@ -126,7 +126,7 @@ Instead of just learning point estimates, we’re going to learn a
 distribution over variables that are consistent with the observed data.
 
 In Bayesian learning, the weights of the network are
-``random variables``. The output of the nework is another
+``random variables``. The output of the network is another
 ``random variable``. And the random variable of the output is the one
 that implicitlyl defines the ``loss function``. So, when making Bayesian
 learning we do not define ``loss functions``, we do define
@@ -139,7 +139,7 @@ neural network is quite straightforward. First we define our neural
 network using ``inf.layers.Sequential`` and layers of class
 ``tfp.layers.DenseFlipout``. Second, the input ``x`` and output ``y``
 are also define as random variables. More precisely, the output ``y`` is
-defined as a Gaussian random varible. The mean of the Gaussian is the
+defined as a Gaussian random variable. The mean of the Gaussian is the
 output of the neural network.
 
 .. code:: python3
@@ -158,10 +158,10 @@ output of the neural network.
             y = inf.Normal(loc = nnetwork(x) , scale= 1., name="y")
 
 To perform Bayesian learning, we resort the scalable variational methods
-available in Inferpy, which require the definition of a ``q`` model. For
+available in InferPy, which require the definition of a ``q`` model. For
 details,see the documentation about `Inference in
 Inferpy <https://inferpy.readthedocs.io/projects/develop/en/develop/notes/guideinference.html>`__.
-For a deeper theoretical despcription, read this
+For a deeper theoretical description, read this
 `paper <https://arxiv.org/abs/1908.03442>`__. In this case, the q
 variables approximating the NN are defined in a transparent way. For
 that reason we define an empty q model.
@@ -215,7 +215,7 @@ that reason we define an empty q model.
      4800 epochs	 1969.9132080078125....................
 
 As can be seen in the nex figure, the output of our model is not
-deterministic. So, we can caputure the uncertainty in the data. See for
+deterministic. So, we can capture the uncertainty in the data. See for
 example what happens now with the predictions at the point ``x=2.0``.
 See also what happens with the uncertainty in out-of-range predictions.
 

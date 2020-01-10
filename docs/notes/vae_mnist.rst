@@ -124,7 +124,7 @@ Edward does not provide any functionality for this purpose, so we will use Tenso
    :caption: Edward
 
 
-With Inferpy, this is done by simply using the method ``probmodel.posterior()`` as follows.
+With InferPy, this is done by simply using the method ``probmodel.posterior()`` as follows.
 
 .. literalinclude:: ../../examples/probzoo/vae_mnist.py
    :language: python3

@@ -136,7 +136,7 @@ class ``DataLoader``:
    :lines: 113-114
 
 
-Note that the column names must be the same than those in our model. In case
+Note that column names must be the same than those in our model. In case
 of being different or reading from a file without header, we might use
 the mapping functionality:
 

@@ -55,7 +55,7 @@ with ``@inf.probmodel``:
 
 
 In the 'Q' model we should include a q distribution for every non-observed variable in
-the 'P' model. These varaiables are also objects of class ``inferpy.RandomVariable``.
+the 'P' model. These variables are also objects of class ``inferpy.RandomVariable``.
 However, their parameters might be of type ``inf.Parameter``, which are objects
 encapsulating TensorFlow trainable variables.
 
@@ -99,7 +99,6 @@ Finally, we can access to the parameters of the posterior distributions:
 .. literalinclude:: ../../examples/docs/guideinference/1.py
    :language: python3
    :lines: 62-67
-
 
 
 

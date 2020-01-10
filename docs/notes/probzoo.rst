@@ -4,7 +4,7 @@
 Probabilistic Model Zoo
 ===========================
 
-In this section, we present the code for implementing some models in Inferpy.
+In this section, we present the code for implementing some models in InferPy.
 
 
 Bayesian Linear Regression
