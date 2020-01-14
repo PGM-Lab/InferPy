@@ -2,6 +2,7 @@ __version__ = '1.2.3'
 
 
 
+from .util.startup import *
 from .models import *  # noqa F401, F403
 from . import inference  # noqa F401
 from .contextmanager import datamodel  # noqa F401
