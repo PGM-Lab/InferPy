@@ -102,6 +102,58 @@ Finally, we can access to the parameters of the posterior distributions:
 
 
 
+Custom Loss function
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Following InferPy guiding principles, users can further configure the inference algorithm.
+For example, we might be interested in defining our own function to minimize when using VI. As
+an example, we define the following function taking as input parameters the random variables
+of the P and Q models (we assume that their sample sizes are consistent with the plates in the model). Note that the output of
+this function must be a tensor.
+
+.. literalinclude:: ../../examples/docs/guideinference/1.py
+   :language: python3
+   :lines: 77-89
+
+
+
+For using our defined loss function, we simply have to pass this function to the
+input parameter ``loss`` in the inference method constructor. For example:
+
+
+.. literalinclude:: ../../examples/docs/guideinference/1.py
+   :language: python3
+   :lines: 93-97
+
+
+After this, the rest of the code remains unchanged.
+
+
+
+
+
+Markov Chain Monte Carlo
+------------------------------
+
+Relying on Edward functionality, Markov Chain Monte Carlo (MCMC) is also available for doing inference on InferPy
+models. For this, an object of class ``inf.inference.MCMC`` is created and passed to the model when fitting the data.
+Unlike variational inference, a Q-model is not created for doing inference.
+
+
+.. literalinclude:: ../../examples/docs/guideinference/1.py
+   :language: python3
+   :lines: 99-102
+
+Now the posterior is represented as a set of samples. So we might need to aggregate them, e.g., using the mean:
+
+.. literalinclude:: ../../examples/docs/guideinference/1.py
+   :language: python3
+   :lines: 106-107
+
+
+
+
+
 Queries
 ---------
 
@@ -175,34 +227,6 @@ As a full example of the usage of the queries, we might consider the following c
 
 .. literalinclude:: ../../examples/docs/guideinference/2.py
    :language: python3
-
-
-
-Custom Loss function
----------------------------------
-
-Following InferPy guiding principles, users can further configure the inference algorithm.
-For example, we might be interested in defining our own function to minimize. As
-an example, we define the following function taking as input parameters the random variables
-of the P and Q models (we assume that their sample sizes are consistent with the plates in the model). Note that the output of
-this function must be a tensor.
-
-.. literalinclude:: ../../examples/docs/guideinference/1.py
-   :language: python3
-   :lines: 77-89
-
-
-
-For using our defined loss function, we simply have to pass this function to the
-input parameter ``loss`` in the inference method constructor. For example:
-
-
-.. literalinclude:: ../../examples/docs/guideinference/1.py
-   :language: python3
-   :lines: 93-97
-
-
-After this, the rest of the code remains unchanged.
 
 
 
