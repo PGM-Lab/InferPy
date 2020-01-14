@@ -99,15 +99,25 @@ class MCMC(Inference):
     ########################
 
     def _generate_sample_chain(self, data):
+
+        # check if model should be expanded for getting the the initial state
+        local_hidden = [n for n, v in self.pmodel.vars.items() if v.is_datamodel and n not in data.keys()]
+        if len(local_hidden)>0:
+            init_vars, _ = self.pmodel.expand_model(self.plate_size)
+        else:
+            init_vars = self.pmodel.vars
+
+        # sample the initial state
         self.hiddenvars_name = []
         initial_state = []
-        for name, var in self.pmodel.vars.items():
+        for name, var in init_vars.items():
             if name not in data:
                 # sample vars to use them as initial state
                 initial_state.append(var)
                 self.hiddenvars_name.append(name)
         initial_state = util.get_session().run(initial_state)
 
+        # initialize MCMC
         hmc_kernel = tfp.mcmc.HamiltonianMonteCarlo(
             target_log_prob_fn=self._target_log_prob_fn,
             step_size=self.step_size,

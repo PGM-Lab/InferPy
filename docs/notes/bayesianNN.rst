@@ -110,11 +110,9 @@ as expected.
 .. image:: ../_static/img/notebooks/output_7_0.png
 
 
-However this model is unable to capture the uncertainty in the model.
-For example, when making predictions about a single point (e.g. around
-x=2.0) we can see we do not account about the inherent noise there is in
-this predictions. In next section, we will what happen when we introduce
-a Bayesian approach using InferPy.
+However, this model is unable to capture the uncertainty in the model. For example, when making predictions about a
+single point (e.g. around x=2.0), we can see we do not have into account the inherent noise there is in this prediction.
+In next section, we will what happen when we introduce a Bayesian approach using InferPy.
 
 Bayesian Learning of Neural Networks
 ------------------------------------
@@ -159,11 +157,11 @@ output of the neural network.
 
 To perform Bayesian learning, we resort the scalable variational methods
 available in InferPy, which require the definition of a ``q`` model. For
-details,see the documentation about `Inference in
+details, see the documentation about `Inference in
 Inferpy <https://inferpy.readthedocs.io/projects/develop/en/develop/notes/guideinference.html>`__.
 For a deeper theoretical description, read this
 `paper <https://arxiv.org/abs/1908.03442>`__. In this case, the q
-variables approximating the NN are defined in a transparent way. For
+variables approximating the NN are defined in a transparent manner. For
 that reason we define an empty q model.
 
 .. code:: python3
