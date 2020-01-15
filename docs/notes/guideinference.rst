@@ -76,7 +76,7 @@ the batch size:
 
 .. literalinclude:: ../../examples/docs/guideinference/1.py
    :language: python3
-   :lines: 144-144
+   :lines: 111
 
 
 Then we must instantiate our 'P' model and fit the data with the inference

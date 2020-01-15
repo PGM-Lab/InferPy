@@ -20,6 +20,14 @@ inferpy.contextmanager.evidence module
    :undoc-members:
    :show-inheritance:
 
+inferpy.contextmanager.layer\_registry module
+---------------------------------------------
+
+.. automodule:: inferpy.contextmanager.layer_registry
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 inferpy.contextmanager.randvar\_registry module
 -----------------------------------------------
 

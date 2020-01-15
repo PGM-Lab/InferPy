@@ -64,7 +64,7 @@ that are available at ``tfp.layers``, i.e.:
 
 
 The weights of these layers are drawn from distributions whose posteriors are calculated
-using variational inference. For more details, check the official `tfp documentation<https://www.tensorflow.org/probability/api_docs/python/tfp/layers/dense_variational>`_.
+using variational inference. For more details, check the official `tfp documentation <https://www.tensorflow.org/probability/api_docs/python/tfp/layers/dense_variational>`_.
 For its usage, we simply need to include the in a InferPy
 Sequential model ``inf.layers.Sequential`` as follows.
 

@@ -19,6 +19,14 @@ inferpy.inference.inference module
    :undoc-members:
    :show-inheritance:
 
+inferpy.inference.mcmc module
+-----------------------------
+
+.. automodule:: inferpy.inference.mcmc
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 
 Module contents
 ---------------

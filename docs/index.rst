@@ -135,9 +135,10 @@ on the first version of Edward, which is no longer under development:
    modules/inferpy
    modules/inferpy.contextmanager
    modules/inferpy.data
-   modules/inferpy.exceptions
    modules/inferpy.inference
+   modules/inferpy.layers
    modules/inferpy.models
+   modules/inferpy.queries
    modules/inferpy.util
 
 

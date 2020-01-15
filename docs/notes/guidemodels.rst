@@ -210,8 +210,7 @@ Supported Probability Distributions
 
 
 Supported probability distributions are located in the package ``inferpy.models``. All of them
-have ``inferpy.models.RandomVariable`` as the superclass. A list with all the supported distributions can be obtained as
- follows.
+have ``inferpy.models.RandomVariable`` as the superclass. A list with all the supported distributions can be obtained as follows.
 
 
 .. literalinclude:: ../../examples/docs/guidemodels/3.py

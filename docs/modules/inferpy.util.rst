@@ -52,6 +52,14 @@ inferpy.util.session module
    :undoc-members:
    :show-inheritance:
 
+inferpy.util.startup module
+---------------------------
+
+.. automodule:: inferpy.util.startup
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 inferpy.util.tf\_graph module
 -----------------------------
 

@@ -9,6 +9,7 @@ Subpackages
    inferpy.contextmanager
    inferpy.data
    inferpy.inference
+   inferpy.layers
    inferpy.models
    inferpy.queries
    inferpy.util
