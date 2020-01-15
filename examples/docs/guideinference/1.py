@@ -105,3 +105,7 @@ m.fit({"x": x_train}, MC)
 
 # extract the posterior of z
 hidden_encoding = m.posterior("z").parameters()["samples"].mean(axis=0)
+
+
+
+SVI = inf.inference.SVI(qmodel(k=1,d=2), epochs=1000, batch_size=200)

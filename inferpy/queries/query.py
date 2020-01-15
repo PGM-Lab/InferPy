@@ -76,7 +76,8 @@ class Query:
         If `names` is a list, then return the parameters specified in the list (if exists) for all the Random Variables.
         If `names` is a dict, then return all the parameters specified (value) for each Random Variable (key).
 
-        NOTE: If tf_run=True, but any of the returned parameters is not a Tensor *and therefore cannot be evaluated)
+        Note:
+            If `tf_run=True`, but any of the returned parameters is not a Tensor and therefore cannot be evaluated)
             this returns a not evaluated dict (because the evaluation will raise an Exception)
 
         Args:
@@ -84,6 +85,7 @@ class Query:
 
         Returns:
             A dict, where the keys are the names of the Random Variables and the values a dict of parameters (name-value)
+
         """
         # argument type checking
         if not(names is None or isinstance(names, (list, dict))):

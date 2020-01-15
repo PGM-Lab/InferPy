@@ -7,10 +7,14 @@ import numpy as np
 def load_data(vectorize=True, num_instances=None, num_instances_test=None, digits=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]):
     """ Loads the MNIST datase
 
-    :param vectorize: if true, each 2D image is transformed into a 1D vector
-    :param num_instances: total number of images loaded
-    :param digits: list of integers indicating the digits to be considered
-    :return:  Tuple of Numpy arrays: `(x_train, y_train), (x_test, y_test)
+        Args:
+            vectorize: if true, each 2D image is transformed into a 1D vector
+            num_instances: total number of images loaded
+            digits: list of integers indicating the digits to be considered
+
+        Returns:
+            Tuple of Numpy arrays: `(x_train, y_train), (x_test, y_test)
+
     """
 
     (x_train, y_train), (x_test, y_test) = mnist.load_data()

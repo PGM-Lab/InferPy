@@ -1,13 +1,18 @@
 
 def get_shape(x):
-    """
-    Get the shape of an element x. If it is an element with a shape attribute, return it. If it is a list with more than
+    """ Get the shape of an element x. If it is an element with a shape attribute, return it. If it is a list with more than
     one element, compute the shape by checking the len, and the shape of internal elements. In that case, the shape must
     be consistent. Finally, in other case return () as shape.
 
-    :param x: The element to compute its shape
-    :raises : class `ValueError`: list shape not consistent
-    :returns: A tuple with the shape of `x`
+    Args:
+        x: The element to compute its shape
+
+    Raises:
+        class `ValueError`: list shape not consistent
+
+    Returns:
+        A tuple with the shape of `x`
+
     """
     if isinstance(x, list) and len(x) > 0:
         shapes = [get_shape(subx) for subx in x]
