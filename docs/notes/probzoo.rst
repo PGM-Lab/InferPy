@@ -113,5 +113,9 @@ one in the Q (encoder). Its code in InferPy is shown below,
 
 
 
+Note that in this example objects of class ``tf.layers``, but
+keras or tfp layers are compatible as well.
+
+
 
 

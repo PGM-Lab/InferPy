@@ -38,25 +38,25 @@ from inferpy.data import mnist
 
 ############## Edward ##############
 
-def vae(k, d0, dx, N, decoder):
+def vae(k, d0, dx, N):
     z = ed.Normal(loc=tf.ones(k), scale=1., sample_shape=N, name="z")
+
+    decoder = inf.layers.Sequential([
+        tf.keras.layers.Dense(d0, activation=tf.nn.relu, name="h0"),
+        tf.keras.layers.Dense(dx, name="h1")],
+    name="decoder")
     x = ed.Normal(loc=decoder(z, d0, dx), scale=1., name="x")
     return z, x
 
-# Neural networks for decoding and encoding
-def decoder(z, d0, dx):
-    h0 = tf.keras.layers.Dense(d0, activation=tf.nn.relu, name="decoder_h0")
-    h1 = tf.keras.layers.Dense(dx, name="decoder_h1")
-    return h1(h0(z))
 
-def encoder(x, d0, k):
-    h0 = tf.keras.layers.Dense(d0, activation=tf.nn.relu, name="encoder_h0")
-    h1 = tf.keras.layers.Dense(2*k, name="encoder_h1")
-    return h1(h0(x))
 
 # Q model for making inference which is parametrized by the data x.
-def qmodel(k, d0, x, encoder):
-    output = encoder(x, d0, k)
+def qmodel(k, d0, x):
+    encoder = tf.keras.Sequential([
+        tf.keras.layers.Dense(d0, activation=tf.nn.relu, name="h0"),
+        tf.keras.layers.Dense(2 * k, name="h1")],
+    name = "encoder")
+    output = encoder(x)
     qz_loc = output[:, :k]
     qz_scale = tf.nn.softplus(output[:, k:]) + scale_epsilon
     qz = ed.Normal(loc=qz_loc, scale=qz_scale, name="qz")
@@ -65,7 +65,7 @@ def qmodel(k, d0, x, encoder):
 
 
 
-
+#68
 
 # Inference
 ############################
@@ -92,10 +92,10 @@ batch = tf.data.Dataset.from_tensor_slices(x_train)\
         .repeat()\
         .make_one_shot_iterator().get_next()
 
-qz = qmodel(k, d0, batch, encoder)
+qz = qmodel(k, d0, batch)
 
 with ed.interception(ed.make_value_setter(z=qz, x=batch)):
-    pz, px = vae(k, d0, dx, M, decoder)
+    pz, px = vae(k, d0, dx, M)
 
 energy = N/M*tf.reduce_sum(pz.distribution.log_prob(pz.value)) + \
          N/M*tf.reduce_sum(px.distribution.log_prob(px.value))
@@ -145,7 +145,7 @@ def predictive_nn(x, beta0, alpha0, beta1, alpha1):
 
     return output
 
-weights_encoder = [sess.run(get_tfvar("encoder_h" + name)) for name in ["0/kernel", "0/bias", "1/kernel", "1/bias",]]
+weights_encoder = [sess.run(get_tfvar("encoder/h" + name)) for name in ["0/kernel", "0/bias", "1/kernel", "1/bias",]]
 postz = sess.run(predictive_nn(x_train, *weights_encoder)[:, :k])
 
 
@@ -174,7 +174,7 @@ plt.show()
 
 ############## Edward ##############
 
-weights_decoder = [sess.run(get_tfvar("decoder_h" + name)) for name in ["0/kernel", "0/bias", "1/kernel", "1/bias",]]
+weights_decoder = [sess.run(get_tfvar("decoder/h" + name)) for name in ["0/kernel", "0/bias", "1/kernel", "1/bias",]]
 x_gen = sess.run(predictive_nn(postz, *weights_decoder)[:, :dx])
 
 nx, ny = (3,3)

@@ -38,35 +38,35 @@ mnist.plot_digits(x_train, grid=[5,5])
 
 ############## Inferpy ##############
 
+# P model and the  decoder NN
 @inf.probmodel
-def vae(k, d0, dx, decoder):
+def vae(k, d0, dx):
     with inf.datamodel():
         z = inf.Normal(tf.ones(k), 1,name="z")
-        x = inf.Normal(decoder(z, d0, dx), 1, name="x")
 
-# Neural networks for decoding and encoding
-def decoder(z, d0, dx):
-    h0 = tf.keras.layers.Dense(d0, activation=tf.nn.relu)
-    h1 = tf.keras.layers.Dense(dx)
-    return h1(h0(z))
+        decoder = inf.layers.Sequential([
+            tf.keras.layers.Dense(d0, activation=tf.nn.relu),
+            tf.keras.layers.Dense(dx)])
 
-def encoder(x, d0, k):
-    h0 = tf.keras.layers.Dense(d0, activation=tf.nn.relu)
-    h1 = tf.keras.layers.Dense(2*k)
-    return h1(h0(x))
+        x = inf.Normal(decoder(z), 1, name="x")
 
 # Q model for making inference
 @inf.probmodel
-def qmodel(k, d0, dx, encoder):
+def qmodel(k, d0, dx):
     with inf.datamodel():
         x = inf.Normal(tf.ones(dx), 1, name="x")
-        output = encoder(x, d0, k)
+
+        encoder = tf.keras.Sequential([
+            tf.keras.layers.Dense(d0, activation=tf.nn.relu),
+            tf.keras.layers.Dense(2 * k)])
+
+        output = encoder(x)
         qz_loc = output[:, :k]
         qz_scale = tf.nn.softplus(output[:, k:]) + scale_epsilon
         qz = inf.Normal(qz_loc, qz_scale, name="z")
 
 
-
+#69
 
 
 
@@ -75,8 +75,8 @@ def qmodel(k, d0, dx, encoder):
 
 ############## Inferpy ##############
 
-m = vae(k, d0, dx, decoder)
-q = qmodel(k, d0, dx, encoder)
+m = vae(k, d0, dx)
+q = qmodel(k, d0, dx)
 
 # set the inference algorithm
 SVI = inf.inference.SVI(q, epochs=1000, batch_size=M)
