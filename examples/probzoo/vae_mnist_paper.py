@@ -10,37 +10,32 @@ N, M = 1000, 100 # data and batch size
 
 # P model and the  decoder NN
 @inf.probmodel
-def vae(k, d0, d, decoder):
+def vae(k, d0, d):
     with inf.datamodel():
         z = inf.Normal(tf.ones(k), 1,name="z")
-        x = inf.Normal(decoder(d0, d, z), 1, name="x")
-
-def decoder(d0, d, z):
-    return inf.layers.Sequential([
-        tfp.layers.DenseFlipout(d0, activation=tf.nn.relu),
-        tf.keras.layers.Dense(d),
-    ])(z)
-p = vae(k=2, d0=100, d=28*28, decoder=decoder)
+        decoder = inf.layers.Sequential([
+            tfp.layers.DenseFlipout(d0, activation=tf.nn.relu),
+            tf.keras.layers.Dense(d)])
+        x = inf.Normal(decoder(z), 1, name="x")
+p = vae(k=2, d0=100, d=28*28)
 
 
 # Q model and the encoder NN
 @inf.probmodel
-def qmodel(k, d0, d, encoder):
+def qmodel(k, d0, d):
     with inf.datamodel():
         x = inf.Normal(tf.ones(d), 1, name="x")
-        output = encoder(x, d0, k)
+        encoder = tf.keras.Sequential([
+            tf.keras.layers.Dense(d0, activation=tf.nn.relu),
+            tf.keras.layers.Dense(2 * k)])
+        output = encoder(x)
         qz_loc = output[:, :k]
         qz_scale = tf.nn.softplus(output[:, k:])+0.01
         qz = inf.Normal(qz_loc, qz_scale, name="z")
-def encoder(x, d0, k):
-    return tf.keras.Sequential([
-        tf.keras.layers.Dense(d0, activation=tf.nn.relu),
-        tf.keras.layers.Dense(2 * k)
-    ])(x)
-q = qmodel(k=2, d0=100, d=28*28, encoder=encoder)
+q = qmodel(k=2, d0=100, d=28*28)
 
 # set the inference algorithm
-SVI = inf.inference.SVI(q, epochs=1000, batch_size=M)
+SVI = inf.inference.SVI(q, epochs=1000, batch_size=100)
 
 # learn the parameters
 p.fit({"x": x_train}, SVI)
