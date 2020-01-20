@@ -30,7 +30,7 @@ a list of strings (i.e., for datasets distributed across multiple CSV files):
 
 
 
-A data loader can be built indistinctly from  CSV files with or without a header.
+A data loader can be built from  CSV files with or without a header.
 However, in case of a list of files,  the presence of the header and column names must
 be consistent among all the files.
 
@@ -65,7 +65,7 @@ Data in memory
 ------------------
 
 Analogously, a data loader can be built from data already loaded into memory, e.g.,
-pandas data. For this, we will use the class ``SampleDictLoader`` which can be
+pandas data. To do this, we will use the class ``SampleDictLoader`` which can be
 instantiated as follows.
 
 
@@ -76,7 +76,7 @@ instantiated as follows.
 Properties
 ---------------
 
-From any object of class ``DataLoader`` we might obtain the size, (i.e., number of instances)
+From any object of class ``DataLoader`` we can obtain the size, (i.e., number of instances)
 of the list of variable names:
 
 
@@ -85,7 +85,7 @@ of the list of variable names:
    :lines: 33-36
 
 
-In case of a ``CsvLoader``, we might determine if the source files have or not
+In case of a ``CsvLoader``, we can determine if the source files have or not
 a header:
 
 
@@ -109,8 +109,8 @@ Data can be loaded as a dictionary (of numpy objects) or as TensorFlow dataset o
 Usage with probabilistic models
 ----------------------------------
 
-Clearly, making inference in a probabilistic model is the final goal of loading data.
-Thus, consider the following code of a simple linear regression:
+Making inference in a probabilistic model is the final goal of loading data.
+Consider the following code of a simple linear regression:
 
 
 .. literalinclude:: ../../examples/docs/guidedata/1.py
@@ -127,7 +127,7 @@ takes a dictionary of samples as an input parameter:
    :lines: 109
 
 
-The ``data`` parameter can be straightforward replaced by an object of
+The ``data`` parameter can be replaced by an object of
 class ``DataLoader``:
 
 
@@ -136,8 +136,8 @@ class ``DataLoader``:
    :lines: 113-114
 
 
-Note that column names must be the same than those in our model. In case
-of being different or reading from a file without header, we might use
+Note that column names must be the same as those in the model. In case
+of being different or reading from a file without header, we use
 the mapping functionality:
 
 

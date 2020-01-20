@@ -29,8 +29,8 @@ Dependencies
 
 Note that your environment must be configured to use the GPU correctly. The InferPy
 package offers an extra requirement option to install the GPU dependencies. However,
-take in mind that you must install the non-python dependencies by yourself. For more
-details see this link  `TensorFlow-GPU <https://www.tensorflow.org/install/gpu>`_.
+bear in mind that you must install the non-python dependencies by yourself. For more
+details see the link  `TensorFlow-GPU <https://www.tensorflow.org/install/gpu>`_.
 To use the extra requirements option in InferPy just use the keyword ``gpu``:
 
 .. code-block:: bash
@@ -43,7 +43,7 @@ To use the extra requirements option in InferPy just use the keyword ``gpu``:
 Configure default float type
 --------------------------------
 
-As well as it is done in `Keras <https://www.tensorflow.org/api_docs/python/tf/keras/backend/floatx>`_, InferPy allows
+Just like in `Keras <https://www.tensorflow.org/api_docs/python/tf/keras/backend/floatx>`_, InferPy allows
 to specify the default float type: e.g. float16, float32, float64.
 
 

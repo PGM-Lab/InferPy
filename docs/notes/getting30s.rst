@@ -18,8 +18,8 @@ For further details, check the `Installation <installation.html>`_ section.
 30 seconds to InferPy
 --------------------------
 
-The core data structures of InferPy is a **probabilistic model**,
-defined as a set of **random variables** with a conditional dependency
+The core data structure of InferPy is a **probabilistic model**,
+defined as a set of **random variables** with a conditional independence
 structure. A **random variable** is an object
 parameterized by a set of tensors.
 
@@ -47,12 +47,12 @@ the variables defined inside this function:
    :lines: 14-22
 
 
-The construct ``with inf.datamodel()``, which resembles to the **plateau notation**, will replicate
-N times the variables enclosed, where N is the size of our data.
+The construct ``with inf.datamodel()``, which resembles the **plateau notation**, will replicate
+N times the variables enclosed, where N is the data size.
 
 
 In the previous model, the input argument ``decoder`` must be a function implementing a neural network.
-This might be defined outside the model as follows.
+This can be defined outside the model as follows.
 
 
 .. literalinclude:: ../../examples/docs/getting30s/1.py
@@ -78,7 +78,7 @@ In variational inference, we need to define a Q-model as follows.
 
 
 
-Afterward, we define the parameters of our inference algorithm and fit the data to the model.
+Afterwards, we define the parameters of the inference algorithm and fit the model to the data.
 
 
 
@@ -94,7 +94,7 @@ user the full control if needed.
 
 
 Finally, we might extract the posterior of ``z``, which is basically the hidden representation
-of our data.
+of the data.
 
 
 

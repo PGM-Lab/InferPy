@@ -15,7 +15,7 @@ or equivalently
    $ pip install inferpy
 
 
-Previous commands install our package only with the dependencies for a basic usage.
+The previous commands install our package only with the dependencies for a basic usage.
 Instead, additional dependencies can be installed using the following keywords:
 
 .. code:: bash
@@ -27,7 +27,7 @@ Instead, additional dependencies can be installed using the following keywords:
    $ pip install inferpy[datasets]          # for using datasets at inf.data
 
 
-If we desire to install InferPy including all the dependencies, use the keyword
+If we want to install InferPy including all the dependencies, use the keyword
 ``all``, that is:
 
 

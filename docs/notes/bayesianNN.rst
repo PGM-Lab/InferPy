@@ -3,7 +3,7 @@ Bayesian Neural Networks
 ========================
 
 Neural networks are powerful approximators. However, standard approaches
-for learning this approximators does not take into account the inherent
+for learning this approximators do not take into account the inherent
 uncertainty we may have when fitting a model.
 
 .. code:: python3
@@ -45,8 +45,7 @@ neural network to fit a noisy sinusoidal data, like this:
 Training a neural network
 -------------------------
 
-We employ a simple feedforward network with 20 hidden units to try to
-fit the data.
+For illustrating We employ a simple feedforward network with 20 hidden units.
 
 .. code:: python3
 

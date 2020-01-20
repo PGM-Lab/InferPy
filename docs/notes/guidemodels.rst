@@ -29,7 +29,7 @@ For example, a Bayesian PCA model has the following graphical structure,
 
    Bayesian PCA
 
-The **prior model** are the variables :math:`w_k`. The **data model** is the part of the model surrounded by the box indexed by **N**.
+The **prior model** is composed by the variables :math:`\bf{w}_k`. The **data model** is the part of the model surrounded by the box indexed by **N**.
 
 
 And this is how this Bayesian PCA model is defined in InferPy:
@@ -49,7 +49,7 @@ independent** given the previous random variables (if any) defined
 outside the **with** statement. The plateau size will be later automatically calculated,
 so there is no need to specify it. Yet, this construct has an optional input parameter for specifying
 its size, e.g., ``with inf.datamodel(size=N)``. This should be consistent with the size of
-our data.
+the data.
 
 .. Internally, ``with inf.replicate(size = N)`` construct modifies the
    random variable shape by adding an extra dimension. For the above
@@ -60,7 +60,7 @@ Random Variables
 ----------------
 
 Any random variable in InferPy encapsulates an equivalent one in Edward 2, and hence it also has associated
-a distribution object from TensorFlow Probability. These can be accessed using the properties ``var`` and
+a distribution object from tensorflow-probability. These can be accessed using the properties ``var`` and
 ``distribution`` respectively:
 
 .. literalinclude:: ../../examples/docs/guidemodels/2.py
@@ -68,7 +68,7 @@ a distribution object from TensorFlow Probability. These can be accessed using t
    :lines: 12-19
 
 
-Even more, InferPy random variables inherit all the properties and methods from Edward2 variables or TensorFlow
+InferPy random variables inherit all the properties and methods from Edward2 variables or TensorFlow
 Probability distributions (in this order or priority). For example:
 
 
@@ -77,9 +77,9 @@ Probability distributions (in this order or priority). For example:
    :lines: 26-33
 
 
-In the previous code, ``value`` is inherited form the encapsulated Edward2 object while ``sample()`` and the
+In the code, ``value`` is inherited form the encapsulated Edward2 object while ``sample()`` and the
 parameter ``loc`` are obtained from the distribution object. Note that the method ``sample()`` returns
-evaluated tensors. In case of desiring it not to be evaluated, simply use the input parameter ``tf_run`` as follows.
+evaluated tensors. It can be avoided using the input parameter ``tf_run`` as follows.
 
 .. literalinclude:: ../../examples/docs/guidemodels/2.py
    :language: python3
@@ -169,7 +169,7 @@ below.
    :lines: 6-13
 
 
-Note that any variable in a model can be initialized with a name. If not provided, names generated
+Note that any variable in a model can be initialized with a name. Otherwise, names generated
 automatically will be used. However, it is highly convenient to explicitly specify the name of a random variable because
 in this way it will be able to be referenced in some inference stages.
 
@@ -181,8 +181,8 @@ The model must be **instantiated** before it can be used. This is done by simply
    :lines: 20-22
 
 
-Now we can use the model with the prior probabilities. For example,
-we might get a sample or access to the distribution parameters:
+Now we are ready to use the model with the prior probabilities. For example,
+we might get a sample or access the distribution parameters:
 
 .. literalinclude:: ../../examples/docs/guidemodels/3.py
    :language: python3
@@ -217,5 +217,5 @@ have ``inferpy.models.RandomVariable`` as the superclass. A list with all the su
    :language: python3
    :lines: 76-94
 
-Note that these are all the distributions in Edward 2 and hence in TensorFlow Probability. Their
+Note that these are all the distributions in Edward 2 and hence in tensorflow-probability. Their
 input parameters will be the same.

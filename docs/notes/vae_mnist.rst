@@ -1,7 +1,7 @@
 Variational auto-encoder (VAE) in Edward and Inferpy
 ===========================================================
 
-Here we make a comparison between TensorFlow Probability/Edward 2 and InferPy. As a running example, we will consider
+Here we make a comparison between tensorflow-probability/Edward 2 and InferPy. As a running example, we will consider
 a variational auto-encoder (VAE) trained with the MNIST dataset containing handwritten digits. For the inference, SVI method
 will be used.
 
@@ -15,7 +15,7 @@ First, we import the required packages and set the global variables. This code i
    :language: python3
    :lines: 1-26
 
-Then, we can load and plot the MNIST dataset using the functionality provided at ``inferpy.data.mnist``.
+Then, we can load and plot the MNIST dataset using the functionality provided by ``inferpy.data.mnist``.
 
 .. literalinclude:: ../../examples/probzoo/vae_mnist.py
    :language: python3
@@ -43,7 +43,7 @@ definition using Edward is shown below.
    :caption: Edward
 
 
-Whereas the equivalent code using InferPy is:
+The equivalent code using InferPy is:
 
 
 .. literalinclude:: ../../examples/probzoo/vae_mnist.py
@@ -57,7 +57,7 @@ datamodel construct). Instead, this will be automatically obtained at inference 
 
 
 In both cases, models are defined as functions, though InferPy requires to use the decorator ``@inf.probmodel``. On the
-other, even though  neural networks can be the same, in the Edward code these are defined with a name as this
+other hand, even though  neural networks can be the same, in the Edward code these are defined with a name as this
 will be later used for access to the learned weights.
 
 Inference
@@ -113,7 +113,7 @@ algorithm object previously defined.
 Usage of the inferred model
 ----------------------------------
 
-Once optimization is finished, we might consider using the model with the inferred parameters. For example, we
+Once optimization is finished, we can use the model with the inferred parameters. For example, we
 might obtain the hidden representation of the original data, which is done by passing such data through the decoder.
 Edward does not provide any functionality for this purpose, so we will use TensorFlow code:
 

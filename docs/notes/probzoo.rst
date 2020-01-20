@@ -103,7 +103,7 @@ Variational auto-encoder (VAE)
 --------------------------------------
 
 
-Similarly to the models PCA and NLPCA, a variational autoencoder allows to perform dimensionality
+Similarly to the PCA and NLPCA models, a variational auto-encoder allows to perform dimensionality
 reduction. However a VAE will contain a neural network in the P model (decoder) and another
 one in the Q (encoder). Its code in InferPy is shown below,
 
@@ -113,7 +113,7 @@ one in the Q (encoder). Its code in InferPy is shown below,
 
 
 
-Note that in this example objects of class ``tf.layers``, but
+Note that in this example objects of class ``tf.layers`` are used, but
 keras or tfp layers are compatible as well.
 
 

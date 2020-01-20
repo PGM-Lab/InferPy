@@ -13,7 +13,7 @@ place. This tensor :math:`x^*` contains the samples of the random
 variable :math:`x`, i.e. :math:`x^* \sim p(x|\theta)`. In this way,
 random variables can be involved in complex deterministic operations
 containing deep neural networks, math operations and other libraries
-compatible with Tensorflow (such as Keras).
+compatible with TensorFlow (such as Keras).
 
 Bayesian deep learning or deep probabilistic programming embraces the
 idea of employing deep neural networks within a probabilistic model in
@@ -43,7 +43,7 @@ decoder function as follows.
    :language: python3
    :lines: 68-75
 
-InferPy is also compatible with keras models such as `tf.keras.Sequential``:
+InferPy is also compatible with Keras models such as `tf.keras.Sequential``:
 
 .. literalinclude:: ../../examples/docs/guidebayesian/1.py
    :language: python3
@@ -54,7 +54,7 @@ Bayesian Neural Networks
 -----------------------------------
 
 InferPy allows the definition of Bayesian NN using the same dense variational layers
-that are available at ``tfp.layers``, i.e.:
+that are available in ``tfp.layers``, i.e.:
 
 - DenseFlipout: Densely-connected layer class with Flipout estimator.
 
@@ -65,7 +65,7 @@ that are available at ``tfp.layers``, i.e.:
 
 The weights of these layers are drawn from distributions whose posteriors are calculated
 using variational inference. For more details, check the official `tfp documentation <https://www.tensorflow.org/probability/api_docs/python/tfp/layers/dense_variational>`_.
-For its usage, we simply need to include the in a InferPy
+For its usage, we simply need to include them in an InferPy
 Sequential model ``inf.layers.Sequential`` as follows.
 
 
