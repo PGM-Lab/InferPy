@@ -3,7 +3,7 @@ Bayesian Neural Networks
 ========================
 
 Neural networks are powerful approximators. However, standard approaches
-for learning this approximators do not take into account the inherent
+for learning this approximators does not take into account the inherent
 uncertainty we may have when fitting a model.
 
 .. code:: python3
@@ -42,10 +42,11 @@ neural network to fit a noisy sinusoidal data, like this:
 .. image:: ../_static/img/notebooks/output_3_0.png
 
 
-Training a neural network
--------------------------
+Learning Standard Neural Networks
+---------------------------------
 
-For illustrating We employ a simple feedforward network with 20 hidden units.
+We employ a simple feedforward network with 20 hidden units to learn the
+model.
 
 .. code:: python3
 
@@ -65,25 +66,27 @@ For illustrating We employ a simple feedforward network with 20 hidden units.
 .. parsed-literal::
 
     Epoch 1/1000
-    100/100 [==============================] - 0s 2ms/sample - loss: 396.0843
+    100/100 [==============================] - 0s 2ms/sample - loss: 369.0472
     Epoch 2/1000
-    100/100 [==============================] - 0s 106us/sample - loss: 362.0025
+    100/100 [==============================] - 0s 110us/sample - loss: 333.4858
     Epoch 3/1000
-    100/100 [==============================] - 0s 69us/sample - loss: 349.1164
-    [...]
+    100/100 [==============================] - 0s 58us/sample - loss: 339.3102
+	[...]
+    Epoch 997/1000
+    100/100 [==============================] - 0s 52us/sample - loss: 78.6340
     Epoch 998/1000
-    100/100 [==============================] - 0s 54us/sample - loss: 17.3651
+    100/100 [==============================] - 0s 50us/sample - loss: 78.3568
     Epoch 999/1000
-    100/100 [==============================] - 0s 85us/sample - loss: 18.4519
+    100/100 [==============================] - 0s 37us/sample - loss: 78.4461
     Epoch 1000/1000
-    100/100 [==============================] - 0s 87us/sample - loss: 18.3769
+    100/100 [==============================] - 0s 49us/sample - loss: 76.3849
 
 
 
 
 .. parsed-literal::
 
-    <tensorflow.python.keras.callbacks.History at 0x12e6eb3c8>
+    <tensorflow.python.keras.callbacks.History at 0x139726668>
 
 
 
@@ -109,12 +112,14 @@ as expected.
 .. image:: ../_static/img/notebooks/output_7_0.png
 
 
-However, this model is unable to capture the uncertainty in the model. For example, when making predictions about a
-single point (e.g. around x=2.0), we can see we do not have into account the inherent noise there is in this prediction.
-In next section, we will what happen when we introduce a Bayesian approach using InferPy.
+However, the model uncertainty is not appropriately captured. For
+example, when making predictions about a single point (e.g. around
+x=2.0), we can see we do not have into account the inherent noise there
+is in the prediction. In the next section, we will what happen when we
+introduce a Bayesian approach using InferPy.
 
-Bayesian Learning of Neural Networks
-------------------------------------
+Learning Bayesian Neural Networks
+---------------------------------
 
 `Bayesian
 modeling <http://mlg.eng.cam.ac.uk/zoubin/papers/NatureReprint15.pdf>`__
@@ -123,20 +128,20 @@ Instead of just learning point estimates, we’re going to learn a
 distribution over variables that are consistent with the observed data.
 
 In Bayesian learning, the weights of the network are
-``random variables``. The output of the network is another
-``random variable``. And the random variable of the output is the one
-that implicitlyl defines the ``loss function``. So, when making Bayesian
-learning we do not define ``loss functions``, we do define
-``random variables``. For more information you can check `this
+``random variables``. The output of the nework is another
+``random variable`` which is the one that implicitlyl defines the
+``loss function``. So, when making Bayesian learning we do not define
+``loss functions``, we do define ``random variables``. For more
+information you can check `this
 talk <https://www.cs.ox.ac.uk/people/yarin.gal/website/PDFs/2017_OReilly_talk.pdf>`__
 and this `paper <https://arxiv.org/abs/1908.03442>`__.
 
 In `Inferpy <https://inferpy.readthedocs.io>`__, defining a Bayesian
-neural network is quite straightforward. First we define our neural
+neural network is quite straightforward. First we define the neural
 network using ``inf.layers.Sequential`` and layers of class
 ``tfp.layers.DenseFlipout``. Second, the input ``x`` and output ``y``
-are also define as random variables. More precisely, the output ``y`` is
-defined as a Gaussian random variable. The mean of the Gaussian is the
+are also defined as random variables. More precisely, the output ``y``
+is defined as a Gaussian random varible. The mean of the Gaussian is the
 output of the neural network.
 
 .. code:: python3
@@ -154,11 +159,11 @@ output of the neural network.
 
             y = inf.Normal(loc = nnetwork(x) , scale= 1., name="y")
 
-To perform Bayesian learning, we resort the scalable variational methods
-available in InferPy, which require the definition of a ``q`` model. For
-details, see the documentation about `Inference in
+To perform Bayesian learning, we resort to the scalable variational
+methods available in InferPy, which require the definition of a ``q``
+model. For details, see the documentation about `Inference in
 Inferpy <https://inferpy.readthedocs.io/projects/develop/en/develop/notes/guideinference.html>`__.
-For a deeper theoretical description, read this
+For a deeper theoretical despcription, read this
 `paper <https://arxiv.org/abs/1908.03442>`__. In this case, the q
 variables approximating the NN are defined in a transparent manner. For
 that reason we define an empty q model.
@@ -185,33 +190,33 @@ that reason we define an empty q model.
 .. parsed-literal::
 
 
-     0 epochs	 3624.52294921875....................
-     200 epochs	 2872.20947265625....................
-     400 epochs	 2204.5673828125....................
-     600 epochs	 2003.1492919921875....................
-     800 epochs	 1982.3792724609375....................
-     1000 epochs	 1976.4678955078125....................
-     1200 epochs	 1975.5140380859375....................
-     1400 epochs	 1974.84765625....................
-     1600 epochs	 1974.39501953125....................
-     1800 epochs	 1973.7484130859375....................
-     2000 epochs	 1974.3310546875....................
-     2200 epochs	 1972.4315185546875....................
-     2400 epochs	 1972.6212158203125....................
-     2600 epochs	 1973.4249267578125....................
-     2800 epochs	 1973.1256103515625....................
-     3000 epochs	 1972.3126220703125....................
-     3200 epochs	 1971.6856689453125....................
-     3400 epochs	 1972.302734375....................
-     3600 epochs	 1971.942626953125....................
-     3800 epochs	 1970.769287109375....................
-     4000 epochs	 1970.2620849609375....................
-     4200 epochs	 1971.232666015625....................
-     4400 epochs	 1969.9805908203125....................
-     4600 epochs	 1970.2784423828125....................
-     4800 epochs	 1969.9132080078125....................
+     0 epochs	 3477.63818359375....................
+     200 epochs	 2621.487548828125....................
+     400 epochs	 2294.40478515625....................
+     600 epochs	 2003.2978515625....................
+     800 epochs	 1932.5308837890625....................
+     1000 epochs	 1912.515625....................
+     1200 epochs	 1909.4072265625....................
+     1400 epochs	 1908.7269287109375....................
+     1600 epochs	 1908.28564453125....................
+     1800 epochs	 1909.939697265625....................
+     2000 epochs	 1907.779052734375....................
+     2200 epochs	 1908.8096923828125....................
+     2400 epochs	 1907.308349609375....................
+     2600 epochs	 1907.8809814453125....................
+     2800 epochs	 1906.529541015625....................
+     3000 epochs	 1906.2943115234375....................
+     3200 epochs	 1906.744140625....................
+     3400 epochs	 1905.798828125....................
+     3600 epochs	 1905.2296142578125....................
+     3800 epochs	 1905.57275390625....................
+     4000 epochs	 1905.6163330078125....................
+     4200 epochs	 1904.5223388671875....................
+     4400 epochs	 1904.778564453125....................
+     4600 epochs	 1904.68408203125....................
+     4800 epochs	 1903.94970703125....................
 
-As can be seen in the nex figure, the output of our model is not
+As can be seen in the next figure, the output of our model is not
 deterministic. So, we can capture the uncertainty in the data. See for
 example what happens now with the predictions at the point ``x=2.0``.
 See also what happens with the uncertainty in out-of-range predictions.

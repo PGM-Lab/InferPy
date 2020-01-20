@@ -31,13 +31,13 @@ class DataLoader:
 
     @property
     def variables(self):
-        """ List of variables over which is defined the dataset"""
+        """ List of variables over which is  the dataset defined"""
         return self._variables
 
 
     @property
     def map_batch_fn(self):
-        """ Returns a function transforms each tensor batch """
+        """ Returns a function that transforms each tensor batch """
         if not self._map_batch_fn:
             return lambda x: x
         return self._map_batch_fn
@@ -45,12 +45,12 @@ class DataLoader:
 
     @map_batch_fn.setter
     def map_batch_fn(self, fn):
-        """ Sets a function transforms each tensor batch """
+        """ Sets a function that transforms each tensor batch """
         self._map_batch_fn = fn
 
     @property
     def shuffle_buffer_size(self):
-        """ Size of the shuffle size where 1 implies no shuffle """
+        """ Size of the shuffle size where 1 means no shuffle """
         return self._shuffle_buffer_size
 
     @shuffle_buffer_size.setter

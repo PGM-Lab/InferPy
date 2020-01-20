@@ -32,8 +32,8 @@ def probmodel(builder):
     """
     Decorator to create probabilistic models. The function decorated
     must be a function which declares the Random Variables in the model.
-    It is not needed that the function returns such variables (we capture
-    them using ed.tape).
+    It is not required that the function returns such variables (they are
+    captured using ed.tape).
     """
     @functools.wraps(builder)
     def wrapper(*args, **kwargs):

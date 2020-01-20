@@ -25,9 +25,9 @@ def _has_datamodel_var_parameters(name):
 def get_sample_shape(name):
     """
     This function must be used inside a datamodel context (it is not checked here)
-    If var parameters are not expanded, then expand.
+    If the parameters are not already expanded, then are now expanded.
         :name (str): The name of the variable to get its sample shape
-        :returns: a the sample_shape (number of samples of the datamodel). It is an integer, or ().
+        :returns: the sample_shape (number of samples of the datamodel). It is an integer, or ().
     """
 
     # Parameters already expanded? (remember that in probmodel definitions, each RandomVariable must have a name)
@@ -59,7 +59,7 @@ def fit(size):
 def datamodel(size=None):
     """
     This context is used to declare a plateau model. Random Variables and Parameters will use a sample_shape
-    defined by the argument `size`, or by the `data_model.fit`. If `size` is not specify, the default size 1,
+    defined by the argument `size`, or by the `data_model.fit`. If `size` is not specified, the default size 1,
     or the size specified by `fit` will be used.
     """
 
