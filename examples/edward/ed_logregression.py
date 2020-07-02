@@ -1,18 +1,19 @@
-import tensorflow_probability as tfp
+### Setting up
+
 from tensorflow_probability import edward2 as ed
-
 import tensorflow as tf
-import matplotlib.pyplot as plt
-
-tf.reset_default_graph()
 
 d = 2
-N = 2000
+N = 1000
 
 
-#  P and Q model definition
 
-def logregression(d, N, w_init=(1, 1), x_init=(0, 1)):
+
+#12
+
+### Model definition ####
+
+def log_reg(d, N, w_init=(1, 1), x_init=(0, 1)):
     w = ed.Normal(loc=tf.ones([d], dtype="float32") * w_init[0], scale=1. * w_init[1], name="w")
     w0 = ed.Normal(loc=1. * w_init[0], scale=1. * w_init[1], name="w0")
 
@@ -22,7 +23,7 @@ def logregression(d, N, w_init=(1, 1), x_init=(0, 1)):
     return x, y, (w, w0)
 
 
-def q_model(d, N):
+def qmodel(d, N):
     qw_loc = tf.Variable(tf.ones([d]))
     qw_scale = tf.math.softplus(tf.Variable(tf.ones([d])))
     qw0_loc = tf.Variable(1.)
@@ -33,14 +34,14 @@ def q_model(d, N):
     return qw, qw0
 
 
-##### Data generator from model ####
+
+
+#39
+
+##### Sample from prior model
 
 # Training data is generated from the same model, but with the priors variables
 # set to given values w_sampling and w0_sampling. This is done with ed.interception
-
-
-w_sampling = [2, 1]
-w0_sampling = 0
 
 
 def set_values(**model_kwargs):
@@ -58,28 +59,20 @@ def set_values(**model_kwargs):
     return interceptor
 
 
-with ed.interception(set_values(w=w_sampling, w0=w0_sampling)):
-    generate = logregression(d, N, x_init=(2, 10))
+with ed.interception(set_values(w=[2, 1], w0=0)):
+    generate = log_reg(d, N, x_init=(2, 10))
 
 with tf.Session() as sess:
     x_train, y_train, _ = sess.run(generate)
 
 
 
-# Plot training data
-fig = plt.figure(figsize=(10, 5))
-for c in [0, 1]:
-    x_train_c = x_train[y_train == c, :]
-    plt.plot(x_train_c[:, 0], x_train_c[:, 1], 'bx' if c == 0 else 'rx')
+#### Inference
 
-
-
-## Inference
-
-qw, qw0 = q_model(d, N)
+qw, qw0 = qmodel(d, N)
 
 with ed.interception(set_values(w=qw, w0=qw0, x=x_train, y=y_train)):
-    post_x, post_y, (post_w, post_w0) = logregression(d, N)
+    post_x, post_y, (post_w, post_w0) = log_reg(d, N)
 
 energy = tf.reduce_sum(post_x.distribution.log_prob(post_x.value)) +  \
                     tf.reduce_sum(post_y.distribution.log_prob(y_train)) + \
@@ -95,17 +88,13 @@ elbo = energy + entropy
 
 
 # Optimization loop
-
 optimizer = tf.train.AdamOptimizer(learning_rate=0.05)
 train = optimizer.minimize(-elbo)
 
 init = tf.global_variables_initializer()
 
-
 t = []
-
 num_epochs = 10000
-
 with tf.Session() as sess:
     sess.run(init)
 
@@ -117,40 +106,41 @@ with tf.Session() as sess:
             if i % 50 == 0:
                 print(sess.run(elbo))
 
-    w_loc_inferred = sess.run(qw.distribution.loc)
-    w_scale_inferred = sess.run(qw.distribution.scale)
-    w0_loc_inferred = sess.run(qw0.distribution.loc)
-    w0_scale_inferred = sess.run(qw0.distribution.scale)
+    w_post = sess.run(qw.distribution.loc)
+    w0_post = sess.run(qw0.distribution.loc)
 
 
-# print the results
+#### Usage of the inferred model
 
-print("Inferred axes:")
-print(w_loc_inferred)
-print("Standard Deviation:")
-print(w_scale_inferred)
+# Print the parameters
+print(w_post, w0_post)
 
-plt.plot(range(1, num_epochs, 5), t)
-plt.show()
-
-qw.distribution.loc
-
-
-# Test the learnt model #
-#########################
-
-# Generate a set of samples x ~ N(10,8) and classify them. To do this, the priors
-# are fixed with the inferred values, then, the model is evaluated.
-
-
-with ed.interception(set_values(w=w_loc_inferred, w0=w0_loc_inferred)):
-    generate = logregression(d, N, x_init=(10, 8))
+# Sample form the posterior
+with ed.interception(set_values(w=w_post, w0=w0_post)):
+    generate = log_reg(d, N, x_init=(0, 0))
 
 with tf.Session() as sess:
     x_gen, y_gen, _ = sess.run(generate)
 
+print(x_gen, y_gen)
+
+
+
+
+
+##### Plot the results
+
+import matplotlib.pyplot as plt
 
 fig = plt.figure(figsize=(10, 5))
 for c in [0, 1]:
     x_gen_c = x_gen[y_gen == c, :]
     plt.plot(x_gen_c[:, 0], x_gen_c[:, 1], 'bx' if c == 0 else 'rx')
+
+plt.show()
+
+
+
+# 146
+
+

@@ -101,6 +101,15 @@ on the first version of Edward, which is no longer under development:
 .. toctree::
    :includehidden:
    :maxdepth: 1
+   :caption: Inferpy vs Others
+
+   notes/comparative_logreg
+   notes/comparative_vae_mnist
+
+
+.. toctree::
+   :includehidden:
+   :maxdepth: 1
    :caption: Guides
    
    notes/guidemodels
@@ -108,6 +117,7 @@ on the first version of Edward, which is no longer under development:
    notes/guidebayesian
    notes/guidedata
    notes/advancedsetup
+   notes/videotutorials
 
 ..   notes/guidevalidation
 
@@ -120,7 +130,6 @@ on the first version of Edward, which is no longer under development:
    :caption: Examples
    
    notes/probzoo
-   VAE with MNIST in Edward and Inferpy <notes/vae_mnist>
    notes/bayesianNN
    notes/mixture
 

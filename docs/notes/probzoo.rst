@@ -46,6 +46,7 @@ The InferPy code for this model is shown below,
 
 .. literalinclude:: ../../examples/probzoo/log_regression.py
    :language: python3
+   :lines: 2-69
 
 
 --------------

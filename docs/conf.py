@@ -46,7 +46,9 @@ extensions = ['sphinx.ext.mathjax',
     'sphinx.ext.githubpages',
     'sphinx.ext.autodoc',
     'sphinxcontrib.napoleon',
-    'nbsphinx']
+    'nbsphinx',
+    'sphinx_tabs.tabs',
+    ]
 
 # Napoleon settings
 napoleon_google_docstring = True
@@ -138,7 +140,11 @@ html_static_path = ['_static']
 
 html_context = {
     'css_files': [
-        '_static/css/inferpy_theme.css'
+        '_static/css/inferpy_theme.css',
+        '_static/css/tabs.css',
+'_static/css/tab.min.css',
+'_static/css/segment.min.css',
+'_static/css/menu.min.css',
     ],
 }
 
