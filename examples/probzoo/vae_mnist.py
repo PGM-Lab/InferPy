@@ -2,6 +2,9 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 import numpy as np
 import inferpy as inf
+import pyro
+import torch
+import tensorflow_probability.python.edward2 as ed
 
 # number of components
 k = 2
@@ -21,12 +24,9 @@ scale_epsilon = 0.01
 num_epochs = 1000
 learning_rate = 0.01
 
-# reset tensorflow
 tf.reset_default_graph()
 tf.set_random_seed(1234)
-
-
-
+#29
 from inferpy.data import mnist
 
 # load the data
@@ -35,7 +35,7 @@ from inferpy.data import mnist
 mnist.plot_digits(x_train, grid=[5,5])
 
 
-
+#38
 ############## Inferpy ##############
 
 # P model and the  decoder NN

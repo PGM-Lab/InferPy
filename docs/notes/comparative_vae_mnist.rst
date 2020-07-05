@@ -13,7 +13,7 @@ First, we import the required packages and set the global variables. This code i
 
 .. literalinclude:: ../../examples/edward/ed_vae_mnist.py
    :language: python3
-   :lines: 1-26
+   :lines: 1-28
 
 Then, we can load and plot the MNIST dataset using the functionality provided by ``inferpy.data.mnist``.
 
@@ -50,9 +50,13 @@ definitions using InferPy and Edward are shown below.
 
       .. literalinclude:: ../../examples/edward/ed_vae_mnist.py
          :language: python3
-         :lines: 41-63
+         :lines: 46-68
 
+   .. group-tab:: Pyro
 
+      .. literalinclude:: ../../examples/pyro/pyro_vae.py
+         :language: python3
+         :lines: 43-117
 
 
 The most relevant difference is that with InferPy we do not need to specify which is the size of the data (i.e., plateau or
@@ -90,6 +94,11 @@ done as follows.
          :language: python3
          :lines: 89-104
 
+   .. group-tab:: Pyro
+
+      .. literalinclude:: ../../examples/pyro/pyro_vae.py
+         :language: python3
+         :lines: 127-138
 
 
 
@@ -114,6 +123,12 @@ algorithm object previously defined.
          :language: python3
          :lines: 112-127
 
+   .. group-tab:: Pyro
+
+      .. literalinclude:: ../../examples/pyro/pyro_vae.py
+         :language: python3
+         :lines: 147-165
+
 
 
 Usage of the inferred model
@@ -136,6 +151,12 @@ Edward does not provide any functionality for this purpose, so we will use Tenso
       .. literalinclude:: ../../examples/edward/ed_vae_mnist.py
          :language: python3
          :lines: 137-149
+
+   .. group-tab:: Pyro
+
+      .. literalinclude:: ../../examples/pyro/pyro_vae.py
+         :language: python3
+         :lines: 166-169
 
 
 
@@ -166,7 +187,13 @@ through the decoder. With InferPy we must just invoke the method ``probmodel.pos
 
       .. literalinclude:: ../../examples/edward/ed_vae_mnist.py
          :language: python3
-         :lines: 177-188
+         :lines: 177-187
+
+   .. group-tab:: Pyro
+
+      .. literalinclude:: ../../examples/pyro/pyro_vae.py
+         :language: python3
+         :lines: 193-195
 
 
 

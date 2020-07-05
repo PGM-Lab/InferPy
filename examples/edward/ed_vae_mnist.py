@@ -1,7 +1,10 @@
 import tensorflow as tf
 import matplotlib.pyplot as plt
-import tensorflow_probability.python.edward2 as ed
+import numpy as np
 import inferpy as inf
+import pyro
+import torch
+import tensorflow_probability.python.edward2 as ed
 
 # number of components
 k = 2
@@ -21,16 +24,18 @@ scale_epsilon = 0.01
 num_epochs = 1000
 learning_rate = 0.01
 
-# reset tensorflow
 tf.reset_default_graph()
 tf.set_random_seed(1234)
-
-
+#29
 from inferpy.data import mnist
 
 # load the data
 (x_train, y_train), _ = mnist.load_data(num_instances=N, digits=DIG)
 
+mnist.plot_digits(x_train, grid=[5,5])
+
+
+#38
 
 # Model definition
 ######################
@@ -65,17 +70,12 @@ def qmodel(k, d0, x):
 
 
 
-#68
+#73
 
 # Inference
 ############################
 
-### preparing inference and batched data
-
-
-
-
-
+###
 
 
 
@@ -191,3 +191,5 @@ plt.show()
 
 
 tf.trainable_variables()
+
+# 200
