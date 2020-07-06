@@ -47,7 +47,7 @@ optim = Adam({"lr": 0.1})
 svi = SVI(log_reg, qmodel, optim, loss=Trace_ELBO(), num_samples=10)
 
 
-num_iterations = 1000
+num_iterations = 10000
 pyro.clear_param_store()
 for j in range(num_iterations):
     # calculate the loss and take a gradient step

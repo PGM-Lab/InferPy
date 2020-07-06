@@ -205,12 +205,3 @@ Some of the resulting images are shown below.
    :align: center
 
 
-
-Time
-------------
-
-
-
-The average running times for this model are xxx s. for InferPy, xxx s. for Edward and
-xxx s. for Pyro. The measurements have been done using Google Colab with the
-default configuration.
