@@ -36,9 +36,13 @@ If we want to install InferPy including all the dependencies (for CPU only), use
    $ pip install inferpy[all]
 
 
-Similarly, for all the dependencies including for GPUs, use the keyword ``all-gpu``:
+Similarly, for installing all the dependencies including those for running over GPUs, use the keyword ``all-gpu``:
 
 
 .. code:: bash
 
    $ pip install inferpy[all-gpu]
+
+
+
+A video tutorial about the installation can be found `here <notes/videotutorials.html>`_.
