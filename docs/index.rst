@@ -46,7 +46,31 @@ Use InferPy if you need a probabilistic programming language that:
 .. complex probability constructs.
 
 
-A set of examples can be found in the `Probabilistic Model Zoo <notes/probzoo.html>`_ section.
+
+
+Related software
+------------------------
+
+Similar frameworks for deep probabilistic modeling are:
+
+- `Edward <http://edwardlib.org>`_
+- `TFP/Edward 2 <https://github.com/google/edward2>`_
+- `Pyro <https://pyro.ai>`_
+- `Stan <https://mc-stan.org>`_
+- `Pymc <https://docs.pymc.io>`_
+
+The advantage of InferPy resides on its simplicity. A comparison with respect to TFP/Edward 2 and Pyro is provided
+for a `logistic regression <notes/comparative_logreg.html>`_ and for a `variational auto-encoder (VAE) <notes/comparative_vae_mnist.html>`_ using
+the MNIST dataset.
+
+
+Code examples
+----------------
+
+A set of examples of models defined with InferPy can be found in the `Probabilistic Model Zoo <notes/probzoo.html>`_ section.
+Additionally, more complex examples are provided: `model with Bayesian NN <notes/bayesianNN.html>`_ and a
+`mixture density network <notes/mixture.html>`_.
+
 
 
 Citation
