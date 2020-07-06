@@ -1,7 +1,7 @@
 Comparison: Variational auto-encoder
 ===========================================================
 
-Here we make a comparison between tensorflow-probability/Edward 2 and InferPy. As a running example, we will consider
+Here we make a comparison between tensorflow-probability/Edward 2, Pyro and InferPy. As a running example, we will consider
 a variational auto-encoder (VAE) trained with the MNIST dataset containing handwritten digits. For the inference, SVI method
 will be used.
 
@@ -9,7 +9,7 @@ will be used.
 Setting up
 -------------
 
-First, we import the required packages and set the global variables. This code is common for both, Edward and InferPy:
+First, we import the required packages and set the global variables. This code is common for the 3 different frameworks:
 
 .. literalinclude:: ../../examples/edward/ed_vae_mnist.py
    :language: python3
@@ -63,9 +63,10 @@ The most relevant difference is that with InferPy we do not need to specify whic
 datamodel construct). Instead, this will be automatically obtained at inference time.
 
 
-In both cases, models are defined as functions, though InferPy requires to use the decorator ``@inf.probmodel``. On the
-other hand, even though  neural networks can be the same, in the Edward code these are defined with a name as this
-will be later used for access to the learned weights.
+With InferPy and Edward 2, models are defined as functions, though InferPy requires to use the decorator ``@inf.probmodel``. On the
+other hand, even though  neural networks can be the same, in the Edward 2 code these are defined with a name as this
+will be later used for access to the learned weights. The code in Pyro (adapted from the one in the `official documentation <https://pyro.ai/examples/vae.html>`_)
+is quite different as a class structure is used.
 
 Inference
 ---------------
@@ -73,11 +74,12 @@ Inference
 Setting up the inference and batched data
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In Edward, before optimizing the variational parameters, we must: split the data into batches; create the instances of the P and Q
+In Edward 2, before optimizing the variational parameters, we must: split the data into batches; create the instances of the P and Q
 models; and finally build tensor for computing **ELBO**, which represents the function that will be optimized.
 The equivalent code using InferPy is much more simple, as most of such functionality is done transparently to the user:
 we simply instantiate the P and Q models and the corresponding inference algorithm. For the running example, this is
-done as follows.
+done as follows. In this case, the Pyro code also remains quite simple as most of the inference details are encapsulated.
+Yet the user is required to split the data into batches using the functionality in ``torch.utils.data.DataLoader``.
 
 
 .. tabs::
@@ -105,8 +107,9 @@ done as follows.
 Optimization loop
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-In variational inference, parameters are iteratively optimized. When using Edward, we must first specify TensorFlow optimizers
-and training objects. Then the loop is explicitly coded as shown below. With InferPy, we simply invoke the method ``probmodel.fit()`` which takes as input parameters the data and the inference
+In variational inference, parameters are iteratively optimized. When using Edward 2, we must first specify TensorFlow optimizers
+and training objects. Then the loop is explicitly coded as shown below. With Pyro, the optimization loop must coded by calling
+ ``svi.step()`` at each iteration. By contrast, with InferPy, we simply invoke the method ``probmodel.fit()`` which takes as input parameters the data and the inference
 algorithm object previously defined.
 
 .. tabs::
@@ -137,6 +140,8 @@ Usage of the inferred model
 Once optimization is finished, we can use the model with the inferred parameters. For example, we
 might obtain the hidden representation of the original data, which is done by passing such data through the decoder.
 Edward does not provide any functionality for this purpose, so we will use TensorFlow code. With InferPy, this is done by simply using the method ``probmodel.posterior()`` as follows.
+For this, Pyro requires to invoke the class method ``vae.encoder.forward`` which performs the forward propagation in the encoder NN.
+
 
 .. tabs::
 
@@ -173,6 +178,7 @@ The result of plotting the hidden representation is:
 
 We might be also interested in generating new digits, which implies passing some data in the hidden space
 through the decoder. With InferPy we must just invoke the method ``probmodel.posterior_predictive()``.
+In Pyro this is done by invoking the class method ``vae.encoder.forward`` which performs the forward propagation in the decoder NN.
 
 
 .. tabs::

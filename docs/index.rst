@@ -181,6 +181,7 @@ on the first version of Edward, which is no longer under development:
    :caption: Other
 
    notes/contact
+   notes/acknowledgements
 
 
 
