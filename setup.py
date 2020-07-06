@@ -46,7 +46,7 @@ def get_requirements(*files):
 setup(
     name='inferpy',
     version=version,
-    description='Probabilistic modeling with Tensorflow made easy',
+    description='Deep Probabilistic modeling with Tensorflow made easy',
     long_description=long_description,
     long_description_content_type="text/markdown",
     author='Andrés R. Masegosa, Rafael Cabañas, Javier Cózar',
@@ -70,7 +70,9 @@ setup(
         'gpu': get_requirements('requirements/gpu.txt'),
         'visualization': get_requirements('requirements/visualization.txt'),
         'datasets': get_requirements('requirements/datasets.txt'),
-        'all': get_requirements('requirements/gpu.txt', 'requirements/visualization.txt', 'requirements/datasets.txt'),
+        'all': get_requirements('requirements/visualization.txt', 'requirements/datasets.txt'),
+        'all-gpu': get_requirements('requirements/gpu.txt', 'requirements/visualization.txt', 'requirements/datasets.txt'),
+
     },
     tests_require=get_requirements('requirements/test.txt'),
     include_package_data=True,

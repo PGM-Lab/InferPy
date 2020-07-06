@@ -4,7 +4,7 @@ from tensorflow_probability import edward2 as ed
 import tensorflow as tf
 
 d = 2
-N = 1000
+N = 50000
 
 
 

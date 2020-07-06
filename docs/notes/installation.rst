@@ -27,11 +27,18 @@ Instead, additional dependencies can be installed using the following keywords:
    $ pip install inferpy[datasets]          # for using datasets at inf.data
 
 
-If we want to install InferPy including all the dependencies, use the keyword
+If we want to install InferPy including all the dependencies (for CPU only), use the keyword
 ``all``, that is:
-
 
 
 .. code:: bash
 
    $ pip install inferpy[all]
+
+
+Similarly, for all the dependencies including for GPUs, use the keyword ``all-gpu``:
+
+
+.. code:: bash
+
+   $ pip install inferpy[all-gpu]

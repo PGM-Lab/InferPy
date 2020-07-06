@@ -5,7 +5,7 @@ import numpy as np
 import tensorflow as tf
 
 d = 2
-N = 1000
+N = 10000
 
 
 
