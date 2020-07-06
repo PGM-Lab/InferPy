@@ -48,6 +48,7 @@ extensions = ['sphinx.ext.mathjax',
     'sphinxcontrib.napoleon',
     'nbsphinx',
     'sphinx_tabs.tabs',
+#'sphinxcontrib.youtube'
     ]
 
 # Napoleon settings
