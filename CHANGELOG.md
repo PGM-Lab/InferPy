@@ -1,3 +1,17 @@
+1.3.1
+=======
+InferPy is a high-level API for defining probabilistic models containing deep neural networks in Python and capable of running on top of
+Edward and TensorFlow. InferPy’s API is strongly inspired by Keras, and it has a focus on enabling flexible
+data processing, easy-to-code probabilistic modeling, scalable inference and robust model validation.
+
+
+Changes:
+
+- Documentation updated.
+- Extras requirements modified: keyword `all` installs only CPU dependencies while `all-gpu` also those for GPUs are installed .
+
+
+
 1.3.0
 =======
 InferPy is a high-level API for defining probabilistic models containing deep neural networks in Python and capable of running on top of
@@ -10,7 +24,7 @@ Changes:
 - Integration with Bayesian Layers from TFP.
 - Keras models can be defined inside InferPy models.
 - Inference with MCMC.
-- Documentation update.
+- Documentation updated.
 - Fixed bugs #200, #201, #202.
 
 
