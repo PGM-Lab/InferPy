@@ -34,8 +34,8 @@ Model definition
 --------------------
 
 P and Q models are defined as functions creating random variables. In the case of the VAE model, we must also
-define the neural networks for encoding and decoding. For simplicity, these are also defined in functions. The model
-definitions using InferPy and Edward are shown below.
+define the neural networks for encoding and decoding. For simplicity, they are also defined as functions. The model
+definitions using InferPy, Edward and Pyro are shown below.
 
 
 .. tabs::
@@ -59,12 +59,12 @@ definitions using InferPy and Edward are shown below.
          :lines: 43-117
 
 
-The most relevant difference is that with InferPy we do not need to specify which is the size of the data (i.e., plateau or
+With InferPy we do not need to specify which is the size of the data (i.e., plateau or
 datamodel construct). Instead, this will be automatically obtained at inference time.
 
 
 With InferPy and Edward 2, models are defined as functions, though InferPy requires to use the decorator ``@inf.probmodel``. On the
-other hand, even though  neural networks can be the same, in the Edward 2 code these are defined with a name as this
+other hand, even though  neural networks can be the same, in the Edward 2's code these are defined with a name as this
 will be later used for access to the learned weights. The code in Pyro (adapted from the one in the `official documentation <https://pyro.ai/examples/vae.html>`_)
 is quite different as a class structure is used.
 
@@ -75,11 +75,11 @@ Setting up the inference and batched data
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In Edward 2, before optimizing the variational parameters, we must: split the data into batches; create the instances of the P and Q
-models; and finally build tensor for computing **ELBO**, which represents the function that will be optimized.
-The equivalent code using InferPy is much more simple, as most of such functionality is done transparently to the user:
-we simply instantiate the P and Q models and the corresponding inference algorithm. For the running example, this is
-done as follows. In this case, the Pyro code also remains quite simple as most of the inference details are encapsulated.
-Yet the user is required to split the data into batches using the functionality in ``torch.utils.data.DataLoader``.
+models; and finally build tensor for computing the variational **ELBO**, which represents the function that will be optimized.
+The equivalent code using InferPy is much more simple, because most of the functionality is done transparently to the user:
+we simply instantiate the P and Q models and the corresponding inference algorithm. Pyro's code also remains quite simple because
+most of the inference details are also encapsulated. Yet the user is required to split the data into batches using the 
+functionality in ``torch.utils.data.DataLoader``.
 
 
 .. tabs::
@@ -107,10 +107,7 @@ Yet the user is required to split the data into batches using the functionality 
 Optimization loop
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-In variational inference, parameters are iteratively optimized. When using Edward 2, we must first specify TensorFlow optimizers
-and training objects. Then the loop is explicitly coded as shown below. With Pyro, the optimization loop must coded by calling
- ``svi.step()`` at each iteration. By contrast, with InferPy, we simply invoke the method ``probmodel.fit()`` which takes as input parameters the data and the inference
-algorithm object previously defined.
+In variational inference, parameters are iteratively optimized. When using Edward 2, we must first specify TensorFlow optimizers and training objects. Then the loop is explicitly coded as shown below. With Pyro, the optimization loop must coded by calling ``svi.step()`` at each iteration. By contrast, with InferPy, we simply invoke the method ``probmodel.fit()`` which takes as input parameters the data and the inference algorithm object previously defined.
 
 .. tabs::
 
