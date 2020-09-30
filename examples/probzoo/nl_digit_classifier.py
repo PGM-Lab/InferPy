@@ -14,12 +14,8 @@ N = 1000
 M = 100
 
 
-scale_epsilon = 0.01
-
-
 @inf.probmodel
 def digit_classifier(k, d0, dx, dy):
-
     with inf.datamodel():
         z = inf.Normal(tf.ones(k) * 0.1, 1., name="z")
 
@@ -27,11 +23,9 @@ def digit_classifier(k, d0, dx, dy):
             tf.keras.layers.Dense(d0, tf.nn.relu),
             tf.keras.layers.Dense(dx)
         ])
-
         classifier = tf.keras.Sequential([
             tf.keras.layers.Dense(dy)
         ])
-
         x = inf.Normal(decoder(z), 1., name="x")
         y = inf.Categorical(logits=classifier(z), name="y")
 
@@ -47,7 +41,6 @@ def qmodel(k, d0, dx):
             tf.keras.layers.Dense(d0, activation=tf.nn.relu),
             tf.keras.layers.Dense(2 * k)
         ])
-
         output = encoder(x)
         qz_loc = output[:, :k]
         qz_scale = tf.nn.softplus(output[:, k:])+0.01
@@ -56,11 +49,10 @@ def qmodel(k, d0, dx):
 q = qmodel(k=2, d0=100, dx=28*28)
 
 # get the MNIST dataset
-(x_train, y_train), (x_test, y_test) = mnist.load_data(num_instances=N, digits=[0, 1, 2])
-
+(x_train, y_train), (x_test, y_test) = mnist.load_data(
+    num_instances=N, digits=[0, 1, 2])
 # set the inference algorithm
-SVI = inf.inference.SVI(q, epochs=5000, batch_size=M)
-
+SVI = inf.inference.SVI(q, epochs=10000, batch_size=M)
 # fit the model to the data
 p.fit({"x": x_train, "y":y_train}, SVI)
 
@@ -76,7 +68,7 @@ plt.grid(True)
 plt.show()
 
 
-# Extract the posterior of z given the training data
+# extract the posterior of z given the training data
 postz = np.concatenate([
     p.posterior("z", data={"x": x_train[i:i + M, :]}).sample()
     for i in range(0,N,M)])
@@ -100,13 +92,13 @@ plt.show()
 
 
 
-# Predict a set of images
+# predict a set of images
 def predict(x):
     postz = p.posterior("z", data={"x": x}).sample()
     return p.posterior_predictive("y", data={"z":postz}).sample()
 
 y_gen = predict(x_test[:M])
 
-# Compute the accuracy
+# compute the accuracy
 acc = np.sum(y_test[:M] == y_gen)/M
 print(f"accuracy: {acc}")
