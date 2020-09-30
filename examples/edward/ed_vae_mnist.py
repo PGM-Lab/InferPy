@@ -2,8 +2,8 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 import numpy as np
 import inferpy as inf
-import pyro
-import torch
+# import pyro
+# import torch
 import tensorflow_probability.python.edward2 as ed
 
 # number of components
