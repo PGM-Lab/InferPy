@@ -16,11 +16,18 @@ import functools
 from enum import IntEnum
 import tensorflow as tf
 from tensorflow_probability import edward2 as ed
-from tensorflow_probability.python.edward2.interceptor import interceptable
+# For tfp version 0.7.0
+# from tensorflow_probability.edward2.interception import interceptable
+from tensorflow_probability.python.edward2 import interceptable
 
 import tensorflow_probability as tfp
-from tensorflow_probability.python.edward2 import generated_random_variables
-from tensorflow.python.client import session as tf_session
+# For tfp version 0.7.0
+# from tensorflow_probability.python.edward2 import generated_random_variables
+from tensorflow_probability.python.experimental.edward2 import generated_random_variables
+# For tfp version 0.7.0
+# from tensorflow.python.client import session as tf_session
+
+
 import warnings
 
 from . import sanitize_input_arg
