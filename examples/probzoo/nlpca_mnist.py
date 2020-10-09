@@ -1,4 +1,4 @@
-# required pacakges
+# required packages
 import inferpy as inf
 import numpy as np
 import tensorflow as tf

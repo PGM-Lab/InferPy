@@ -26,7 +26,7 @@ import tensorflow_probability as tfp
 from tensorflow_probability.python.experimental.edward2 import generated_random_variables
 # For tfp version 0.7.0
 # from tensorflow.python.client import session as tf_session
-
+from tensorflow.python.client import session as tf_session
 
 import warnings
 
