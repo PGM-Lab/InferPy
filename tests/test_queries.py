@@ -52,6 +52,7 @@ def test_prior():
     m, x_train, y_train = init_model()
 
     s = m.prior().sample()
+    l = m.prior().log_prob(s)
 
     print({k: v.shape for k, v in s.items()})
 
@@ -59,6 +60,11 @@ def test_prior():
     assert s["w"].shape == (2, 1)
     assert s["x"].shape == (1, 2)
     assert s["y"].shape == (1, 1)
+
+    assert l["w0"].shape == ()
+    assert l["w"].shape == (2, 1)
+    assert l["x"].shape == (1, 2)
+    assert l["y"].shape == (1, 1)
 
 
 def test_prior_size():
@@ -153,7 +159,7 @@ def test_post_data():
 
 def test_post_data2():
     m, x_train, y_train = init_model()
-    s = m.posterior_predictive(data={"w0": 0, "w": [[2], [1]], "y": np.zeros((1000, 1))}).sample(3)
+    s = m.posterior_predictive(data={"w0": 0, "w": [[2], [1]], "x": np.zeros((1000, 2))}).sample(3)
 
     print({k: v.shape for k, v in s.items()})
 

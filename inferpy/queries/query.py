@@ -37,9 +37,15 @@ class Query:
         self.data = data
         self.enable_interceptor_variables = enable_interceptor_variables
 
-
+        # plateau size
         self.batch_size = [v for (k,v) in self.observed_variables.items() if v.is_datamodel][0].shape[0].value
-        self.data_size = self.data[[k for (k,v) in self.observed_variables.items() if k in self.data.keys() and v.is_datamodel][0]].shape[0]
+
+        # size of the observed variables in data
+        obs_datamodel = [k for (k,v) in self.observed_variables.items() if k in self.data.keys() and v.is_datamodel]
+        if len(obs_datamodel)>0:
+            self.data_size = self.data[obs_datamodel[0]].shape[0]
+        else:
+            self.data_size = self.batch_size
 
         ####
 
@@ -80,7 +86,8 @@ class Query:
 
             results.append(result)
 
-
+        if len(self.batches)==1:
+            return results[0]
         return {k:np.vstack([r[k] for r in results])[:self.data_size] for k in self.target_variables.keys()}
 
     def sum_log_prob(self):
@@ -109,6 +116,8 @@ class Query:
 
             results.append(result)
 
+        if len(self.batches)==1:
+            return results[0]
 
         return {k:np.vstack([r[k] for r in results])[:self.data_size] for k in self.target_variables.keys()}
 
