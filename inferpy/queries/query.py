@@ -86,20 +86,19 @@ class Query:
 
             results.append(result)
 
-        if len(self.batches)==1:
-            return results[0]
-        return {k:np.vstack([r[k] for r in results])[:self.data_size] for k in self.target_variables.keys()}
+        return self.process_output(results)
+
 
     def sum_log_prob(self):
         """ Computes the sum of the log probabilities (evaluated) of a (set of) sample(s)"""
         # The decorator is not needed here because this function returns a single value
         return np.sum([np.mean(lp) for lp in self.log_prob(simplify_result=False).values()])
 
+
     @flatten_result
     @util.tf_run_ignored
     def sample(self, size=1):
         """ Generates a sample for eache variable in the model """
-
         results = []
         for batch in self.batches:
             with util.interceptor.enable_interceptor(*self.enable_interceptor_variables):
@@ -116,10 +115,24 @@ class Query:
 
             results.append(result)
 
-        if len(self.batches)==1:
-            return results[0]
+        return self.process_output(results)
 
-        return {k:np.vstack([r[k] for r in results])[:self.data_size] for k in self.target_variables.keys()}
+
+    def process_output(self, results):
+        out = {}
+
+        for r in results:
+            for k,v in self.target_variables.items():
+                if k not in out:
+                    out[k] = r[k]
+                elif v.is_datamodel:
+                    # merge batches
+                    out[k] = np.concatenate([out[k], r[k]], axis=-2)
+                    if self.data_size<out[k].shape[-2]:
+                        out[k] = np.take(out[k], range(self.data_size), axis=-2)
+
+        return out
+
 
 
     @flatten_result
