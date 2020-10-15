@@ -3,8 +3,6 @@ import functools
 
 from inferpy import contextmanager
 from inferpy import util
-import math
-import tensorflow as tf
 
 
 def flatten_result(f):
@@ -37,51 +35,15 @@ class Query:
         self.data = data
         self.enable_interceptor_variables = enable_interceptor_variables
 
-
-        self.batch_size = [v for (k,v) in self.observed_variables.items() if v.is_datamodel][0].shape[0].value
-        self.data_size = self.data[[k for (k,v) in self.observed_variables.items() if k in self.data.keys() and v.is_datamodel][0]].shape[0]
-
-        ####
-
-
-        rows_to_add = round((math.ceil(self.data_size / self.batch_size) - self.data_size / self.batch_size) * self.batch_size)
-        num_batches = math.ceil(self.data_size / self.batch_size)
-
-        for k,v in self.observed_variables.items():
-            if k in self.data and v.is_datamodel:
-                padding = np.zeros([len(data[k].shape), 2], np.int32)
-                padding[0, 1] = rows_to_add
-                data[k] = np.pad(data[k], padding, mode="constant")
-
-        self.batches = [{} for _ in range(num_batches)]
-
-        k,v = list(self.observed_variables.items())[0]
-        for k,v in self.observed_variables.items():
-            if k in self.data and v.is_datamodel:
-                batches_k = np.split(data[k], num_batches, axis=0)
-                for i in range(num_batches):
-                    self.batches[i][k] = batches_k[i]
-            elif k in self.data:
-                for i in range(num_batches):
-                    self.batches[i][k] = data[k]
-
-
-
     @flatten_result
     @util.tf_run_ignored
     def log_prob(self):
         """ Computes the log probabilities of a (set of) sample(s)"""
+        with util.interceptor.enable_interceptor(*self.enable_interceptor_variables):
+            with contextmanager.observe(self.observed_variables, self.data):
+                result = util.runtime.try_run({k: v.log_prob(v.value) for k, v in self.target_variables.items()})
 
-        results = []
-        for batch in self.batches:
-            with util.interceptor.enable_interceptor(*self.enable_interceptor_variables):
-                with contextmanager.observe(self.observed_variables, batch):
-                    result = util.runtime.try_run({k: v.log_prob(v.value) for k, v in self.target_variables.items()})
-
-            results.append(result)
-
-
-        return {k:np.vstack([r[k] for r in results])[:self.data_size] for k in self.target_variables.keys()}
+        return result
 
     def sum_log_prob(self):
         """ Computes the sum of the log probabilities (evaluated) of a (set of) sample(s)"""
@@ -92,26 +54,19 @@ class Query:
     @util.tf_run_ignored
     def sample(self, size=1):
         """ Generates a sample for eache variable in the model """
+        with util.interceptor.enable_interceptor(*self.enable_interceptor_variables):
+            with contextmanager.observe(self.observed_variables, self.data):
+                # each iteration for `size` run the dict in the session, so if there are dependencies among random vars
+                # they are computed in the same graph operations, and reflected in the results
+                samples = [util.runtime.try_run(self.target_variables) for _ in range(size)]
 
-        results = []
-        for batch in self.batches:
-            with util.interceptor.enable_interceptor(*self.enable_interceptor_variables):
-                with contextmanager.observe(self.observed_variables, batch):
-                    # each iteration for `size` run the dict in the session, so if there are dependencies among random vars
-                    # they are computed in the same graph operations, and reflected in the results
-                    samples = [util.runtime.try_run(self.target_variables) for _ in range(size)]
+        if size == 1:
+            result = samples[0]
+        else:
+            # compact all samples in one single dict
+            result = {k: np.array([sample[k] for sample in samples]) for k in self.target_variables.keys()}
 
-            if size == 1:
-                result = samples[0]
-            else:
-                # compact all samples in one single dict
-                result = {k: np.array([sample[k] for sample in samples]) for k in self.target_variables.keys()}
-
-            results.append(result)
-
-
-        return {k:np.vstack([r[k] for r in results])[:self.data_size] for k in self.target_variables.keys()}
-
+        return result
 
     @flatten_result
     @util.tf_run_ignored
@@ -149,27 +104,8 @@ class Query:
 
             return {k: util.runtime.try_run(v) for k, v in parameters.items() if k in selected_parameters}
 
-        # function that merges the parameters of 2 batches
-        def merge_params(p1, p2):
-            out = {}
-            for k,v in p1.items():
-                if np.ndim(v) == 0:
-                    out[k] = v
-                else:
-                    out[k] = np.vstack([p1[k], p2[k]])[0:self.data_size]
-            return out
-
-        # get the parameter for each batch
-        result = {}
-
-        for batch in self.batches:
-            with contextmanager.observe(self.observed_variables, batch):
-                r = {k: filter_parameters(k, v.parameters)
-                          for k, v in self.target_variables.items()}
-
-            if len(result.keys()) == 0:
-                result = r
-            else:
-                result = {var:merge_params(result[var], r[var]) for var in self.target_variables.keys()}
+        with contextmanager.observe(self.observed_variables, self.data):
+            result = {k: filter_parameters(k, v.parameters)
+                      for k, v in self.target_variables.items()}
 
         return result
