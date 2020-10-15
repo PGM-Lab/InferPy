@@ -83,6 +83,12 @@ class MCMC(Inference):
         self.states = {name: models.Empirical(states, event_ndims=len(states.shape) - 1, name=name)
                        for name, states in zip(self.hiddenvars_name, variables_states)}
 
+
+        # set the is_datamodel flag to the results
+        for k,v in self.expanded_variables.items():
+            if k in self.states:
+                self.states[k].is_datamodel = v.is_datamodel
+
     def posterior(self, target_names=None, data={}):
         return Query(self.states, target_names, data)
 

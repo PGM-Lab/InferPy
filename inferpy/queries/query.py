@@ -38,7 +38,8 @@ class Query:
         self.enable_interceptor_variables = enable_interceptor_variables
 
         # plateau size
-        self.batch_size = [v for (k,v) in self.observed_variables.items() if v.is_datamodel][0].shape[0].value
+        vars_datamodel = [v for (k,v) in self.observed_variables.items() if v.is_datamodel]
+        self.batch_size = vars_datamodel[0].shape[0].value if len(vars_datamodel)>0 else 1
 
         # size of the observed variables in data
         obs_datamodel = [k for (k,v) in self.observed_variables.items() if k in self.data.keys() and v.is_datamodel]
