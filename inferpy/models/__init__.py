@@ -2,7 +2,7 @@ import tensorflow as tf
 from tensorflow_probability.python import edward2 as ed
 
 
-def sanitize_input_arg(arg):
+def sanitize_input_arg(arg, varname=None):
     # This function sanitize the input arguments to create Random Variables. It does:
     # - convert Random Variables (from inferpy or edward2) to tensors, even if there
     # are in a list or nested list, in order to allow to use them as arguments for other Random Variables
@@ -20,6 +20,12 @@ def sanitize_input_arg(arg):
     # if it has dtype arg, is float, and different from default float type (floatx), cast it
     if hasattr(sanitized_arg, "dtype") and util.common.is_float(sanitized_arg.dtype) and sanitized_arg.dtype != util.floatx():
         sanitized_arg = tf.cast(sanitized_arg, util.floatx())
+
+    # In TFP>0.8 the argument tensors are not created until needed, but we need them
+    # for building the dependence graph.
+    if varname is not None and isinstance(sanitized_arg, tf.Tensor):
+        with tf.name_scope(varname):
+            sanitized_arg = tf.identity(sanitized_arg)
 
     return sanitized_arg
 

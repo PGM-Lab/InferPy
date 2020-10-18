@@ -111,7 +111,6 @@ def update_graph(rv_name=None):
             elements_set.add(rv_name)
         # now create the dependencies graph
         _properties['graph'] = tf_graph.get_graph(elements_set)
-        print("DEBUG")
 
 
 @contextmanager

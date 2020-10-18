@@ -335,8 +335,8 @@ def _make_random_variable(distribution_name):
             sample_shape = kwargs.pop('sample_shape', ())
 
         # convert any Random Variable in a list or nested list in arguments to tensors, allowing to use RV's as arguments
-        sanitized_args = [sanitize_input_arg(arg) for arg in args]
-        sanitized_kwargs = {k: sanitize_input_arg(v) for k, v in kwargs.items()}
+        sanitized_args = [sanitize_input_arg(arg, rv_name) for arg in args]
+        sanitized_kwargs = {k: sanitize_input_arg(v, rv_name) for k, v in kwargs.items()}
 
         # If it is inside a data model, ommit the sample_shape in kwargs if exist and use size from data_model
         # NOTE: Needed here because we need to know the shape of the distribution, as well as its dtype
@@ -345,7 +345,6 @@ def _make_random_variable(distribution_name):
         if contextmanager.data_model.is_active():
             # create graph once tensors are registered in graph
             contextmanager.randvar_registry.update_graph(rv_name)
-
             # compute sample_shape now that we have computed the dependencies
             sample_shape = contextmanager.data_model.get_sample_shape(rv_name)
 
