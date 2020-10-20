@@ -338,7 +338,7 @@ def _make_random_variable(distribution_name):
         sanitized_args = [sanitize_input_arg(arg, rv_name) for arg in args]
         sanitized_kwargs = {k: sanitize_input_arg(v, rv_name) for k, v in kwargs.items()}
 
-        # If it is inside a data model, ommit the sample_shape in kwargs if exist and use size from data_model
+        # If it is inside a data model, omit the sample_shape in kwargs if exist and use size from data_model
         # NOTE: Needed here because we need to know the shape of the distribution, as well as its dtype
         # Not using sample shape yet. Used just to create the tensors, and compute the dependencies using the tf graph
         tfp_dist = distribution_cls(*sanitized_args, **sanitized_kwargs)
