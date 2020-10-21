@@ -278,7 +278,6 @@ def test_post_data2():
 
     print({k: v.shape for k, v in s.items()})
     print({k: v.shape for k, v in l.items()})
-    print({k: np.shape(p[k]["loc"]) for k, v in p.items()})
 
     assert s["x"].shape == (3, 1000, 2)
     assert s["y"].shape == (3, 1000, 1)
