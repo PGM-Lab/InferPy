@@ -118,7 +118,7 @@ def test_sample_intercept():
             inf.Normal(x, 1., name='y')
 
     N = 10
-    data_y = 1.0
+    data_y = np.array([1.0])
     m = model()
 
     sample_dict = m.prior(data={'y': data_y}).sample(N)
