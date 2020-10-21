@@ -53,8 +53,11 @@ def test_prior():
 
     s = m.prior().sample()
     l = m.prior().log_prob()
+    p = m.prior().parameters()
 
     print({k: v.shape for k, v in s.items()})
+    print({k: v.shape for k, v in l.items()})
+    print({k: np.shape(p[k]["loc"]) for k, v in p.items()})
 
     assert s["w0"].shape == ()
     assert s["w"].shape == (2, 1)
@@ -66,14 +69,19 @@ def test_prior():
     assert l["x"].shape == (1, 2)
     assert l["y"].shape == (1, 1)
 
+    assert np.shape(p["w0"]["loc"]) == ()
+    assert np.shape(p["w"]["loc"]) == (2, 1)
+    assert np.shape(p["x"]["loc"]) == (2,)
+    assert np.shape(p["y"]["loc"]) == (1, 1)
+
 
 def test_prior_size():
     m, x_train, y_train = init_model()
     s = m.prior().sample(size=5)
     l = m.prior().sample(size=5)
 
-
     print({k: v.shape for k, v in s.items()})
+    print({k: v.shape for k, v in l.items()})
 
     assert s["w0"].shape == (5,)
     assert s["w"].shape == (5, 2, 1)
@@ -88,11 +96,16 @@ def test_prior_size():
 
 def test_prior_size_datamodel():
     m, x_train, y_train = init_model()
+
     s = m.prior(size_datamodel=10).sample()
     l = m.prior(size_datamodel=10).log_prob()
+    p = m.prior(size_datamodel=10).parameters()
 
 
     print({k: v.shape for k, v in s.items()})
+    print({k: v.shape for k, v in l.items()})
+    print({k: np.shape(p[k]["loc"]) for k, v in p.items()})
+
 
     assert s["w0"].shape == ()
     assert s["w"].shape == (2, 1)
@@ -103,6 +116,11 @@ def test_prior_size_datamodel():
     assert l["w"].shape == (2, 1)
     assert l["x"].shape == (10, 2)
     assert l["y"].shape == (10, 1)
+
+    assert np.shape(p["w0"]["loc"]) == ()
+    assert np.shape(p["w"]["loc"]) == (2, 1)
+    assert np.shape(p["x"]["loc"]) == (2,)
+    assert np.shape(p["y"]["loc"]) == (10, 1)
 
 
 def test_prior_size2():
@@ -120,9 +138,12 @@ def test_prior_data():
     m, x_train, y_train = init_model()
     s = m.prior(size_datamodel=10, data={"w0": 0, "w": [[2], [1]], "y": np.zeros((10, 1))}).sample(size=5)
     l = m.prior(size_datamodel=10, data={"w0": 0, "w": [[2], [1]], "y": np.zeros((10, 1))}).log_prob()
+    p = m.prior(size_datamodel=10, data={"w0": 0, "w": [[2], [1]], "y": np.zeros((10, 1))}).parameters()
 
     print({k: v.shape for k, v in s.items()})
     print({k: v.shape for k, v in l.items()})
+    print({k: np.shape(p[k]["loc"]) for k, v in p.items()})
+
 
     assert s["w0"].shape == (5,)
     assert s["w"].shape == (5, 2, 1)
@@ -134,14 +155,21 @@ def test_prior_data():
     assert l["x"].shape == (10, 2)
     assert l["y"].shape == (10, 1)
 
+    assert np.shape(p["w0"]["loc"]) == ()
+    assert np.shape(p["w"]["loc"]) == (2, 1)
+    assert np.shape(p["x"]["loc"]) == (2,)
+    assert np.shape(p["y"]["loc"]) == (10, 1)
+
 
 def test_prior_batches():
     m, x_train, y_train = init_model()
     s = m.prior(size_datamodel=10, data={"w0": 0, "w": [[2], [1]], "y": np.zeros((15, 1))}).sample()
     l = m.prior(size_datamodel=10, data={"w0": 0, "w": [[2], [1]], "y": np.zeros((15, 1))}).log_prob()
-
+    p = m.prior(size_datamodel=10, data={"w0": 0, "w": [[2], [1]], "y": np.zeros((15, 1))}).parameters()
 
     print({k: v.shape for k, v in s.items()})
+    print({k: v.shape for k, v in l.items()})
+    print({k: np.shape(p[k]["loc"]) for k, v in p.items()})
 
     assert s["w0"].shape == ()
     assert s["w"].shape == (2, 1)
@@ -154,14 +182,21 @@ def test_prior_batches():
     assert l["x"].shape == (15, 2)
     assert l["y"].shape == (15, 1)
 
+    assert np.shape(p["w0"]["loc"]) == ()
+    assert np.shape(p["w"]["loc"]) == (2, 1)
+    assert np.shape(p["x"]["loc"]) == (2,)
+    assert np.shape(p["y"]["loc"]) == (15, 1)
+
 
 def test_prior_batches2():
     m, x_train, y_train = init_model()
     s = m.prior(size_datamodel=10, data={"w0": 0, "w": [[2], [1]], "y": np.zeros((15, 1))}).sample(size=5)
     l = m.prior(size_datamodel=10, data={"w0": 0, "w": [[2], [1]], "y": np.zeros((15, 1))}).log_prob()
-
+    p = m.prior(size_datamodel=10, data={"w0": 0, "w": [[2], [1]], "y": np.zeros((15, 1))}).parameters()
 
     print({k: v.shape for k, v in s.items()})
+    print({k: v.shape for k, v in l.items()})
+    print({k: np.shape(p[k]["loc"]) for k, v in p.items()})
 
     assert s["w0"].shape == (5,)
     assert s["w"].shape == (5, 2, 1)
@@ -173,19 +208,31 @@ def test_prior_batches2():
     assert l["x"].shape == (15, 2)
     assert l["y"].shape == (15, 1)
 
+    assert np.shape(p["w0"]["loc"]) == ()
+    assert np.shape(p["w"]["loc"]) == (2, 1)
+    assert np.shape(p["x"]["loc"]) == (2,)
+    assert np.shape(p["y"]["loc"]) == (15, 1)
+
+
 def test_post():
     m, x_train, y_train = init_model()
     s = m.posterior_predictive().sample()
     l = m.posterior_predictive().log_prob()
-
+    p = m.posterior_predictive().parameters()
 
     print({k: v.shape for k, v in s.items()})
+    print({k: v.shape for k, v in l.items()})
+    print({k: np.shape(p[k]["loc"]) for k, v in p.items()})
 
     assert s["x"].shape == (1000, 2)
     assert s["y"].shape == (1000, 1)
 
     assert l["x"].shape == (1000, 2)
     assert l["y"].shape == (1000, 1)
+
+    assert np.shape(p["x"]["loc"]) == (2,)
+    assert np.shape(p["y"]["loc"]) == (1000, 1)
+
 
 
 def test_post_size():
@@ -207,9 +254,12 @@ def test_post_data():
     m, x_train, y_train = init_model()
     s = m.posterior_predictive(data={"x":x_train}).sample(3)
     l = m.posterior_predictive(data={"x":x_train}).log_prob()
+    p = m.posterior_predictive(data={"x":x_train}).parameters()
 
 
-    print({k:v.shape for k,v in s.items()})
+    print({k: v.shape for k, v in s.items()})
+    print({k: v.shape for k, v in l.items()})
+    print({k: np.shape(p[k]["loc"]) for k, v in p.items()})
 
     assert s["x"].shape == (3,1000,2)
     assert s["y"].shape == (3,1000,1)
@@ -217,6 +267,8 @@ def test_post_data():
     assert l["x"].shape == (1000, 2)
     assert l["y"].shape == (1000, 1)
 
+    assert np.shape(p["x"]["loc"]) == (2,)
+    assert np.shape(p["y"]["loc"]) == (1000, 1)
 
 
 def test_post_data2():
@@ -224,8 +276,9 @@ def test_post_data2():
     s = m.posterior_predictive(data={"w0": 0, "w": [[2], [1]], "x": np.zeros((1000, 2))}).sample(3)
     l = m.posterior_predictive(data={"w0": 0, "w": [[2], [1]], "x": np.zeros((1000, 2))}).log_prob()
 
-
     print({k: v.shape for k, v in s.items()})
+    print({k: v.shape for k, v in l.items()})
+    print({k: np.shape(p[k]["loc"]) for k, v in p.items()})
 
     assert s["x"].shape == (3, 1000, 2)
     assert s["y"].shape == (3, 1000, 1)
@@ -239,8 +292,11 @@ def test_post_batches():
     m, x_train, y_train = init_model()
     s = m.posterior_predictive(data={"y": np.zeros((1300, 1))}).sample(3)
     l = m.posterior_predictive(data={"y": np.zeros((1300, 1))}).log_prob()
+    p = m.posterior_predictive(data={"y": np.zeros((1300, 1))}).parameters()
 
     print({k: v.shape for k, v in s.items()})
+    print({k: v.shape for k, v in l.items()})
+    print({k: np.shape(p[k]["loc"]) for k, v in p.items()})
 
     assert s["x"].shape == (3, 1300, 2)
     assert s["y"].shape == (3, 1300, 1)
@@ -248,7 +304,8 @@ def test_post_batches():
     assert l["x"].shape == (1300, 2)
     assert l["y"].shape == (1300, 1)
 
-
+    assert np.shape(p["x"]["loc"]) == (2,)
+    assert np.shape(p["y"]["loc"]) == (1300, 1)
 
 
 

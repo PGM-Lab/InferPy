@@ -121,7 +121,6 @@ class Query:
 
     def process_output(self, results):
         out = {}
-
         for r in results:
             for k,v in self.target_variables.items():
                 if k not in out:
@@ -175,8 +174,11 @@ class Query:
         # function that merges the parameters of 2 batches
         def merge_params(p1, p2):
             out = {}
+            var = self.observed_variables[p1["name"]]
             for k,v in p1.items():
-                if np.ndim(v) == 0:
+                if np.ndim(v) == 0 or  \
+                        (var.is_datamodel and len(var.sample_shape.as_list())>0) or \
+                        not var.is_datamodel:
                     out[k] = v
                 else:
                     out[k] = np.vstack([p1[k], p2[k]])[0:self.data_size]
@@ -194,5 +196,4 @@ class Query:
                 result = r
             else:
                 result = {var:merge_params(result[var], r[var]) for var in self.target_variables.keys()}
-
         return result
