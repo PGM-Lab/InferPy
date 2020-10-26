@@ -1,7 +1,9 @@
 ### Setting up
 
 from tensorflow_probability import edward2 as ed
-import tensorflow as tf
+# import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 
 d = 2
 N = 50000

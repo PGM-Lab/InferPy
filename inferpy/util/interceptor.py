@@ -1,8 +1,11 @@
-import tensorflow as tf
+# import tensorflow as tf
+import tensorflow.compat.v1 as tf
 from tensorflow_probability import edward2 as ed
 from contextlib import contextmanager
 from inferpy import util
 from inferpy.contextmanager import data_model
+
+tf.disable_v2_behavior()
 
 
 # Global variable to access when enable_interceptor is used. However, the vaiable will be None in the finally clause,
