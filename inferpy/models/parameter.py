@@ -12,12 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-import tensorflow as tf
+# import tensorflow as tf
 from tensorflow.python.client import session as tf_session
 
 from . import sanitize_input_arg
 from inferpy import contextmanager
 from inferpy import util
+
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 
 
 class Parameter:

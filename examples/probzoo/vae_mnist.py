@@ -1,10 +1,12 @@
-import tensorflow as tf
+# import tensorflow as tf
 import matplotlib.pyplot as plt
 import numpy as np
 import inferpy as inf
 # import pyro
 # import torch
 import tensorflow_probability.python.edward2 as ed
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 
 # number of components
 k = 2

@@ -9,8 +9,6 @@ d = 2
 N = 50000
 
 
-
-
 #12
 
 ### Model definition ####

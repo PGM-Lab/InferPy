@@ -1,5 +1,5 @@
 import numpy as np
-import tensorflow as tf
+# import tensorflow as tf
 import inspect
 import itertools
 from tensorflow_probability.python import edward2 as ed
@@ -13,6 +13,9 @@ from inferpy import contextmanager
 from ..inference import Inference
 
 from inferpy.data.loaders import build_sample_dict
+
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 
 
 class VI(Inference):

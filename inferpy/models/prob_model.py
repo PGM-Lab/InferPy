@@ -17,7 +17,7 @@
 import functools
 from collections import OrderedDict
 from tensorflow_probability import edward2 as ed
-import tensorflow as tf
+# import tensorflow as tf
 import networkx as nx
 import warnings
 
@@ -26,6 +26,9 @@ from inferpy import contextmanager
 from inferpy.queries import Query
 from .random_variable import RandomVariable
 from inferpy.data.loaders import build_data_loader
+
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 
 
 def probmodel(builder):

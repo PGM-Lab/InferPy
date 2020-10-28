@@ -1,7 +1,9 @@
 # required packages
 import numpy as np
 import inferpy as inf
-import tensorflow as tf
+# import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 
 
 # number of observations

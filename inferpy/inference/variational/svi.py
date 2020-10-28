@@ -1,10 +1,12 @@
 import numpy as np
-import tensorflow as tf
+# import tensorflow as tf
 
 from inferpy import util
 from inferpy import contextmanager
 from .vi import VI
 from inferpy.data.loaders import build_data_loader, DataLoader
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 
 
 class SVI(VI):
@@ -74,7 +76,9 @@ class SVI(VI):
             raise ValueError("The size of the data must be equal or greater than the batch size")
 
         data_loader.shuffle_buffer_size = data_size
-        iterator = data_loader.to_tfdataset(self.batch_size).make_one_shot_iterator()
+        # iterator = data_loader.to_tfdataset(self.batch_size).make_one_shot_iterator()
+
+        iterator = tf.compat.v1.data.make_one_shot_iterator(data_loader.to_tfdataset(self.batch_size))
 
         # each time this tensor is evaluated in a session it contains new data
         input_data = data_loader.map_batch_fn(iterator.get_next())

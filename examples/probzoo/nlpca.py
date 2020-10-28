@@ -7,7 +7,9 @@ x_test = np.concatenate([inf.Normal([0.0,0.0], scale=1.).sample(int(N/2)), inf.N
 ##########
 
 import inferpy as inf
-import tensorflow as tf
+# import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 
 # definition of a generic model
 
