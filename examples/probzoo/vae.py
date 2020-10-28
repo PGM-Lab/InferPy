@@ -68,7 +68,7 @@ m = vae(k, d0, dx, decoder)
 q = qmodel(k, d0, dx, encoder)
 
 # set the inference algorithm
-SVI = inf.inference.SVI(q, epochs=5000)
+SVI = inf.inference.SVI(q, epochs=50)
 
 # learn the parameters
 m.fit({"x": x_train}, SVI)
@@ -83,5 +83,5 @@ m.posterior("z", data={"x": x_test}).sample(5)
 m.posterior_predictive("x").sample(5)
 
 # decode values from the hidden representation
-m.posterior_predictive("x", data={"z": [2]}).sample(5)
+m.posterior_predictive("x", data={"z": 2})
 

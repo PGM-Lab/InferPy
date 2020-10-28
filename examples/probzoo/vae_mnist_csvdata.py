@@ -64,9 +64,9 @@ SVI = inf.inference.SVI(q, epochs=200, batch_size=100)
 
 
 # create data loader from 10 csv files
-path = [f"./mnist_xtrain{i}.csv" for i in range(10)]
+path = [f"./datasets/mnist_xtrain{i}.csv" for i in range(10)]
 
-data_loader = CsvLoader(path, variables={"x" : range(dx)})
+data_loader = CsvLoader(path, var_dict={"x" : range(dx)})
 m.fit(data_loader.to_dict(), SVI)
 
 

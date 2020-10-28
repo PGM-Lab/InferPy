@@ -1,10 +1,14 @@
 import numpy as np
 import functools
 
-from inferpy import contextmanager
-from inferpy import util
 import math
 import tensorflow as tf
+
+from inferpy import contextmanager
+from inferpy import util
+from inferpy.data.preprocess import to_numpy, add_sample_dim, create_batches
+
+
 
 
 def flatten_result(f):
@@ -33,44 +37,36 @@ class Query:
         self.target_variables = variables if not target_names else \
             {k: v for k, v in variables.items() if k in target_names}
 
-        self.observed_variables = variables
-        self.data = data
+        self.query_vars = variables
         self.enable_interceptor_variables = enable_interceptor_variables
 
-        # plateau size
-        vars_datamodel = [v for (k,v) in self.observed_variables.items() if v.is_datamodel]
-        self.batch_size = vars_datamodel[0].shape[0].value if len(vars_datamodel)>0 else 1
+        vars_datamodel = dict([(k,v) for (k,v) in self.query_vars.items() if v.is_datamodel])
 
-        # size of the observed variables in data
-        obs_datamodel = [k for (k,v) in self.observed_variables.items() if k in self.data.keys() and v.is_datamodel]
+        # all observations from vars in the data model must have the sample dimension
+        self.data = add_sample_dim(to_numpy(data), vars_datamodel)
+
+        # the batch size should be equal to the plateau in the model
+        self.batch_size = list(vars_datamodel.values())[0].shape[0].value if len(vars_datamodel)>0 else 1
+
+        # observed variables in the datamodel
+        obs_datamodel = [k for (k,v) in self.query_vars.items() if k in self.data.keys() and v.is_datamodel]
+
+        # actual data size
         if len(obs_datamodel)>0:
-            self.data_size = self.data[obs_datamodel[0]].shape[0]
+            d = self.data[obs_datamodel[0]]
+            if isinstance(d, tf.Tensor):
+                self.data_size = d.get_shape().as_list()[0]
+            else:
+                self.data_size = d.shape[0]
         else:
             self.data_size = self.batch_size
 
-        ####
+        # get batches (even if we have a single one)
+        self.batches = create_batches(self.data, vars_datamodel, self.data_size, self.batch_size)
 
 
-        rows_to_add = round((math.ceil(self.data_size / self.batch_size) - self.data_size / self.batch_size) * self.batch_size)
-        num_batches = math.ceil(self.data_size / self.batch_size)
 
-        for k,v in self.observed_variables.items():
-            if k in self.data and v.is_datamodel:
-                padding = np.zeros([len(data[k].shape), 2], np.int32)
-                padding[0, 1] = rows_to_add
-                data[k] = np.pad(data[k], padding, mode="constant")
 
-        self.batches = [{} for _ in range(num_batches)]
-
-        k,v = list(self.observed_variables.items())[0]
-        for k,v in self.observed_variables.items():
-            if k in self.data and v.is_datamodel:
-                batches_k = np.split(data[k], num_batches, axis=0)
-                for i in range(num_batches):
-                    self.batches[i][k] = batches_k[i]
-            elif k in self.data:
-                for i in range(num_batches):
-                    self.batches[i][k] = data[k]
 
 
 
@@ -82,7 +78,7 @@ class Query:
         results = []
         for batch in self.batches:
             with util.interceptor.enable_interceptor(*self.enable_interceptor_variables):
-                with contextmanager.observe(self.observed_variables, batch):
+                with contextmanager.observe(self.query_vars, batch):
                     result = util.runtime.try_run({k: v.log_prob(v.value) for k, v in self.target_variables.items()})
 
             results.append(result)
@@ -103,7 +99,7 @@ class Query:
         results = []
         for batch in self.batches:
             with util.interceptor.enable_interceptor(*self.enable_interceptor_variables):
-                with contextmanager.observe(self.observed_variables, batch):
+                with contextmanager.observe(self.query_vars, batch):
                     # each iteration for `size` run the dict in the session, so if there are dependencies among random vars
                     # they are computed in the same graph operations, and reflected in the results
                     samples = [util.runtime.try_run(self.target_variables) for _ in range(size)]
@@ -174,7 +170,7 @@ class Query:
         # function that merges the parameters of 2 batches
         def merge_params(p1, p2):
             out = {}
-            var = self.observed_variables[p1["name"]]
+            var = self.query_vars[p1["name"]]
             for k,v in p1.items():
                 if np.ndim(v) == 0 or  \
                         (var.is_datamodel and len(var.sample_shape.as_list())>0) or \
@@ -188,7 +184,7 @@ class Query:
         result = {}
 
         for batch in self.batches:
-            with contextmanager.observe(self.observed_variables, batch):
+            with contextmanager.observe(self.query_vars, batch):
                 r = {k: filter_parameters(k, v.parameters)
                           for k, v in self.target_variables.items()}
 
