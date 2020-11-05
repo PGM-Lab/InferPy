@@ -2,6 +2,7 @@
 import inferpy as inf
 from inferpy.data import mnist
 import tensorflow_probability as tfp
+
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
