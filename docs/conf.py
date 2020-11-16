@@ -81,8 +81,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'InferPy'
-copyright = u'2017, Javier Cózar, Rafael Cabañas, Antonio Salmerón, Andrés R. Masegosa'
-author = u'Javier Cózar, Rafael Cabañas, Antonio Salmerón, Andrés R. Masegosa'
+copyright = u'2017, Javier Cózar, Rafael Cabañas, Antonio Salmerón, Andrés R. Masegosa, Juan Jesús Ojeda'
+author = u'Javier Cózar, Rafael Cabañas, Antonio Salmerón, Andrés R. Masegosa, Juan Jesús Ojeda'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
