@@ -164,7 +164,9 @@ class VI(Inference):
         if extra_loss_tensor is not None:
             loss_tensor += extra_loss_tensor
         # use the optimizer to create the train tensor
-        train = self.optimizer.minimize(loss_tensor)
+        # train = self.optimizer.minimize(loss_tensor)
+        tvars = tf.trainable_variables()
+        train = self.optimizer.minimize(loss_tensor, var_list=tvars)
 
         # save the expanded variables and parameters
         self.expanded_variables = {

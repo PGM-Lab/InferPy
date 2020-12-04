@@ -1,15 +1,18 @@
 # required pacakges
 import inferpy as inf
 import numpy as np
-# import tensorflow as tf
+import tensorflow as tf
 import matplotlib.pyplot as plt
+from tensorflow.python.framework import ops
 
 from inferpy.data import mnist
-import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
 
-tf.reset_default_graph()
-tf.set_random_seed(1234)
+
+"""tf.reset_default_graph()
+tf.set_random_seed(1234)"""
+
+ops.reset_default_graph()
+tf.random.set_seed(1234)
 
 # number of components
 k = 2
@@ -62,7 +65,8 @@ q = qmodel(k,d)
 # load the data
 (x_train, y_train), _ = mnist.load_data(num_instances=N, digits=DIG)
 
-optimizer = tf.train.AdamOptimizer(learning_rate)
+#optimizer = tf.train.AdamOptimizer(learning_rate)
+optimizer = tf.optimizers.Adam()
 VI = inf.inference.VI(q, optimizer=optimizer, epochs=2000)
 
 m.fit({"x": x_train}, VI)

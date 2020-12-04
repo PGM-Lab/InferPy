@@ -7,9 +7,7 @@ x_test = np.concatenate([inf.Normal([0.0,0.0], scale=1.).sample(int(N/2)), inf.N
 ##########
 
 import inferpy as inf
-# import tensorflow as tf
-import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
+import tensorflow as tf
 
 # definition of a generic model
 
@@ -36,8 +34,12 @@ def nlpca(k, d0, dx, decoder):
 
 
 def decoder(z,d0,dx):
-    h0 = tf.layers.dense(z, d0, tf.nn.relu)
-    return tf.layers.dense(h0, 2 * dx)
+    """h0 = tf.layers.dense(z, d0, tf.nn.relu)
+    return tf.layers.dense(h0, 2 * dx)"""
+    model = tf.keras.Sequential([tf.keras.layers.Dense(d0, tf.nn.relu)])
+    h0 = model(z)
+    model2 = tf.keras.Sequential([tf.keras.layers.Dense(2 * dx)])
+    return model2(h0)
 
 
 # Q-model  approximating P

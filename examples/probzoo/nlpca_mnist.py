@@ -1,12 +1,10 @@
 # required packages
 import inferpy as inf
 import numpy as np
-# import tensorflow as tf
+import tensorflow as tf
 
 import matplotlib.pyplot as plt
 from inferpy.data import mnist
-import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
 
 
 # number of components
@@ -35,8 +33,12 @@ def nlpca(k, d0, dx, decoder):
 
 
 def decoder(z, d0, dx):  # k -> d0 -> 2*dx
-    h0 = tf.layers.dense(z, d0, tf.nn.relu)
-    return tf.layers.dense(h0, 2 * dx)
+    """h0 = tf.layers.dense(z, d0, tf.nn.relu)
+    return tf.layers.dense(h0, 2 * dx)"""
+    model = tf.keras.Sequential([tf.keras.layers.Dense(d0, tf.nn.relu)])
+    h0 = model(z)
+    model2 = tf.keras.Sequential([tf.keras.layers.Dense(2 * dx)])
+    return model2(h0)
 
 
 @inf.probmodel

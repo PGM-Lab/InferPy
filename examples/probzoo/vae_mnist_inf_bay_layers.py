@@ -1,10 +1,8 @@
-# import tensorflow as tf
+import tensorflow as tf
 import inferpy as inf
 from inferpy.data import mnist
 import tensorflow_probability as tfp
 
-import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
 
 N, M = 1000, 100 # data and batch size
 (x_train, _), _ = mnist.load_data(num_instances=N,

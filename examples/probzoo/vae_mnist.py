@@ -1,12 +1,12 @@
-# import tensorflow as tf
+import tensorflow as tf
 import matplotlib.pyplot as plt
 import numpy as np
 import inferpy as inf
 # import pyro
 # import torch
 import tensorflow_probability.python.edward2 as ed
-import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
+from tensorflow.python.framework import ops
+
 
 # number of components
 k = 2
@@ -26,8 +26,11 @@ scale_epsilon = 0.01
 num_epochs = 1000
 learning_rate = 0.01
 
-tf.reset_default_graph()
-tf.set_random_seed(1234)
+"""tf.reset_default_graph()
+tf.set_random_seed(1234)"""
+ops.reset_default_graph()
+tf.random.set_seed(1234)
+
 #29
 from inferpy.data import mnist
 

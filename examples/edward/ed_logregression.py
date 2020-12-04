@@ -1,9 +1,7 @@
 ### Setting up
 
 from tensorflow_probability import edward2 as ed
-# import tensorflow as tf
-import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
+import tensorflow as tf
 
 d = 2
 N = 50000
@@ -64,6 +62,8 @@ with ed.interception(set_values(w=[2, 1], w0=0)):
 
 with tf.Session() as sess:
     x_train, y_train, _ = sess.run(generate)
+
+
 
 
 
