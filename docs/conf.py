@@ -165,7 +165,7 @@ html_sidebars = {
 
 
 # A list of ignored prefixes for module index sorting.
-modindex_common_prefix = ['inferpy.']
+#modindex_common_prefix = ['inferpy.']  ## descomentar
 
 
 # -- Options for HTMLHelp output ------------------------------------------
