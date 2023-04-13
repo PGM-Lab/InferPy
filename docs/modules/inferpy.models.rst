@@ -28,7 +28,6 @@ inferpy.models.random\_variable module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

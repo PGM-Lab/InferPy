@@ -12,7 +12,6 @@ inferpy.layers.sequential module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

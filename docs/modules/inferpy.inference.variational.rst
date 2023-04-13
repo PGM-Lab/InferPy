@@ -5,6 +5,7 @@ Subpackages
 -----------
 
 .. toctree::
+   :maxdepth: 4
 
    inferpy.inference.variational.loss_functions
 
@@ -26,7 +27,6 @@ inferpy.inference.variational.vi module
    :members:
    :undoc-members:
    :show-inheritance:
-
 
 Module contents
 ---------------

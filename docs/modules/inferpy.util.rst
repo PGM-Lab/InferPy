@@ -68,7 +68,6 @@ inferpy.util.tf\_graph module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

@@ -36,7 +36,6 @@ inferpy.contextmanager.randvar\_registry module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

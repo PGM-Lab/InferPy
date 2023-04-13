@@ -12,7 +12,6 @@ inferpy.inference.variational.loss\_functions.elbo module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

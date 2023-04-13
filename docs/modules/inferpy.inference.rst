@@ -5,6 +5,7 @@ Subpackages
 -----------
 
 .. toctree::
+   :maxdepth: 4
 
    inferpy.inference.variational
 
@@ -26,7 +27,6 @@ inferpy.inference.mcmc module
    :members:
    :undoc-members:
    :show-inheritance:
-
 
 Module contents
 ---------------

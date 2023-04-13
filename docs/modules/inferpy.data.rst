@@ -20,7 +20,6 @@ inferpy.data.mnist module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 
