@@ -1,24 +1,3 @@
 inferpy package
 ===============
 
-Subpackages
------------
-
-.. toctree::
-   :maxdepth: 4
-
-   inferpy.contextmanager
-   inferpy.data
-   inferpy.inference
-   inferpy.layers
-   inferpy.models
-   inferpy.queries
-   inferpy.util
-
-Module contents
----------------
-
-.. automodule:: inferpy
-   :members:
-   :undoc-members:
-   :show-inheritance:
