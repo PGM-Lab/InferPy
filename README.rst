@@ -17,6 +17,7 @@
    	:scale: 90 %
    	:align: center
 
+Documentation --> (https://inferpy-docs.readthedocs.io/en/stable/index.html)
 
 InferPy: Deep Probabilistic Modeling Made Easy
 ===============================================
